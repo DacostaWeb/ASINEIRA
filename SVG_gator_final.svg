@@ -1,5 +1,150 @@
 <svg id="elizFThVjSU1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 276.724 141.89" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" project-id="0bd0f26c1d9f498baeb5027bdaeaa133" export-id="263f1b6029814483ba27c18610c179db" cached="false">
 <style>
-#elizFThVjSU2_tr {animation: elizFThVjSU2_tr__tr 4000ms linear infinite normal}@keyframes elizFThVjSU2_tr__tr { 0% {transform: translate(61.805172px,73.153994px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 20% {transform: translate(61.805172px,73.153994px) rotate(-35deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 25% {transform: translate(61.805172px,73.153994px) rotate(-35deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 45% {transform: translate(61.805172px,73.153994px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 50% {transform: translate(61.805172px,73.153994px) rotate(0deg)}} #elizFThVjSU3_to {animation: elizFThVjSU3_to__to 4000ms linear infinite normal}@keyframes elizFThVjSU3_to__to { 0% {transform: translate(102.681297px,70.45px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 20% {transform: translate(102.681297px,60.45px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 25% {transform: translate(102.681297px,60.45px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 45% {transform: translate(102.681297px,70.45px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 50% {transform: translate(102.681297px,70.45px)}} #elizFThVjSU4_to {animation: elizFThVjSU4_to__to 4000ms linear infinite normal}@keyframes elizFThVjSU4_to__to { 0% {transform: translate(122.109634px,64.644287px)} 7.5% {transform: translate(122.109634px,64.644287px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 20% {transform: translate(122.109634px,56.64px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 25% {transform: translate(122.109634px,56.64px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 45% {transform: translate(122.109634px,64.644287px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 50% {transform: translate(122.109634px,64.644287px)}} #elizFThVjSU5_to {animation: elizFThVjSU5_to__to 4000ms linear infinite normal}@keyframes elizFThVjSU5_to__to { 0% {transform: translate(122.109634px,79.004761px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 20% {transform: translate(122.109634px,71px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 25% {transform: translate(122.109634px,71px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 45% {transform: translate(122.109634px,79.004761px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 50% {transform: translate(122.109634px,79.004761px)}} #elizFThVjSU6_to {animation: elizFThVjSU6_to__to 4000ms linear infinite normal}@keyframes elizFThVjSU6_to__to { 0% {transform: translate(140.437744px,74.288086px);animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005)} 20% {transform: translate(140.437744px,69.29px);animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005)} 25% {transform: translate(140.437744px,69.29px);animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005)} 45% {transform: translate(140.437744px,74.288086px);animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005)} 50% {transform: translate(140.437744px,74.288086px)}} #elizFThVjSU7_tr {animation: elizFThVjSU7_tr__tr 4000ms linear infinite normal}@keyframes elizFThVjSU7_tr__tr { 0% {transform: translate(165.976837px,74.576172px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 20% {transform: translate(165.976837px,74.576172px) rotate(15deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 25% {transform: translate(165.976837px,74.576172px) rotate(15deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 45% {transform: translate(165.976837px,74.576172px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 50% {transform: translate(165.976837px,74.576172px) rotate(0deg)}} #elizFThVjSU8_to {animation: elizFThVjSU8_to__to 4000ms linear infinite normal}@keyframes elizFThVjSU8_to__to { 0% {transform: translate(183.770813px,56.491943px)} 7.5% {transform: translate(183.770813px,56.491943px);animation-timing-function: cubic-bezier(0.915,0.19,0.15,1)} 20% {transform: translate(183.770813px,68.49px);animation-timing-function: cubic-bezier(0.915,0.19,0.15,1)} 30% {transform: translate(183.770813px,68.49px);animation-timing-function: cubic-bezier(0.915,0.19,0.15,1)} 45% {transform: translate(183.770813px,56.491943px);animation-timing-function: cubic-bezier(0.915,0.19,0.15,1)} 50% {transform: translate(183.770813px,56.491943px)}} #elizFThVjSU9_ts {animation: elizFThVjSU9_ts__ts 4000ms linear infinite normal}@keyframes elizFThVjSU9_ts__ts { 0% {transform: translate(183.77094px,86.9997px) scale(1,1);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 20% {transform: translate(183.77094px,86.9997px) scale(1,0.511932);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 25% {transform: translate(183.77094px,86.9997px) scale(1,0.511932);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 45% {transform: translate(183.77094px,86.9997px) scale(1,1);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 50% {transform: translate(183.77094px,86.9997px) scale(1,1)}} #elizFThVjSU10_tr {animation: elizFThVjSU10_tr__tr 4000ms linear infinite normal}@keyframes elizFThVjSU10_tr__tr { 0% {transform: translate(198.365051px,74.640503px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 20% {transform: translate(198.365051px,74.640503px) rotate(-10deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 25% {transform: translate(198.365051px,74.640503px) rotate(-10deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 45% {transform: translate(198.365051px,74.640503px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 50% {transform: translate(198.365051px,74.640503px) rotate(0deg)}} #elizFThVjSU11_to {animation: elizFThVjSU11_to__to 4000ms linear infinite normal}@keyframes elizFThVjSU11_to__to { 0% {transform: translate(217.027161px,74.288059px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 20% {transform: translate(217.027161px,69.29px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 25% {transform: translate(217.027161px,69.29px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 45% {transform: translate(217.027161px,74.288059px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)} 50% {transform: translate(217.027161px,74.288059px)}} 
+#elizFThVjSU2_tr {
+animation: elizFThVjSU2_tr__tr 4000ms linear infinite normal}
+@keyframes elizFThVjSU2_tr__tr {
+ 0% {
+transform: translate(61.805172px,73.153994px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 20% {
+transform: translate(61.805172px,73.153994px) rotate(-35deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 25% {
+transform: translate(61.805172px,73.153994px) rotate(-35deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 45% {
+transform: translate(61.805172px,73.153994px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 50%, 100% {
+transform: translate(61.805172px,73.153994px) rotate(0deg)}
+}
+ #elizFThVjSU3_to {
+animation: elizFThVjSU3_to__to 4000ms linear infinite normal}
+@keyframes elizFThVjSU3_to__to {
+ 0% {
+transform: translate(102.681297px,70.45px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 20% {
+transform: translate(102.681297px,60.45px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 25% {
+transform: translate(102.681297px,60.45px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 45% {
+transform: translate(102.681297px,70.45px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 50%, 100% {
+transform: translate(102.681297px,70.45px)}
+}
+ #elizFThVjSU4_to {
+animation: elizFThVjSU4_to__to 4000ms linear infinite normal}
+@keyframes elizFThVjSU4_to__to {
+ 0% {
+transform: translate(122.109634px,64.644287px)}
+ 7.5% {
+transform: translate(122.109634px,64.644287px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 20% {
+transform: translate(122.109634px,56.64px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 25% {
+transform: translate(122.109634px,56.64px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 45% {
+transform: translate(122.109634px,64.644287px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 50%, 100% {
+transform: translate(122.109634px,64.644287px)}
+}
+ #elizFThVjSU5_to {
+animation: elizFThVjSU5_to__to 4000ms linear infinite normal}
+@keyframes elizFThVjSU5_to__to {
+ 0% {
+transform: translate(122.109634px,79.004761px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 20% {
+transform: translate(122.109634px,71px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 25% {
+transform: translate(122.109634px,71px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 45% {
+transform: translate(122.109634px,79.004761px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 50%, 100% {
+transform: translate(122.109634px,79.004761px)}
+}
+ #elizFThVjSU6_to {
+animation: elizFThVjSU6_to__to 4000ms linear infinite normal}
+@keyframes elizFThVjSU6_to__to {
+ 0% {
+transform: translate(140.437744px,74.288086px);animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005)}
+ 20% {
+transform: translate(140.437744px,69.29px);animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005)}
+ 25% {
+transform: translate(140.437744px,69.29px);animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005)}
+ 45% {
+transform: translate(140.437744px,74.288086px);animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005)}
+ 50%, 100% {
+transform: translate(140.437744px,74.288086px)}
+}
+ #elizFThVjSU7_tr {
+animation: elizFThVjSU7_tr__tr 4000ms linear infinite normal}
+@keyframes elizFThVjSU7_tr__tr {
+ 0% {
+transform: translate(165.976837px,74.576172px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 20% {
+transform: translate(165.976837px,74.576172px) rotate(15deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 25% {
+transform: translate(165.976837px,74.576172px) rotate(15deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 45% {
+transform: translate(165.976837px,74.576172px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 50%, 100% {
+transform: translate(165.976837px,74.576172px) rotate(0deg)}
+}
+ #elizFThVjSU8_to {
+animation: elizFThVjSU8_to__to 4000ms linear infinite normal}
+@keyframes elizFThVjSU8_to__to {
+ 0% {
+transform: translate(183.770813px,56.491943px)}
+ 7.5% {
+transform: translate(183.770813px,56.491943px);animation-timing-function: cubic-bezier(0.915,0.19,0.15,1)}
+ 20% {
+transform: translate(183.770813px,68.49px);animation-timing-function: cubic-bezier(0.915,0.19,0.15,1)}
+ 30% {
+transform: translate(183.770813px,68.49px);animation-timing-function: cubic-bezier(0.915,0.19,0.15,1)}
+ 45% {
+transform: translate(183.770813px,56.491943px);animation-timing-function: cubic-bezier(0.915,0.19,0.15,1)}
+ 50%, 100% {
+transform: translate(183.770813px,56.491943px)}
+}
+ #elizFThVjSU9_ts {
+animation: elizFThVjSU9_ts__ts 4000ms linear infinite normal}
+@keyframes elizFThVjSU9_ts__ts {
+ 0% {
+transform: translate(183.77094px,86.9997px) scale(1,1);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 20% {
+transform: translate(183.77094px,86.9997px) scale(1,0.511932);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 25% {
+transform: translate(183.77094px,86.9997px) scale(1,0.511932);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 45% {
+transform: translate(183.77094px,86.9997px) scale(1,1);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 50%, 100% {
+transform: translate(183.77094px,86.9997px) scale(1,1)}
+}
+ #elizFThVjSU10_tr {
+animation: elizFThVjSU10_tr__tr 4000ms linear infinite normal}
+@keyframes elizFThVjSU10_tr__tr {
+ 0% {
+transform: translate(198.365051px,74.640503px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 20% {
+transform: translate(198.365051px,74.640503px) rotate(-10deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 25% {
+transform: translate(198.365051px,74.640503px) rotate(-10deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 45% {
+transform: translate(198.365051px,74.640503px) rotate(0deg);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 50%, 100% {
+transform: translate(198.365051px,74.640503px) rotate(0deg)}
+}
+ #elizFThVjSU11_to {
+animation: elizFThVjSU11_to__to 4000ms linear infinite normal}
+@keyframes elizFThVjSU11_to__to {
+ 0% {
+transform: translate(217.027161px,74.288059px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 20% {
+transform: translate(217.027161px,69.29px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 25% {
+transform: translate(217.027161px,69.29px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 45% {
+transform: translate(217.027161px,74.288059px);animation-timing-function: cubic-bezier(0.825,0,0.115,0.77)}
+ 50%, 100% {
+transform: translate(217.027161px,74.288059px)}
+}
+ 
 </style>
 <g id="elizFThVjSU2_tr" transform="translate(61.805172,73.153994) rotate(0)"><path d="M69.823985,81.501434c-.890183,2.191852-2.012935,5.465021-2.104465,6.074494l-6.089234-2.473037c.006775-.527952.366541-1.795292.59178-2.381029-1.359507.954594-3.531095,1.809153-7.602648.155563-5.550884-2.254396-6.410494-6.854411-4.960295-10.425162c2.130009-5.244613,7.324404-5.953472,14.074134-3.212186l3.285291,1.334264.571407-1.406947c.664744-1.636765.729446-3.485605-2.226502-4.686112-2.690844-1.092839-3.744337-.188405-4.714542,1.359611l-6.061185-2.461646c2.007121-3.950634,5.881465-6.233827,12.864932-3.351763c6.150156,2.54363,8.527829,6.315106,6.30228,11.794964l-3.930953,9.678986ZM65.45233,74.446331l-2.596746-1.054624c-3.840831-1.559887-5.741204-.965669-6.642595,1.253779-.67687,1.666623-.224395,3.485186,2.066532,4.415607c4.050743,1.645139,5.691927-.96846,6.927159-4.00991l.24565-.604852Z" transform="translate(-61.805172,-73.153994)" fill="#ffffff"/></g><g id="elizFThVjSU3_to" transform="translate(102.681297,70.45)"><path d="M96.421534,77.298584c.754883,3.323731,3.138672,4.780762,6.969727,4.780762c3.819336,0,5.453125-1.508789,5.453125-3.931641c0-2.693359-1.594727-3.862305-7.254883-5.179687-9.006836-2.114258-11.233398-5.390137-11.233398-9.858399c0-5.768554,4.314453-9.685547,12.149414-9.685547c8.787109,0,12.288086,4.723633,12.761719,9.564453h-7.209961c-.345703-2.036621-1.47168-4.248535-5.738281-4.248535-2.904297,0-4.657227,1.199707-4.657227,3.549317c0,2.301757,1.405273,3.234863,6.75293,4.475097c9.625976,2.268067,11.736328,5.849121,11.736328,10.515137c0,6.042969-4.572266,10.188965-13.321289,10.188965-8.400391,0-12.825196-4.135742-13.618165-10.169922h7.209961Z" transform="translate(-102.681297,-70.446289)" fill="#ffffff"/></g><g id="elizFThVjSU4_to" transform="translate(122.109634,64.644287)"><rect width="6.87987" height="6.13574" rx="0" ry="0" transform="translate(-3.439634,-3.067887)" fill="#ffffff"/></g><g id="elizFThVjSU5_to" transform="translate(122.109634,79.004761)"><rect width="6.87987" height="15.99" rx="0" ry="0" transform="translate(-3.439634,-7.994961)" fill="#ffffff"/></g><g id="elizFThVjSU6_to" transform="translate(140.437744,74.288086)"><path d="M129.301519,68.412354c0-2.112305,0-5.000489-.048828-6.835938h6.663086c.138671.641113.228515,2.942871.264648,3.741699.844727-1.560547,2.855469-3.741699,7.208008-3.741699c4.991211,0,8.234375,3.37207,8.234375,9.616211v15.807129h-6.879883v-15.042481c0-2.793457-.930664-4.816894-3.966797-4.816894-2.922852,0-4.595703,1.625-4.595703,6.012695v13.84668h-6.878906v-18.587402Z" transform="translate(-140.437744,-74.288086)" fill="#ffffff"/></g><g id="elizFThVjSU7_tr" transform="translate(165.976837,74.576172) rotate(0)"><path d="M161.196567,76.047607c.005859,3.107422,1.5625,6.14502,4.987305,6.14502c2.864258,0,3.682617-1.149902,4.334961-2.65332h6.885742c-.881836,3.041504-3.594727,8.036621-11.401367,8.036621-8.183594,0-11.734375-6.119629-11.734375-12.638672c0-7.794434,4-13.36084,11.980468-13.36084c8.53418,0,11.435547,6.17334,11.435547,12.375977c0,.841308,0,1.38623-.09082,2.095214h-16.397461Zm9.59668-4.225585c-.047852-2.892579-1.203125-5.327149-4.555664-5.327149-3.295899,0-4.622071,2.272949-4.896485,5.327149h9.452149Z" transform="translate(-165.976837,-74.576172)" fill="#ffffff"/></g><g id="elizFThVjSU8_to" transform="translate(183.770813,56.491943)"><rect width="6.87988" height="6.13574" rx="0" ry="0" transform="translate(-3.439813,-3.067843)" fill="#ffffff"/></g><g id="elizFThVjSU9_ts" transform="translate(183.77094,86.9997) scale(1,1)"><rect width="6.87988" height="24.1423" rx="0" ry="0" transform="translate(-3.43994,-24.1423)" fill="#ffffff"/></g><g id="elizFThVjSU10_tr" transform="translate(198.365051,74.640503) rotate(0)"><path d="M190.962709,69.597168c0-2.46875-.005859-4.661621-.047852-6.739746h6.747071c.09082.556641.180664,3.022461.180664,4.362305c1.09668-2.839844,3.746094-4.915528,7.972656-4.938477v6.564453c-4.992188-.128418-7.972656.51001-7.972656,7.321045v10.833008h-6.879883v-17.402588Z" transform="translate(-198.365051,-74.640503)" fill="#ffffff"/></g><g id="elizFThVjSU11_to" transform="translate(217.027161,74.288059)"><path d="M227.903139,80.291936c0,2.365722.191406,5.8208.335937,6.419921h-6.572265c-.192383-.491699-.335938-1.801269-.347657-2.42871-.90039,1.395996-2.589843,3.004882-6.985351,3.004882-5.991211,0-8.518555-3.938476-8.518555-7.79248c0-5.660645,4.545899-8.271973,11.831055-8.271973h3.545898v-1.907658c0-1.766602-.635742-3.114803-3.826172-3.114803-2.904297,0-3.540039.845272-3.856445,2.644588h-6.541992c.373047-4.415527,3.103515-7.599666,10.658203-7.557185c6.655273.04248,10.277344,2.252986,10.277344,8.167537v10.835881Zm-6.705094-4.891602h-2.802719c-4.145508,0-5.682617,1.265625-5.682617,3.661133c0,1.798828,1.103516,3.313476,3.576172,3.313476c4.37207,0,4.909164-3.039062,4.909164-6.321777v-.652832Z" transform="translate(-217.027161,-74.288059)" fill="#ffffff"/></g></svg>
+
