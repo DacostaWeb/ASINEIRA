@@ -89,7 +89,6 @@ position: relative;
         justify-content: center;
         background: #003C78;
         cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         padding: 0;
       }
       .video-toggle svg {
@@ -134,7 +133,7 @@ user-select: none;
     </style>
 </head>
 <body>
-  <video id="bg-video" autoplay muted loop playsinline webkit-playsinline preload="auto">
+  <video id="bg-video" muted loop playsinline webkit-playsinline preload="auto">
     <source src="pop.mp4" type="video/mp4">
   </video>
   <div class="video-spacer" aria-hidden="true"></div>
@@ -532,8 +531,10 @@ transform: translate(217.027161px,74.288059px)}
           if (p && p.catch) p.catch(() => {});
         };
 
-        // Attempt autoplay once on load
-        tryPlay();
+        // Attempt autoplay 2 seconds after load
+        window.addEventListener('load', () => {
+          setTimeout(tryPlay, 3000);
+        });
 
         // Create mute/unmute toggle button
         const btn = document.createElement('button');
