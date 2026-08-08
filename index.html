@@ -226,10 +226,21 @@
         gap: 40px;
         padding: 0 var(--pad);
       }
-      .activity .row { padding-left: 0; padding-right: 0; }
+      .activity .row {
+        padding-left: 0;
+        padding-right: 0;
+        min-height: 66px; /* 1 linha de título: linhas seguintes alinham entre colunas */
+        white-space: nowrap;
+      }
       .activity .blurb,
       .activity .more { padding-left: 0; padding-right: 0; }
       .photo img { aspect-ratio: 4 / 3; object-fit: cover; }
+
+      /* títulos dimensionados para caberem numa linha na coluna */
+      .activity h2 { font-size: clamp(20px, 2.1vw, 27px); }
+      .activity .num { font-size: clamp(15px, 1.6vw, 20px); }
+      .activity .toggle { font-size: clamp(20px, 2.1vw, 27px); }
+      #criacao h2 { letter-spacing: .32em; }
     }
 
     /* ==========================================================
