@@ -307,13 +307,14 @@
       padding: 0;
       /* incentro do triângulo (ponto fixo da rotação/expansão) */
       transform-origin: 41.7% 42.8%;
-      transition: transform var(--menu-dur) cubic-bezier(.6, .05, .25, 1) .25s;
+      /* fechar: dobro da velocidade de abrir */
+      transition: transform calc(var(--menu-dur) / 2) cubic-bezier(.6, .05, .25, 1) .12s;
       -webkit-tap-highlight-color: transparent;
     }
 
     body.menu-open .triangle {
       transform: rotate(-108deg) scale(var(--menu-scale, 60));
-      transition-delay: 0s;
+      transition: transform var(--menu-dur) cubic-bezier(.6, .05, .25, 1) 0s;
       cursor: default;
       pointer-events: none;
     }
@@ -325,7 +326,7 @@
     /* letras a/S: não crescem — fazem morph imediato para o x ao abrir,
        e voltam quando o triângulo está quase fechado */
     .triangle .letters {
-      transition: opacity .35s ease .85s;
+      transition: opacity .3s ease .45s;
     }
     body.menu-open .triangle .letters {
       opacity: 0;
