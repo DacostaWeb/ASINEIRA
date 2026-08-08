@@ -136,7 +136,7 @@
 
     .photo {
       position: relative;
-      background: var(--blue);
+      background: transparent;
       overflow: hidden;
     }
     .photo img {
@@ -242,6 +242,26 @@
       .activity .num { font-size: clamp(15px, 1.6vw, 20px); }
       .activity .toggle { font-size: clamp(20px, 2.1vw, 27px); }
       #criacao h2 { letter-spacing: .32em; }
+    }
+
+    /* telemóvel / ecrãs estreitos: imagens a largura total */
+    @media (max-width: 799px) {
+      .photo,
+      .aerial,
+      .dist-map {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+      }
+      .aerial {
+        border-left: none;
+        border-right: none;
+      }
+      .hero .frame {
+        width: 100vw;
+        max-width: 100vw;
+      }
     }
 
     /* ==========================================================
