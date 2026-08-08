@@ -267,6 +267,93 @@
       .txt .cols { grid-template-columns: 1fr 1fr; }
     }
 
+    /* ==========================================================
+       COMO CHEGAR — tabela / infográfico / vista aérea
+       ========================================================== */
+    .dist-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .dtab {
+      border: 1.5px solid var(--blue);
+      border-radius: 99px;
+      background: none;
+      color: var(--blue);
+      font-family: inherit;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .dtab:hover { background: var(--blue); color: var(--cream); }
+    .dtab.active { background: var(--blue); color: var(--cream); }
+
+    .dist-table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 560px;
+      font-size: 13px;
+    }
+    .dist-table th, .dist-table td {
+      border: 1.5px solid var(--blue);
+      padding: 9px 12px;
+      text-align: left;
+    }
+    .dist-table th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .dist-table td:nth-child(2),
+    .dist-table td:nth-child(3) {
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .bar-group { max-width: 560px; margin-bottom: 22px; }
+    .bar-label {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+    .bar-icon { font-size: 13px; width: 20px; flex-shrink: 0; }
+    .bar {
+      height: 14px;
+      background: var(--blue);
+      min-width: 6px;
+      transition: width .6s ease;
+    }
+    .bar-min {
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .dist-map {
+      width: 100%;
+      max-width: 640px;
+      height: auto;
+      display: block;
+      font-family: "Nimbus", serif;
+    }
+    .dist-map text { fill: var(--blue); }
+    .map-ring   { font-size: 11px; text-anchor: middle; opacity: .65; }
+    .map-center { font-size: 13px; font-weight: 700; text-anchor: middle; }
+    .map-pt     { font-size: 13px; }
+    .map-time   { font-size: 11px; font-weight: 700; }
+    .map-end    { text-anchor: end; }
+
     .cta {
       display: inline-block;
       border: 1.5px solid var(--blue);
@@ -684,16 +771,86 @@
   <!-- COMO CHEGAR -->
   <section class="txt" id="como-chegar">
     <h3>Como chegar</h3>
-    <div class="cols">
-      <ul>
-        <li>Metro Santa Clara / Vila do Conde — 5 a 15 min</li>
-        <li>Centro histórico de Vila do Conde — 10 a 20 min</li>
-        <li>Praias de Vila do Conde — 20 a 30 min</li>
-      </ul>
-      <ul>
-        <li>Metro Trindade / Porto — 40 a 60 min</li>
-        <li>Aeroporto Francisco Sá Carneiro — 20 a 50 min</li>
-      </ul>
+
+    <div class="dist-tabs" role="tablist" aria-label="Vistas das distâncias">
+      <button class="dtab active" data-view="tabela">tabela</button>
+      <button class="dtab" data-view="barras">infográfico</button>
+      <button class="dtab" data-view="mapa">vista aérea</button>
+    </div>
+
+    <!-- vista 1: tabela -->
+    <div class="dist-view" id="view-tabela">
+      <table class="dist-table">
+        <thead>
+          <tr><th>destino</th><th>🚶 a pé</th><th>🚗 carro</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Ponte de Retorta / Estação Aquícola 🚍</td><td>5 min</td><td>1 min</td></tr>
+          <tr><td>Escolas Secundária e Básica / Escola Profissional</td><td>14 min</td><td>3 min</td></tr>
+          <tr><td>Metro Vila do Conde</td><td>24 min</td><td>4 min</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- vista 2: infográfico de barras -->
+    <div class="dist-view" id="view-barras" hidden>
+      <div class="bar-group">
+        <p class="bar-label">Ponte de Retorta / Estação Aquícola 🚍</p>
+        <div class="bar-row"><span class="bar-icon">🚶</span><div class="bar" style="width: 21%"></div><span class="bar-min">5 min</span></div>
+        <div class="bar-row"><span class="bar-icon">🚗</span><div class="bar" style="width: 4%"></div><span class="bar-min">1 min</span></div>
+      </div>
+      <div class="bar-group">
+        <p class="bar-label">Escolas Secundária e Básica / Escola Profissional</p>
+        <div class="bar-row"><span class="bar-icon">🚶</span><div class="bar" style="width: 58%"></div><span class="bar-min">14 min</span></div>
+        <div class="bar-row"><span class="bar-icon">🚗</span><div class="bar" style="width: 12%"></div><span class="bar-min">3 min</span></div>
+      </div>
+      <div class="bar-group">
+        <p class="bar-label">Metro Vila do Conde</p>
+        <div class="bar-row"><span class="bar-icon">🚶</span><div class="bar" style="width: 100%"></div><span class="bar-min">24 min</span></div>
+        <div class="bar-row"><span class="bar-icon">🚗</span><div class="bar" style="width: 17%"></div><span class="bar-min">4 min</span></div>
+      </div>
+    </div>
+
+    <!-- vista 3: vista aérea (anéis de distância a pé) -->
+    <div class="dist-view" id="view-mapa" hidden>
+      <svg class="dist-map" viewBox="0 0 640 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa estilizado das distâncias a pé desde a Sineira">
+        <!-- rio Ave, estilizado -->
+        <path d="M-10 430 C 120 400, 260 450, 400 415 S 620 430, 660 400"
+              fill="none" stroke="#003C78" stroke-width="10" opacity=".18"/>
+        <!-- anéis de tempo a pé -->
+        <circle cx="320" cy="235" r="60"  fill="none" stroke="#003C78" stroke-width="1.2" stroke-dasharray="4 5"/>
+        <circle cx="320" cy="235" r="130" fill="none" stroke="#003C78" stroke-width="1.2" stroke-dasharray="4 5"/>
+        <circle cx="320" cy="235" r="200" fill="none" stroke="#003C78" stroke-width="1.2" stroke-dasharray="4 5"/>
+        <text x="320" y="167" class="map-ring">5 min</text>
+        <text x="320" y="97"  class="map-ring">14 min</text>
+        <text x="320" y="27"  class="map-ring">24 min</text>
+
+        <!-- centro: a Sineira -->
+        <g transform="translate(320 235)">
+          <path d="M-9 12 L12 -3.5 L-12 -12 Z" fill="#003C78"/>
+          <text x="0" y="30" class="map-center">a Sineira</text>
+        </g>
+
+        <!-- pontos -->
+        <g transform="translate(367 272)">
+          <circle r="5" fill="#003C78"/>
+          <text x="10" y="22" class="map-pt">Ponte de Retorta /</text>
+          <text x="10" y="38" class="map-pt">Estação Aquícola 🚍</text>
+          <text x="10" y="4" class="map-time">5 min 🚶 · 1 min 🚗</text>
+        </g>
+        <g transform="translate(215 320)">
+          <circle r="5" fill="#003C78"/>
+          <text x="-8" y="24" class="map-pt map-end">Escolas Secundária e Básica /</text>
+          <text x="-8" y="40" class="map-pt map-end">Escola Profissional</text>
+          <text x="-8" y="6" class="map-time map-end">14 min 🚶 · 3 min 🚗</text>
+        </g>
+        <g transform="translate(132 152)">
+          <circle r="5" fill="#003C78"/>
+          <text x="-8" y="-26" class="map-pt map-end">Metro</text>
+          <text x="-8" y="-10" class="map-pt map-end">Vila do Conde</text>
+          <text x="-8" y="20" class="map-time map-end">24 min 🚶 · 4 min 🚗</text>
+        </g>
+      </svg>
     </div>
   </section>
 
@@ -718,8 +875,9 @@
   <!-- CONTACTOS -->
   <section class="txt" id="contactos">
     <h3>Contactos</h3>
-    <p>a Sineira — Associação &amp; Espaço Cultural<br>
-    Antiga Igreja de Retorta, Vila do Conde<br>
+    <p>a Sineira — Associação Cultural · NIF 518858359<br>
+    Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
+    Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde<br>
     <a href="mailto:ola@asineira.pt">ola@asineira.pt</a> · <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a></p>
   </section>
 
@@ -877,6 +1035,17 @@
           const sec = btn.closest('.activity');
           const open = sec.classList.toggle('open');
           btn.setAttribute('aria-expanded', open);
+        });
+      });
+
+      /* como chegar: alternar entre tabela / infográfico / vista aérea */
+      const dtabs = document.querySelectorAll('.dtab');
+      dtabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          dtabs.forEach(t => t.classList.toggle('active', t === tab));
+          document.querySelectorAll('.dist-view').forEach(v => {
+            v.hidden = v.id !== 'view-' + tab.dataset.view;
+          });
         });
       });
 
