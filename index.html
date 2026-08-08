@@ -34,7 +34,7 @@
       --blue:  #003C78; /* cor principal / fundo do banner / triângulo grande */
       --cream: #F2E7A9; /* cor secundária / texto do banner / fundo da página */
       --banner-height: 70px;
-      --menu-dur: 1.5s;
+      --menu-dur: 1.1s;
     }
 
     * { margin: 0; box-sizing: border-box; }
@@ -325,7 +325,7 @@
     /* letras a/S: não crescem — fazem morph imediato para o x ao abrir,
        e voltam quando o triângulo está quase fechado */
     .triangle .letters {
-      transition: opacity .35s ease 1.15s;
+      transition: opacity .35s ease .85s;
     }
     body.menu-open .triangle .letters {
       opacity: 0;
@@ -369,7 +369,7 @@
     body.menu-open .menu li {
       opacity: 1;
       transform: none;
-      transition: opacity .5s ease var(--d, 1s), transform .5s ease var(--d, 1s);
+      transition: opacity .45s ease var(--d, .75s), transform .45s ease var(--d, .75s);
     }
 
     .menu li a {
@@ -410,7 +410,7 @@
     body.menu-open .menu .pills {
       opacity: 1;
       transform: none;
-      transition: opacity .5s ease 1.9s, transform .5s ease 1.9s;
+      transition: opacity .45s ease 1.55s, transform .45s ease 1.55s;
     }
 
     .menu .pills a {
@@ -752,14 +752,14 @@
   <!-- MENU (painel sobre o triângulo expandido) -->
   <nav class="menu" id="menu" aria-hidden="true">
     <ol>
-      <li class="m1" style="--d: 1.0s"><a href="#formacao"><span class="n">1.</span><span class="label">formação</span><span class="arrow">→</span></a></li>
-      <li class="m2" style="--d: 1.1s"><a href="#criacao"><span class="n">2.</span><span class="label">criação</span><span class="arrow">→</span></a></li>
-      <li class="m3" style="--d: 1.2s"><a href="#apresentacao"><span class="n">3.</span><span class="label">apresentação</span><span class="arrow">→</span></a></li>
-      <li class="m4" style="--d: 1.3s"><a href="#como-chegar"><span class="n">4.</span><span class="label">como chegar</span><span class="arrow">→</span></a></li>
-      <li class="m5" style="--d: 1.4s"><a href="#eventos"><span class="n">5.</span><span class="label">eventos</span></a></li>
-      <li class="sub" style="--d: 1.5s"><a href="#eventos"><span class="n">5.1</span><span class="label">próximos</span><span class="arrow">→</span></a></li>
-      <li class="sub" style="--d: 1.6s"><a href="#eventos"><span class="n">5.2</span><span class="label">últimos</span><span class="arrow">→</span></a></li>
-      <li class="sub" style="--d: 1.7s"><a href="#eventos"><span class="n">5.3</span><span class="label">arquivo</span><span class="arrow">→</span></a></li>
+      <li class="m1" style="--d: .75s"><a href="#formacao"><span class="n">1.</span><span class="label">formação</span><span class="arrow">→</span></a></li>
+      <li class="m2" style="--d: .85s"><a href="#criacao"><span class="n">2.</span><span class="label">criação</span><span class="arrow">→</span></a></li>
+      <li class="m3" style="--d: .95s"><a href="#apresentacao"><span class="n">3.</span><span class="label">apresentação</span><span class="arrow">→</span></a></li>
+      <li class="m4" style="--d: 1.05s"><a href="#como-chegar"><span class="n">4.</span><span class="label">como chegar</span><span class="arrow">→</span></a></li>
+      <li class="m5" style="--d: 1.15s"><a href="#eventos"><span class="n">5.</span><span class="label">eventos</span></a></li>
+      <li class="sub" style="--d: 1.25s"><a href="#eventos"><span class="n">5.1</span><span class="label">próximos</span><span class="arrow">→</span></a></li>
+      <li class="sub" style="--d: 1.35s"><a href="#eventos"><span class="n">5.2</span><span class="label">últimos</span><span class="arrow">→</span></a></li>
+      <li class="sub" style="--d: 1.45s"><a href="#eventos"><span class="n">5.3</span><span class="label">arquivo</span><span class="arrow">→</span></a></li>
     </ol>
     <div class="pills">
       <a href="#formacao">🤸 atividades</a>
@@ -839,7 +839,7 @@
          cortadas pelo triângulo (clip roda em conjunto) */
       const triRot = document.getElementById('triRot');
       const triClipPath = document.getElementById('triClipPath');
-      const ORIGIN = '159.26 165.764'; /* incentro em coordenadas do viewBox */
+      const ORIGIN = '184 198'; /* eixo de rotação: ligeiramente abaixo e à direita do incentro, equilibrado com o a/S */
       let targetAngle = 0;
       let currentAngle = 0;
       let spinning = false;
