@@ -334,29 +334,34 @@
       font-weight: 700;
     }
 
-    .bar-group { max-width: 620px; margin-bottom: 24px; }
-    .bar-label {
-      font-size: 12px;
+    .aerial {
+      position: relative;
+      max-width: 720px;
+      border: 1.5px solid var(--blue);
+      line-height: 0;
+    }
+    .aerial img { width: 100%; height: auto; display: block; }
+    .atag {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      background: var(--cream);
+      color: var(--blue);
+      border: 1.5px solid var(--blue);
+      border-radius: 99px;
+      font-size: 11.5px;
       font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .bar-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 5px;
-    }
-    .bar-icon { font-size: 13px; width: 20px; flex-shrink: 0; }
-    .bar {
-      height: 14px;
-      background: var(--blue);
-      min-width: 6px;
-      transition: width .6s ease;
-    }
-    .bar-min {
-      font-size: 12px;
-      font-weight: 700;
+      line-height: 1;
+      padding: 5px 10px;
       white-space: nowrap;
+    }
+    .atag.sineira {
+      background: var(--blue);
+      color: var(--cream);
+    }
+    .aerial-note {
+      font-size: 11.5px;
+      margin-top: 10px;
+      opacity: .7;
     }
 
     .dist-map {
@@ -793,8 +798,8 @@
 
     <div class="dist-tabs" role="tablist" aria-label="Vistas das distâncias">
       <button class="dtab active" data-view="tabela">tabela</button>
-      <button class="dtab" data-view="barras">infográfico</button>
-      <button class="dtab" data-view="mapa">vista aérea</button>
+      <button class="dtab" data-view="mapa">infográfico</button>
+      <button class="dtab" data-view="aerea">vista aérea</button>
     </div>
 
     <!-- vista 1: tabela -->
@@ -811,26 +816,7 @@
       </table>
     </div>
 
-    <!-- vista 2: infográfico de barras -->
-    <div class="dist-view" id="view-barras" hidden>
-      <div class="bar-group">
-        <p class="bar-label">Ponte de Retorta / Estação Aquícola 🚍</p>
-        <div class="bar-row"><span class="bar-icon">🚶</span><div class="bar" style="width: 21%"></div><span class="bar-min">5 min</span></div>
-        <div class="bar-row"><span class="bar-icon">🚗</span><div class="bar" style="width: 4%"></div><span class="bar-min">1 min</span></div>
-      </div>
-      <div class="bar-group">
-        <p class="bar-label">Escolas Secundária e Básica / Escola Profissional</p>
-        <div class="bar-row"><span class="bar-icon">🚶</span><div class="bar" style="width: 58%"></div><span class="bar-min">14 min</span></div>
-        <div class="bar-row"><span class="bar-icon">🚗</span><div class="bar" style="width: 12%"></div><span class="bar-min">3 min</span></div>
-      </div>
-      <div class="bar-group">
-        <p class="bar-label">Metro Vila do Conde</p>
-        <div class="bar-row"><span class="bar-icon">🚶</span><div class="bar" style="width: 100%"></div><span class="bar-min">24 min</span></div>
-        <div class="bar-row"><span class="bar-icon">🚗</span><div class="bar" style="width: 17%"></div><span class="bar-min">4 min</span></div>
-      </div>
-    </div>
-
-    <!-- vista 3: vista aérea (anéis de distância a pé) -->
+    <!-- vista 2: infográfico (ilustração do mapa com anéis de distância) -->
     <div class="dist-view" id="view-mapa" hidden>
       <svg class="dist-map" viewBox="0 0 640 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa estilizado das distâncias a pé desde a Sineira">
         <!-- rio Ave, estilizado -->
@@ -870,6 +856,18 @@
           <text x="-8" y="20" class="map-time map-end">24 min 🚶 · 4 min 🚗</text>
         </g>
       </svg>
+    </div>
+
+    <!-- vista 3: vista aérea (imagem do maps com etiquetas) -->
+    <div class="dist-view" id="view-aerea" hidden>
+      <div class="aerial">
+        <img src="mapsbirdseye.png" alt="Vista aérea de Retorta: Igreja, ponte sobre o Rio Ave, escolas e envolvente" loading="lazy">
+        <span class="atag sineira" style="left: 82%; top: 87%;">▲ a Sineira</span>
+        <span class="atag" style="left: 56%; top: 60%;">🚍 ponte / est. aquícola · 5 min 🚶</span>
+        <span class="atag" style="left: 30%; top: 43%;">escolas · 14 min 🚶</span>
+        <span class="atag" style="left: 17%; top: 7%;">← metro V. do Conde · 24 min 🚶</span>
+      </div>
+      <p class="aerial-note">tempos a pé desde a Sineira · de carro: 1 / 3 / 4 min</p>
     </div>
   </section>
 
