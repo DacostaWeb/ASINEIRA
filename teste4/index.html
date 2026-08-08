@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>a Sineira — teste 4 (catálogo)</title>
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+
+  <style>
+    @font-face {
+      font-family: "Nimbus";
+      src: url("../fonts/NimbusSanL-Regu.ttf") format("truetype");
+      font-weight: 400; font-style: normal;
+    }
+    @font-face {
+      font-family: "Nimbus";
+      src: url("../fonts/NimbusSanL-Bold.ttf") format("truetype");
+      font-weight: 700; font-style: normal;
+    }
+    @font-face {
+      font-family: "Nimbus Cond";
+      src: url("../fonts/NimbusSanL-BoldCond.ttf") format("truetype");
+      font-weight: 700; font-style: normal;
+    }
+
+    :root {
+      --blue:  #003C78;
+      --cream: #F2E7A9;
+      --line: 1.5px solid var(--blue);
+    }
+
+    * { margin: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--cream);
+      color: var(--blue);
+      font-family: "Nimbus", Helvetica, Arial, sans-serif;
+      padding: 22px;
+    }
+
+    a { color: inherit; }
+
+    header.sheet {
+      border: var(--line);
+      border-bottom: none;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+
+    h1.sheet-title {
+      border: var(--line);
+      border-bottom: none;
+      padding: 8px 16px 14px;
+      font-family: "Nimbus Cond", "Nimbus", sans-serif;
+      font-size: clamp(46px, 10vw, 130px);
+      line-height: .95;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      border: var(--line);
+    }
+    @media (min-width: 640px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .card {
+      border: var(--line);
+      margin: -0.75px; /* colapsa bordas duplas */
+      padding: 16px 18px 22px;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card .id {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      opacity: .65;
+    }
+
+    .card h2 {
+      font-size: 21px;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      margin-bottom: 10px;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+      font-size: 13.5px;
+      line-height: 1.65;
+    }
+    .card li::before { content: "> "; font-weight: 700; }
+
+    .card p {
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    .card.fill {
+      background: var(--blue);
+      color: var(--cream);
+      justify-content: center;
+    }
+    .card.fill h2 { font-size: 26px; }
+
+    .card .cta {
+      display: inline-block;
+      border: 1.5px solid currentColor;
+      padding: 8px 14px;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      text-decoration: none;
+      margin-top: auto;
+      align-self: flex-start;
+      transition: background .2s, color .2s;
+    }
+    .card.fill .cta:hover { background: var(--cream); color: var(--blue); }
+    .card:not(.fill) .cta:hover { background: var(--blue); color: var(--cream); }
+
+    .card .thumb {
+      margin: 4px -18px 12px;
+      position: relative;
+      background: var(--blue);
+    }
+    .card .thumb img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(1) contrast(1.05);
+      mix-blend-mode: screen;
+    }
+    .card .thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--cream);
+      mix-blend-mode: multiply;
+    }
+
+    footer {
+      border: var(--line);
+      border-top: none;
+      padding: 14px 20px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    footer a { margin-right: 10px; }
+  </style>
+</head>
+<body>
+
+  <header class="sheet">
+    <span>a Sineira — Associação &amp; Espaço Cultural</span>
+    <span>Ficha nº 001 / 2025</span>
+    <span>Retorta · Vila do Conde</span>
+  </header>
+
+  <h1 class="sheet-title">a Sineira — Catálogo</h1>
+
+  <div class="grid">
+
+    <div class="card">
+      <p class="id">01 · Formação</p>
+      <div class="thumb"><img src="../imagem 1.png" alt="" loading="lazy"></div>
+      <ul>
+        <li>Aulas regulares (“a Sineirinha”, até aos 14 anos)</li>
+        <li>Workshops</li>
+        <li>Cursos intensivos</li>
+        <li>Campo de férias</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <p class="id">02 · Criação</p>
+      <div class="thumb"><img src="../imagem 2.png" alt="" loading="lazy"></div>
+      <ul>
+        <li>Residências artísticas com alojamento</li>
+        <li>Estúdio polivalente</li>
+        <li>Estúdio de dança profissional</li>
+        <li>Igreja: espaço multiusos</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <p class="id">03 · Apresentação</p>
+      <div class="thumb"><img src="../imagem 3.png" alt="" loading="lazy"></div>
+      <ul>
+        <li>Espetáculos</li>
+        <li>Sessões de cinema</li>
+        <li>Exposições e convívios</li>
+        <li>Festival anual de dança e música</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <p class="id">04 · Disciplinas</p>
+      <h2>Dança · Música · Teatro</h2>
+      <p>Arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
+    </div>
+
+    <div class="card">
+      <p class="id">05 · O espaço</p>
+      <h2>Antiga Igreja de Retorta</h2>
+      <ul>
+        <li>Estúdio / palco</li>
+        <li>Floresta: percursos de lazer e pedagógicos</li>
+        <li>Clareira: espaço para festival</li>
+        <li>Restauração · estacionamento</li>
+        <li>Área aprox.: 18.000 m²</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <p class="id">06 · Como chegar</p>
+      <h2>Acessos</h2>
+      <ul>
+        <li>Metro Santa Clara / V. do Conde — 5–15 min</li>
+        <li>Centro histórico — 10–20 min</li>
+        <li>Praias — 20–30 min</li>
+        <li>Metro Trindade / Porto — 40–60 min</li>
+        <li>Aeroporto Sá Carneiro — 20–50 min</li>
+      </ul>
+    </div>
+
+    <div class="card fill">
+      <p class="id">07 · Amigos</p>
+      <h2>Amigo da Sineira</h2>
+      <ul>
+        <li>Acesso gratuito a todos os eventos</li>
+        <li>Desconto em aulas, workshops e cursos</li>
+        <li>Surpresas mensais</li>
+      </ul>
+      <a class="cta" href="mailto:ola@asineira.pt?subject=Quero%20ser%20Amigo%20da%20Sineira">Aderir</a>
+    </div>
+
+    <div class="card">
+      <p class="id">08 · Parcerias e apoios</p>
+      <ul>
+        <li>Curtas de Vila do Conde</li>
+        <li>Centro Ciência Viva</li>
+        <li>Junta de Freguesia de Retorta e Tougues</li>
+        <li>Câmara Municipal de Vila do Conde</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <p class="id">09 · Contactos</p>
+      <h2>Fala connosco</h2>
+      <p>Antiga Igreja de Retorta, Vila do Conde<br>
+      <a href="mailto:ola@asineira.pt">ola@asineira.pt</a><br>
+      <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a></p>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>experiências: <a href="../">1</a> <a href="../teste2/">2</a> <a href="../teste3/">3</a> <a href="./">4</a> <a href="../teste5/">5</a></span>
+    <span>a Sineira © 2025</span>
+  </footer>
+
+</body>
+</html>
