@@ -132,7 +132,7 @@
       margin: 0 auto;
     }
 
-    .activity { padding-bottom: clamp(64px, 10vh, 96px); }
+    .activity {padding-bottom: clamp(64px, 10vh, 96px);}
 
     .photo {
       position: relative;
@@ -357,7 +357,7 @@
 
     .aerial {
       position: relative;
-      max-width: 720px;
+      /* max-width: 720px; */
       border: 1.5px solid var(--blue);
       line-height: 0;
     }
@@ -1050,9 +1050,7 @@
       menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
       window.addEventListener('resize', () => {
-        if (body.classList.contains('menu-open')) {
-          triangle.style.setProperty('--menu-scale', coverScale());
-        }
+        if (body.classList.contains('menu-open')) closeMenu();
       });
 
       /* scroll: triângulo roda no sítio; letras ficam paradas,
