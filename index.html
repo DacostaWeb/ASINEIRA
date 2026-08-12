@@ -55,7 +55,11 @@
       padding-bottom: calc(var(--banner-height) + 60px);
     }
 
-    body.menu-open { overflow: hidden; }
+    html.menu-open,
+    body.menu-open {
+      overflow: hidden;
+      touch-action: none;
+    }
 
     a { color: inherit; }
 
@@ -1034,34 +1038,64 @@
         return (maxDist / rIn) * 1.08;
       }
 
+      const MENU_DUR_MS = 1100;
+      const html = document.documentElement;
+      let openLock = false;
+      let openingUntil = 0;
+      let lastInnerWidth = window.innerWidth;
+      let hitRect = { left: 0, right: 0, top: 0, bottom: 0 };
+
       function isMenuOpen() {
         return body.classList.contains('menu-open');
       }
 
-      let openLock = false;
+      function isOpening() {
+        return Date.now() < openingUntil;
+      }
+
+      function cacheHitRect() {
+        if (isMenuOpen() || isOpening()) return;
+        const r = triangle.getBoundingClientRect();
+        const pad = 20;
+        hitRect = {
+          left: r.left - pad,
+          right: r.right + pad,
+          top: r.top - pad,
+          bottom: r.bottom + pad
+        };
+      }
 
       function openMenu() {
         if (isMenuOpen() || openLock) return;
+        openingUntil = Date.now() + MENU_DUR_MS + 80;
         triangle.style.setProperty('--menu-scale', coverScale());
         body.classList.add('menu-open');
+        html.classList.add('menu-open');
         triangle.setAttribute('aria-expanded', 'true');
         menu.setAttribute('aria-hidden', 'false');
       }
 
       function closeMenu() {
+        if (!isMenuOpen()) return;
+        if (isOpening()) return;
         body.classList.remove('menu-open');
+        html.classList.remove('menu-open');
         triangle.setAttribute('aria-expanded', 'false');
         menu.setAttribute('aria-hidden', 'true');
         openLock = true;
-        setTimeout(() => { openLock = false; }, 450);
+        setTimeout(() => {
+          openLock = false;
+          cacheHitRect();
+        }, 700);
       }
 
       function hitsTriangle(x, y) {
-        const r = triangle.getBoundingClientRect();
-        const pad = 20;
-        return x >= r.left - pad && x <= r.right + pad &&
-               y >= r.top - pad && y <= r.bottom + pad;
+        if (isMenuOpen() || openLock || isOpening()) return false;
+        return x >= hitRect.left && x <= hitRect.right &&
+               y >= hitRect.top && y <= hitRect.bottom;
       }
+
+      cacheHitRect();
 
       /* rato: passar por cima abre já */
       triangle.addEventListener('pointerenter', openMenu);
@@ -1072,7 +1106,7 @@
 
       /* mobile: scroll / dedo que passe pelo triângulo abre o menu */
       function maybeOpenFromTouch(e) {
-        if (isMenuOpen()) return;
+        if (isMenuOpen() || openLock || isOpening()) return;
         const pts = e.touches || e.changedTouches;
         if (!pts) return;
         for (let i = 0; i < pts.length; i++) {
@@ -1085,20 +1119,28 @@
       document.addEventListener('touchstart', maybeOpenFromTouch, { passive: true });
       document.addEventListener('touchmove', maybeOpenFromTouch, { passive: true });
       document.addEventListener('pointermove', e => {
-        if (isMenuOpen() || e.pointerType === 'mouse') return;
+        if (isMenuOpen() || openLock || isOpening() || e.pointerType === 'mouse') return;
         if (hitsTriangle(e.clientX, e.clientY)) openMenu();
       }, { passive: true });
 
       closeBtn.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && body.classList.contains('menu-open')) closeMenu();
+        if (e.key === 'Escape' && isMenuOpen()) closeMenu();
       });
 
       /* links do menu fecham-no antes do scroll */
       menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
+      /* fechar só em mudança real de largura (rotação / janela).
+         ignorar altura (barra do browser) e o resize do overflow:hidden.
+         nunca interromper a animação de abrir. */
       window.addEventListener('resize', () => {
-        if (body.classList.contains('menu-open')) closeMenu();
+        const w = window.innerWidth;
+        const widthChanged = Math.abs(w - lastInnerWidth) > 50;
+        lastInnerWidth = w;
+        if (isOpening()) return;
+        cacheHitRect();
+        if (widthChanged && isMenuOpen()) closeMenu();
       });
 
       /* scroll: triângulo roda no sítio; letras ficam paradas,
@@ -1129,6 +1171,7 @@
       }
 
       window.addEventListener('scroll', () => {
+        if (isMenuOpen()) return;
         targetAngle = -window.scrollY * 0.18;
         if (!spinning) {
           spinning = true;
