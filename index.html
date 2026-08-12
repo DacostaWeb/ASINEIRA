@@ -458,6 +458,13 @@
       /* fechar: dobro da velocidade de abrir */
       transition: transform calc(var(--menu-dur) / 2) cubic-bezier(.6, .05, .25, 1) .12s;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    /* área de toque extra: hover / tap / scroll a passar por cima abre o menu */
+    .triangle::before {
+      content: "";
+      position: absolute;
+      inset: -20px;
     }
 
     body.menu-open .triangle {
@@ -1027,7 +1034,14 @@
         return (maxDist / rIn) * 1.08;
       }
 
+      function isMenuOpen() {
+        return body.classList.contains('menu-open');
+      }
+
+      let openLock = false;
+
       function openMenu() {
+        if (isMenuOpen() || openLock) return;
         triangle.style.setProperty('--menu-scale', coverScale());
         body.classList.add('menu-open');
         triangle.setAttribute('aria-expanded', 'true');
@@ -1038,9 +1052,43 @@
         body.classList.remove('menu-open');
         triangle.setAttribute('aria-expanded', 'false');
         menu.setAttribute('aria-hidden', 'true');
+        openLock = true;
+        setTimeout(() => { openLock = false; }, 450);
       }
 
+      function hitsTriangle(x, y) {
+        const r = triangle.getBoundingClientRect();
+        const pad = 20;
+        return x >= r.left - pad && x <= r.right + pad &&
+               y >= r.top - pad && y <= r.bottom + pad;
+      }
+
+      /* rato: passar por cima abre já */
+      triangle.addEventListener('pointerenter', openMenu);
+      triangle.addEventListener('mouseenter', openMenu);
+      /* tap leve: pointerdown, sem esperar pelo click */
+      triangle.addEventListener('pointerdown', openMenu);
       triangle.addEventListener('click', openMenu);
+
+      /* mobile: scroll / dedo que passe pelo triângulo abre o menu */
+      function maybeOpenFromTouch(e) {
+        if (isMenuOpen()) return;
+        const pts = e.touches || e.changedTouches;
+        if (!pts) return;
+        for (let i = 0; i < pts.length; i++) {
+          if (hitsTriangle(pts[i].clientX, pts[i].clientY)) {
+            openMenu();
+            return;
+          }
+        }
+      }
+      document.addEventListener('touchstart', maybeOpenFromTouch, { passive: true });
+      document.addEventListener('touchmove', maybeOpenFromTouch, { passive: true });
+      document.addEventListener('pointermove', e => {
+        if (isMenuOpen() || e.pointerType === 'mouse') return;
+        if (hitsTriangle(e.clientX, e.clientY)) openMenu();
+      }, { passive: true });
+
       closeBtn.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e => {
         if (e.key === 'Escape' && body.classList.contains('menu-open')) closeMenu();
