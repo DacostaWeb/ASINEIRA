@@ -51,7 +51,11 @@
       overflow-x: hidden;
       padding-bottom: var(--banner-height);
     }
-    body.menu-open { overflow: hidden; }
+    /* só no body: overflow no html corta o triângulo fixed no iOS */
+    body.menu-open {
+      overflow: hidden;
+      touch-action: none;
+    }
 
     a { color: inherit; }
 
@@ -297,6 +301,13 @@
       transform-origin: 41.7% 42.8%;
       transition: transform calc(var(--menu-dur) / 2) cubic-bezier(.6, .05, .25, 1) .12s;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: visible;
+    }
+    .triangle::before {
+      content: "";
+      position: absolute;
+      inset: -20px;
     }
     body.menu-open .triangle {
       transform: rotate(-108deg) scale(var(--menu-scale, 60));
@@ -315,18 +326,32 @@
 
     .menu {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
       z-index: 60;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       padding: min(9vh, 70px) 30px calc(var(--banner-height) + 90px);
       color: var(--cream);
+      background: transparent;
       visibility: hidden;
       pointer-events: none;
       overflow-y: auto;
+      transition: background 0s linear 0s;
     }
-    body.menu-open .menu { visibility: visible; pointer-events: auto; }
+    body.menu-open .menu {
+      visibility: visible;
+      pointer-events: auto;
+      background: var(--blue);
+      transition: background 0s linear 0.8s;
+    }
 
     .menu ol { list-style: none; padding: 0; max-width: 480px; margin: 0 auto; width: 100%; }
     .menu li {
@@ -652,18 +677,52 @@
       const dotsEl = document.getElementById('catDots');
 
       function coverScale() {
-        const r = triangle.getBoundingClientRect();
-        const cx = r.left + r.width * 0.417;
-        const cy = r.top + r.height * 0.428;
+        const w = triangle.offsetWidth;
+        const h = triangle.offsetHeight;
+        const vv = window.visualViewport;
+        const vw = Math.max(innerWidth, document.documentElement.clientWidth, vv ? vv.width : 0);
+        const vh = Math.max(innerHeight, document.documentElement.clientHeight, vv ? vv.height : 0);
+        const cs = getComputedStyle(triangle);
+        const left = parseFloat(cs.left) || 18;
+        const bottom = parseFloat(cs.bottom) || 80;
+        const top = vh - bottom - h;
+        const cx = left + w * 0.417;
+        const cy = top + h * 0.428;
         const corners = [
-          [0, 0], [innerWidth, 0], [0, innerHeight], [innerWidth, innerHeight]
+          [0, 0], [vw, 0], [0, vh], [vw, vh]
         ];
         const maxDist = Math.max(...corners.map(([x, y]) => Math.hypot(x - cx, y - cy)));
-        const rIn = r.width * 0.30;
-        return (maxDist / rIn) * 1.08;
+        const rIn = w * 0.30;
+        return (maxDist / rIn) * 1.25;
+      }
+
+      const MENU_DUR_MS = 1100;
+      let openLock = false;
+      let openingUntil = 0;
+      let lastInnerWidth = window.innerWidth;
+      let hitRect = { left: 0, right: 0, top: 0, bottom: 0 };
+
+      function isMenuOpen() {
+        return body.classList.contains('menu-open');
+      }
+      function isOpening() {
+        return Date.now() < openingUntil;
+      }
+      function cacheHitRect() {
+        if (isMenuOpen() || isOpening()) return;
+        const r = triangle.getBoundingClientRect();
+        const pad = 20;
+        hitRect = {
+          left: r.left - pad,
+          right: r.right + pad,
+          top: r.top - pad,
+          bottom: r.bottom + pad
+        };
       }
 
       function openMenu() {
+        if (isMenuOpen() || openLock) return;
+        openingUntil = Date.now() + MENU_DUR_MS + 80;
         triangle.style.setProperty('--menu-scale', coverScale());
         body.classList.add('menu-open');
         triangle.setAttribute('aria-expanded', 'true');
@@ -671,18 +730,59 @@
       }
 
       function closeMenu() {
+        if (!isMenuOpen()) return;
+        if (isOpening()) return;
         body.classList.remove('menu-open');
         triangle.setAttribute('aria-expanded', 'false');
         menu.setAttribute('aria-hidden', 'true');
+        openLock = true;
+        setTimeout(() => {
+          openLock = false;
+          cacheHitRect();
+        }, 700);
       }
 
+      function hitsTriangle(x, y) {
+        if (isMenuOpen() || openLock || isOpening()) return false;
+        return x >= hitRect.left && x <= hitRect.right &&
+               y >= hitRect.top && y <= hitRect.bottom;
+      }
+
+      cacheHitRect();
+      triangle.addEventListener('pointerenter', openMenu);
+      triangle.addEventListener('mouseenter', openMenu);
+      triangle.addEventListener('pointerdown', openMenu);
       triangle.addEventListener('click', openMenu);
+
+      function maybeOpenFromTouch(e) {
+        if (isMenuOpen() || openLock || isOpening()) return;
+        const pts = e.touches || e.changedTouches;
+        if (!pts) return;
+        for (let i = 0; i < pts.length; i++) {
+          if (hitsTriangle(pts[i].clientX, pts[i].clientY)) {
+            openMenu();
+            return;
+          }
+        }
+      }
+      document.addEventListener('touchstart', maybeOpenFromTouch, { passive: true });
+      document.addEventListener('touchmove', maybeOpenFromTouch, { passive: true });
+      document.addEventListener('pointermove', e => {
+        if (isMenuOpen() || openLock || isOpening() || e.pointerType === 'mouse') return;
+        if (hitsTriangle(e.clientX, e.clientY)) openMenu();
+      }, { passive: true });
+
       closeBtn.addEventListener('click', closeMenu);
       document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && body.classList.contains('menu-open')) closeMenu();
+        if (e.key === 'Escape' && isMenuOpen()) closeMenu();
       });
       window.addEventListener('resize', () => {
-        if (body.classList.contains('menu-open')) closeMenu();
+        const w = window.innerWidth;
+        const widthChanged = Math.abs(w - lastInnerWidth) > 50;
+        lastInnerWidth = w;
+        if (isOpening()) return;
+        cacheHitRect();
+        if (widthChanged && isMenuOpen()) closeMenu();
       });
 
       function goToCard(el) {
@@ -768,6 +868,7 @@
       }
 
       function onTurn() {
+        if (isMenuOpen()) return;
         const x = isCarousel() ? catalog.scrollLeft : window.scrollY;
         targetAngle = -x * 0.18;
         if (!spinning) {
