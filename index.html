@@ -79,7 +79,40 @@
       letter-spacing: .1em;
       gap: 12px;
     }
-    .sheet-head .where { opacity: .7; }
+    .sheet-head .brand {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sheet-head .where {
+      opacity: .7;
+      flex-shrink: 0;
+    }
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+    .lang-toggle button {
+      background: none;
+      border: none;
+      font: inherit;
+      color: inherit;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 4px 0;
+      opacity: .38;
+    }
+    .lang-toggle button[aria-pressed="true"] { opacity: 1; }
+    .lang-toggle .lang-sep { opacity: .38; }
+    @media (max-width: 760px) {
+      .sheet-head .where { display: none; }
+    }
 
     /* ==========================================================
        CATÁLOGO — 1 coluna móvel / 3 colunas desktop
@@ -478,126 +511,131 @@
 <body>
 
   <header class="sheet-head">
-    <span>a Sineira — Associação &amp; Espaço Cultural</span>
+    <span class="brand" data-i18n="brand">a Sineira — Associação &amp; Espaço Cultural</span>
     <span class="where">Retorta · Vila do Conde</span>
+    <div class="lang-toggle" role="group" aria-label="PT — EN">
+      <button type="button" id="langPt" aria-pressed="true">PT</button>
+      <span class="lang-sep" aria-hidden="true">—</span>
+      <button type="button" id="langEn" aria-pressed="false">EN</button>
+    </div>
   </header>
 
   <div class="catalog-wrap">
-    <button class="cat-nav prev" id="catPrev" type="button" aria-label="Coluna anterior">‹</button>
-    <button class="cat-nav next" id="catNext" type="button" aria-label="Coluna seguinte">›</button>
+    <button class="cat-nav prev" id="catPrev" type="button" data-i18n-aria="prevCol" aria-label="Coluna anterior">‹</button>
+    <button class="cat-nav next" id="catNext" type="button" data-i18n-aria="nextCol" aria-label="Coluna seguinte">›</button>
 
     <div class="catalog" id="catalog">
 
       <article class="card" id="intro">
-        <p class="id">00 · Comunidade</p>
+        <p class="id" data-i18n="introId">00 · Comunidade</p>
         <div class="thumb">
           <video id="bg-video" src="pop.mp4" autoplay muted loop playsinline></video>
-          <button class="video-toggle" id="videoToggle" type="button" aria-label="Ativar / desativar som do vídeo" aria-pressed="false"></button>
+          <button class="video-toggle" id="videoToggle" type="button" data-i18n-aria="videoSound" aria-label="Ativar / desativar som do vídeo" aria-pressed="false"></button>
         </div>
-        <h2>Está a nascer uma comunidade para as artes…</h2>
-        <p>Formação, criação e apresentação no complexo da antiga Igreja de Retorta. Um ponto de encontro intergeracional, com as artes e com a natureza.</p>
+        <h2 data-i18n="introH2">Está a nascer uma comunidade para as artes…</h2>
+        <p data-i18n="introP">Formação, criação e apresentação no complexo da antiga Igreja de Retorta. Um ponto de encontro intergeracional, com as artes e com a natureza.</p>
       </article>
 
       <article class="card" id="formacao">
-        <p class="id">01 · Formação</p>
-        <div class="thumb"><img src="imagem 1.png" alt="Crianças em atividade de formação em palco" loading="lazy"></div>
-        <h2>formação</h2>
-        <p>Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.</p>
+        <p class="id" data-i18n="formId">01 · Formação</p>
+        <div class="thumb"><img src="imagem 1.png" data-i18n-alt="alt1" alt="Crianças em atividade de formação em palco" loading="lazy"></div>
+        <h2 data-i18n="formH2">formação</h2>
+        <p data-i18n="formP1">Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.</p>
         <ul>
-          <li>Aulas regulares</li>
-          <li>Workshops</li>
-          <li>Cursos intensivos</li>
-          <li>Campo de férias</li>
+          <li data-i18n="formLi1">Aulas regulares</li>
+          <li data-i18n="formLi2">Workshops</li>
+          <li data-i18n="formLi3">Cursos intensivos</li>
+          <li data-i18n="formLi4">Campo de férias</li>
         </ul>
-        <p>Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
+        <p data-i18n="formP2">Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
       </article>
 
       <article class="card" id="criacao">
-        <p class="id">02 · Criação</p>
-        <div class="thumb"><img src="imagem 2.png" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy"></div>
-        <h2>criação</h2>
-        <p>Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.</p>
+        <p class="id" data-i18n="criaId">02 · Criação</p>
+        <div class="thumb"><img src="imagem 2.png" data-i18n-alt="alt2" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy"></div>
+        <h2 data-i18n="criaH2">criação</h2>
+        <p data-i18n="criaP">Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.</p>
         <ul>
-          <li>Residências artísticas com alojamento</li>
-          <li>Estúdio polivalente</li>
-          <li>Estúdio de dança profissional</li>
-          <li>Igreja: espaço multiusos</li>
+          <li data-i18n="criaLi1">Residências artísticas com alojamento</li>
+          <li data-i18n="criaLi2">Estúdio polivalente</li>
+          <li data-i18n="criaLi3">Estúdio de dança profissional</li>
+          <li data-i18n="criaLi4">Igreja: espaço multiusos</li>
         </ul>
       </article>
 
       <article class="card" id="apresentacao">
-        <p class="id">03 · Apresentação</p>
-        <div class="thumb"><img src="imagem 3.png" alt="Bailarina em ensaio com estrutura de madeira" loading="lazy"></div>
-        <h2>apresentação</h2>
-        <p>Divulgamos projetos artísticos no estúdio/palco e na igreja.</p>
+        <p class="id" data-i18n="apresId">03 · Apresentação</p>
+        <div class="thumb"><img src="imagem 3.png" data-i18n-alt="alt3" alt="Bailarina em ensaio com estrutura de madeira" loading="lazy"></div>
+        <h2 data-i18n="apresH2">apresentação</h2>
+        <p data-i18n="apresP">Divulgamos projetos artísticos no estúdio/palco e na igreja.</p>
         <ul>
-          <li>Espetáculos</li>
-          <li>Sessões de cinema</li>
-          <li>Exposições e convívios</li>
-          <li>Festival anual de dança e música</li>
+          <li data-i18n="apresLi1">Espetáculos</li>
+          <li data-i18n="apresLi2">Sessões de cinema</li>
+          <li data-i18n="apresLi3">Exposições e convívios</li>
+          <li data-i18n="apresLi4">Festival anual de dança e música</li>
         </ul>
       </article>
 
       <article class="card" id="instituicao">
-        <p class="id">04 · O espaço</p>
-        <h2>Antiga Igreja de Retorta</h2>
-        <p>Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
+        <p class="id" data-i18n="espId">04 · O espaço</p>
+        <h2 data-i18n="espH2">Antiga Igreja de Retorta</h2>
+        <p data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
         <ul>
-          <li>Estúdio / palco</li>
-          <li>Igreja: espaço multiusos</li>
-          <li>Alojamento: residências artísticas</li>
-          <li>Restauração · estacionamento</li>
-          <li>Floresta: percursos de lazer e pedagógicos</li>
-          <li>Clareira: espaço para festival</li>
+          <li data-i18n="espLi1">Estúdio / palco</li>
+          <li data-i18n="espLi2">Igreja: espaço multiusos</li>
+          <li data-i18n="espLi3">Alojamento: residências artísticas</li>
+          <li data-i18n="espLi4">Restauração · estacionamento</li>
+          <li data-i18n="espLi5">Floresta: percursos de lazer e pedagógicos</li>
+          <li data-i18n="espLi6">Clareira: espaço para festival</li>
         </ul>
       </article>
 
       <article class="card" id="como-chegar">
-        <p class="id">05 · Como chegar</p>
-        <h2>Acessos</h2>
+        <p class="id" data-i18n="chegarId">05 · Como chegar</p>
+        <h2 data-i18n="chegarH2">Acessos</h2>
         <table class="dist-table">
           <thead>
-            <tr><th>destino</th><th>a pé</th><th>carro</th></tr>
+            <tr><th data-i18n="thDest">destino</th><th data-i18n="thFoot">a pé</th><th data-i18n="thCar">carro</th></tr>
           </thead>
           <tbody>
-            <tr><td>Ponte de Retorta / Estação Aquícola</td><td>5 min</td><td>1 min</td></tr>
-            <tr><td>Escolas Secundária e Básica / Escola Profissional</td><td>14 min</td><td>3 min</td></tr>
-            <tr><td>Metro Vila do Conde</td><td>24 min</td><td>4 min</td></tr>
+            <tr><td data-i18n="row1">Ponte de Retorta / Estação Aquícola</td><td>5 min</td><td>1 min</td></tr>
+            <tr><td data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</td><td>14 min</td><td>3 min</td></tr>
+            <tr><td data-i18n="row3">Metro Vila do Conde</td><td>24 min</td><td>4 min</td></tr>
           </tbody>
         </table>
         <ul>
-          <li>Metro Santa Clara / V. do Conde — 5–15 min</li>
-          <li>Centro histórico — 10–20 min</li>
-          <li>Praias — 20–30 min</li>
-          <li>Metro Trindade / Porto — 40–60 min</li>
-          <li>Aeroporto Sá Carneiro — 20–50 min</li>
+          <li data-i18n="chegarLi1">Metro Santa Clara / V. do Conde — 5–15 min</li>
+          <li data-i18n="chegarLi2">Centro histórico — 10–20 min</li>
+          <li data-i18n="chegarLi3">Praias — 20–30 min</li>
+          <li data-i18n="chegarLi4">Metro Trindade / Porto — 40–60 min</li>
+          <li data-i18n="chegarLi5">Aeroporto Sá Carneiro — 20–50 min</li>
         </ul>
       </article>
 
       <article class="card" id="eventos">
-        <p class="id">06 · Eventos</p>
-        <h2>Eventos</h2>
-        <p>Próximos, últimos e arquivo — brevemente.</p>
-        <p>Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.</p>
+        <p class="id" data-i18n="evId">06 · Eventos</p>
+        <h2 data-i18n="evH2">Eventos</h2>
+        <p data-i18n="evP1">Próximos, últimos e arquivo — brevemente.</p>
+        <p data-i18n="evP2">Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.</p>
       </article>
 
       <article class="card fill" id="amigos">
-        <p class="id">07 · Amigos</p>
-        <h2>Amigo da Sineira</h2>
-        <p>Adere e torna-te um “Amigo da Sineira”:</p>
+        <p class="id" data-i18n="amId">07 · Amigos</p>
+        <h2 data-i18n="amH2">Amigo da Sineira</h2>
+        <p data-i18n="amP">Adere e torna-te um “Amigo da Sineira”:</p>
         <ul>
-          <li>Acesso gratuito a todos os eventos</li>
-          <li>Desconto em aulas regulares, workshops e cursos intensivos</li>
-          <li>Surpresas mensais</li>
+          <li data-i18n="amLi1">Acesso gratuito a todos os eventos</li>
+          <li data-i18n="amLi2">Desconto em aulas regulares, workshops e cursos intensivos</li>
+          <li data-i18n="amLi3">Surpresas mensais</li>
         </ul>
-        <a class="cta" href="mailto:ola@asineira.pt?subject=Quero%20ser%20Amigo%20da%20Sineira">Quero aderir</a>
+        <a class="cta" id="amigoCta" href="mailto:ola@asineira.pt?subject=Quero%20ser%20Amigo%20da%20Sineira" data-i18n="amCta">Quero aderir</a>
       </article>
 
       <article class="card" id="contactos">
-        <p class="id">08 · Contactos</p>
-        <h2>Fala connosco</h2>
-        <p>a Sineira — Associação Cultural · NIF 518858359</p>
-        <p>Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
+        <p class="id" data-i18n="coId">08 · Contactos</p>
+        <h2 data-i18n="coH2">Fala connosco</h2>
+        <p data-i18n="coLegal">a Sineira — Associação Cultural · NIF 518858359</p>
+        <p data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
         Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
         <p><a href="mailto:ola@asineira.pt">ola@asineira.pt</a><br>
         <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a></p>
@@ -608,7 +646,7 @@
     <div class="cat-dots" id="catDots" aria-hidden="true"></div>
   </div>
 
-  <button class="triangle" id="menuTriangle" aria-label="Abrir menu" aria-expanded="false">
+  <button class="triangle" id="menuTriangle" data-i18n-aria="openMenu" aria-label="Abrir menu" aria-expanded="false">
     <svg viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <clipPath id="triClip" clipPathUnits="userSpaceOnUse">
@@ -627,22 +665,22 @@
 
   <nav class="menu" id="menu" aria-hidden="true">
     <ol>
-      <li class="m1" style="--d: .75s"><a href="#formacao"><span class="n">1.</span><span class="label">formação</span><span class="arrow">→</span></a></li>
-      <li class="m2" style="--d: .85s"><a href="#criacao"><span class="n">2.</span><span class="label">criação</span><span class="arrow">→</span></a></li>
-      <li class="m3" style="--d: .95s"><a href="#apresentacao"><span class="n">3.</span><span class="label">apresentação</span><span class="arrow">→</span></a></li>
-      <li class="m4" style="--d: 1.05s"><a href="#como-chegar"><span class="n">4.</span><span class="label">como chegar</span><span class="arrow">→</span></a></li>
-      <li class="m5" style="--d: 1.15s"><a href="#eventos"><span class="n">5.</span><span class="label">eventos</span><span class="arrow">→</span></a></li>
+      <li class="m1" style="--d: .75s"><a href="#formacao"><span class="n">1.</span><span class="label" data-i18n="formH2">formação</span><span class="arrow">→</span></a></li>
+      <li class="m2" style="--d: .85s"><a href="#criacao"><span class="n">2.</span><span class="label" data-i18n="criaH2">criação</span><span class="arrow">→</span></a></li>
+      <li class="m3" style="--d: .95s"><a href="#apresentacao"><span class="n">3.</span><span class="label" data-i18n="apresH2">apresentação</span><span class="arrow">→</span></a></li>
+      <li class="m4" style="--d: 1.05s"><a href="#como-chegar"><span class="n">4.</span><span class="label" data-i18n="menuChegar">como chegar</span><span class="arrow">→</span></a></li>
+      <li class="m5" style="--d: 1.15s"><a href="#eventos"><span class="n">5.</span><span class="label" data-i18n="evH2">eventos</span><span class="arrow">→</span></a></li>
     </ol>
     <div class="pills">
-      <a href="#formacao">🤸 atividades</a>
-      <a href="#como-chegar">📍 como chegar</a>
-      <a href="#eventos">📅 eventos</a>
-      <a href="#instituicao">🏠 instituição</a>
-      <a href="#contactos">☎️ contactos</a>
-      <a href="#amigos">💳 amigos</a>
+      <a href="#formacao" data-i18n="pillAtiv">🤸 atividades</a>
+      <a href="#como-chegar" data-i18n="pillChegar">📍 como chegar</a>
+      <a href="#eventos" data-i18n="pillEv">📅 eventos</a>
+      <a href="#instituicao" data-i18n="pillInst">🏠 instituição</a>
+      <a href="#contactos" data-i18n="pillCo">☎️ contactos</a>
+      <a href="#amigos" data-i18n="pillAm">💳 amigos</a>
     </div>
     <p class="vers">
-      experiências:
+      <span data-i18n="experiencias">experiências</span>:
       <a href="./">1</a>
       <a href="teste2/">2</a>
       <a href="teste3/">3</a>
@@ -652,7 +690,7 @@
     </p>
   </nav>
 
-  <button class="menu-close" id="menuClose" aria-label="Fechar menu">
+  <button class="menu-close" id="menuClose" data-i18n-aria="closeMenu" aria-label="Fechar menu">
     <svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
       <path d="M32.8795 0.0325423L37.6193 4.77237L23.5656 18.8261L37.5862 32.8467L32.8464 37.5865L18.8258 23.5659L4.77203 37.6197L0.0322052 32.8799L14.086 18.8261L-0.000940464 4.73922L4.73888 -0.000603347L18.8258 14.0863L32.8795 0.0325423Z"/>
     </svg>
@@ -660,7 +698,7 @@
 
   <div class="banner">
     <div class="track">
-      <span class="marquee-text" style="--text: 'Adere já e torna-te um &quot;Amigo da Sineira&quot; para descontos e surpresas mensais!';"></span>
+      <span class="marquee-text" id="marqueeText" style="--text: 'Adere já e torna-te um &quot;Amigo da Sineira&quot; para descontos e surpresas mensais!';"></span>
     </div>
   </div>
 
@@ -675,6 +713,222 @@
       const prevBtn = document.getElementById('catPrev');
       const nextBtn = document.getElementById('catNext');
       const dotsEl = document.getElementById('catDots');
+      const langPt = document.getElementById('langPt');
+      const langEn = document.getElementById('langEn');
+      const marqueeText = document.getElementById('marqueeText');
+      const amigoCta = document.getElementById('amigoCta');
+      const metaDesc = document.querySelector('meta[name="description"]');
+
+      const I18N = {
+        pt: {
+          title: 'a Sineira — Associação & Espaço Cultural',
+          desc: 'a Sineira — Associação e Espaço Cultural em Retorta, Vila do Conde. Formação, criação e apresentação nas artes.',
+          brand: 'a Sineira — Associação & Espaço Cultural',
+          prevCol: 'Coluna anterior',
+          nextCol: 'Coluna seguinte',
+          videoSound: 'Ativar / desativar som do vídeo',
+          openMenu: 'Abrir menu',
+          closeMenu: 'Fechar menu',
+          introId: '00 · Comunidade',
+          introH2: 'Está a nascer uma comunidade para as artes…',
+          introP: 'Formação, criação e apresentação no complexo da antiga Igreja de Retorta. Um ponto de encontro intergeracional, com as artes e com a natureza.',
+          formId: '01 · Formação',
+          formH2: 'formação',
+          formP1: 'Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.',
+          formLi1: 'Aulas regulares',
+          formLi2: 'Workshops',
+          formLi3: 'Cursos intensivos',
+          formLi4: 'Campo de férias',
+          formP2: 'Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.',
+          criaId: '02 · Criação',
+          criaH2: 'criação',
+          criaP: 'Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.',
+          criaLi1: 'Residências artísticas com alojamento',
+          criaLi2: 'Estúdio polivalente',
+          criaLi3: 'Estúdio de dança profissional',
+          criaLi4: 'Igreja: espaço multiusos',
+          apresId: '03 · Apresentação',
+          apresH2: 'apresentação',
+          apresP: 'Divulgamos projetos artísticos no estúdio/palco e na igreja.',
+          apresLi1: 'Espetáculos',
+          apresLi2: 'Sessões de cinema',
+          apresLi3: 'Exposições e convívios',
+          apresLi4: 'Festival anual de dança e música',
+          espId: '04 · O espaço',
+          espH2: 'Antiga Igreja de Retorta',
+          espP: 'Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².',
+          espLi1: 'Estúdio / palco',
+          espLi2: 'Igreja: espaço multiusos',
+          espLi3: 'Alojamento: residências artísticas',
+          espLi4: 'Restauração · estacionamento',
+          espLi5: 'Floresta: percursos de lazer e pedagógicos',
+          espLi6: 'Clareira: espaço para festival',
+          chegarId: '05 · Como chegar',
+          chegarH2: 'Acessos',
+          thDest: 'destino',
+          thFoot: 'a pé',
+          thCar: 'carro',
+          row1: 'Ponte de Retorta / Estação Aquícola',
+          row2: 'Escolas Secundária e Básica / Escola Profissional',
+          row3: 'Metro Vila do Conde',
+          chegarLi1: 'Metro Santa Clara / V. do Conde — 5–15 min',
+          chegarLi2: 'Centro histórico — 10–20 min',
+          chegarLi3: 'Praias — 20–30 min',
+          chegarLi4: 'Metro Trindade / Porto — 40–60 min',
+          chegarLi5: 'Aeroporto Sá Carneiro — 20–50 min',
+          evId: '06 · Eventos',
+          evH2: 'eventos',
+          evP1: 'Próximos, últimos e arquivo — brevemente.',
+          evP2: 'Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.',
+          amId: '07 · Amigos',
+          amH2: 'Amigo da Sineira',
+          amP: 'Adere e torna-te um “Amigo da Sineira”:',
+          amLi1: 'Acesso gratuito a todos os eventos',
+          amLi2: 'Desconto em aulas regulares, workshops e cursos intensivos',
+          amLi3: 'Surpresas mensais',
+          amCta: 'Quero aderir',
+          amSubject: 'Quero ser Amigo da Sineira',
+          coId: '08 · Contactos',
+          coH2: 'Fala connosco',
+          coLegal: 'a Sineira — Associação Cultural · NIF 518858359',
+          coAddr: 'Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>\n        Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
+          menuChegar: 'como chegar',
+          pillAtiv: '🤸 atividades',
+          pillChegar: '📍 como chegar',
+          pillEv: '📅 eventos',
+          pillInst: '🏠 instituição',
+          pillCo: '☎️ contactos',
+          pillAm: '💳 amigos',
+          experiencias: 'experiências',
+          marquee: 'Adere já e torna-te um "Amigo da Sineira" para descontos e surpresas mensais!',
+          alt1: 'Crianças em atividade de formação em palco',
+          alt2: 'Músico com guitarra rodeado de crianças em palco',
+          alt3: 'Bailarina em ensaio com estrutura de madeira'
+        },
+        en: {
+          title: 'a Sineira — Association & Cultural Space',
+          desc: 'a Sineira — Cultural Association and Space in Retorta, Vila do Conde. Training, creation and presentation in the arts.',
+          brand: 'a Sineira — Association & Cultural Space',
+          prevCol: 'Previous column',
+          nextCol: 'Next column',
+          videoSound: 'Mute / unmute video',
+          openMenu: 'Open menu',
+          closeMenu: 'Close menu',
+          introId: '00 · Community',
+          introH2: 'A community for the arts is being born…',
+          introP: 'Training, creation and presentation at the former Retorta Church complex. An intergenerational meeting point, with the arts and with nature.',
+          formId: '01 · Training',
+          formH2: 'training',
+          formP1: 'Regular classes “a Sineirinha”, enrolments open! Up to age 14.',
+          formLi1: 'Regular classes',
+          formLi2: 'Workshops',
+          formLi3: 'Intensive courses',
+          formLi4: 'Holiday camp',
+          formP2: 'Dance, music, theatre, architecture, visual arts and fine arts. Programmes for babies, children, young people, adults and seniors.',
+          criaId: '02 · Creation',
+          criaH2: 'creation',
+          criaP: 'Artistic residencies and support for creation, at the former Retorta Church complex.',
+          criaLi1: 'Artistic residencies with lodging',
+          criaLi2: 'Multipurpose studio',
+          criaLi3: 'Professional dance studio',
+          criaLi4: 'Church: multipurpose space',
+          apresId: '03 · Presentation',
+          apresH2: 'presentation',
+          apresP: 'We present artistic projects in the studio/stage and in the church.',
+          apresLi1: 'Performances',
+          apresLi2: 'Film screenings',
+          apresLi3: 'Exhibitions and gatherings',
+          apresLi4: 'Annual dance and music festival',
+          espId: '04 · The space',
+          espH2: 'Former Retorta Church',
+          espP: 'Founded in 2025, a Sineira — Cultural Association is a collective, and also a physical space. Approximate area: 18,000 m².',
+          espLi1: 'Studio / stage',
+          espLi2: 'Church: multipurpose space',
+          espLi3: 'Lodging: artistic residencies',
+          espLi4: 'Food · parking',
+          espLi5: 'Forest: leisure and educational trails',
+          espLi6: 'Clearing: festival space',
+          chegarId: '05 · Getting here',
+          chegarH2: 'Access',
+          thDest: 'destination',
+          thFoot: 'on foot',
+          thCar: 'by car',
+          row1: 'Retorta Bridge / Aquaculture Station',
+          row2: 'Secondary and primary schools / Vocational school',
+          row3: 'Vila do Conde metro',
+          chegarLi1: 'Santa Clara / V. do Conde metro — 5–15 min',
+          chegarLi2: 'Historic centre — 10–20 min',
+          chegarLi3: 'Beaches — 20–30 min',
+          chegarLi4: 'Trindade / Porto metro — 40–60 min',
+          chegarLi5: 'Sá Carneiro Airport — 20–50 min',
+          evId: '06 · Events',
+          evH2: 'events',
+          evP1: 'Upcoming, recent and archive — coming soon.',
+          evP2: 'Follow us for the first activities: regular classes, workshops, holiday camps, film screenings and nature experiences.',
+          amId: '07 · Friends',
+          amH2: 'Friend of a Sineira',
+          amP: 'Join and become a “Friend of a Sineira”:',
+          amLi1: 'Free access to all events',
+          amLi2: 'Discount on regular classes, workshops and intensive courses',
+          amLi3: 'Monthly surprises',
+          amCta: 'I want to join',
+          amSubject: 'I want to be a Friend of a Sineira',
+          coId: '08 · Contacts',
+          coH2: 'Get in touch',
+          coLegal: 'a Sineira — Cultural Association · Tax ID 518858359',
+          coAddr: 'HQ: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>\n        Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
+          menuChegar: 'getting here',
+          pillAtiv: '🤸 activities',
+          pillChegar: '📍 getting here',
+          pillEv: '📅 events',
+          pillInst: '🏠 institution',
+          pillCo: '☎️ contacts',
+          pillAm: '💳 friends',
+          experiencias: 'experiments',
+          marquee: 'Join now and become a "Friend of a Sineira" for discounts and monthly surprises!',
+          alt1: 'Children in a training activity on stage',
+          alt2: 'Musician with guitar surrounded by children on stage',
+          alt3: 'Dancer in rehearsal with a wooden structure'
+        }
+      };
+
+      function applyLang(lang) {
+        const t = I18N[lang] || I18N.pt;
+        document.documentElement.lang = lang;
+        document.title = t.title;
+        if (metaDesc) metaDesc.setAttribute('content', t.desc);
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const v = t[el.getAttribute('data-i18n')];
+          if (v != null) el.textContent = v;
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach(el => {
+          const v = t[el.getAttribute('data-i18n-html')];
+          if (v != null) el.innerHTML = v;
+        });
+        document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+          const v = t[el.getAttribute('data-i18n-aria')];
+          if (v != null) el.setAttribute('aria-label', v);
+        });
+        document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+          const v = t[el.getAttribute('data-i18n-alt')];
+          if (v != null) el.setAttribute('alt', v);
+        });
+        if (marqueeText) marqueeText.style.setProperty('--text', JSON.stringify(t.marquee));
+        if (amigoCta) amigoCta.href = 'mailto:ola@asineira.pt?subject=' + encodeURIComponent(t.amSubject);
+        langPt.setAttribute('aria-pressed', String(lang === 'pt'));
+        langEn.setAttribute('aria-pressed', String(lang === 'en'));
+        try { localStorage.setItem('sineira-lang', lang); } catch (e) {}
+      }
+
+      langPt.addEventListener('click', () => applyLang('pt'));
+      langEn.addEventListener('click', () => applyLang('en'));
+      let startLang = 'pt';
+      try {
+        const saved = localStorage.getItem('sineira-lang');
+        if (saved === 'en' || saved === 'pt') startLang = saved;
+      } catch (e) {}
+      applyLang(startLang);
+
 
       function coverScale() {
         const w = triangle.offsetWidth;
