@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>a Sineira — teste 6</title>
+  <meta name="description" content="a Sineira — Associação e Espaço Cultural em Retorta, Vila do Conde. Formação, criação e apresentação nas artes.">
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+
+  <style>
+    /* ==========================================================
+       FONTE
+       ========================================================== */
+    @font-face {
+      font-family: "Nimbus";
+      src: url("../fonts/NimbusSanL-Regu.ttf") format("truetype");
+      font-weight: 400; font-style: normal;
+    }
+    @font-face {
+      font-family: "Nimbus";
+      src: url("../fonts/NimbusSanL-Bold.ttf") format("truetype");
+      font-weight: 700; font-style: normal;
+    }
+    @font-face {
+      font-family: "Nimbus";
+      src: url("../fonts/NimbusSanL-ReguItal.ttf") format("truetype");
+      font-weight: 400; font-style: italic;
+    }
+
+    /* ==========================================================
+       PALETA — apenas as duas cores universais do projeto.
+       ========================================================== */
+    :root {
+      --blue:  #003C78; /* cor principal / fundo do banner / triângulo grande */
+      --cream: #F2E7A9; /* cor secundária / texto do banner / fundo da página */
+      --banner-height: 70px;
+      --menu-dur: 1.1s;
+      --pad: clamp(40px, 5vw, 48px);   /* margem lateral única para todo o conteúdo */
+      --container: 1120px;             /* largura máxima única */
+      --indent: 44px;                  /* indentação do texto sob os títulos numerados */
+    }
+
+    * { margin: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    html, body {
+      background: var(--cream);
+      color: var(--blue);
+      font-family: "Nimbus", serif;
+    }
+
+    body {
+      overflow-x: hidden;
+      padding-bottom: calc(var(--banner-height) + 60px);
+    }
+
+    body.menu-open { overflow: hidden; }
+
+    a { color: inherit; }
+
+    /* ==========================================================
+       HERO — vídeo pequeno emoldurado + unmute
+       ========================================================== */
+    .hero {
+      padding-top: clamp(40px, 7vh, 72px);
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero .frame {
+      position: relative;
+      width: min(64vw, 380px);
+      /* border: 1.5px solid var(--blue); */
+      line-height: 0;
+    }
+
+    .hero video {
+      width: 100%;
+      height: auto;
+      display: block;
+  /*     mix-blend-mode: overlay; */
+    }
+
+    .video-toggle {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 50%;
+      background: var(--blue);
+      cursor: pointer;
+      padding: 7px;
+      line-height: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .video-toggle svg { width: 100%; height: 100%; display: block; }
+
+    /* ==========================================================
+       HEADLINE + WORDMARK (SVG_gator_final, loop infinito)
+       ========================================================== */
+    .intro {
+      text-align: center;
+      padding: clamp(80px, 30vh, 200px) var(--pad) 0;
+    }
+
+    .intro h1 {
+      font-size: clamp(17px, 3vw, 22px);
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: 1.4;
+      letter-spacing: .03em;
+      max-width: 18em;
+      margin: 0 auto;
+    }
+
+    .wordmark {
+      display: block;
+      width: min(40vw, 250px);
+      margin: clamp(32px, 24vh, 200px) auto clamp(100px, 24vh, 200px);
+    }
+    .wordmark path,
+    .wordmark rect { fill: var(--blue); }
+
+    /* ==========================================================
+       SECÇÕES 1-3 (imagem duotone + título numerado + acordeão)
+       ========================================================== */
+    .activities {
+      max-width: var(--container);
+      margin: 0 auto;
+    }
+
+    .activity {padding-bottom: clamp(64px, 10vh, 96px);}
+
+    .photo {
+      position: relative;
+      background: transparent;
+      overflow: hidden;
+    }
+    .photo img {
+      width: 100%;
+      height: auto;
+      display: block;
+      /* filter: grayscale(1) contrast(1.05); */
+      /* mix-blend-mode: screen; */
+    }
+    .photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--cream);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    .activity .row {
+      display: flex;
+      align-items: baseline;
+      padding: 28px var(--pad) 20px;
+    }
+
+    .activity .num {
+      font-size: clamp(26px, 2.2vw, 26px);
+      font-weight: 400;
+      min-width: var(--indent);
+      flex-shrink: 0;
+    }
+
+    .activity h2 {
+      font-size: clamp(26px, 3.2vw, 40px);
+      font-weight: 400;
+      flex: 1;
+    }
+
+    /* estilos distintos por secção, como no protótipo */
+    #formacao h2, #formacao .num      { font-style: italic; }
+    #criacao h2                       { letter-spacing: .45em; }
+    #apresentacao h2, #apresentacao .num {font-weight: 700;}
+
+    .activity .toggle {
+      background: none;
+      border: none;
+      color: var(--blue);
+      font-family: inherit;
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 2px;
+      margin-left: 16px;
+      transition: transform .35s ease;
+      flex-shrink: 0;
+    }
+    .activity.open .toggle { transform: rotate(45deg); }
+
+    /* texto alinhado com o início do título (depois do número) */
+    .activity .blurb {
+      padding: 0 var(--pad);
+      margin-left: var(--indent);
+      font-size: 12.5px;
+      font-weight: 700;
+      line-height: 1.5;
+      max-width: 30em;
+    }
+
+    .activity .more {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height .5s ease;
+      padding: 0 var(--pad);
+      margin-left: var(--indent);
+    }
+    .activity.open .more { max-height: 400px; }
+    .activity .more p {
+      padding: 10px 0 4px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      max-width: 32em;
+    }
+
+    /* desktop: os três títulos passam a 3 colunas */
+    @media (min-width: 900px) {
+      .activities {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        padding: 0 var(--pad);
+      }
+      .activity .row {
+        padding-left: 0;
+        padding-right: 0;
+        min-height: 66px; /* 1 linha de título: linhas seguintes alinham entre colunas */
+        white-space: nowrap;
+      }
+      .activity .blurb,
+      .activity .more { padding-left: 0; padding-right: 0; }
+      .photo img { aspect-ratio: 4 / 3; object-fit: cover; }
+
+      /* títulos dimensionados para caberem numa linha na coluna */
+      .activity h2 { font-size: clamp(20px, 1.6vw, 27px); }
+      .activity .num { font-size: clamp(15px, 1.6vw, 20px); }
+      .activity .toggle { font-size: clamp(20px, 2.1vw, 27px); }
+      #criacao h2 { letter-spacing: .32em; }
+    }
+
+    /* telemóvel / ecrãs estreitos: imagens a largura total */
+    @media (max-width: 799px) {
+      .photo,
+      .aerial,
+      .dist-map {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+      }
+      .aerial {
+        border-left: none;
+        border-right: none;
+      }
+      .hero .frame {
+        width: min(72vw, 280px);
+        max-width: 280px;
+      }
+    }
+
+    /* ==========================================================
+       SECÇÕES DE TEXTO (o espaço, como chegar, eventos, amigos, contactos)
+       ========================================================== */
+    .txt {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: clamp(56px, 9vh, 88px) var(--pad) clamp(32px, 5vh, 52px);
+      /* border-top: 1.5px solid var(--blue); */
+    }
+
+    .txt h3 {
+      font-size: clamp(18px, 2.4vw, 26px);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: clamp(20px, 3vh, 30px);
+    }
+
+    .txt p {
+      font-size: 13.5px;
+      line-height: 1.65;
+      max-width: 60ch;
+      margin-bottom: 16px;
+    }
+
+    .txt ul {
+      list-style: none;
+      padding: 0;
+      font-size: 13.5px;
+      line-height: 1.9;
+      max-width: 60ch;
+      margin-bottom: 16px;
+    }
+    .txt ul li::before { content: "> "; font-weight: 700; }
+
+    .txt .cols {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0 48px;
+    }
+    @media (min-width: 700px) {
+      .txt .cols { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ==========================================================
+       COMO CHEGAR — tabela / infográfico / vista aérea
+       ========================================================== */
+    .dist-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .dtab {
+      border: 1.5px solid var(--blue);
+      border-radius: 99px;
+      background: none;
+      color: var(--blue);
+      font-family: inherit;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .dtab:hover { background: var(--blue); color: var(--cream); }
+    .dtab.active { background: var(--blue); color: var(--cream); }
+
+    .dist-table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 620px;
+      font-size: 13.5px;
+    }
+    .dist-table th, .dist-table td {
+      border: 1.5px solid var(--blue);
+      padding: 9px 12px;
+      text-align: left;
+    }
+    .dist-table th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .dist-table td:nth-child(2),
+    .dist-table td:nth-child(3) {
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .aerial {
+      position: relative;
+      /* max-width: 720px; */
+      border: 1.5px solid var(--blue);
+      line-height: 0;
+    }
+    .aerial img { width: 100%; height: auto; display: block; }
+    .atag {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      background: var(--cream);
+      color: var(--blue);
+      border: 1.5px solid var(--blue);
+      border-radius: 14px;
+      font-size: 11.5px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+    .atag .car {
+      font-size: 10.5px;
+      font-weight: 400;
+    }
+    .atag.sineira {
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      border-radius: 99px;
+      font-size: 12.5px;
+    }
+    .atag.sineira svg {
+      width: 17px;
+      height: auto;
+      display: block;
+    }
+    .aerial-note {
+      font-size: 11.5px;
+      margin-top: 10px;
+      opacity: .7;
+    }
+
+    .dist-map {
+      width: 100%;
+      max-width: 640px;
+      height: auto;
+      display: block;
+      font-family: "Nimbus", serif;
+    }
+    .dist-map text { fill: var(--blue); }
+    .map-ring   { font-size: 11px; text-anchor: middle; opacity: .65; }
+    .map-center { font-size: 13px; font-weight: 700; text-anchor: middle; }
+    .map-pt     { font-size: 13px; }
+    .map-time   { font-size: 11px; font-weight: 700; }
+    .map-end    { text-anchor: end; }
+
+    .cta {
+      display: inline-block;
+      border: 1.5px solid var(--blue);
+      padding: 10px 20px;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      text-decoration: none;
+      margin: 6px 0 20px;
+      transition: background .25s, color .25s;
+    }
+    .cta:hover { background: var(--blue); color: var(--cream); }
+
+    /* ==========================================================
+       RODAPÉ (links entre versões)
+       ========================================================== */
+    footer {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 34px var(--pad) 40px;
+      font-size: 11px;
+      opacity: .65;
+    }
+    footer a { margin-right: 12px; }
+
+    /* ==========================================================
+       TRIÂNGULO (logótipo / botão de menu)
+       ========================================================== */
+    .triangle {
+      position: fixed;
+      left: 18px;
+      bottom: calc(var(--banner-height) + 10px);
+      width: 92px;
+      z-index: 50;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+      /* incentro do triângulo (ponto fixo da rotação/expansão) */
+      transform-origin: 41.7% 42.8%;
+      /* fechar: dobro da velocidade de abrir */
+      transition: transform calc(var(--menu-dur) / 2) cubic-bezier(.6, .05, .25, 1) .12s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body.menu-open .triangle {
+      transform: rotate(-108deg) scale(var(--menu-scale, 60));
+      transition: transform var(--menu-dur) cubic-bezier(.6, .05, .25, 1) 0s;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .triangle svg { width: 100%; height: auto; display: block; overflow: visible; }
+    .triangle .shape-blue  { fill: var(--blue); }
+    .triangle .shape-cream { fill: var(--cream); }
+
+    /* letras a/S: não crescem — fazem morph imediato para o x ao abrir,
+       e voltam quando o triângulo está quase fechado */
+    .triangle .letters {
+      transition: opacity .3s ease .45s;
+    }
+    body.menu-open .triangle .letters {
+      opacity: 0;
+      transition: opacity .18s ease 0s;
+    }
+
+    /* ==========================================================
+       MENU (painel + fecho x)
+       ========================================================== */
+    .menu {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: min(9vh, 70px) 30px calc(var(--banner-height) + 90px);
+      color: var(--cream);
+      visibility: hidden;
+      pointer-events: none;
+      overflow-y: auto;
+    }
+    body.menu-open .menu {
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .menu ol {
+      list-style: none;
+      padding: 0;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .menu li {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    body.menu-open .menu li {
+      opacity: 1;
+      transform: none;
+      transition: opacity .45s ease var(--d, .75s), transform .45s ease var(--d, .75s);
+    }
+
+    .menu li a {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      text-decoration: none;
+      font-size: clamp(20px, 4.8vw, 27px);
+      padding: 9px 0;
+    }
+    .menu li a:hover .label { text-decoration: underline; }
+
+    .menu .n { min-width: 1.6em; font-weight: 400; }
+    .menu .label { flex: 1; }
+    .menu .arrow { font-weight: 400; }
+
+    .menu li.m1 .label { font-style: italic; }
+    .menu li.m2 .label { letter-spacing: .45em; }
+    .menu li.m3 .label { font-weight: 700; }
+
+    .menu li.sub a {
+      font-size: clamp(16px, 4vw, 21px);
+      padding: 6px 0;
+    }
+    .menu li.sub .n { margin-left: 2.2em; }
+
+    .menu .pills {
+      max-width: 480px;
+      margin: 34px auto 0;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    body.menu-open .menu .pills {
+      opacity: 1;
+      transform: none;
+      transition: opacity .45s ease 1.55s, transform .45s ease 1.55s;
+    }
+
+    .menu .pills a {
+      border: 1.5px solid var(--cream);
+      border-radius: 99px;
+      padding: 7px 15px;
+      font-size: 13px;
+      text-decoration: none;
+      transition: background .25s, color .25s;
+    }
+    .menu .pills a:hover { background: var(--cream); color: var(--blue); }
+
+    /* botão x (morph do a/S) */
+    .menu-close {
+      position: fixed;
+      left: 40px;
+      bottom: calc(var(--banner-height) + 34px);
+      width: 40px;
+      height: 40px;
+      z-index: 70;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      opacity: 0;
+      transform: rotate(-120deg) scale(.4);
+      pointer-events: none;
+      transition: opacity .35s ease, transform .35s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body.menu-open .menu-close {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+      pointer-events: auto;
+      transition: opacity .4s ease .12s, transform .45s cubic-bezier(.2, 1.4, .4, 1) .12s;
+    }
+    .menu-close svg { width: 100%; height: 100%; display: block; }
+    .menu-close path { fill: var(--cream); }
+    .menu-close:hover { transform: rotate(90deg) scale(1); }
+
+    /* ==========================================================
+       BANNER / MARQUEE (Apenas HTML + CSS)
+       ========================================================== */
+    .banner {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: var(--banner-height);
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      z-index: 80;
+    }
+
+    .track {
+      display: flex;
+      width: max-content;
+      animation: marquee 25s linear infinite;
+    }
+
+    /* O texto principal */
+    .marquee-text {
+      white-space: nowrap;
+      color: var(--cream);
+      font-size: 20px;
+      text-transform: uppercase;
+      display: inline-flex;
+    }
+
+    /*
+       Duplicação automática via CSS:
+       Usamos uma variável CSS contendo o texto para repeti-lo
+       múltiplas vezes e criar a largura necessária para o ecrã.
+    */
+    .marquee-text::before {
+      content: var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 ";
+    }
+
+    /*
+       O clone exato do bloco acima para fazer o ponto de transição
+       invisível do loop (-50%)
+    */
+    .marquee-text::after {
+      content: var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 ";
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO: vídeo pequeno -->
+  <div class="hero">
+    <div class="frame">
+      <video id="bg-video" src="../pop.mp4" autoplay muted loop playsinline></video>
+      <button class="video-toggle" id="videoToggle" type="button" aria-label="Ativar / desativar som do vídeo" aria-pressed="false"></button>
+    </div>
+  </div>
+
+  <!-- HEADLINE + WORDMARK -->
+  <header class="intro">
+    <h1>Está a nascer uma comunidade para as artes…</h1>
+
+    <!-- SVG_gator_final: animação infinita em loop -->
+    <svg class="wordmark" xmlns="http://www.w3.org/2000/svg" viewBox="48 42 194 58" role="img" aria-label="a Sineira" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+      <style>
+        #elizFThVjSU2_tr { animation: elizFThVjSU2_tr__tr 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU2_tr__tr {
+          0% { transform: translate(61.805172px,73.153994px) rotate(0deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          20% { transform: translate(61.805172px,73.153994px) rotate(-35deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          25% { transform: translate(61.805172px,73.153994px) rotate(-35deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          45% { transform: translate(61.805172px,73.153994px) rotate(0deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          50%, 100% { transform: translate(61.805172px,73.153994px) rotate(0deg); }
+        }
+        #elizFThVjSU3_to { animation: elizFThVjSU3_to__to 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU3_to__to {
+          0% { transform: translate(102.681297px,70.45px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          20% { transform: translate(102.681297px,60.45px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          25% { transform: translate(102.681297px,60.45px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          45% { transform: translate(102.681297px,70.45px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          50%, 100% { transform: translate(102.681297px,70.45px); }
+        }
+        #elizFThVjSU4_to { animation: elizFThVjSU4_to__to 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU4_to__to {
+          0% { transform: translate(122.109634px,64.644287px); }
+          7.5% { transform: translate(122.109634px,64.644287px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          20% { transform: translate(122.109634px,56.64px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          25% { transform: translate(122.109634px,56.64px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          45% { transform: translate(122.109634px,64.644287px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          50%, 100% { transform: translate(122.109634px,64.644287px); }
+        }
+        #elizFThVjSU5_to { animation: elizFThVjSU5_to__to 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU5_to__to {
+          0% { transform: translate(122.109634px,79.004761px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          20% { transform: translate(122.109634px,71px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          25% { transform: translate(122.109634px,71px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          45% { transform: translate(122.109634px,79.004761px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          50%, 100% { transform: translate(122.109634px,79.004761px); }
+        }
+        #elizFThVjSU6_to { animation: elizFThVjSU6_to__to 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU6_to__to {
+          0% { transform: translate(140.437744px,74.288086px); animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005); }
+          20% { transform: translate(140.437744px,69.29px); animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005); }
+          25% { transform: translate(140.437744px,69.29px); animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005); }
+          45% { transform: translate(140.437744px,74.288086px); animation-timing-function: cubic-bezier(0.81,0.405,0.015,1.005); }
+          50%, 100% { transform: translate(140.437744px,74.288086px); }
+        }
+        #elizFThVjSU7_tr { animation: elizFThVjSU7_tr__tr 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU7_tr__tr {
+          0% { transform: translate(165.976837px,74.576172px) rotate(0deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          20% { transform: translate(165.976837px,74.576172px) rotate(15deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          25% { transform: translate(165.976837px,74.576172px) rotate(15deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          45% { transform: translate(165.976837px,74.576172px) rotate(0deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          50%, 100% { transform: translate(165.976837px,74.576172px) rotate(0deg); }
+        }
+        #elizFThVjSU8_to { animation: elizFThVjSU8_to__to 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU8_to__to {
+          0% { transform: translate(183.770813px,56.491943px); }
+          7.5% { transform: translate(183.770813px,56.491943px); animation-timing-function: cubic-bezier(0.915,0.19,0.15,1); }
+          20% { transform: translate(183.770813px,68.49px); animation-timing-function: cubic-bezier(0.915,0.19,0.15,1); }
+          30% { transform: translate(183.770813px,68.49px); animation-timing-function: cubic-bezier(0.915,0.19,0.15,1); }
+          45% { transform: translate(183.770813px,56.491943px); animation-timing-function: cubic-bezier(0.915,0.19,0.15,1); }
+          50%, 100% { transform: translate(183.770813px,56.491943px); }
+        }
+        #elizFThVjSU9_ts { animation: elizFThVjSU9_ts__ts 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU9_ts__ts {
+          0% { transform: translate(183.77094px,86.9997px) scale(1,1); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          20% { transform: translate(183.77094px,86.9997px) scale(1,0.511932); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          25% { transform: translate(183.77094px,86.9997px) scale(1,0.511932); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          45% { transform: translate(183.77094px,86.9997px) scale(1,1); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          50%, 100% { transform: translate(183.77094px,86.9997px) scale(1,1); }
+        }
+        #elizFThVjSU10_tr { animation: elizFThVjSU10_tr__tr 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU10_tr__tr {
+          0% { transform: translate(198.365051px,74.640503px) rotate(0deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          20% { transform: translate(198.365051px,74.640503px) rotate(-10deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          25% { transform: translate(198.365051px,74.640503px) rotate(-10deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          45% { transform: translate(198.365051px,74.640503px) rotate(0deg); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          50%, 100% { transform: translate(198.365051px,74.640503px) rotate(0deg); }
+        }
+        #elizFThVjSU11_to { animation: elizFThVjSU11_to__to 2000ms linear infinite normal; }
+        @keyframes elizFThVjSU11_to__to {
+          0% { transform: translate(217.027161px,74.288059px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          20% { transform: translate(217.027161px,69.29px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          25% { transform: translate(217.027161px,69.29px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          45% { transform: translate(217.027161px,74.288059px); animation-timing-function: cubic-bezier(0.825,0,0.115,0.77); }
+          50%, 100% { transform: translate(217.027161px,74.288059px); }
+        }
+      </style>
+      <g id="elizFThVjSU2_tr" transform="translate(61.805172,73.153994) rotate(0)"><path d="M69.823985,81.501434c-.890183,2.191852-2.012935,5.465021-2.104465,6.074494l-6.089234-2.473037c.006775-.527952.366541-1.795292.59178-2.381029-1.359507.954594-3.531095,1.809153-7.602648.155563-5.550884-2.254396-6.410494-6.854411-4.960295-10.425162c2.130009-5.244613,7.324404-5.953472,14.074134-3.212186l3.285291,1.334264.571407-1.406947c.664744-1.636765.729446-3.485605-2.226502-4.686112-2.690844-1.092839-3.744337-.188405-4.714542,1.359611l-6.061185-2.461646c2.007121-3.950634,5.881465-6.233827,12.864932-3.351763c6.150156,2.54363,8.527829,6.315106,6.30228,11.794964l-3.930953,9.678986ZM65.45233,74.446331l-2.596746-1.054624c-3.840831-1.559887-5.741204-.965669-6.642595,1.253779-.67687,1.666623-.224395,3.485186,2.066532,4.415607c4.050743,1.645139,5.691927-.96846,6.927159-4.00991l.24565-.604852Z" transform="translate(-61.805172,-73.153994)"/></g>
+      <g id="elizFThVjSU3_to" transform="translate(102.681297,70.45)"><path d="M96.421534,77.298584c.754883,3.323731,3.138672,4.780762,6.969727,4.780762c3.819336,0,5.453125-1.508789,5.453125-3.931641c0-2.693359-1.594727-3.862305-7.254883-5.179687-9.006836-2.114258-11.233398-5.390137-11.233398-9.858399c0-5.768554,4.314453-9.685547,12.149414-9.685547c8.787109,0,12.288086,4.723633,12.761719,9.564453h-7.209961c-.345703-2.036621-1.47168-4.248535-5.738281-4.248535-2.904297,0-4.657227,1.199707-4.657227,3.549317c0,2.301757,1.405273,3.234863,6.75293,4.475097c9.625976,2.268067,11.736328,5.849121,11.736328,10.515137c0,6.042969-4.572266,10.188965-13.321289,10.188965-8.400391,0-12.825196-4.135742-13.618165-10.169922h7.209961Z" transform="translate(-102.681297,-70.446289)"/></g>
+      <g id="elizFThVjSU4_to" transform="translate(122.109634,64.644287)"><rect width="6.87987" height="6.13574" rx="0" ry="0" transform="translate(-3.439634,-3.067887)"/></g>
+      <g id="elizFThVjSU5_to" transform="translate(122.109634,79.004761)"><rect width="6.87987" height="15.99" rx="0" ry="0" transform="translate(-3.439634,-7.994961)"/></g>
+      <g id="elizFThVjSU6_to" transform="translate(140.437744,74.288086)"><path d="M129.301519,68.412354c0-2.112305,0-5.000489-.048828-6.835938h6.663086c.138671.641113.228515,2.942871.264648,3.741699.844727-1.560547,2.855469-3.741699,7.208008-3.741699c4.991211,0,8.234375,3.37207,8.234375,9.616211v15.807129h-6.879883v-15.042481c0-2.793457-.930664-4.816894-3.966797-4.816894-2.922852,0-4.595703,1.625-4.595703,6.012695v13.84668h-6.878906v-18.587402Z" transform="translate(-140.437744,-74.288086)"/></g>
+      <g id="elizFThVjSU7_tr" transform="translate(165.976837,74.576172) rotate(0)"><path d="M161.196567,76.047607c.005859,3.107422,1.5625,6.14502,4.987305,6.14502c2.864258,0,3.682617-1.149902,4.334961-2.65332h6.885742c-.881836,3.041504-3.594727,8.036621-11.401367,8.036621-8.183594,0-11.734375-6.119629-11.734375-12.638672c0-7.794434,4-13.36084,11.980468-13.36084c8.53418,0,11.435547,6.17334,11.435547,12.375977c0,.841308,0,1.38623-.09082,2.095214h-16.397461Zm9.59668-4.225585c-.047852-2.892579-1.203125-5.327149-4.555664-5.327149-3.295899,0-4.622071,2.272949-4.896485,5.327149h9.452149Z" transform="translate(-165.976837,-74.576172)"/></g>
+      <g id="elizFThVjSU8_to" transform="translate(183.770813,56.491943)"><rect width="6.87988" height="6.13574" rx="0" ry="0" transform="translate(-3.439813,-3.067843)"/></g>
+      <g id="elizFThVjSU9_ts" transform="translate(183.77094,86.9997) scale(1,1)"><rect width="6.87988" height="24.1423" rx="0" ry="0" transform="translate(-3.43994,-24.1423)"/></g>
+      <g id="elizFThVjSU10_tr" transform="translate(198.365051,74.640503) rotate(0)"><path d="M190.962709,69.597168c0-2.46875-.005859-4.661621-.047852-6.739746h6.747071c.09082.556641.180664,3.022461.180664,4.362305c1.09668-2.839844,3.746094-4.915528,7.972656-4.938477v6.564453c-4.992188-.128418-7.972656.51001-7.972656,7.321045v10.833008h-6.879883v-17.402588Z" transform="translate(-198.365051,-74.640503)"/></g>
+      <g id="elizFThVjSU11_to" transform="translate(217.027161,74.288059)"><path d="M227.903139,80.291936c0,2.365722.191406,5.8208.335937,6.419921h-6.572265c-.192383-.491699-.335938-1.801269-.347657-2.42871-.90039,1.395996-2.589843,3.004882-6.985351,3.004882-5.991211,0-8.518555-3.938476-8.518555-7.79248c0-5.660645,4.545899-8.271973,11.831055-8.271973h3.545898v-1.907658c0-1.766602-.635742-3.114803-3.826172-3.114803-2.904297,0-3.540039.845272-3.856445,2.644588h-6.541992c.373047-4.415527,3.103515-7.599666,10.658203-7.557185c6.655273.04248,10.277344,2.252986,10.277344,8.167537v10.835881Zm-6.705094-4.891602h-2.802719c-4.145508,0-5.682617,1.265625-5.682617,3.661133c0,1.798828,1.103516,3.313476,3.576172,3.313476c4.37207,0,4.909164-3.039062,4.909164-6.321777v-.652832Z" transform="translate(-217.027161,-74.288059)"/></g>
+    </svg>
+  </header>
+
+  <!-- SECÇÕES 1-3 -->
+  <div class="activities">
+    <section class="activity" id="formacao">
+      <div class="photo"><img src="../imagem 1.png" alt="Crianças em atividade de formação em palco" loading="lazy"></div>
+      <div class="row">
+        <span class="num">1.</span>
+        <h2>formação</h2>
+        <button class="toggle" aria-expanded="false" aria-label="Mais sobre formação">+</button>
+      </div>
+      <p class="blurb">Aulas Regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.</p>
+      <div class="more">
+        <p>Aulas regulares, workshops e cursos intensivos de dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
+      </div>
+    </section>
+
+    <section class="activity" id="criacao">
+      <div class="photo"><img src="../imagem 2.png" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy"></div>
+      <div class="row">
+        <span class="num">2.</span>
+        <h2>criação</h2>
+        <button class="toggle" aria-expanded="false" aria-label="Mais sobre criação">+</button>
+      </div>
+      <p class="blurb">Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.</p>
+      <div class="more">
+        <p>Fomentamos e apoiamos a criação de projetos artísticos: residências artísticas com alojamento, estúdios de trabalho e a igreja como espaço multiusos.</p>
+      </div>
+    </section>
+
+    <section class="activity" id="apresentacao">
+      <div class="photo"><img src="../imagem 3.png" alt="Bailarina em ensaio com estrutura de madeira" loading="lazy"></div>
+      <div class="row">
+        <span class="num">3.</span>
+        <h2>apresentação</h2>
+        <button class="toggle" aria-expanded="false" aria-label="Mais sobre apresentação">+</button>
+      </div>
+      <p class="blurb">Espetáculos, sessões de cinema e um festival anual de dança e música.</p>
+      <div class="more">
+        <p>Divulgamos projetos artísticos: espetáculos no estúdio/palco e na igreja, sessões de cinema, exposições e convívios — e, na clareira da floresta, um festival anual de dança e música.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- O ESPAÇO -->
+  <section class="txt" id="instituicao">
+    <h3>O espaço — Retorta, Vila do Conde</h3>
+    <p>Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Requalificando o complexo arquitectónico da antiga Igreja de Retorta, cria-se um ponto de encontro intergeracional, de conexão com as artes e com a natureza. Área aproximada: 18.000 m².</p>
+    <div class="cols">
+      <ul>
+        <li>Estúdio / palco</li>
+        <li>Igreja: espaço multiusos</li>
+        <li>Alojamento: residências artísticas</li>
+        <li>Restauração</li>
+      </ul>
+      <ul>
+        <li>Floresta: percursos de lazer e pedagógicos</li>
+        <li>Clareira: espaço para festival</li>
+        <li>Estacionamento</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- COMO CHEGAR -->
+  <section class="txt" id="como-chegar">
+    <h3>Como chegar</h3>
+
+    <div class="dist-tabs" role="tablist" aria-label="Vistas das distâncias">
+      <button class="dtab active" data-view="tabela">tabela</button>
+      <button class="dtab" data-view="mapa">infográfico</button>
+      <button class="dtab" data-view="aerea">vista aérea</button>
+    </div>
+
+    <!-- vista 1: tabela -->
+    <div class="dist-view" id="view-tabela">
+      <table class="dist-table">
+        <thead>
+          <tr><th>destino</th><th>🚶 a pé</th><th>🚗 carro</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Ponte de Retorta / Estação Aquícola 🚍</td><td>5 min</td><td>1 min</td></tr>
+          <tr><td>Escolas Secundária e Básica / Escola Profissional</td><td>14 min</td><td>3 min</td></tr>
+          <tr><td>Metro Vila do Conde</td><td>24 min</td><td>4 min</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- vista 2: infográfico (ilustração do mapa com anéis de distância) -->
+    <div class="dist-view" id="view-mapa" hidden>
+      <svg class="dist-map" viewBox="0 0 640 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa estilizado das distâncias a pé desde a Sineira">
+        <!-- rio Ave, estilizado -->
+        <path d="M-10 430 C 120 400, 260 450, 400 415 S 620 430, 660 400"
+              fill="none" stroke="#003C78" stroke-width="10" opacity=".18"/>
+        <!-- anéis de tempo a pé -->
+        <circle cx="320" cy="235" r="60"  fill="none" stroke="#003C78" stroke-width="1.2" stroke-dasharray="4 5"/>
+        <circle cx="320" cy="235" r="130" fill="none" stroke="#003C78" stroke-width="1.2" stroke-dasharray="4 5"/>
+        <circle cx="320" cy="235" r="200" fill="none" stroke="#003C78" stroke-width="1.2" stroke-dasharray="4 5"/>
+        <text x="320" y="167" class="map-ring">5 min</text>
+        <text x="320" y="97"  class="map-ring">14 min</text>
+        <text x="320" y="27"  class="map-ring">24 min</text>
+
+        <!-- centro: a Sineira -->
+        <g transform="translate(320 235)">
+          <path d="M-9 12 L12 -3.5 L-12 -12 Z" fill="#003C78"/>
+          <text x="0" y="30" class="map-center">a Sineira</text>
+        </g>
+
+        <!-- pontos -->
+        <g transform="translate(367 272)">
+          <circle r="5" fill="#003C78"/>
+          <text x="10" y="22" class="map-pt">Ponte de Retorta /</text>
+          <text x="10" y="38" class="map-pt">Estação Aquícola 🚍</text>
+          <text x="10" y="4" class="map-time">5 min 🚶 · 1 min 🚗</text>
+        </g>
+        <g transform="translate(215 320)">
+          <circle r="5" fill="#003C78"/>
+          <text x="-8" y="24" class="map-pt map-end">Escolas Secundária e Básica /</text>
+          <text x="-8" y="40" class="map-pt map-end">Escola Profissional</text>
+          <text x="-8" y="6" class="map-time map-end">14 min 🚶 · 3 min 🚗</text>
+        </g>
+        <g transform="translate(132 152)">
+          <circle r="5" fill="#003C78"/>
+          <text x="-8" y="-26" class="map-pt map-end">Metro</text>
+          <text x="-8" y="-10" class="map-pt map-end">Vila do Conde</text>
+          <text x="-8" y="20" class="map-time map-end">24 min 🚶 · 4 min 🚗</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- vista 3: vista aérea (imagem do maps com etiquetas) -->
+    <div class="dist-view" id="view-aerea" hidden>
+      <div class="aerial">
+        <img src="../mapsbirdseye.png" alt="Vista aérea de Retorta: Igreja, ponte sobre o Rio Ave, escolas e envolvente" loading="lazy">
+        <span class="atag sineira" style="left: 92%; top: 96%;">
+          <svg viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path fill="#003C78" d="M95.7804 387L382 110.293L0 0L95.7804 387Z"/>
+            <path fill="#F2E7A9" d="M237.388 200.34C247.689 213.363 261.205 214.741 278 206.656C294.744 198.596 298.733 188.514 293.636 177.859C287.97 166.014 278.519 164.239 250.934 170.39C207 180.098 190.348 170.391 180.948 150.741C168.813 125.373 179.487 99.0424 213.836 82.5088C252.358 63.9658 277.644 77.3509 289.904 97.6398L258.295 112.855C252.495 104.628 242.906 97.2765 224.201 106.28C211.468 112.409 206.307 121.384 211.25 131.717C216.092 141.839 224.216 142.977 250.269 137.146C297.241 126.807 314.026 138.102 323.842 158.622C336.554 185.197 325.231 213.078 286.876 231.541C250.048 249.268 221.95 240.417 205.779 215.554L237.388 200.34Z"/>
+            <path fill="#F2E7A9" d="M127.809 268.327C123.481 279.019 118.021 294.985 117.576 297.957L87.9668 285.895C87.9997 283.319 89.7491 277.138 90.8443 274.28C84.2336 278.937 73.674 283.105 53.8757 275.039C26.8839 264.043 22.704 241.605 29.7557 224.188C40.1131 198.606 65.3714 195.148 98.1927 208.519L114.168 215.028L116.946 208.165C120.179 200.181 120.493 191.163 106.12 185.307C93.0352 179.976 87.9124 184.388 83.1947 191.939L53.7216 179.932C63.4814 160.661 82.3208 149.524 116.279 163.582C146.184 175.99 157.746 194.386 146.924 221.116L127.809 268.327ZM106.552 233.914L93.9249 228.77C75.2484 221.161 66.0077 224.06 61.6246 234.886C58.3332 243.015 60.5334 251.886 71.6733 256.424C91.3705 264.449 99.3509 251.7 105.357 236.865L106.552 233.914Z"/>
+          </svg>
+          a Sineira
+        </span>
+        <span class="atag" style="left: 61%; top: 47%;"><span>ponte / est. aquícola</span><span class="car">5 min 🚶 · 1 min 🚗</span></span>
+        <span class="atag" style="left: 32%; top: 50%;"><span>escolas</span><span class="car">14 min 🚶 · 3 min 🚗</span></span>
+        <span class="atag" style="left: 14%; top: 23%;"><span>metro V. do Conde</span><span class="car">24 min 🚶 · 4 min 🚗</span></span>
+      </div>
+<!--       <p class="aerial-note">tempos desde a Sineira, a pé 🚶 e de carro 🚗</p> -->
+    </div>
+  </section>
+
+  <!-- EVENTOS -->
+  <section class="txt" id="eventos">
+    <h3>Eventos</h3>
+    <p>Próximos, últimos e arquivo — brevemente. Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.</p>
+  </section>
+
+  <!-- AMIGOS -->
+  <section class="txt" id="amigos">
+    <h3>Amigo da Sineira</h3>
+    <p>Adere e torna-te um “Amigo da Sineira”:</p>
+    <ul>
+      <li>Acesso gratuito a todos os eventos</li>
+      <li>Desconto em aulas regulares, workshops e cursos intensivos</li>
+      <li>Surpresas mensais</li>
+    </ul>
+    <a class="cta" href="mailto:ola@asineira.pt?subject=Quero%20ser%20Amigo%20da%20Sineira">Quero aderir</a>
+  </section>
+
+  <!-- CONTACTOS -->
+  <section class="txt" id="contactos">
+    <h3>Contactos</h3>
+    <p>a Sineira — Associação Cultural · NIF 518858359<br>
+    Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
+    Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde<br>
+    <a href="mailto:ola@asineira.pt">ola@asineira.pt</a> · <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a></p>
+  </section>
+
+  <footer>
+    experiências: <a href="../">1</a> <a href="../teste2/">2</a> <a href="../teste3/">3</a> <a href="../teste4/">4</a> <a href="../teste5/">5</a> <a href="./">6</a>
+  </footer>
+
+  <!-- TRIÂNGULO (botão de menu) -->
+  <button class="triangle" id="menuTriangle" aria-label="Abrir menu" aria-expanded="false">
+    <svg viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="triClip" clipPathUnits="userSpaceOnUse">
+          <path id="triClipPath" d="M95.7804 387L382 110.293L0 0L95.7804 387Z" />
+        </clipPath>
+      </defs>
+      <!-- triângulo azul: roda com o scroll -->
+      <g id="triRot">
+        <path class="shape-blue"
+              d="M95.7804 387L382 110.293L0 0L95.7804 387Z" />
+      </g>
+      <!-- letras a/S: ficam paradas, cortadas pelo triângulo que roda -->
+      <g class="letters" clip-path="url(#triClip)">
+        <path class="shape-cream"
+              d="M237.388 200.34C247.689 213.363 261.205 214.741 278 206.656C294.744 198.596 298.733 188.514 293.636 177.859C287.97 166.014 278.519 164.239 250.934 170.39C207 180.098 190.348 170.391 180.948 150.741C168.813 125.373 179.487 99.0424 213.836 82.5088C252.358 63.9658 277.644 77.3509 289.904 97.6398L258.295 112.855C252.495 104.628 242.906 97.2765 224.201 106.28C211.468 112.409 206.307 121.384 211.25 131.717C216.092 141.839 224.216 142.977 250.269 137.146C297.241 126.807 314.026 138.102 323.842 158.622C336.554 185.197 325.231 213.078 286.876 231.541C250.048 249.268 221.95 240.417 205.779 215.554L237.388 200.34Z" />
+        <path class="shape-cream"
+              d="M127.809 268.327C123.481 279.019 118.021 294.985 117.576 297.957L87.9668 285.895C87.9997 283.319 89.7491 277.138 90.8443 274.28C84.2336 278.937 73.674 283.105 53.8757 275.039C26.8839 264.043 22.704 241.605 29.7557 224.188C40.1131 198.606 65.3714 195.148 98.1927 208.519L114.168 215.028L116.946 208.165C120.179 200.181 120.493 191.163 106.12 185.307C93.0352 179.976 87.9124 184.388 83.1947 191.939L53.7216 179.932C63.4814 160.661 82.3208 149.524 116.279 163.582C146.184 175.99 157.746 194.386 146.924 221.116L127.809 268.327ZM106.552 233.914L93.9249 228.77C75.2484 221.161 66.0077 224.06 61.6246 234.886C58.3332 243.015 60.5334 251.886 71.6733 256.424C91.3705 264.449 99.3509 251.7 105.357 236.865L106.552 233.914Z" />
+      </g>
+    </svg>
+  </button>
+
+  <!-- MENU (painel sobre o triângulo expandido) -->
+  <nav class="menu" id="menu" aria-hidden="true">
+    <ol>
+      <li class="m1" style="--d: .75s"><a href="#formacao"><span class="n">1.</span><span class="label">formação</span><span class="arrow">→</span></a></li>
+      <li class="m2" style="--d: .85s"><a href="#criacao"><span class="n">2.</span><span class="label">criação</span><span class="arrow">→</span></a></li>
+      <li class="m3" style="--d: .95s"><a href="#apresentacao"><span class="n">3.</span><span class="label">apresentação</span><span class="arrow">→</span></a></li>
+      <li class="m4" style="--d: 1.05s"><a href="#como-chegar"><span class="n">4.</span><span class="label">como chegar</span><span class="arrow">→</span></a></li>
+      <li class="m5" style="--d: 1.15s"><a href="#eventos"><span class="n">5.</span><span class="label">eventos</span></a></li>
+      <li class="sub" style="--d: 1.25s"><a href="#eventos"><span class="n">5.1</span><span class="label">próximos</span><span class="arrow">→</span></a></li>
+      <li class="sub" style="--d: 1.35s"><a href="#eventos"><span class="n">5.2</span><span class="label">últimos</span><span class="arrow">→</span></a></li>
+      <li class="sub" style="--d: 1.45s"><a href="#eventos"><span class="n">5.3</span><span class="label">arquivo</span><span class="arrow">→</span></a></li>
+    </ol>
+    <div class="pills">
+      <a href="#formacao">🤸 atividades</a>
+      <a href="#como-chegar">📍 como chegar</a>
+      <a href="#eventos">📅 eventos</a>
+      <a href="#instituicao">🏠 instituição</a>
+      <a href="#contactos">☎️ contactos</a>
+      <a href="#amigos">💳 amigos</a>
+    </div>
+  </nav>
+
+  <!-- X (fecho do menu — “morph” do a/S) -->
+  <button class="menu-close" id="menuClose" aria-label="Fechar menu">
+    <svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32.8795 0.0325423L37.6193 4.77237L23.5656 18.8261L37.5862 32.8467L32.8464 37.5865L18.8258 23.5659L4.77203 37.6197L0.0322052 32.8799L14.086 18.8261L-0.000940464 4.73922L4.73888 -0.000603347L18.8258 14.0863L32.8795 0.0325423Z"/>
+    </svg>
+  </button>
+
+  <!-- Banner animado (marquee) -->
+  <div class="banner">
+    <div class="track">
+      <!-- Escreves a frase apenas uma vez no atributo style: --text -->
+      <span class="marquee-text" style="--text: 'Adere já e torna-te um &quot;Amigo da Sineira&quot; para descontos e surpresas mensais!';"></span>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const body = document.body;
+      const triangle = document.getElementById('menuTriangle');
+      const menu = document.getElementById('menu');
+      const closeBtn = document.getElementById('menuClose');
+
+      /* escala necessária para o triângulo azul cobrir todo o viewport,
+         a partir do incentro do triângulo (raio inscrito ≈ 30% da largura) */
+      function coverScale() {
+        const r = triangle.getBoundingClientRect();
+        const cx = r.left + r.width * 0.417;
+        const cy = r.top + r.height * 0.428;
+        const corners = [
+          [0, 0], [innerWidth, 0], [0, innerHeight], [innerWidth, innerHeight]
+        ];
+        const maxDist = Math.max(...corners.map(([x, y]) => Math.hypot(x - cx, y - cy)));
+        const rIn = r.width * 0.30;
+        return (maxDist / rIn) * 1.08;
+      }
+
+      function openMenu() {
+        triangle.style.setProperty('--menu-scale', coverScale());
+        body.classList.add('menu-open');
+        triangle.setAttribute('aria-expanded', 'true');
+        menu.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeMenu() {
+        body.classList.remove('menu-open');
+        triangle.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-hidden', 'true');
+      }
+
+      triangle.addEventListener('click', openMenu);
+      closeBtn.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && body.classList.contains('menu-open')) closeMenu();
+      });
+
+      /* links do menu fecham-no antes do scroll */
+      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+      window.addEventListener('resize', () => {
+        if (body.classList.contains('menu-open')) closeMenu();
+      });
+
+      /* scroll: triângulo roda no sítio; letras ficam paradas,
+         cortadas pelo triângulo (clip roda em conjunto) */
+      const triRot = document.getElementById('triRot');
+      const triClipPath = document.getElementById('triClipPath');
+      const ORIGIN = '159.26 165.764'; /* eixo de rotação: incentro do triângulo */
+      let targetAngle = 0;
+      let currentAngle = 0;
+      let spinning = false;
+
+      function applyAngle(a) {
+        const t = `rotate(${a.toFixed(2)} ${ORIGIN})`;
+        triRot.setAttribute('transform', t);
+        triClipPath.setAttribute('transform', t);
+      }
+
+      function spin() {
+        currentAngle += (targetAngle - currentAngle) * 0.09;
+        if (Math.abs(targetAngle - currentAngle) < 0.05) {
+          currentAngle = targetAngle;
+          applyAngle(currentAngle);
+          spinning = false;
+          return;
+        }
+        applyAngle(currentAngle);
+        requestAnimationFrame(spin);
+      }
+
+      window.addEventListener('scroll', () => {
+        targetAngle = -window.scrollY * 0.18;
+        if (!spinning) {
+          spinning = true;
+          requestAnimationFrame(spin);
+        }
+      }, { passive: true });
+
+      /* acordeões + */
+      document.querySelectorAll('.activity .toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sec = btn.closest('.activity');
+          const open = sec.classList.toggle('open');
+          btn.setAttribute('aria-expanded', open);
+        });
+      });
+
+      /* como chegar: alternar entre tabela / infográfico / vista aérea */
+      const dtabs = document.querySelectorAll('.dtab');
+      dtabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          dtabs.forEach(t => t.classList.toggle('active', t === tab));
+          document.querySelectorAll('.dist-view').forEach(v => {
+            v.hidden = v.id !== 'view-' + tab.dataset.view;
+          });
+        });
+      });
+
+      /* vídeo: unmute / mute */
+      const video = document.getElementById('bg-video');
+      const toggle = document.getElementById('videoToggle');
+      const iconMuted = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11 5 L7 9 H3 v6 h4 l4 4 V5 z" fill="#F2E7A9"/><line x1="19" y1="5" x2="5" y2="21" stroke="#F2E7A9" stroke-width="2" stroke-linecap="round"/></svg>';
+      const iconSound = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11 5 L7 9 H3 v6 h4 l4 4 V5 z" fill="#F2E7A9"/><path d="M16.5 8.5a5 5 0 010 7" stroke="#F2E7A9" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M19 6a8 8 0 010 12" stroke="#F2E7A9" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+      toggle.innerHTML = iconMuted;
+      toggle.addEventListener('click', () => {
+        video.muted = !video.muted;
+        toggle.innerHTML = video.muted ? iconMuted : iconSound;
+        toggle.setAttribute('aria-pressed', String(!video.muted));
+        if (!video.muted) video.play().catch(() => {});
+      });
+    })();
+  </script>
+</body>
+</html>
