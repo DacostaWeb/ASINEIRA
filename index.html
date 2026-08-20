@@ -1,1172 +1,1085 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>a Sineira — Associação &amp; Espaço Cultural</title>
-  <meta name="description" content="a Sineira — Associação e Espaço Cultural em Retorta, Vila do Conde. Formação, criação e apresentação nas artes.">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>a Sineira — Associação &amp; Espaço Cultural</title>
+<meta name="description" content="a Sineira — Associação e Espaço Cultural em Retorta, Vila do Conde. Formação, criação e apresentação nas artes.">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 
-  <style>
-    @font-face {
-      font-family: "Nimbus";
-      src: url("fonts/NimbusSanL-Regu.ttf") format("truetype");
-      font-weight: 400; font-style: normal;
-    }
-    @font-face {
-      font-family: "Nimbus";
-      src: url("fonts/NimbusSanL-Bold.ttf") format("truetype");
-      font-weight: 700; font-style: normal;
-    }
-    @font-face {
-      font-family: "Nimbus";
-      src: url("fonts/NimbusSanL-ReguItal.ttf") format("truetype");
-      font-weight: 400; font-style: italic;
-    }
-    @font-face {
-      font-family: "Nimbus";
-      src: url("fonts/NimbusSanL-BoldItal.ttf") format("truetype");
-      font-weight: 700; font-style: italic;
-    }
-    @font-face {
-      font-family: "Nimbus Cond";
-      src: url("fonts/NimbusSanL-BoldCond.ttf") format("truetype");
-      font-weight: 700; font-style: normal;
-    }
-    @font-face {
-      font-family: "Nimbus Cond";
-      src: url("fonts/NimbusSanL-BoldCondItal.ttf") format("truetype");
-      font-weight: 700; font-style: italic;
-    }
+<style>
+/* ==========================================================================
+   a Sineira — folha de estilos única
+   1. Tipos de letra
+   2. Variáveis
+   3. Base
+   4. Animações
+   5. Cabeçalho
+   6. Grelha e mosaicos
+   7. Tabela de acessos
+   8. Menu de ecrã inteiro
+   9. Rodapé (marquee)
+  10. Ecrãs estreitos
+   ========================================================================== */
 
-    :root {
-      --blue:  #003C78;
-      --cream: #F2E7A9;
-      --banner-height: 70px;
-      --head-h: 56px;
-      --line: 1.5px solid var(--blue);
-      --menu-dur: 1.1s;
-    }
 
-    * { margin: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+/* 1. Tipos de letra ======================================================= */
 
-    html, body {
-      background: var(--cream);
-      color: var(--blue);
-      font-family: "Nimbus", Helvetica, Arial, sans-serif;
-    }
+@font-face { font-family:"Nimbus"; src:url("fonts/NimbusSanL-Regu.ttf")     format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Nimbus"; src:url("fonts/NimbusSanL-Bold.ttf")     format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+@font-face { font-family:"Nimbus"; src:url("fonts/NimbusSanL-ReguItal.ttf") format("truetype"); font-weight:400; font-style:italic; font-display:swap; }
+@font-face { font-family:"Nimbus"; src:url("fonts/NimbusSanL-BoldItal.ttf") format("truetype"); font-weight:700; font-style:italic; font-display:swap; }
+@font-face { font-family:"Nimbus Cond"; src:url("fonts/NimbusSanL-BoldCond.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
 
-    body {
-      overflow-x: hidden;
-      padding-bottom: var(--banner-height);
-    }
-    /* só no body: overflow no html corta o triângulo fixed no iOS */
-    body.menu-open {
-      overflow: hidden;
-      touch-action: none;
-    }
 
-    a { color: inherit; }
+/* 2. Variáveis ============================================================ */
 
-    /* ==========================================================
-       CABEÇALHO
-       ========================================================== */
-    .sheet-head {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: var(--cream);
-      border-bottom: var(--line);
-      height: var(--head-h);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 18px;
-      text-transform: uppercase;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .1em;
-      gap: 12px;
-    }
-    .sheet-head .brand {
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .sheet-head .where {
-      opacity: .7;
-      flex-shrink: 0;
-    }
-    .lang-toggle {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-      margin-left: auto;
-    }
-    .lang-toggle button {
-      background: none;
-      border: none;
-      font: inherit;
-      color: inherit;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      padding: 4px 0;
-      opacity: .38;
-    }
-    .lang-toggle button[aria-pressed="true"] { opacity: 1; }
-    .lang-toggle .lang-sep { opacity: .38; }
-    @media (max-width: 760px) {
-      .sheet-head .where { display: none; }
-    }
+:root {
+  /* Paleta. Todas as cores do site saem daqui — não repetir hexadecimais. */
+  --blue:        #003C78;   /* azul principal: texto, fundo escuro, triângulo */
+  --blue-mid:    #0359B0;   /* mosaico "formação" */
+  --blue-light:  #477FB8;   /* mosaico "acessos" */
+  --cream:       #F2E7A9;   /* fundo do site */
+  --peach:       #F2BFA9;   /* mosaicos "eventos" e "contactos" */
+  --olive:       #888A65;   /* mosaico "amigos" */
+  --white:       #FFFFFF;
 
-    /* ==========================================================
-       CATÁLOGO — 1 coluna móvel / 3 colunas desktop
-       ========================================================== */
-    .catalog-wrap {
-      position: relative;
-    }
+  /* Filetes da tabela de acessos: creme translúcido sobre fundo azul. */
+  --rule:        rgba(242, 231, 169, .5);
+  --rule-soft:   rgba(242, 231, 169, .25);
 
-    .catalog {
-      display: flex;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .catalog::-webkit-scrollbar { display: none; }
+  /* Tipografia */
+  --font: Helvetica, Arial, sans-serif;
 
-    .card {
-      flex: 0 0 100%;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
-      height: calc(100dvh - var(--head-h) - var(--banner-height));
-      overflow-y: auto;
-      border-right: var(--line);
-      padding: 22px 22px 88px;
-      display: flex;
-      flex-direction: column;
-    }
-    .card:last-child { border-right: none; }
+  /* Medidas do cabeçalho (redefinidas em ecrãs estreitos, secção 10) */
+  --header-h:       78px;
+  --header-gap:     34px;
+  --header-pad-x:   30px;
+  --wordmark-h:     40px;
+  --trigger-w:      62px;
+  --close-right:    30px;
+  --close-top:     104px;
 
-    .card .id {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
+  /* Medidas do corpo */
+  --tile-pad:       30px;
+  --grid-max:     1600px;
+  --col-min:       360px;   /* largura mínima de coluna antes de quebrar */
+  --scroll-offset:  80px;   /* folga para o cabeçalho ao saltar para uma âncora */
+  --marquee-h:      40px;
 
-    .card h2 {
-      font-family: "Nimbus Cond", "Nimbus", Helvetica, Arial, sans-serif;
-      font-size: clamp(34px, 8.5vw, 52px);
-      font-weight: 700;
-      line-height: .92;
-      text-transform: uppercase;
-      letter-spacing: -.02em;
-      margin-bottom: 18px;
-    }
-    #formacao h2 { font-style: italic; }
-    #criacao h2 { letter-spacing: .18em; }
+  /* Movimento */
+  --wm-dur: 2000ms;         /* ciclo do salto das letras do logótipo */
+}
 
-    .card p, .card li {
-      font-size: 15px;
-      font-weight: 400;
-      line-height: 1.55;
-    }
-    .card p { margin-bottom: 12px; }
 
-    .card ul {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 14px;
-    }
-    .card li::before { content: "> "; font-weight: 700; }
+/* 3. Base ================================================================= */
 
-    .card .thumb {
-      position: relative;
-      background: var(--blue);
-      margin: 0 -22px 18px;
-      line-height: 0;
-    }
-    .card .thumb img,
-    .card .thumb video {
-      width: 100%;
-      height: 38vh;
-      max-height: 280px;
-      object-fit: cover;
-      display: block;
-    }
-    .card .thumb video { background: #000; }
+*, *::before, *::after { box-sizing: border-box; }
 
-    .video-toggle {
-      position: absolute;
-      right: 10px;
-      bottom: 10px;
-      width: 34px;
-      height: 34px;
-      border: none;
-      border-radius: 50%;
-      background: var(--blue);
-      cursor: pointer;
-      padding: 7px;
-      line-height: 0;
-    }
-    .video-toggle svg { width: 100%; height: 100%; display: block; }
+html { scroll-behavior: smooth; }
 
-    .card.fill {
-      background: var(--blue);
-      color: var(--cream);
-    }
-    .card.fill .cta:hover { background: var(--cream); color: var(--blue); }
+/* overflow-x:clip e não :hidden — hidden força overflow-y:auto, o que torna o
+   body num contentor de scroll e faz o cabeçalho sticky colar ao body (que
+   nunca rola) em vez do ecrã, desaparecendo logo aos primeiros píxeis. */
+html, body { margin: 0; overflow-x: clip; }
 
-    .cta {
-      display: inline-block;
-      border: 1.5px solid currentColor;
-      padding: 10px 18px;
-      font-weight: 700;
-      font-size: 12px;
-      text-transform: uppercase;
-      text-decoration: none;
-      margin-top: auto;
-      align-self: flex-start;
-      transition: background .2s, color .2s;
-    }
-    .card:not(.fill) .cta:hover { background: var(--blue); color: var(--cream); }
+body {
+  background: var(--cream);
+  color: var(--blue);
+  font-family: var(--font);
+  text-wrap: pretty;
+  padding-bottom: var(--marquee-h);   /* espaço para o marquee fixo */
+}
 
-    .dist-table {
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 13px;
-      margin: 8px 0 16px;
-    }
-    .dist-table th, .dist-table td {
-      border: var(--line);
-      padding: 8px 10px;
-      text-align: left;
-    }
-    .dist-table th {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-    .card.fill .dist-table th,
-    .card.fill .dist-table td { border-color: var(--cream); }
+/* Bloqueia o scroll do fundo enquanto o menu está aberto (classe posta pelo JS). */
+body.menu-open { overflow: hidden; touch-action: none; }
 
-    /* setas + indicador — só móvel */
-    .cat-nav {
-      position: fixed;
-      top: calc(var(--head-h) + (100dvh - var(--head-h) - var(--banner-height)) / 2);
-      transform: translateY(-50%);
-      z-index: 30;
-      width: 42px;
-      height: 42px;
-      border: var(--line);
-      background: var(--cream);
-      color: var(--blue);
-      font-size: 28px;
-      line-height: 1;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .cat-nav.prev { left: 8px; }
-    .cat-nav.next { right: 8px; }
-    .cat-nav:disabled { opacity: .28; cursor: default; }
+h1, h2, h3, p, ul, ol, figure, table { margin: 0; }
 
-    .cat-dots {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: calc(var(--banner-height) + 14px);
-      z-index: 30;
-      display: flex;
-      justify-content: center;
-      gap: 7px;
-      pointer-events: none;
-    }
-    .cat-dots span {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      border: 1.5px solid var(--blue);
-      background: transparent;
-    }
-    .cat-dots span.on { background: var(--blue); }
+a { color: inherit; text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-    @media (min-width: 900px) {
-      .catalog {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        overflow: visible;
-        scroll-snap-type: none;
-        border-bottom: var(--line);
-      }
-      .card {
-        flex: none;
-        width: auto;
-        height: auto;
-        min-height: 520px;
-        overflow: visible;
-        border-right: var(--line);
-        border-bottom: var(--line);
-        padding: 22px 24px 28px;
-      }
-      .card:nth-child(3n) { border-right: none; }
-      .card:nth-last-child(-n+3) { border-bottom: none; }
-      .card h2 { font-size: 36px; }
-      .card .thumb { margin: 0 -24px 16px; }
-      .card .thumb img,
-      .card .thumb video {
-        height: 200px;
-        max-height: none;
-      }
-      .cat-nav, .cat-dots { display: none; }
-    }
 
-    /* ==========================================================
-       TRIÂNGULO / MENU
-       ========================================================== */
-    .triangle {
-      position: fixed;
-      left: 18px;
-      bottom: calc(var(--banner-height) + 10px);
-      width: 92px;
-      z-index: 50;
-      cursor: pointer;
-      border: none;
-      background: none;
-      padding: 0;
-      transform-origin: 41.7% 42.8%;
-      transition: transform calc(var(--menu-dur) / 2) cubic-bezier(.6, .05, .25, 1) .12s;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      overflow: visible;
-    }
-    .triangle::before {
-      content: "";
-      position: absolute;
-      inset: -20px;
-    }
-    body.menu-open .triangle {
-      transform: rotate(-108deg) scale(var(--menu-scale, 60));
-      transition: transform var(--menu-dur) cubic-bezier(.6, .05, .25, 1) 0s;
-      cursor: default;
-      pointer-events: none;
-    }
-    .triangle svg { width: 100%; height: auto; display: block; overflow: visible; }
-    .triangle .shape-blue  { fill: var(--blue); }
-    .triangle .shape-cream { fill: var(--cream); }
-    .triangle .letters { transition: opacity .3s ease .45s; }
-    body.menu-open .triangle .letters {
-      opacity: 0;
-      transition: opacity .18s ease 0s;
-    }
+/* 4. Animações ============================================================ */
 
-    .menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      min-height: 100vh;
-      min-height: 100dvh;
-      z-index: 60;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      padding: min(9vh, 70px) 30px calc(var(--banner-height) + 90px);
-      color: var(--cream);
-      background: transparent;
-      visibility: hidden;
-      pointer-events: none;
-      overflow-y: auto;
-      transition: background 0s linear 0s;
-    }
-    body.menu-open .menu {
-      visibility: visible;
-      pointer-events: auto;
-      background: var(--blue);
-      transition: background 0s linear 0.8s;
-    }
+/* Salto das dez formas do logótipo. Cada letra tem o seu percurso; a pausa
+   entre 50% e 100% é o repouso antes de repetir. */
+@keyframes wm-a { 0% { transform:translate(61.805172px,73.153994px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(61.805172px,73.153994px) rotate(-35deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(61.805172px,73.153994px) rotate(-35deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(61.805172px,73.153994px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(61.805172px,73.153994px) rotate(0deg); } }
+@keyframes wm-s { 0% { transform:translate(102.681297px,70.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(102.681297px,60.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(102.681297px,60.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(102.681297px,70.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(102.681297px,70.45px); } }
+@keyframes wm-i1-dot { 0% { transform:translate(122.109634px,64.644287px); } 7.5% { transform:translate(122.109634px,64.644287px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(122.109634px,56.64px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(122.109634px,56.64px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(122.109634px,64.644287px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(122.109634px,64.644287px); } }
+@keyframes wm-i1-stem { 0% { transform:translate(122.109634px,79.004761px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(122.109634px,71px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(122.109634px,71px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(122.109634px,79.004761px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(122.109634px,79.004761px); } }
+@keyframes wm-n { 0% { transform:translate(140.437744px,74.288086px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 20% { transform:translate(140.437744px,69.29px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 25% { transform:translate(140.437744px,69.29px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 45% { transform:translate(140.437744px,74.288086px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 50%,100% { transform:translate(140.437744px,74.288086px); } }
+@keyframes wm-e { 0% { transform:translate(165.976837px,74.576172px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(165.976837px,74.576172px) rotate(15deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(165.976837px,74.576172px) rotate(15deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(165.976837px,74.576172px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(165.976837px,74.576172px) rotate(0deg); } }
+@keyframes wm-i2-dot { 0% { transform:translate(183.770813px,56.491943px); } 7.5% { transform:translate(183.770813px,56.491943px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 20% { transform:translate(183.770813px,68.49px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 30% { transform:translate(183.770813px,68.49px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 45% { transform:translate(183.770813px,56.491943px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 50%,100% { transform:translate(183.770813px,56.491943px); } }
+@keyframes wm-i2-stem { 0% { transform:translate(183.77094px,86.9997px) scale(1,1); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(183.77094px,86.9997px) scale(1,.511932); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(183.77094px,86.9997px) scale(1,.511932); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(183.77094px,86.9997px) scale(1,1); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(183.77094px,86.9997px) scale(1,1); } }
+@keyframes wm-r { 0% { transform:translate(198.365051px,74.640503px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(198.365051px,74.640503px) rotate(-10deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(198.365051px,74.640503px) rotate(-10deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(198.365051px,74.640503px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(198.365051px,74.640503px) rotate(0deg); } }
+@keyframes wm-a2 { 0% { transform:translate(217.027161px,74.288059px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(217.027161px,69.29px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(217.027161px,69.29px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(217.027161px,74.288059px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(217.027161px,74.288059px); } }
 
-    .menu ol { list-style: none; padding: 0; max-width: 480px; margin: 0 auto; width: 100%; }
-    .menu li {
-      opacity: 0;
-      transform: translateY(14px);
-      transition: opacity .3s ease, transform .3s ease;
-    }
-    body.menu-open .menu li {
-      opacity: 1;
-      transform: none;
-      transition: opacity .45s ease var(--d, .75s), transform .45s ease var(--d, .75s);
-    }
-    .menu li a {
-      display: flex;
-      align-items: baseline;
-      gap: 20px;
-      text-decoration: none;
-      font-family: "Nimbus Cond", "Nimbus", Helvetica, Arial, sans-serif;
-      font-size: clamp(24px, 5.4vw, 32px);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: -.02em;
-      padding: 9px 0;
-    }
-    .menu li a:hover .label { text-decoration: underline; }
-    .menu .n { min-width: 1.6em; }
-    .menu .label { flex: 1; }
-    .menu li.m1 .label { font-style: italic; }
-    .menu li.m2 .label { letter-spacing: .18em; }
-    .menu li.m3 .label { letter-spacing: -.02em; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-    .menu .pills {
-      max-width: 480px;
-      margin: 34px auto 0;
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      opacity: 0;
-      transform: translateY(14px);
-      transition: opacity .3s ease, transform .3s ease;
-    }
-    body.menu-open .menu .pills {
-      opacity: 1;
-      transform: none;
-      transition: opacity .45s ease 1.55s, transform .45s ease 1.55s;
-    }
-    .menu .pills a {
-      border: 1.5px solid var(--cream);
-      border-radius: 99px;
-      padding: 7px 15px;
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      text-decoration: none;
-    }
-    .menu .pills a:hover { background: var(--cream); color: var(--blue); }
 
-    .menu-close {
-      position: fixed;
-      left: 40px;
-      bottom: calc(var(--banner-height) + 34px);
-      width: 40px;
-      height: 40px;
-      z-index: 70;
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      opacity: 0;
-      transform: rotate(-120deg) scale(.4);
-      pointer-events: none;
-      transition: opacity .35s ease, transform .35s ease;
-    }
-    body.menu-open .menu-close {
-      opacity: 1;
-      transform: rotate(0deg) scale(1);
-      pointer-events: auto;
-      transition: opacity .4s ease .12s, transform .45s cubic-bezier(.2, 1.4, .4, 1) .12s;
-    }
-    .menu-close svg { width: 100%; height: 100%; display: block; }
-    .menu-close path { fill: var(--cream); }
+/* 5. Cabeçalho ============================================================ */
 
-    .vers {
-      max-width: 480px;
-      margin: 28px auto 0;
-      width: 100%;
-      font-size: 12px;
-      opacity: .75;
-    }
-    .vers a { margin-right: 10px; }
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--header-gap);
+  height: var(--header-h);
+  padding: 0 var(--header-pad-x);
+  background: var(--cream);
+}
 
-    /* ==========================================================
-       BANNER
-       ========================================================== */
-    .banner {
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      height: var(--banner-height);
-      background: var(--blue);
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-      z-index: 80;
-    }
-    .track {
-      display: flex;
-      width: max-content;
-      animation: marquee 25s linear infinite;
-    }
-    .marquee-text {
-      white-space: nowrap;
-      color: var(--cream);
-      font-size: 20px;
-      text-transform: uppercase;
-      display: inline-flex;
-    }
-    .marquee-text::before {
-      content: var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 ";
-    }
-    .marquee-text::after {
-      content: var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 ";
-    }
-    @keyframes marquee {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-  </style>
+/* --- Logótipo --- */
+
+.wordmark { flex-shrink: 0; display: block; line-height: 0; }
+.wordmark:hover { text-decoration: none; }
+
+.wordmark__svg {
+  display: block;
+  height: var(--wordmark-h);
+  width: auto;
+  fill: var(--blue);
+  overflow: visible;   /* as letras saem da caixa a meio do salto */
+}
+
+/* As letras saltam ao passar o rato e enquanto se faz scroll. A classe
+   .wm-anim é posta e retirada pelo JS; o hover funciona sem JS nenhum.
+   Fora destes dois estados não há animação declarada, por isso as letras
+   ficam paradas na posição de repouso. */
+.wordmark:hover .wm__letter,
+.wordmark.wm-anim .wm__letter {
+  animation-duration: var(--wm-dur);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.wordmark:hover .wm__a,       .wordmark.wm-anim .wm__a       { animation-name: wm-a; }
+.wordmark:hover .wm__s,       .wordmark.wm-anim .wm__s       { animation-name: wm-s; }
+.wordmark:hover .wm__i1-dot,  .wordmark.wm-anim .wm__i1-dot  { animation-name: wm-i1-dot; }
+.wordmark:hover .wm__i1-stem, .wordmark.wm-anim .wm__i1-stem { animation-name: wm-i1-stem; }
+.wordmark:hover .wm__n,       .wordmark.wm-anim .wm__n       { animation-name: wm-n; }
+.wordmark:hover .wm__e,       .wordmark.wm-anim .wm__e       { animation-name: wm-e; }
+.wordmark:hover .wm__i2-dot,  .wordmark.wm-anim .wm__i2-dot  { animation-name: wm-i2-dot; }
+.wordmark:hover .wm__i2-stem, .wordmark.wm-anim .wm__i2-stem { animation-name: wm-i2-stem; }
+.wordmark:hover .wm__r,       .wordmark.wm-anim .wm__r       { animation-name: wm-r; }
+.wordmark:hover .wm__a2,      .wordmark.wm-anim .wm__a2      { animation-name: wm-a2; }
+
+/* --- Selector de idioma --- */
+
+.lang {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.lang__btn {
+  padding: 4px 0;
+  border: none;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  cursor: pointer;
+  opacity: .38;
+}
+.lang__btn[aria-pressed="true"] { opacity: 1; }
+
+.lang__sep { opacity: .38; }
+
+/* --- Triângulo que abre o menu --- */
+
+.menu-trigger {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: var(--trigger-w);
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  z-index: 50;
+  overflow: visible;
+  /* Ponto em torno do qual o triângulo cresce até cobrir o ecrã (o JS
+     aplica a escala; a origem tem de ser a ponta, não o centro da caixa). */
+  transform-origin: 41.7% 42.8%;
+}
+
+.menu-trigger__svg { display: block; width: 100%; height: auto; overflow: visible; }
+.menu-trigger__shape { fill: var(--blue); }
+.menu-trigger__letters path { fill: var(--cream); }
+
+
+/* 6. Grelha e mosaicos ==================================================== */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--col-min)), 1fr));
+  max-width: var(--grid-max);
+  margin-inline: auto;
+}
+
+/* Cada mosaico recebe o seu par fundo/texto por uma classe modificadora,
+   para que nenhuma cor apareça solta dentro dos blocos. */
+.tile {
+  display: flex;
+  flex-direction: column;
+  padding: var(--tile-pad);
+  background: var(--tile-bg);
+  color: var(--tile-fg);
+  scroll-margin-top: var(--scroll-offset);
+}
+
+.tile--peach { --tile-bg: var(--peach);      --tile-fg: var(--blue); }
+.tile--blue  { --tile-bg: var(--blue-mid);   --tile-fg: var(--white); }
+.tile--navy  { --tile-bg: var(--blue);       --tile-fg: var(--cream); }
+.tile--cream { --tile-bg: var(--cream);      --tile-fg: var(--blue); }
+.tile--sky   { --tile-bg: var(--blue-light); --tile-fg: var(--white); }
+.tile--olive { --tile-bg: var(--olive);      --tile-fg: var(--white); }
+
+.tile__head { display: flex; align-items: flex-start; gap: 18px; }
+
+/* Três desenhos de título: compacto (base), itálico e espacejado. */
+.tile__title {
+  flex: 1;
+  font-size: 31px;
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -.025em;
+  text-transform: lowercase;
+}
+.tile__title--regular { font-weight: 400; }
+.tile__title--italic  { font-weight: 400; font-style: italic; line-height: .95; letter-spacing: -.005em; }
+.tile__title--tracked { font-weight: 400; line-height: 1;     letter-spacing: .32em; }
+
+/* O "+" roda para "×" quando abre — a rotação é aplicada pelo JS. */
+.tile__toggle {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: .75;
+  cursor: pointer;
+  transition: transform .25s ease;
+}
+
+.tile__lead {
+  margin-top: 18px;
+  max-width: 34ch;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+/* Conteúdo escondido até se carregar no "+" (o JS troca o display). */
+.tile__body { display: none; margin-top: 16px; }
+.tile__body--stack { flex-direction: column; gap: 4px; }
+.tile__body--stack a { display: block; font-size: 14px; line-height: 1.6; }
+
+.tile__list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tile__list li { font-size: 14px; line-height: 1.6; }
+
+.tile__text { max-width: 44ch; font-size: 14px; line-height: 1.65; }
+.tile__list + .tile__text { margin-top: 12px; }
+
+/* Resumo em versaletes, colado ao fundo do mosaico. */
+.tile__caption {
+  margin-top: auto;
+  padding-top: 26px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.tile__cta {
+  margin-top: 24px;
+  align-self: flex-start;
+  padding: 11px 20px;
+  border: 1.5px solid currentColor;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.tile__cta:hover {
+  background: var(--cream);
+  color: var(--blue-mid);
+  text-decoration: none;
+}
+
+/* Fotografias intercaladas na grelha. */
+.media {
+  display: grid;
+  background: var(--blue);
+  min-height: clamp(240px, 26vw, 380px);
+}
+.media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+
+/* 7. Tabela de acessos ==================================================== */
+
+.access { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+.access th,
+.access td { padding: 6px 8px; border-bottom: 1px solid var(--rule-soft); }
+
+.access th {
+  border-bottom-color: var(--rule);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* Primeira coluna encostada à esquerda; tempos alinhados à direita e sem
+   quebrar. O cabeçalho e os dados diferem: só os destinos têm entrelinha
+   folgada, e só os tempos ficam em nowrap. */
+.access th:first-child,
+.access td:first-child { padding-left: 0; }
+
+.access th:last-child,
+.access td:last-child { padding-right: 0; }
+
+.access th:first-child { text-align: left; }
+.access th:not(:first-child) { text-align: right; }
+
+.access td:first-child { line-height: 1.35; }
+.access td:not(:first-child) { text-align: right; white-space: nowrap; }
+
+.access + .tile__list { margin-top: 12px; }
+
+
+/* 8. Menu de ecrã inteiro ================================================= */
+
+/* Estado de repouso. O JS trata da abertura: entrada do fundo, opacidade e
+   atrasos escalonados de cada item são escritos inline por ele. */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding: min(9vh, 70px) var(--tile-pad) 160px;
+  overflow-y: auto;
+  color: var(--cream);
+  background: transparent;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.menu__list { list-style: none; width: 100%; max-width: 480px; margin: 0 auto; padding: 0; }
+
+/* Nome de classe partilhado com o JS, que percorre .menu-item para escalonar
+   a entrada — mudar aqui obriga a mudar lá. */
+.menu-item { opacity: 0; transform: translateY(14px); }
+
+.menu__link {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding: 9px 0;
+  font-size: clamp(24px, 5.4vw, 34px);
+  font-weight: 700;
+  letter-spacing: -.015em;
+  text-transform: uppercase;
+}
+.menu__link:hover { text-decoration: none; }
+
+.menu__index { min-width: 1.6em; }
+.menu__label { flex: 1; }
+
+.menu__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  max-width: 480px;
+  margin: 34px auto 0;
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.pill {
+  padding: 7px 15px;
+  border: 1.5px solid currentColor;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.pill:hover { background: var(--cream); color: var(--blue); text-decoration: none; }
+
+.menu-close {
+  position: fixed;
+  right: var(--close-right);
+  top: var(--close-top);
+  z-index: 70;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: rotate(-120deg) scale(.4);
+  pointer-events: none;
+}
+.menu-close svg { display: block; width: 100%; height: 100%; fill: var(--cream); }
+
+
+/* 9. Rodapé (marquee) ===================================================== */
+
+.marquee {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  height: var(--marquee-h);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--blue);
+}
+
+/* A frase está repetida seis vezes: o translate de -50% cai sempre numa
+   cópia idêntica, por isso o ciclo não tem emenda visível. */
+.marquee__track { display: flex; width: max-content; animation: marquee 25s linear infinite; }
+
+.marquee__text {
+  padding-right: 60px;
+  white-space: nowrap;
+  color: var(--cream);
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+
+/* 10. Ecrãs estreitos ===================================================== */
+
+/* Só medidas do cabeçalho: sem isto o "PT — EN" centrado encavalita no
+   logótipo abaixo dos ~390px. */
+@media (max-width: 640px) {
+  :root {
+    --header-h:      66px;
+    --header-gap:    16px;
+    --header-pad-x:  18px;
+    --wordmark-h:    32px;
+    --trigger-w:     52px;
+    --close-right:   18px;
+    --close-top:     88px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <header class="sheet-head">
-    <span class="brand" data-i18n="brand">a Sineira — Associação &amp; Espaço Cultural</span>
-    <span class="where">Retorta · Vila do Conde</span>
-    <div class="lang-toggle" role="group" aria-label="PT — EN">
-      <button type="button" id="langPt" aria-pressed="true">PT</button>
-      <span class="lang-sep" aria-hidden="true">—</span>
-      <button type="button" id="langEn" aria-pressed="false">EN</button>
-    </div>
-  </header>
+<!-- ===== Cabeçalho ====================================================== -->
 
-  <div class="catalog-wrap">
-    <button class="cat-nav prev" id="catPrev" type="button" data-i18n-aria="prevCol" aria-label="Coluna anterior">‹</button>
-    <button class="cat-nav next" id="catNext" type="button" data-i18n-aria="nextCol" aria-label="Coluna seguinte">›</button>
+<header class="site-header" id="site-header">
 
-    <div class="catalog" id="catalog">
+  <a class="wordmark" id="wm-link" href="#" aria-label="a Sineira">
+    <svg class="wordmark__svg" viewBox="48 42 194 58" role="img" aria-label="a Sineira" shape-rendering="geometricPrecision">
+      <g class="wm__letter wm__a" id="wm-a" transform="translate(61.805172,73.153994) rotate(0)"><path d="M69.823985,81.501434c-.890183,2.191852-2.012935,5.465021-2.104465,6.074494l-6.089234-2.473037c.006775-.527952.366541-1.795292.59178-2.381029-1.359507.954594-3.531095,1.809153-7.602648.155563-5.550884-2.254396-6.410494-6.854411-4.960295-10.425162c2.130009-5.244613,7.324404-5.953472,14.074134-3.212186l3.285291,1.334264.571407-1.406947c.664744-1.636765.729446-3.485605-2.226502-4.686112-2.690844-1.092839-3.744337-.188405-4.714542,1.359611l-6.061185-2.461646c2.007121-3.950634,5.881465-6.233827,12.864932-3.351763c6.150156,2.54363,8.527829,6.315106,6.30228,11.794964l-3.930953,9.678986ZM65.45233,74.446331l-2.596746-1.054624c-3.840831-1.559887-5.741204-.965669-6.642595,1.253779-.67687,1.666623-.224395,3.485186,2.066532,4.415607c4.050743,1.645139,5.691927-.96846,6.927159-4.00991l.24565-.604852Z" transform="translate(-61.805172,-73.153994)"></path></g>
+      <g class="wm__letter wm__s" transform="translate(102.681297,70.45)"><path d="M96.421534,77.298584c.754883,3.323731,3.138672,4.780762,6.969727,4.780762c3.819336,0,5.453125-1.508789,5.453125-3.931641c0-2.693359-1.594727-3.862305-7.254883-5.179687-9.006836-2.114258-11.233398-5.390137-11.233398-9.858399c0-5.768554,4.314453-9.685547,12.149414-9.685547c8.787109,0,12.288086,4.723633,12.761719,9.564453h-7.209961c-.345703-2.036621-1.47168-4.248535-5.738281-4.248535-2.904297,0-4.657227,1.199707-4.657227,3.549317c0,2.301757,1.405273,3.234863,6.75293,4.475097c9.625976,2.268067,11.736328,5.849121,11.736328,10.515137c0,6.042969-4.572266,10.188965-13.321289,10.188965-8.400391,0-12.825196-4.135742-13.618165-10.169922h7.209961Z" transform="translate(-102.681297,-70.446289)"></path></g>
+      <g class="wm__letter wm__i1-dot" transform="translate(122.109634,64.644287)"><rect width="6.87987" height="6.13574" transform="translate(-3.439634,-3.067887)"></rect></g>
+      <g class="wm__letter wm__i1-stem" transform="translate(122.109634,79.004761)"><rect width="6.87987" height="15.99" transform="translate(-3.439634,-7.994961)"></rect></g>
+      <g class="wm__letter wm__n" transform="translate(140.437744,74.288086)"><path d="M129.301519,68.412354c0-2.112305,0-5.000489-.048828-6.835938h6.663086c.138671.641113.228515,2.942871.264648,3.741699.844727-1.560547,2.855469-3.741699,7.208008-3.741699c4.991211,0,8.234375,3.37207,8.234375,9.616211v15.807129h-6.879883v-15.042481c0-2.793457-.930664-4.816894-3.966797-4.816894-2.922852,0-4.595703,1.625-4.595703,6.012695v13.84668h-6.878906v-18.587402Z" transform="translate(-140.437744,-74.288086)"></path></g>
+      <g class="wm__letter wm__e" transform="translate(165.976837,74.576172) rotate(0)"><path d="M161.196567,76.047607c.005859,3.107422,1.5625,6.14502,4.987305,6.14502c2.864258,0,3.682617-1.149902,4.334961-2.65332h6.885742c-.881836,3.041504-3.594727,8.036621-11.401367,8.036621-8.183594,0-11.734375-6.119629-11.734375-12.638672c0-7.794434,4-13.36084,11.980468-13.36084c8.53418,0,11.435547,6.17334,11.435547,12.375977c0,.841308,0,1.38623-.09082,2.095214h-16.397461Zm9.59668-4.225585c-.047852-2.892579-1.203125-5.327149-4.555664-5.327149-3.295899,0-4.622071,2.272949-4.896485,5.327149h9.452149Z" transform="translate(-165.976837,-74.576172)"></path></g>
+      <g class="wm__letter wm__i2-dot" transform="translate(183.770813,56.491943)"><rect width="6.87988" height="6.13574" transform="translate(-3.439813,-3.067843)"></rect></g>
+      <g class="wm__letter wm__i2-stem" transform="translate(183.77094,86.9997) scale(1,1)"><rect width="6.87988" height="24.1423" transform="translate(-3.43994,-24.1423)"></rect></g>
+      <g class="wm__letter wm__r" transform="translate(198.365051,74.640503) rotate(0)"><path d="M190.962709,69.597168c0-2.46875-.005859-4.661621-.047852-6.739746h6.747071c.09082.556641.180664,3.022461.180664,4.362305c1.09668-2.839844,3.746094-4.915528,7.972656-4.938477v6.564453c-4.992188-.128418-7.972656.51001-7.972656,7.321045v10.833008h-6.879883v-17.402588Z" transform="translate(-198.365051,-74.640503)"></path></g>
+      <g class="wm__letter wm__a2" transform="translate(217.027161,74.288059)"><path d="M227.903139,80.291936c0,2.365722.191406,5.8208.335937,6.419921h-6.572265c-.192383-.491699-.335938-1.801269-.347657-2.42871-.90039,1.395996-2.589843,3.004882-6.985351,3.004882-5.991211,0-8.518555-3.938476-8.518555-7.79248c0-5.660645,4.545899-8.271973,11.831055-8.271973h3.545898v-1.907658c0-1.766602-.635742-3.114803-3.826172-3.114803-2.904297,0-3.540039.845272-3.856445,2.644588h-6.541992c.373047-4.415527,3.103515-7.599666,10.658203-7.557185c6.655273.04248,10.277344,2.252986,10.277344,8.167537v10.835881Zm-6.705094-4.891602h-2.802719c-4.145508,0-5.682617,1.265625-5.682617,3.661133c0,1.798828,1.103516,3.313476,3.576172,3.313476c4.37207,0,4.909164-3.039062,4.909164-6.321777v-.652832Z" transform="translate(-217.027161,-74.288059)"></path></g>
+    </svg>
+  </a>
 
-      <article class="card" id="intro">
-        <p class="id" data-i18n="introId">00 · Comunidade</p>
-        <div class="thumb">
-          <video id="bg-video" src="pop.mp4" autoplay muted loop playsinline></video>
-          <button class="video-toggle" id="videoToggle" type="button" data-i18n-aria="videoSound" aria-label="Ativar / desativar som do vídeo" aria-pressed="false"></button>
-        </div>
-        <h2 data-i18n="introH2">Está a nascer uma comunidade para as artes…</h2>
-        <p data-i18n="introP">Formação, criação e apresentação no complexo da antiga Igreja de Retorta. Um ponto de encontro intergeracional, com as artes e com a natureza.</p>
-      </article>
-
-      <article class="card" id="formacao">
-        <p class="id" data-i18n="formId">01 · Formação</p>
-        <div class="thumb"><img src="imagem 1.png" data-i18n-alt="alt1" alt="Crianças em atividade de formação em palco" loading="lazy"></div>
-        <h2 data-i18n="formH2">formação</h2>
-        <p data-i18n="formP1">Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.</p>
-        <ul>
-          <li data-i18n="formLi1">Aulas regulares</li>
-          <li data-i18n="formLi2">Workshops</li>
-          <li data-i18n="formLi3">Cursos intensivos</li>
-          <li data-i18n="formLi4">Campo de férias</li>
-        </ul>
-        <p data-i18n="formP2">Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
-      </article>
-
-      <article class="card" id="criacao">
-        <p class="id" data-i18n="criaId">02 · Criação</p>
-        <div class="thumb"><img src="imagem 2.png" data-i18n-alt="alt2" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy"></div>
-        <h2 data-i18n="criaH2">criação</h2>
-        <p data-i18n="criaP">Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.</p>
-        <ul>
-          <li data-i18n="criaLi1">Residências artísticas com alojamento</li>
-          <li data-i18n="criaLi2">Estúdio polivalente</li>
-          <li data-i18n="criaLi3">Estúdio de dança profissional</li>
-          <li data-i18n="criaLi4">Igreja: espaço multiusos</li>
-        </ul>
-      </article>
-
-      <article class="card" id="apresentacao">
-        <p class="id" data-i18n="apresId">03 · Apresentação</p>
-        <div class="thumb"><img src="imagem 3.png" data-i18n-alt="alt3" alt="Bailarina em ensaio com estrutura de madeira" loading="lazy"></div>
-        <h2 data-i18n="apresH2">apresentação</h2>
-        <p data-i18n="apresP">Divulgamos projetos artísticos no estúdio/palco e na igreja.</p>
-        <ul>
-          <li data-i18n="apresLi1">Espetáculos</li>
-          <li data-i18n="apresLi2">Sessões de cinema</li>
-          <li data-i18n="apresLi3">Exposições e convívios</li>
-          <li data-i18n="apresLi4">Festival anual de dança e música</li>
-        </ul>
-      </article>
-
-      <article class="card" id="instituicao">
-        <p class="id" data-i18n="espId">04 · O espaço</p>
-        <h2 data-i18n="espH2">Antiga Igreja de Retorta</h2>
-        <p data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
-        <ul>
-          <li data-i18n="espLi1">Estúdio / palco</li>
-          <li data-i18n="espLi2">Igreja: espaço multiusos</li>
-          <li data-i18n="espLi3">Alojamento: residências artísticas</li>
-          <li data-i18n="espLi4">Restauração · estacionamento</li>
-          <li data-i18n="espLi5">Floresta: percursos de lazer e pedagógicos</li>
-          <li data-i18n="espLi6">Clareira: espaço para festival</li>
-        </ul>
-      </article>
-
-      <article class="card" id="como-chegar">
-        <p class="id" data-i18n="chegarId">05 · Como chegar</p>
-        <h2 data-i18n="chegarH2">Acessos</h2>
-        <table class="dist-table">
-          <thead>
-            <tr><th data-i18n="thDest">destino</th><th data-i18n="thFoot">a pé</th><th data-i18n="thCar">carro</th></tr>
-          </thead>
-          <tbody>
-            <tr><td data-i18n="row1">Ponte de Retorta / Estação Aquícola</td><td>5 min</td><td>1 min</td></tr>
-            <tr><td data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</td><td>14 min</td><td>3 min</td></tr>
-            <tr><td data-i18n="row3">Metro Vila do Conde</td><td>24 min</td><td>4 min</td></tr>
-          </tbody>
-        </table>
-        <ul>
-          <li data-i18n="chegarLi1">Metro Santa Clara / V. do Conde — 5–15 min</li>
-          <li data-i18n="chegarLi2">Centro histórico — 10–20 min</li>
-          <li data-i18n="chegarLi3">Praias — 20–30 min</li>
-          <li data-i18n="chegarLi4">Metro Trindade / Porto — 40–60 min</li>
-          <li data-i18n="chegarLi5">Aeroporto Sá Carneiro — 20–50 min</li>
-        </ul>
-      </article>
-
-      <article class="card" id="eventos">
-        <p class="id" data-i18n="evId">06 · Eventos</p>
-        <h2 data-i18n="evH2">Eventos</h2>
-        <p data-i18n="evP1">Próximos, últimos e arquivo — brevemente.</p>
-        <p data-i18n="evP2">Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.</p>
-      </article>
-
-      <article class="card fill" id="amigos">
-        <p class="id" data-i18n="amId">07 · Amigos</p>
-        <h2 data-i18n="amH2">Amigo da Sineira</h2>
-        <p data-i18n="amP">Adere e torna-te um “Amigo da Sineira”:</p>
-        <ul>
-          <li data-i18n="amLi1">Acesso gratuito a todos os eventos</li>
-          <li data-i18n="amLi2">Desconto em aulas regulares, workshops e cursos intensivos</li>
-          <li data-i18n="amLi3">Surpresas mensais</li>
-        </ul>
-        <a class="cta" id="amigoCta" href="mailto:ola@asineira.pt?subject=Quero%20ser%20Amigo%20da%20Sineira" data-i18n="amCta">Quero aderir</a>
-      </article>
-
-      <article class="card" id="contactos">
-        <p class="id" data-i18n="coId">08 · Contactos</p>
-        <h2 data-i18n="coH2">Fala connosco</h2>
-        <p data-i18n="coLegal">a Sineira — Associação Cultural · NIF 518858359</p>
-        <p data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
-        Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
-        <p><a href="mailto:ola@asineira.pt">ola@asineira.pt</a><br>
-        <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a></p>
-      </article>
-
-    </div>
-
-    <div class="cat-dots" id="catDots" aria-hidden="true"></div>
+  <div class="lang" role="group" aria-label="PT — EN">
+    <button class="lang__btn" id="lang-pt" type="button" aria-pressed="true">PT</button>
+    <span class="lang__sep" aria-hidden="true">—</span>
+    <button class="lang__btn" id="lang-en" type="button" aria-pressed="false">EN</button>
   </div>
 
-  <button class="triangle" id="menuTriangle" data-i18n-aria="openMenu" aria-label="Abrir menu" aria-expanded="false">
-    <svg viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg">
+  <button class="menu-trigger" id="tri-btn" aria-label="Abrir menu" aria-expanded="false">
+    <svg class="menu-trigger__svg" viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <clipPath id="triClip" clipPathUnits="userSpaceOnUse">
-          <path id="triClipPath" d="M95.7804 387L382 110.293L0 0L95.7804 387Z" />
+          <path d="M95.7804 387L382 110.293L0 0L95.7804 387Z"></path>
         </clipPath>
       </defs>
       <g id="triRot">
-        <path class="shape-blue" d="M95.7804 387L382 110.293L0 0L95.7804 387Z" />
+        <path class="menu-trigger__shape" d="M95.7804 387L382 110.293L0 0L95.7804 387Z"></path>
       </g>
-      <g class="letters" clip-path="url(#triClip)">
-        <path class="shape-cream" d="M237.388 200.34C247.689 213.363 261.205 214.741 278 206.656C294.744 198.596 298.733 188.514 293.636 177.859C287.97 166.014 278.519 164.239 250.934 170.39C207 180.098 190.348 170.391 180.948 150.741C168.813 125.373 179.487 99.0424 213.836 82.5088C252.358 63.9658 277.644 77.3509 289.904 97.6398L258.295 112.855C252.495 104.628 242.906 97.2765 224.201 106.28C211.468 112.409 206.307 121.384 211.25 131.717C216.092 141.839 224.216 142.977 250.269 137.146C297.241 126.807 314.026 138.102 323.842 158.622C336.554 185.197 325.231 213.078 286.876 231.541C250.048 249.268 221.95 240.417 205.779 215.554L237.388 200.34Z" />
-        <path class="shape-cream" d="M127.809 268.327C123.481 279.019 118.021 294.985 117.576 297.957L87.9668 285.895C87.9997 283.319 89.7491 277.138 90.8443 274.28C84.2336 278.937 73.674 283.105 53.8757 275.039C26.8839 264.043 22.704 241.605 29.7557 224.188C40.1131 198.606 65.3714 195.148 98.1927 208.519L114.168 215.028L116.946 208.165C120.179 200.181 120.493 191.163 106.12 185.307C93.0352 179.976 87.9124 184.388 83.1947 191.939L53.7216 179.932C63.4814 160.661 82.3208 149.524 116.279 163.582C146.184 175.99 157.746 194.386 146.924 221.116L127.809 268.327ZM106.552 233.914L93.9249 228.77C75.2484 221.161 66.0077 224.06 61.6246 234.886C58.3332 243.015 60.5334 251.886 71.6733 256.424C91.3705 264.449 99.3509 251.7 105.357 236.865L106.552 233.914Z" />
+      <g class="menu-trigger__letters" id="triLetters" clip-path="url(#triClip)">
+        <path d="M237.388 200.34C247.689 213.363 261.205 214.741 278 206.656C294.744 198.596 298.733 188.514 293.636 177.859C287.97 166.014 278.519 164.239 250.934 170.39C207 180.098 190.348 170.391 180.948 150.741C168.813 125.373 179.487 99.0424 213.836 82.5088C252.358 63.9658 277.644 77.3509 289.904 97.6398L258.295 112.855C252.495 104.628 242.906 97.2765 224.201 106.28C211.468 112.409 206.307 121.384 211.25 131.717C216.092 141.839 224.216 142.977 250.269 137.146C297.241 126.807 314.026 138.102 323.842 158.622C336.554 185.197 325.231 213.078 286.876 231.541C250.048 249.268 221.95 240.417 205.779 215.554L237.388 200.34Z"></path>
+        <path d="M127.809 268.327C123.481 279.019 118.021 294.985 117.576 297.957L87.9668 285.895C87.9997 283.319 89.7491 277.138 90.8443 274.28C84.2336 278.937 73.674 283.105 53.8757 275.039C26.8839 264.043 22.704 241.605 29.7557 224.188C40.1131 198.606 65.3714 195.148 98.1927 208.519L114.168 215.028L116.946 208.165C120.179 200.181 120.493 191.163 106.12 185.307C93.0352 179.976 87.9124 184.388 83.1947 191.939L53.7216 179.932C63.4814 160.661 82.3208 149.524 116.279 163.582C146.184 175.99 157.746 194.386 146.924 221.116L127.809 268.327ZM106.552 233.914L93.9249 228.77C75.2484 221.161 66.0077 224.06 61.6246 234.886C58.3332 243.015 60.5334 251.886 71.6733 256.424C91.3705 264.449 99.3509 251.7 105.357 236.865L106.552 233.914Z"></path>
       </g>
     </svg>
   </button>
 
-  <nav class="menu" id="menu" aria-hidden="true">
-    <ol>
-      <li class="m1" style="--d: .75s"><a href="#formacao"><span class="n">1.</span><span class="label" data-i18n="formH2">formação</span><span class="arrow">→</span></a></li>
-      <li class="m2" style="--d: .85s"><a href="#criacao"><span class="n">2.</span><span class="label" data-i18n="criaH2">criação</span><span class="arrow">→</span></a></li>
-      <li class="m3" style="--d: .95s"><a href="#apresentacao"><span class="n">3.</span><span class="label" data-i18n="apresH2">apresentação</span><span class="arrow">→</span></a></li>
-      <li class="m4" style="--d: 1.05s"><a href="#como-chegar"><span class="n">4.</span><span class="label" data-i18n="menuChegar">como chegar</span><span class="arrow">→</span></a></li>
-      <li class="m5" style="--d: 1.15s"><a href="#eventos"><span class="n">5.</span><span class="label" data-i18n="evH2">eventos</span><span class="arrow">→</span></a></li>
-    </ol>
-    <div class="pills">
-      <a href="#formacao" data-i18n="pillAtiv">🤸 atividades</a>
-      <a href="#como-chegar" data-i18n="pillChegar">📍 como chegar</a>
-      <a href="#eventos" data-i18n="pillEv">📅 eventos</a>
-      <a href="#instituicao" data-i18n="pillInst">🏠 instituição</a>
-      <a href="#contactos" data-i18n="pillCo">☎️ contactos</a>
-      <a href="#amigos" data-i18n="pillAm">💳 amigos</a>
-      <a href="dossier/" data-i18n="pillDos">🗂️ dossier</a>
-    </div>
-    <p class="vers">
-      <span data-i18n="experiencias">experiências</span>:
-      <a href="./">1</a>
-      <a href="teste2/">2</a>
-      <a href="teste3/">3</a>
-      <a href="teste4/">4</a>
-      <a href="teste5/">5</a>
-      <a href="teste6/">6</a>
-    </p>
-  </nav>
+</header>
 
-  <button class="menu-close" id="menuClose" data-i18n-aria="closeMenu" aria-label="Fechar menu">
-    <svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
-      <path d="M32.8795 0.0325423L37.6193 4.77237L23.5656 18.8261L37.5862 32.8467L32.8464 37.5865L18.8258 23.5659L4.77203 37.6197L0.0322052 32.8799L14.086 18.8261L-0.000940464 4.73922L4.73888 -0.000603347L18.8258 14.0863L32.8795 0.0325423Z"/>
-    </svg>
-  </button>
 
-  <div class="banner">
-    <div class="track">
-      <span class="marquee-text" id="marqueeText" style="--text: 'Adere já e torna-te um &quot;Amigo da Sineira&quot; para descontos e surpresas mensais!';"></span>
+<!-- ===== Grelha de mosaicos ============================================= -->
+
+<main class="tiles" id="grid">
+
+  <article class="tile tile--peach" id="eventos" data-screen-label="eventos">
+    <div class="tile__head">
+      <h2 class="tile__title tile__title--regular" data-i18n="evH2">eventos</h2>
+      <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais">+</button>
     </div>
+    <p class="tile__lead" data-i18n="evP1">Próximos, últimos e arquivo — brevemente.</p>
+    <div class="tile__body" data-tile-body="Eventos">
+      <p class="tile__text" data-i18n="evP2">Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.</p>
+    </div>
+    <p class="tile__caption" data-i18n="capEv">Próximos · últimos · arquivo — brevemente</p>
+  </article>
+
+  <figure class="media">
+    <img src="./voar4-mt1lbpkk-gskk.jpg" data-i18n-alt="alt1" alt="Crianças em atividade de formação em palco" loading="lazy">
+  </figure>
+
+  <article class="tile tile--blue" id="formacao" data-screen-label="formação">
+    <div class="tile__head">
+      <h2 class="tile__title tile__title--italic" data-i18n="formH2">formação</h2>
+      <button class="tile__toggle" type="button" data-tile="Formacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    </div>
+    <p class="tile__lead" data-i18n="formP1">Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.</p>
+    <div class="tile__body" data-tile-body="Formacao">
+      <ul class="tile__list">
+        <li data-i18n="formLi1">Aulas regulares</li>
+        <li data-i18n="formLi2">Workshops</li>
+        <li data-i18n="formLi3">Cursos intensivos</li>
+        <li data-i18n="formLi4">Campo de férias</li>
+      </ul>
+      <p class="tile__text" data-i18n="formP2">Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
+    </div>
+    <p class="tile__caption" data-i18n="capForm">Aulas regulares · workshops · cursos intensivos · campo de férias</p>
+  </article>
+
+  <figure class="media">
+    <img src="./voar7-mt1lby5g-cd2e.jpg" data-i18n-alt="alt2" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy">
+  </figure>
+
+  <article class="tile tile--navy" id="criacao" data-screen-label="criação">
+    <div class="tile__head">
+      <h2 class="tile__title tile__title--tracked" data-i18n="criaH2">criação</h2>
+      <button class="tile__toggle" type="button" data-tile="Criacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    </div>
+    <p class="tile__lead" data-i18n="criaP">Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.</p>
+    <div class="tile__body" data-tile-body="Criacao">
+      <ul class="tile__list">
+        <li data-i18n="criaLi1">Residências artísticas com alojamento</li>
+        <li data-i18n="criaLi2">Estúdio polivalente</li>
+        <li data-i18n="criaLi3">Estúdio de dança profissional</li>
+        <li data-i18n="criaLi4">Igreja: espaço multiusos</li>
+      </ul>
+    </div>
+    <p class="tile__caption" data-i18n="capCria">Residências · estúdio polivalente · estúdio de dança · igreja</p>
+  </article>
+
+  <article class="tile tile--cream" id="apresentacao" data-screen-label="apresentação">
+    <div class="tile__head">
+      <h2 class="tile__title" data-i18n="apresH2">apresentação</h2>
+      <button class="tile__toggle" type="button" data-tile="Apresentacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    </div>
+    <p class="tile__lead" data-i18n="apresP">Divulgamos projetos artísticos no estúdio/palco e na igreja.</p>
+    <div class="tile__body" data-tile-body="Apresentacao">
+      <ul class="tile__list">
+        <li data-i18n="apresLi1">Espetáculos</li>
+        <li data-i18n="apresLi2">Sessões de cinema</li>
+        <li data-i18n="apresLi3">Exposições e convívios</li>
+        <li data-i18n="apresLi4">Festival anual de dança e música</li>
+      </ul>
+    </div>
+    <p class="tile__caption" data-i18n="capApres">Espetáculos · cinema · exposições · festival anual</p>
+  </article>
+
+  <article class="tile tile--cream" id="instituicao" data-screen-label="o espaço">
+    <div class="tile__head">
+      <h2 class="tile__title tile__title--italic" data-i18n="espH2">Antiga Igreja de Retorta</h2>
+      <button class="tile__toggle" type="button" data-tile="Instituicao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    </div>
+    <p class="tile__lead" data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
+    <div class="tile__body" data-tile-body="Instituicao">
+      <ul class="tile__list">
+        <li data-i18n="espLi1">Estúdio / palco</li>
+        <li data-i18n="espLi2">Igreja: espaço multiusos</li>
+        <li data-i18n="espLi3">Alojamento: residências artísticas</li>
+        <li data-i18n="espLi4">Restauração · estacionamento</li>
+        <li data-i18n="espLi5">Floresta: percursos de lazer e pedagógicos</li>
+        <li data-i18n="espLi6">Clareira: espaço para festival</li>
+      </ul>
+    </div>
+    <p class="tile__caption" data-i18n="capEsp">18.000 m² · estúdio · igreja · alojamento · floresta · clareira</p>
+  </article>
+
+  <article class="tile tile--sky" id="como-chegar" data-screen-label="como chegar">
+    <div class="tile__head">
+      <h2 class="tile__title tile__title--tracked" data-i18n="chegarH2">Acessos</h2>
+      <button class="tile__toggle" type="button" data-tile="Chegar" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    </div>
+    <p class="tile__lead" data-i18n="chegarLi1">Metro Santa Clara / V. do Conde — 5–15 min</p>
+    <div class="tile__body" data-tile-body="Chegar">
+      <table class="access">
+        <thead>
+          <tr>
+            <th data-i18n="thDest">destino</th>
+            <th data-i18n="thFoot">a pé</th>
+            <th data-i18n="thCar">carro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-i18n="row1">Ponte de Retorta / Estação Aquícola</td>
+            <td>5 min</td>
+            <td>1 min</td>
+          </tr>
+          <tr>
+            <td data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</td>
+            <td>14 min</td>
+            <td>3 min</td>
+          </tr>
+          <tr>
+            <td data-i18n="row3">Metro Vila do Conde</td>
+            <td>24 min</td>
+            <td>4 min</td>
+          </tr>
+        </tbody>
+      </table>
+      <ul class="tile__list">
+        <li data-i18n="chegarLi2">Centro histórico — 10–20 min</li>
+        <li data-i18n="chegarLi3">Praias — 20–30 min</li>
+        <li data-i18n="chegarLi4">Metro Trindade / Porto — 40–60 min</li>
+        <li data-i18n="chegarLi5">Aeroporto Sá Carneiro — 20–50 min</li>
+      </ul>
+    </div>
+    <p class="tile__caption" data-i18n="capChegar">Ponte de Retorta 5 min · metro V. do Conde 4 min · Porto 40 min</p>
+  </article>
+
+  <figure class="media">
+    <img src="./sc1-mt1lcwzm-0usn.png" data-i18n-alt="alt3" alt="Bailarina em ensaio com estrutura de madeira" loading="lazy">
+  </figure>
+
+  <article class="tile tile--olive" id="amigos" data-screen-label="amigos">
+    <div class="tile__head">
+      <h2 class="tile__title" data-i18n="amH2">Amigo da Sineira</h2>
+      <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    </div>
+    <p class="tile__lead" data-i18n="amP">Adere e torna-te um “Amigo da Sineira”:</p>
+    <div class="tile__body" data-tile-body="Amigos">
+      <ul class="tile__list">
+        <li data-i18n="amLi1">Acesso gratuito a todos os eventos</li>
+        <li data-i18n="amLi2">Desconto em aulas regulares, workshops e cursos intensivos</li>
+        <li data-i18n="amLi3">Surpresas mensais</li>
+      </ul>
+    </div>
+    <a class="tile__cta" id="amigo-cta" data-i18n="amCta" href="mailto:ola@asineira.pt">Quero aderir</a>
+    <p class="tile__caption" data-i18n="capAm">Acesso gratuito · descontos · surpresas mensais</p>
+  </article>
+
+  <article class="tile tile--peach" id="contactos" data-screen-label="contactos">
+    <div class="tile__head">
+      <h2 class="tile__title tile__title--italic" data-i18n="coH2">Fala connosco</h2>
+      <button class="tile__toggle" type="button" data-tile="Contactos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    </div>
+    <p class="tile__lead" data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
+    Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
+    <div class="tile__body tile__body--stack" data-tile-body="Contactos">
+      <a href="mailto:ola@asineira.pt">ola@asineira.pt</a>
+      <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <p class="tile__caption" data-i18n="coLegal">a Sineira — Associação Cultural · NIF 518858359</p>
+  </article>
+
+</main>
+
+
+<!-- ===== Menu de ecrã inteiro =========================================== -->
+
+<nav class="menu" id="menu" aria-hidden="true">
+  <ol class="menu__list">
+    <li class="menu-item" data-delay="1">
+      <a class="menu__link" href="#formacao">
+        <span class="menu__index">1.</span><span class="menu__label" data-i18n="formH2">formação</span><span aria-hidden="true">→</span>
+      </a>
+    </li>
+    <li class="menu-item" data-delay="2">
+      <a class="menu__link" href="#criacao">
+        <span class="menu__index">2.</span><span class="menu__label" data-i18n="criaH2">criação</span><span aria-hidden="true">→</span>
+      </a>
+    </li>
+    <li class="menu-item" data-delay="3">
+      <a class="menu__link" href="#apresentacao">
+        <span class="menu__index">3.</span><span class="menu__label" data-i18n="apresH2">apresentação</span><span aria-hidden="true">→</span>
+      </a>
+    </li>
+    <li class="menu-item" data-delay="4">
+      <a class="menu__link" href="#como-chegar">
+        <span class="menu__index">4.</span><span class="menu__label" data-i18n="menuChegar">como chegar</span><span aria-hidden="true">→</span>
+      </a>
+    </li>
+    <li class="menu-item" data-delay="5">
+      <a class="menu__link" href="#eventos">
+        <span class="menu__index">5.</span><span class="menu__label" data-i18n="evH2">eventos</span><span aria-hidden="true">→</span>
+      </a>
+    </li>
+  </ol>
+
+  <div class="menu__pills" id="menu-pills">
+    <a class="pill" href="#formacao"    data-i18n="pillAtiv">🤸 atividades</a>
+    <a class="pill" href="#como-chegar" data-i18n="pillChegar">📍 como chegar</a>
+    <a class="pill" href="#eventos"     data-i18n="pillEv">📅 eventos</a>
+    <a class="pill" href="#instituicao" data-i18n="pillInst">🏠 instituição</a>
+    <a class="pill" href="#contactos"   data-i18n="pillCo">☎️ contactos</a>
+    <a class="pill" href="#amigos"      data-i18n="pillAm">💳 amigos</a>
   </div>
+</nav>
 
-  <script>
-    (function () {
-      const body = document.body;
-      const triangle = document.getElementById('menuTriangle');
-      const menu = document.getElementById('menu');
-      const closeBtn = document.getElementById('menuClose');
-      const catalog = document.getElementById('catalog');
-      const cards = Array.from(catalog.querySelectorAll('.card'));
-      const prevBtn = document.getElementById('catPrev');
-      const nextBtn = document.getElementById('catNext');
-      const dotsEl = document.getElementById('catDots');
-      const langPt = document.getElementById('langPt');
-      const langEn = document.getElementById('langEn');
-      const marqueeText = document.getElementById('marqueeText');
-      const amigoCta = document.getElementById('amigoCta');
-      const metaDesc = document.querySelector('meta[name="description"]');
-
-      const I18N = {
-        pt: {
-          title: 'a Sineira — Associação & Espaço Cultural',
-          desc: 'a Sineira — Associação e Espaço Cultural em Retorta, Vila do Conde. Formação, criação e apresentação nas artes.',
-          brand: 'a Sineira — Associação & Espaço Cultural',
-          prevCol: 'Coluna anterior',
-          nextCol: 'Coluna seguinte',
-          videoSound: 'Ativar / desativar som do vídeo',
-          openMenu: 'Abrir menu',
-          closeMenu: 'Fechar menu',
-          introId: '00 · Comunidade',
-          introH2: 'Está a nascer uma comunidade para as artes…',
-          introP: 'Formação, criação e apresentação no complexo da antiga Igreja de Retorta. Um ponto de encontro intergeracional, com as artes e com a natureza.',
-          formId: '01 · Formação',
-          formH2: 'formação',
-          formP1: 'Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.',
-          formLi1: 'Aulas regulares',
-          formLi2: 'Workshops',
-          formLi3: 'Cursos intensivos',
-          formLi4: 'Campo de férias',
-          formP2: 'Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.',
-          criaId: '02 · Criação',
-          criaH2: 'criação',
-          criaP: 'Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.',
-          criaLi1: 'Residências artísticas com alojamento',
-          criaLi2: 'Estúdio polivalente',
-          criaLi3: 'Estúdio de dança profissional',
-          criaLi4: 'Igreja: espaço multiusos',
-          apresId: '03 · Apresentação',
-          apresH2: 'apresentação',
-          apresP: 'Divulgamos projetos artísticos no estúdio/palco e na igreja.',
-          apresLi1: 'Espetáculos',
-          apresLi2: 'Sessões de cinema',
-          apresLi3: 'Exposições e convívios',
-          apresLi4: 'Festival anual de dança e música',
-          espId: '04 · O espaço',
-          espH2: 'Antiga Igreja de Retorta',
-          espP: 'Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².',
-          espLi1: 'Estúdio / palco',
-          espLi2: 'Igreja: espaço multiusos',
-          espLi3: 'Alojamento: residências artísticas',
-          espLi4: 'Restauração · estacionamento',
-          espLi5: 'Floresta: percursos de lazer e pedagógicos',
-          espLi6: 'Clareira: espaço para festival',
-          chegarId: '05 · Como chegar',
-          chegarH2: 'Acessos',
-          thDest: 'destino',
-          thFoot: 'a pé',
-          thCar: 'carro',
-          row1: 'Ponte de Retorta / Estação Aquícola',
-          row2: 'Escolas Secundária e Básica / Escola Profissional',
-          row3: 'Metro Vila do Conde',
-          chegarLi1: 'Metro Santa Clara / V. do Conde — 5–15 min',
-          chegarLi2: 'Centro histórico — 10–20 min',
-          chegarLi3: 'Praias — 20–30 min',
-          chegarLi4: 'Metro Trindade / Porto — 40–60 min',
-          chegarLi5: 'Aeroporto Sá Carneiro — 20–50 min',
-          evId: '06 · Eventos',
-          evH2: 'eventos',
-          evP1: 'Próximos, últimos e arquivo — brevemente.',
-          evP2: 'Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.',
-          amId: '07 · Amigos',
-          amH2: 'Amigo da Sineira',
-          amP: 'Adere e torna-te um “Amigo da Sineira”:',
-          amLi1: 'Acesso gratuito a todos os eventos',
-          amLi2: 'Desconto em aulas regulares, workshops e cursos intensivos',
-          amLi3: 'Surpresas mensais',
-          amCta: 'Quero aderir',
-          amSubject: 'Quero ser Amigo da Sineira',
-          coId: '08 · Contactos',
-          coH2: 'Fala connosco',
-          coLegal: 'a Sineira — Associação Cultural · NIF 518858359',
-          coAddr: 'Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>\n        Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
-          menuChegar: 'como chegar',
-          pillAtiv: '🤸 atividades',
-          pillChegar: '📍 como chegar',
-          pillEv: '📅 eventos',
-          pillInst: '🏠 instituição',
-          pillCo: '☎️ contactos',
-          pillAm: '💳 amigos',
-          pillDos: '🗂️ dossier',
-          experiencias: 'experiências',
-          marquee: 'Adere já e torna-te um "Amigo da Sineira" para descontos e surpresas mensais!',
-          alt1: 'Crianças em atividade de formação em palco',
-          alt2: 'Músico com guitarra rodeado de crianças em palco',
-          alt3: 'Bailarina em ensaio com estrutura de madeira'
-        },
-        en: {
-          title: 'a Sineira — Association & Cultural Space',
-          desc: 'a Sineira — Cultural Association and Space in Retorta, Vila do Conde. Training, creation and presentation in the arts.',
-          brand: 'a Sineira — Association & Cultural Space',
-          prevCol: 'Previous column',
-          nextCol: 'Next column',
-          videoSound: 'Mute / unmute video',
-          openMenu: 'Open menu',
-          closeMenu: 'Close menu',
-          introId: '00 · Community',
-          introH2: 'A community for the arts is being born…',
-          introP: 'Training, creation and presentation at the former Retorta Church complex. An intergenerational meeting point, with the arts and with nature.',
-          formId: '01 · Training',
-          formH2: 'training',
-          formP1: 'Regular classes “a Sineirinha”, enrolments open! Up to age 14.',
-          formLi1: 'Regular classes',
-          formLi2: 'Workshops',
-          formLi3: 'Intensive courses',
-          formLi4: 'Holiday camp',
-          formP2: 'Dance, music, theatre, architecture, visual arts and fine arts. Programmes for babies, children, young people, adults and seniors.',
-          criaId: '02 · Creation',
-          criaH2: 'creation',
-          criaP: 'Artistic residencies and support for creation, at the former Retorta Church complex.',
-          criaLi1: 'Artistic residencies with lodging',
-          criaLi2: 'Multipurpose studio',
-          criaLi3: 'Professional dance studio',
-          criaLi4: 'Church: multipurpose space',
-          apresId: '03 · Presentation',
-          apresH2: 'presentation',
-          apresP: 'We present artistic projects in the studio/stage and in the church.',
-          apresLi1: 'Performances',
-          apresLi2: 'Film screenings',
-          apresLi3: 'Exhibitions and gatherings',
-          apresLi4: 'Annual dance and music festival',
-          espId: '04 · The space',
-          espH2: 'Former Retorta Church',
-          espP: 'Founded in 2025, a Sineira — Cultural Association is a collective, and also a physical space. Approximate area: 18,000 m².',
-          espLi1: 'Studio / stage',
-          espLi2: 'Church: multipurpose space',
-          espLi3: 'Lodging: artistic residencies',
-          espLi4: 'Food · parking',
-          espLi5: 'Forest: leisure and educational trails',
-          espLi6: 'Clearing: festival space',
-          chegarId: '05 · Getting here',
-          chegarH2: 'Access',
-          thDest: 'destination',
-          thFoot: 'on foot',
-          thCar: 'by car',
-          row1: 'Retorta Bridge / Aquaculture Station',
-          row2: 'Secondary and primary schools / Vocational school',
-          row3: 'Vila do Conde metro',
-          chegarLi1: 'Santa Clara / V. do Conde metro — 5–15 min',
-          chegarLi2: 'Historic centre — 10–20 min',
-          chegarLi3: 'Beaches — 20–30 min',
-          chegarLi4: 'Trindade / Porto metro — 40–60 min',
-          chegarLi5: 'Sá Carneiro Airport — 20–50 min',
-          evId: '06 · Events',
-          evH2: 'events',
-          evP1: 'Upcoming, recent and archive — coming soon.',
-          evP2: 'Follow us for the first activities: regular classes, workshops, holiday camps, film screenings and nature experiences.',
-          amId: '07 · Friends',
-          amH2: 'Friend of a Sineira',
-          amP: 'Join and become a “Friend of a Sineira”:',
-          amLi1: 'Free access to all events',
-          amLi2: 'Discount on regular classes, workshops and intensive courses',
-          amLi3: 'Monthly surprises',
-          amCta: 'I want to join',
-          amSubject: 'I want to be a Friend of a Sineira',
-          coId: '08 · Contacts',
-          coH2: 'Get in touch',
-          coLegal: 'a Sineira — Cultural Association · Tax ID 518858359',
-          coAddr: 'HQ: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>\n        Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
-          menuChegar: 'getting here',
-          pillAtiv: '🤸 activities',
-          pillChegar: '📍 getting here',
-          pillEv: '📅 events',
-          pillInst: '🏠 institution',
-          pillCo: '☎️ contacts',
-          pillAm: '💳 friends',
-          pillDos: '🗂️ dossier',
-          experiencias: 'experiments',
-          marquee: 'Join now and become a "Friend of a Sineira" for discounts and monthly surprises!',
-          alt1: 'Children in a training activity on stage',
-          alt2: 'Musician with guitar surrounded by children on stage',
-          alt3: 'Dancer in rehearsal with a wooden structure'
-        }
-      };
-
-      function applyLang(lang) {
-        const t = I18N[lang] || I18N.pt;
-        document.documentElement.lang = lang;
-        document.title = t.title;
-        if (metaDesc) metaDesc.setAttribute('content', t.desc);
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-          const v = t[el.getAttribute('data-i18n')];
-          if (v != null) el.textContent = v;
-        });
-        document.querySelectorAll('[data-i18n-html]').forEach(el => {
-          const v = t[el.getAttribute('data-i18n-html')];
-          if (v != null) el.innerHTML = v;
-        });
-        document.querySelectorAll('[data-i18n-aria]').forEach(el => {
-          const v = t[el.getAttribute('data-i18n-aria')];
-          if (v != null) el.setAttribute('aria-label', v);
-        });
-        document.querySelectorAll('[data-i18n-alt]').forEach(el => {
-          const v = t[el.getAttribute('data-i18n-alt')];
-          if (v != null) el.setAttribute('alt', v);
-        });
-        if (marqueeText) marqueeText.style.setProperty('--text', JSON.stringify(t.marquee));
-        if (amigoCta) amigoCta.href = 'mailto:ola@asineira.pt?subject=' + encodeURIComponent(t.amSubject);
-        langPt.setAttribute('aria-pressed', String(lang === 'pt'));
-        langEn.setAttribute('aria-pressed', String(lang === 'en'));
-        try { localStorage.setItem('sineira-lang', lang); } catch (e) {}
-      }
-
-      langPt.addEventListener('click', () => applyLang('pt'));
-      langEn.addEventListener('click', () => applyLang('en'));
-      let startLang = 'pt';
-      try {
-        const saved = localStorage.getItem('sineira-lang');
-        if (saved === 'en' || saved === 'pt') startLang = saved;
-      } catch (e) {}
-      applyLang(startLang);
+<button class="menu-close" id="menu-close" aria-label="Fechar menu">
+  <svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+    <path d="M32.8795 0.0325423L37.6193 4.77237L23.5656 18.8261L37.5862 32.8467L32.8464 37.5865L18.8258 23.5659L4.77203 37.6197L0.0322052 32.8799L14.086 18.8261L-0.000940464 4.73922L4.73888 -0.000603347L18.8258 14.0863L32.8795 0.0325423Z"></path>
+  </svg>
+</button>
 
 
-      function coverScale() {
-        const w = triangle.offsetWidth;
-        const h = triangle.offsetHeight;
-        const vv = window.visualViewport;
-        const vw = Math.max(innerWidth, document.documentElement.clientWidth, vv ? vv.width : 0);
-        const vh = Math.max(innerHeight, document.documentElement.clientHeight, vv ? vv.height : 0);
-        const cs = getComputedStyle(triangle);
-        const left = parseFloat(cs.left) || 18;
-        const bottom = parseFloat(cs.bottom) || 80;
-        const top = vh - bottom - h;
-        const cx = left + w * 0.417;
-        const cy = top + h * 0.428;
-        const corners = [
-          [0, 0], [vw, 0], [0, vh], [vw, vh]
-        ];
-        const maxDist = Math.max(...corners.map(([x, y]) => Math.hypot(x - cx, y - cy)));
-        const rIn = w * 0.30;
-        return (maxDist / rIn) * 1.25;
-      }
+<!-- ===== Rodapé ========================================================= -->
 
-      const MENU_DUR_MS = 1100;
-      let openLock = false;
-      let openingUntil = 0;
-      let lastInnerWidth = window.innerWidth;
-      let hitRect = { left: 0, right: 0, top: 0, bottom: 0 };
+<div class="marquee">
+  <div class="marquee__track">
+    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para descontos e surpresas mensais!</span>
+    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para descontos e surpresas mensais!</span>
+    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para descontos e surpresas mensais!</span>
+    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para descontos e surpresas mensais!</span>
+    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para descontos e surpresas mensais!</span>
+    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para descontos e surpresas mensais!</span>
+  </div>
+</div>
 
-      function isMenuOpen() {
-        return body.classList.contains('menu-open');
-      }
-      function isOpening() {
-        return Date.now() < openingUntil;
-      }
-      function cacheHitRect() {
-        if (isMenuOpen() || isOpening()) return;
-        const r = triangle.getBoundingClientRect();
-        const pad = 20;
-        hitRect = {
-          left: r.left - pad,
-          right: r.right + pad,
-          top: r.top - pad,
-          bottom: r.bottom + pad
-        };
-      }
+<script>
+(function () {
+  'use strict';
 
-      function openMenu() {
-        if (isMenuOpen() || openLock) return;
-        openingUntil = Date.now() + MENU_DUR_MS + 80;
-        triangle.style.setProperty('--menu-scale', coverScale());
-        body.classList.add('menu-open');
-        triangle.setAttribute('aria-expanded', 'true');
-        menu.setAttribute('aria-hidden', 'false');
-      }
+  var I18N = {
+    pt: null,
+    en: {
+      title: 'a Sineira — Association & Cultural Space',
+      desc: 'a Sineira — Cultural Association and Space in Retorta, Vila do Conde. Training, creation and presentation in the arts.',
+      formH2: 'training',
+      formP1: 'Regular classes “a Sineirinha”, enrolments open! Up to age 14.',
+      formLi1: 'Regular classes', formLi2: 'Workshops', formLi3: 'Intensive courses', formLi4: 'Holiday camp',
+      formP2: 'Dance, music, theatre, architecture, visual arts and fine arts. Programmes for babies, children, young people, adults and seniors.',
+      capForm: 'Regular classes · workshops · intensive courses · holiday camp',
+      criaH2: 'creation',
+      criaP: 'Artistic residencies and support for creation, at the former Retorta Church complex.',
+      criaLi1: 'Artistic residencies with lodging', criaLi2: 'Multipurpose studio', criaLi3: 'Professional dance studio', criaLi4: 'Church: multipurpose space',
+      capCria: 'Residencies · multipurpose studio · dance studio · church',
+      apresH2: 'presentation',
+      apresP: 'We present artistic projects in the studio/stage and in the church.',
+      apresLi1: 'Performances', apresLi2: 'Film screenings', apresLi3: 'Exhibitions and gatherings', apresLi4: 'Annual dance and music festival',
+      capApres: 'Performances · film · exhibitions · annual festival',
+      espH2: 'Former Retorta Church',
+      espP: 'Founded in 2025, a Sineira — Cultural Association is a collective, and also a physical space. Approximate area: 18,000 m².',
+      espLi1: 'Studio / stage', espLi2: 'Church: multipurpose space', espLi3: 'Lodging: artistic residencies',
+      espLi4: 'Food · parking', espLi5: 'Forest: leisure and educational trails', espLi6: 'Clearing: festival space',
+      capEsp: '18,000 m² · studio · church · lodging · forest · clearing',
+      chegarH2: 'Access',
+      thDest: 'destination', thFoot: 'on foot', thCar: 'by car',
+      row1: 'Retorta Bridge / Aquaculture Station', row2: 'Secondary and primary schools / Vocational school', row3: 'Vila do Conde metro',
+      chegarLi1: 'Santa Clara / V. do Conde metro — 5–15 min', chegarLi2: 'Historic centre — 10–20 min', chegarLi3: 'Beaches — 20–30 min',
+      chegarLi4: 'Trindade / Porto metro — 40–60 min', chegarLi5: 'Sá Carneiro Airport — 20–50 min',
+      capChegar: 'Retorta bridge 5 min · V. do Conde metro 4 min · Porto 40 min',
+      evH2: 'events',
+      evP1: 'Upcoming, recent and archive — coming soon.',
+      evP2: 'Follow us for the first activities: regular classes, workshops, holiday camps, film screenings and nature experiences.',
+      capEv: 'Upcoming · recent · archive — coming soon',
+      amH2: 'Friend of a Sineira', amP: 'Join and become a “Friend of a Sineira”:',
+      amLi1: 'Free access to all events', amLi2: 'Discount on regular classes, workshops and intensive courses', amLi3: 'Monthly surprises',
+      capAm: 'Free access · discounts · monthly surprises',
+      amCta: 'I want to join', amSubject: 'I want to be a Friend of a Sineira',
+      coH2: 'Get in touch',
+      coLegal: 'a Sineira — Cultural Association · Tax ID 518858359',
+      coAddr: 'HQ: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
+      menuChegar: 'getting here',
+      pillAtiv: '🤸 activities', pillChegar: '📍 getting here', pillEv: '📅 events', pillInst: '🏠 institution', pillCo: '☎️ contacts', pillAm: '💳 friends',
+      marquee: 'Join now and become a "Friend of a Sineira" for discounts and monthly surprises!',
+      alt1: 'Children in a training activity on stage', alt2: 'Musician with guitar surrounded by children on stage', alt3: 'Dancer in rehearsal with a wooden structure'
+    }
+  };
 
-      function closeMenu() {
-        if (!isMenuOpen()) return;
-        if (isOpening()) return;
-        body.classList.remove('menu-open');
-        triangle.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-        openLock = true;
-        setTimeout(() => {
-          openLock = false;
-          cacheHitRect();
-        }, 700);
-      }
+  var MENU_DUR = 1100;
+  var EASE = 'cubic-bezier(.6,.05,.25,1)';
 
-      function hitsTriangle(x, y) {
-        if (isMenuOpen() || openLock || isOpening()) return false;
-        return x >= hitRect.left && x <= hitRect.right &&
-               y >= hitRect.top && y <= hitRect.bottom;
-      }
+  var header = document.getElementById('site-header');
+  var wmLink = document.getElementById('wm-link');
+  var btnPt = document.getElementById('lang-pt');
+  var btnEn = document.getElementById('lang-en');
+  var triBtn = document.getElementById('tri-btn');
+  var triRot = document.getElementById('triRot');
+  var triClip = document.getElementById('triClip');
+  var triLetters = document.getElementById('triLetters');
+  var grid = document.getElementById('grid');
+  var menu = document.getElementById('menu');
+  var menuItems = Array.prototype.slice.call(document.querySelectorAll('.menu-item'));
+  var menuPills = document.getElementById('menu-pills');
+  var closeBtn = document.getElementById('menu-close');
+  var amigoCta = document.getElementById('amigo-cta');
+  var tileBtns = Array.prototype.slice.call(document.querySelectorAll('[data-tile]'));
+  var tileBodies = {};
+  Array.prototype.forEach.call(document.querySelectorAll('[data-tile-body]'), function (el) {
+    tileBodies[el.getAttribute('data-tile-body')] = el;
+  });
 
-      cacheHitRect();
-      triangle.addEventListener('pointerenter', openMenu);
-      triangle.addEventListener('mouseenter', openMenu);
-      triangle.addEventListener('pointerdown', openMenu);
-      triangle.addEventListener('click', openMenu);
+  var state = { lang: 'pt', menuOpen: false, cols: 3 };
+  var openingUntil = 0;
+  var closeLock = false;
 
-      function maybeOpenFromTouch(e) {
-        if (isMenuOpen() || openLock || isOpening()) return;
-        const pts = e.touches || e.changedTouches;
-        if (!pts) return;
-        for (let i = 0; i < pts.length; i++) {
-          if (hitsTriangle(pts[i].clientX, pts[i].clientY)) {
-            openMenu();
-            return;
-          }
-        }
-      }
-      document.addEventListener('touchstart', maybeOpenFromTouch, { passive: true });
-      document.addEventListener('touchmove', maybeOpenFromTouch, { passive: true });
-      document.addEventListener('pointermove', e => {
-        if (isMenuOpen() || openLock || isOpening() || e.pointerType === 'mouse') return;
-        if (hitsTriangle(e.clientX, e.clientY)) openMenu();
-      }, { passive: true });
+  /* ---------- i18n ---------- */
 
-      closeBtn.addEventListener('click', closeMenu);
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && isMenuOpen()) closeMenu();
-      });
-      window.addEventListener('resize', () => {
-        const w = window.innerWidth;
-        const widthChanged = Math.abs(w - lastInnerWidth) > 50;
-        lastInnerWidth = w;
-        if (isOpening()) return;
-        cacheHitRect();
-        if (widthChanged && isMenuOpen()) closeMenu();
-      });
+  function nodes(attr) { return Array.prototype.slice.call(document.querySelectorAll('[' + attr + ']')); }
 
-      function goToCard(el) {
-        if (!el) return;
-        el.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-      }
+  var pt = { text: new Map(), html: new Map(), alt: new Map() };
+  nodes('data-i18n').forEach(function (el) { pt.text.set(el, el.textContent); });
+  nodes('data-i18n-html').forEach(function (el) { pt.html.set(el, el.innerHTML); });
+  nodes('data-i18n-alt').forEach(function (el) { pt.alt.set(el, el.getAttribute('alt')); });
+  var ptTitle = document.title;
+  var descMeta = document.querySelector('meta[name="description"]');
+  var ptDesc = descMeta ? descMeta.getAttribute('content') : '';
 
-      menu.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', e => {
-          const el = document.querySelector(a.getAttribute('href'));
-          if (el) {
-            e.preventDefault();
-            goToCard(el);
-          }
-          closeMenu();
-        });
-      });
+  function applyLang() {
+    var lang = state.lang;
+    var t = I18N[lang];
+    document.documentElement.lang = lang;
+    document.title = t ? t.title : ptTitle;
+    if (descMeta) descMeta.setAttribute('content', t ? t.desc : ptDesc);
 
-      function cardWidth() {
-        return cards[0] ? cards[0].getBoundingClientRect().width : innerWidth;
-      }
+    nodes('data-i18n').forEach(function (el) {
+      var v = t ? t[el.getAttribute('data-i18n')] : pt.text.get(el);
+      if (v != null) el.textContent = v;
+    });
+    nodes('data-i18n-html').forEach(function (el) {
+      var v = t ? t[el.getAttribute('data-i18n-html')] : pt.html.get(el);
+      if (v != null) el.innerHTML = v;
+    });
+    nodes('data-i18n-alt').forEach(function (el) {
+      var v = t ? t[el.getAttribute('data-i18n-alt')] : pt.alt.get(el);
+      if (v != null) el.setAttribute('alt', v);
+    });
 
-      function currentIndex() {
-        return Math.round(catalog.scrollLeft / Math.max(cardWidth(), 1));
-      }
+    btnPt.setAttribute('aria-pressed', String(lang === 'pt'));
+    btnEn.setAttribute('aria-pressed', String(lang === 'en'));
+    btnPt.style.opacity = lang === 'pt' ? '1' : '.38';
+    btnEn.style.opacity = lang === 'en' ? '1' : '.38';
+    amigoCta.href = 'mailto:ola@asineira.pt?subject=' +
+      encodeURIComponent(lang === 'en' ? I18N.en.amSubject : 'Quero ser Amigo da Sineira');
 
-      function isCarousel() {
-        return window.matchMedia('(max-width: 899px)').matches;
-      }
+    try { localStorage.setItem('sineira-lang', lang); } catch (e) {}
+  }
 
-      dotsEl.innerHTML = cards.map(() => '<span></span>').join('');
-      const dots = Array.from(dotsEl.querySelectorAll('span'));
+  function setLang(lang) { state.lang = lang; applyLang(); }
 
-      function syncNav() {
-        const i = Math.max(0, Math.min(cards.length - 1, currentIndex()));
-        prevBtn.disabled = i <= 0;
-        nextBtn.disabled = i >= cards.length - 1;
-        dots.forEach((d, n) => d.classList.toggle('on', n === i));
-      }
+  btnPt.addEventListener('click', function () { setLang('pt'); });
+  btnEn.addEventListener('click', function () { setLang('en'); });
 
-      function step(dir) {
-        const i = currentIndex() + dir;
-        if (i < 0 || i >= cards.length) return;
-        goToCard(cards[i]);
-      }
+  (function initLang() {
+    var lang = 'pt';
+    try { var s = localStorage.getItem('sineira-lang'); if (s === 'pt' || s === 'en') lang = s; } catch (e) {}
+    setLang(lang);
+  }());
 
-      prevBtn.addEventListener('click', () => step(-1));
-      nextBtn.addEventListener('click', () => step(1));
-      catalog.addEventListener('scroll', syncNav, { passive: true });
-      window.addEventListener('resize', syncNav);
+  /* ---------- mosaicos (+ / −) ---------- */
 
-      document.addEventListener('keydown', e => {
-        if (!isCarousel() || body.classList.contains('menu-open')) return;
-        if (e.key === 'ArrowLeft') step(-1);
-        if (e.key === 'ArrowRight') step(1);
-      });
+  tileBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var key = btn.getAttribute('data-tile');
+      var body = tileBodies[key];
+      var isOpen = btn.getAttribute('aria-expanded') === 'true';
+      var next = !isOpen;
+      btn.setAttribute('aria-expanded', String(next));
+      btn.style.transform = next ? 'rotate(45deg)' : 'none';
+      if (body) body.style.display = next ? (key === 'Contactos' ? 'flex' : 'block') : 'none';
+    });
+  });
 
-      syncNav();
+  /* ---------- grelha: quantas colunas cabem ---------- */
 
-      const triRot = document.getElementById('triRot');
-      const triClipPath = document.getElementById('triClipPath');
-      const ORIGIN = '159.26 165.764';
-      let targetAngle = 0;
-      let currentAngle = 0;
-      let spinning = false;
+  function measure() {
+    if (!grid) return;
+    var cols = Math.max(1, Math.min(3, Math.floor(grid.clientWidth / 360)));
+    if (cols === state.cols) return;
+    state.cols = cols;
+    document.getElementById('amigos').style.gridColumn = cols >= 3 ? 'span 2' : 'auto';
+    document.getElementById('contactos').style.gridColumn = cols === 2 ? '1 / -1' : 'auto';
+  }
 
-      function applyAngle(a) {
-        const t = `rotate(${a.toFixed(2)} ${ORIGIN})`;
-        triRot.setAttribute('transform', t);
-        triClipPath.setAttribute('transform', t);
-      }
+  state.cols = -1;
+  measure();
+  window.addEventListener('resize', measure);
+  if (window.ResizeObserver) new ResizeObserver(measure).observe(grid);
 
-      function spin() {
-        currentAngle += (targetAngle - currentAngle) * 0.09;
-        if (Math.abs(targetAngle - currentAngle) < 0.05) {
-          currentAngle = targetAngle;
-          applyAngle(currentAngle);
-          spinning = false;
-          return;
-        }
-        applyAngle(currentAngle);
-        requestAnimationFrame(spin);
-      }
+  /* ---------- menu (triângulo que cresce até cobrir o ecrã) ---------- */
 
-      function onTurn() {
-        if (isMenuOpen()) return;
-        const x = isCarousel() ? catalog.scrollLeft : window.scrollY;
-        targetAngle = -x * 0.18;
-        if (!spinning) {
-          spinning = true;
-          requestAnimationFrame(spin);
-        }
-      }
-      catalog.addEventListener('scroll', onTurn, { passive: true });
-      window.addEventListener('scroll', onTurn, { passive: true });
+  function coverScale() {
+    var r = triBtn.getBoundingClientRect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var cx = r.left + r.width * 0.417, cy = r.top + r.height * 0.428;
+    var corners = [[0, 0], [vw, 0], [0, vh], [vw, vh]];
+    var max = Math.max.apply(null, corners.map(function (c) { return Math.hypot(c[0] - cx, c[1] - cy); }));
+    return (max / (r.width * 0.30)) * 1.25;
+  }
 
-      const video = document.getElementById('bg-video');
-      const toggle = document.getElementById('videoToggle');
-      const iconMuted = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11 5 L7 9 H3 v6 h4 l4 4 V5 z" fill="#F2E7A9"/><line x1="19" y1="5" x2="5" y2="21" stroke="#F2E7A9" stroke-width="2" stroke-linecap="round"/></svg>';
-      const iconSound = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11 5 L7 9 H3 v6 h4 l4 4 V5 z" fill="#F2E7A9"/><path d="M16.5 8.5a5 5 0 010 7" stroke="#F2E7A9" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M19 6a8 8 0 010 12" stroke="#F2E7A9" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
-      toggle.innerHTML = iconMuted;
-      toggle.addEventListener('click', () => {
-        video.muted = !video.muted;
-        toggle.innerHTML = video.muted ? iconMuted : iconSound;
-        toggle.setAttribute('aria-pressed', String(!video.muted));
-        if (!video.muted) video.play().catch(() => {});
-      });
-    })();
-  </script>
+  function renderMenu() {
+    var open = state.menuOpen;
+
+    triBtn.setAttribute('aria-expanded', String(open));
+    triBtn.style.pointerEvents = open ? 'none' : 'auto';
+    triBtn.style.transition = open
+      ? 'transform ' + (MENU_DUR / 1000) + 's ' + EASE + ' 0s'
+      : 'transform ' + (MENU_DUR / 2000) + 's ' + EASE + ' .12s';
+    triBtn.style.transform = open ? 'rotate(-108deg) scale(' + state.scale + ')' : 'none';
+
+    triLetters.style.opacity = open ? '0' : '1';
+    triLetters.style.transition = open ? 'opacity .18s ease 0s' : 'opacity .3s ease .45s';
+
+    menu.setAttribute('aria-hidden', String(!open));
+    menu.style.visibility = open ? 'visible' : 'hidden';
+    menu.style.pointerEvents = open ? 'auto' : 'none';
+    menu.style.background = open ? '#003C78' : 'transparent';
+    menu.style.transition = open ? 'background 0s linear .8s' : 'background 0s linear 0s';
+
+    menuItems.forEach(function (li) {
+      var d = 0.65 + Number(li.getAttribute('data-delay')) * 0.1;
+      li.style.opacity = open ? '1' : '0';
+      li.style.transform = open ? 'none' : 'translateY(14px)';
+      li.style.transition = open
+        ? 'opacity .45s ease ' + d + 's, transform .45s ease ' + d + 's'
+        : 'opacity .3s ease, transform .3s ease';
+    });
+
+    menuPills.style.opacity = open ? '1' : '0';
+    menuPills.style.transform = open ? 'none' : 'translateY(14px)';
+    menuPills.style.transition = open
+      ? 'opacity .45s ease 1.55s, transform .45s ease 1.55s'
+      : 'opacity .3s ease, transform .3s ease';
+
+    closeBtn.style.opacity = open ? '1' : '0';
+    closeBtn.style.transform = open ? 'rotate(0deg) scale(1)' : 'rotate(-120deg) scale(.4)';
+    closeBtn.style.pointerEvents = open ? 'auto' : 'none';
+    closeBtn.style.transition = open
+      ? 'opacity .4s ease .12s, transform .45s cubic-bezier(.2,1.4,.4,1) .12s'
+      : 'opacity .35s ease, transform .35s ease';
+  }
+
+  function openMenu() {
+    if (state.menuOpen || closeLock) return;
+    openingUntil = Date.now() + MENU_DUR + 80;
+    document.body.classList.add('menu-open');
+    state.menuOpen = true;
+    state.scale = coverScale();
+    renderMenu();
+  }
+
+  function closeMenu() {
+    if (!state.menuOpen || Date.now() < openingUntil) return;
+    document.body.classList.remove('menu-open');
+    state.menuOpen = false;
+    renderMenu();
+    closeLock = true;
+    setTimeout(function () { closeLock = false; }, 700);
+  }
+
+  triBtn.addEventListener('click', openMenu);
+  triBtn.addEventListener('mouseenter', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  document.querySelectorAll('#menu a').forEach(function (a) { a.addEventListener('click', closeMenu); });
+  window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+
+  wmLink.addEventListener('click', function (e) { e.preventDefault(); });
+
+  state.scale = 60;
+  renderMenu();
+
+  /* ---------- wordmark salta enquanto se faz scroll ---------- */
+
+  /* Enquanto há scroll a classe fica posta; quando pára, só a tiramos no fim de
+     um ciclo completo (2000ms), para as letras assentarem na posição de repouso
+     em vez de congelarem a meio do salto. */
+  var wmStopTimer = null, wmForceTimer = null, wmStopPending = false;
+
+  function wmStop() {
+    wmStopPending = false;
+    clearTimeout(wmForceTimer);
+    wmLink.classList.remove('wm-anim');
+  }
+
+  function wmPulse() {
+    wmStopPending = false;
+    clearTimeout(wmForceTimer);
+    wmLink.classList.add('wm-anim');
+    clearTimeout(wmStopTimer);
+    wmStopTimer = setTimeout(function () {
+      wmStopPending = true;
+      /* Rede de segurança: se o animationiteration não chegar (separador em
+         segundo plano, animação interrompida), não deixar o logótipo preso a saltar. */
+      wmForceTimer = setTimeout(wmStop, 2600);
+    }, 160);
+  }
+
+  document.getElementById('wm-a').addEventListener('animationiteration', function () {
+    if (wmStopPending) wmStop();
+  });
+
+  /* ---------- triângulo roda com o scroll ---------- */
+
+  var angle = 0, target = 0, spinning = false;
+
+  function spin() {
+    angle += (target - angle) * 0.09;
+    if (Math.abs(target - angle) < 0.05) { angle = target; spinning = false; }
+    var t = 'rotate(' + angle.toFixed(2) + ' 159.26 165.764)';
+    triRot.setAttribute('transform', t);
+    triClip.setAttribute('transform', t);
+    if (spinning) requestAnimationFrame(spin);
+  }
+
+  function onScroll(e) {
+    if (state.menuOpen) return;
+    wmPulse();
+    var t = e && e.target;
+    var y = window.scrollY || 0;
+    if (t && t !== document && t !== window && typeof t.scrollTop === 'number' && t.scrollTop > y) y = t.scrollTop;
+    if (document.scrollingElement && document.scrollingElement.scrollTop > y) y = document.scrollingElement.scrollTop;
+    if (document.body && document.body.scrollTop > y) y = document.body.scrollTop;
+    target = -y * 0.06;
+    if (!spinning) { spinning = true; requestAnimationFrame(spin); }
+  }
+
+  document.addEventListener('scroll', onScroll, { capture: true, passive: true });
+  window.addEventListener('scroll', onScroll, { passive: true });
+}());
+</script>
 </body>
 </html>
