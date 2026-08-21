@@ -241,6 +241,7 @@ a:hover { text-decoration: underline; }
 /* Cada mosaico recebe o seu par fundo/texto por uma classe modificadora,
    para que nenhuma cor apareça solta dentro dos blocos. */
 .tile {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;  /* conteúdo encostado à esquerda, nunca centrado */
@@ -298,12 +299,48 @@ a:hover { text-decoration: underline; }
   transition: transform .25s ease;
 }
 
+/* Cartão a duas colunas: o "+" sai da coluna de leitura e alinha com o
+   canto do mosaico de cima, à direita da segunda coluna. */
+.tile--span .tile__toggle {
+  position: absolute;
+  top: var(--tile-pad);
+  right: var(--gutter);
+}
+
 .tile__lead {
   margin-top: 18px;
   max-width: 34ch;
   font-style: italic;
   font-size: 15px;
   line-height: 1.45;
+}
+
+/* Cartão aberto: sai da grelha e ocupa toda a secção de cartões, do fundo do
+   cabeçalho ao topo do marquee. Fica por baixo do cabeçalho (20) e do menu
+   (60), que continuam acessíveis. O buraco que deixa na grelha não se vê,
+   porque está tapado por ele. */
+.tile.is-expanded {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--header-h);
+  bottom: var(--marquee-h);
+  z-index: 15;
+  overflow-y: auto;
+  overscroll-behavior: contain;   /* não arrastar a página ao chegar ao fim */
+  animation: tile-open .18s ease;
+}
+
+@keyframes tile-open { from { opacity: 0; } to { opacity: 1; } }
+
+/* Com o cartão em painel o fecho vai para o canto superior direito, onde se
+   espera encontrá-lo; o conteúdo continua encostado à esquerda. Preso ao ecrã
+   e não ao painel: em janelas baixas o conteúdo rola lá dentro e, se o fecho
+   rolasse com ele, deixava de haver como fechar num telemóvel. */
+.tile.is-expanded .tile__toggle {
+  position: fixed;
+  top: calc(var(--header-h) + var(--tile-pad));
+  right: var(--gutter);
 }
 
 /* Conteúdo escondido até se carregar no "+" (o JS troca o display). */
@@ -959,15 +996,35 @@ a:hover { text-decoration: underline; }
 
   /* ---------- mosaicos (+ / −) ---------- */
 
+  /* Abrir um cartão passa-o a painel sobre toda a secção de cartões (ver
+     .tile.is-expanded). Só pode estar um aberto de cada vez: como o painel
+     tapa tudo, dois abertos ficariam empilhados sem se verem. */
+  function setTile(btn, open) {
+    var key = btn.getAttribute('data-tile');
+    var body = tileBodies[key];
+    var tile = btn.closest('.tile');
+
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Fechar' : 'Mostrar mais');
+    btn.style.transform = open ? 'rotate(45deg)' : 'none';
+    if (body) body.style.display = open ? (key === 'Contactos' ? 'flex' : 'block') : 'none';
+    if (tile) tile.classList.toggle('is-expanded', open);
+  }
+
+  function closeTiles() {
+    tileBtns.forEach(function (btn) {
+      if (btn.getAttribute('aria-expanded') === 'true') setTile(btn, false);
+    });
+  }
+
   tileBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var key = btn.getAttribute('data-tile');
-      var body = tileBodies[key];
-      var isOpen = btn.getAttribute('aria-expanded') === 'true';
-      var next = !isOpen;
-      btn.setAttribute('aria-expanded', String(next));
-      btn.style.transform = next ? 'rotate(45deg)' : 'none';
-      if (body) body.style.display = next ? (key === 'Contactos' ? 'flex' : 'block') : 'none';
+      var open = btn.getAttribute('aria-expanded') !== 'true';
+      closeTiles();
+      if (open) {
+        setTile(btn, true);
+        btn.closest('.tile').scrollTop = 0;
+      }
     });
   });
 
@@ -1016,8 +1073,12 @@ a:hover { text-decoration: underline; }
     var cols = currentCols();
     if (cols !== state.cols) {
       state.cols = cols;
-      document.getElementById('amigos').style.gridColumn = cols >= 3 ? 'span 2' : 'auto';
-      document.getElementById('contactos').style.gridColumn = cols === 2 ? '1 / -1' : 'auto';
+      var amigos = document.getElementById('amigos');
+      var contactos = document.getElementById('contactos');
+      amigos.style.gridColumn = cols >= 3 ? 'span 2' : 'auto';
+      amigos.classList.toggle('tile--span', cols >= 3);
+      contactos.style.gridColumn = cols === 2 ? '1 / -1' : 'auto';
+      contactos.classList.toggle('tile--span', cols === 2);
     }
 
     fitRows();
@@ -1132,7 +1193,11 @@ a:hover { text-decoration: underline; }
   triBtn.addEventListener('mouseenter', openMenu);
   closeBtn.addEventListener('click', closeMenu);
   document.querySelectorAll('#menu a').forEach(function (a) { a.addEventListener('click', closeMenu); });
-  window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+  window.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    closeTiles();
+    closeMenu();
+  });
 
   wmLink.addEventListener('click', function (e) { e.preventDefault(); });
 
