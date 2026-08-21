@@ -62,8 +62,10 @@
 
   /* Medidas do corpo */
   --tile-pad:       30px;
-  --grid-max:     1600px;
   --col-min:       360px;   /* largura mínima de coluna antes de quebrar */
+  --col-max-n:         4;   /* número máximo de colunas */
+  --card-content: 420px;    /* o conteúdo pára de crescer aqui e fica centrado */
+  --card-h:       320px;    /* altura de cada cartão; o JS recalcula-a (fitRows) */
   --scroll-offset:  80px;   /* folga para o cabeçalho ao saltar para uma âncora */
   --marquee-h:      40px;
 
@@ -221,11 +223,19 @@ a:hover { text-decoration: underline; }
 
 /* 6. Grelha e mosaicos ==================================================== */
 
+/* Os cartões enchem sempre a janela — nunca se vê o fundo aos lados. O
+   mínimo de cada coluna é o maior entre "um quarto da grelha" e a largura
+   mínima de leitura: o primeiro trava a contagem em 4 colunas, o segundo
+   faz quebrar para 3, 2 e 1 à medida que a janela estreita.
+
+   As linhas seguem a mesma ideia na vertical: --card-h vem do JS e vale
+   sempre uma fração inteira da altura visível, para que um ecrã mostre um
+   número certo de linhas e não sobre fundo em baixo. O minmax deixa a linha
+   crescer se um cartão for aberto com mais conteúdo do que a altura dá. */
 .tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--col-min)), 1fr));
-  max-width: var(--grid-max);
-  margin-inline: auto;
+  grid-template-columns: repeat(auto-fit, minmax(max(100% / var(--col-max-n), min(100%, var(--col-min))), 1fr));
+  grid-auto-rows: minmax(var(--card-h), auto);
 }
 
 /* Cada mosaico recebe o seu par fundo/texto por uma classe modificadora,
@@ -233,10 +243,21 @@ a:hover { text-decoration: underline; }
 .tile {
   display: flex;
   flex-direction: column;
+  align-items: center;      /* centra o conteúdo em cartões largos */
   padding: var(--tile-pad);
   background: var(--tile-bg);
   color: var(--tile-fg);
   scroll-margin-top: var(--scroll-offset);
+}
+
+/* Coluna interior: é ela que tem a largura de leitura e que empurra a
+   legenda para o fundo do cartão. */
+.tile__inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: var(--card-content);
 }
 
 .tile--peach { --tile-bg: var(--peach);      --tile-fg: var(--blue); }
@@ -327,11 +348,12 @@ a:hover { text-decoration: underline; }
   text-decoration: none;
 }
 
-/* Fotografias intercaladas na grelha. */
+/* Fotografias intercaladas na grelha. Ocupam o cartão todo — aqui o
+   conteúdo não é limitado, senão via-se fundo à volta da imagem. */
 .media {
   display: grid;
   background: var(--blue);
-  min-height: clamp(240px, 26vw, 380px);
+  min-height: var(--card-h);
 }
 .media img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
@@ -547,15 +569,17 @@ a:hover { text-decoration: underline; }
 <main class="tiles" id="grid">
 
   <article class="tile tile--peach" id="eventos" data-screen-label="eventos">
-    <div class="tile__head">
-      <h2 class="tile__title tile__title--regular" data-i18n="evH2">eventos</h2>
-      <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title tile__title--regular" data-i18n="evH2">eventos</h2>
+        <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+      </div>
+      <p class="tile__lead" data-i18n="evP1">Próximos, últimos e arquivo — brevemente.</p>
+      <div class="tile__body" data-tile-body="Eventos">
+        <p class="tile__text" data-i18n="evP2">Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.</p>
+      </div>
+      <p class="tile__caption" data-i18n="capEv">Próximos · últimos · arquivo — brevemente</p>
     </div>
-    <p class="tile__lead" data-i18n="evP1">Próximos, últimos e arquivo — brevemente.</p>
-    <div class="tile__body" data-tile-body="Eventos">
-      <p class="tile__text" data-i18n="evP2">Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.</p>
-    </div>
-    <p class="tile__caption" data-i18n="capEv">Próximos · últimos · arquivo — brevemente</p>
   </article>
 
   <figure class="media">
@@ -563,21 +587,23 @@ a:hover { text-decoration: underline; }
   </figure>
 
   <article class="tile tile--blue" id="formacao" data-screen-label="formação">
-    <div class="tile__head">
-      <h2 class="tile__title tile__title--italic" data-i18n="formH2">formação</h2>
-      <button class="tile__toggle" type="button" data-tile="Formacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title tile__title--italic" data-i18n="formH2">formação</h2>
+        <button class="tile__toggle" type="button" data-tile="Formacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+      </div>
+      <p class="tile__lead" data-i18n="formP1">Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.</p>
+      <div class="tile__body" data-tile-body="Formacao">
+        <ul class="tile__list">
+          <li data-i18n="formLi1">Aulas regulares</li>
+          <li data-i18n="formLi2">Workshops</li>
+          <li data-i18n="formLi3">Cursos intensivos</li>
+          <li data-i18n="formLi4">Campo de férias</li>
+        </ul>
+        <p class="tile__text" data-i18n="formP2">Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
+      </div>
+      <p class="tile__caption" data-i18n="capForm">Aulas regulares · workshops · cursos intensivos · campo de férias</p>
     </div>
-    <p class="tile__lead" data-i18n="formP1">Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.</p>
-    <div class="tile__body" data-tile-body="Formacao">
-      <ul class="tile__list">
-        <li data-i18n="formLi1">Aulas regulares</li>
-        <li data-i18n="formLi2">Workshops</li>
-        <li data-i18n="formLi3">Cursos intensivos</li>
-        <li data-i18n="formLi4">Campo de férias</li>
-      </ul>
-      <p class="tile__text" data-i18n="formP2">Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
-    </div>
-    <p class="tile__caption" data-i18n="capForm">Aulas regulares · workshops · cursos intensivos · campo de férias</p>
   </article>
 
   <figure class="media">
@@ -585,99 +611,107 @@ a:hover { text-decoration: underline; }
   </figure>
 
   <article class="tile tile--navy" id="criacao" data-screen-label="criação">
-    <div class="tile__head">
-      <h2 class="tile__title tile__title--tracked" data-i18n="criaH2">criação</h2>
-      <button class="tile__toggle" type="button" data-tile="Criacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title tile__title--tracked" data-i18n="criaH2">criação</h2>
+        <button class="tile__toggle" type="button" data-tile="Criacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+      </div>
+      <p class="tile__lead" data-i18n="criaP">Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.</p>
+      <div class="tile__body" data-tile-body="Criacao">
+        <ul class="tile__list">
+          <li data-i18n="criaLi1">Residências artísticas com alojamento</li>
+          <li data-i18n="criaLi2">Estúdio polivalente</li>
+          <li data-i18n="criaLi3">Estúdio de dança profissional</li>
+          <li data-i18n="criaLi4">Igreja: espaço multiusos</li>
+        </ul>
+      </div>
+      <p class="tile__caption" data-i18n="capCria">Residências · estúdio polivalente · estúdio de dança · igreja</p>
     </div>
-    <p class="tile__lead" data-i18n="criaP">Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.</p>
-    <div class="tile__body" data-tile-body="Criacao">
-      <ul class="tile__list">
-        <li data-i18n="criaLi1">Residências artísticas com alojamento</li>
-        <li data-i18n="criaLi2">Estúdio polivalente</li>
-        <li data-i18n="criaLi3">Estúdio de dança profissional</li>
-        <li data-i18n="criaLi4">Igreja: espaço multiusos</li>
-      </ul>
-    </div>
-    <p class="tile__caption" data-i18n="capCria">Residências · estúdio polivalente · estúdio de dança · igreja</p>
   </article>
 
   <article class="tile tile--cream" id="apresentacao" data-screen-label="apresentação">
-    <div class="tile__head">
-      <h2 class="tile__title" data-i18n="apresH2">apresentação</h2>
-      <button class="tile__toggle" type="button" data-tile="Apresentacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title" data-i18n="apresH2">apresentação</h2>
+        <button class="tile__toggle" type="button" data-tile="Apresentacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+      </div>
+      <p class="tile__lead" data-i18n="apresP">Divulgamos projetos artísticos no estúdio/palco e na igreja.</p>
+      <div class="tile__body" data-tile-body="Apresentacao">
+        <ul class="tile__list">
+          <li data-i18n="apresLi1">Espetáculos</li>
+          <li data-i18n="apresLi2">Sessões de cinema</li>
+          <li data-i18n="apresLi3">Exposições e convívios</li>
+          <li data-i18n="apresLi4">Festival anual de dança e música</li>
+        </ul>
+      </div>
+      <p class="tile__caption" data-i18n="capApres">Espetáculos · cinema · exposições · festival anual</p>
     </div>
-    <p class="tile__lead" data-i18n="apresP">Divulgamos projetos artísticos no estúdio/palco e na igreja.</p>
-    <div class="tile__body" data-tile-body="Apresentacao">
-      <ul class="tile__list">
-        <li data-i18n="apresLi1">Espetáculos</li>
-        <li data-i18n="apresLi2">Sessões de cinema</li>
-        <li data-i18n="apresLi3">Exposições e convívios</li>
-        <li data-i18n="apresLi4">Festival anual de dança e música</li>
-      </ul>
-    </div>
-    <p class="tile__caption" data-i18n="capApres">Espetáculos · cinema · exposições · festival anual</p>
   </article>
 
   <article class="tile tile--cream" id="instituicao" data-screen-label="o espaço">
-    <div class="tile__head">
-      <h2 class="tile__title tile__title--italic" data-i18n="espH2">Antiga Igreja de Retorta</h2>
-      <button class="tile__toggle" type="button" data-tile="Instituicao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title tile__title--italic" data-i18n="espH2">Antiga Igreja de Retorta</h2>
+        <button class="tile__toggle" type="button" data-tile="Instituicao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+      </div>
+      <p class="tile__lead" data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
+      <div class="tile__body" data-tile-body="Instituicao">
+        <ul class="tile__list">
+          <li data-i18n="espLi1">Estúdio / palco</li>
+          <li data-i18n="espLi2">Igreja: espaço multiusos</li>
+          <li data-i18n="espLi3">Alojamento: residências artísticas</li>
+          <li data-i18n="espLi4">Restauração · estacionamento</li>
+          <li data-i18n="espLi5">Floresta: percursos de lazer e pedagógicos</li>
+          <li data-i18n="espLi6">Clareira: espaço para festival</li>
+        </ul>
+      </div>
+      <p class="tile__caption" data-i18n="capEsp">18.000 m² · estúdio · igreja · alojamento · floresta · clareira</p>
     </div>
-    <p class="tile__lead" data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
-    <div class="tile__body" data-tile-body="Instituicao">
-      <ul class="tile__list">
-        <li data-i18n="espLi1">Estúdio / palco</li>
-        <li data-i18n="espLi2">Igreja: espaço multiusos</li>
-        <li data-i18n="espLi3">Alojamento: residências artísticas</li>
-        <li data-i18n="espLi4">Restauração · estacionamento</li>
-        <li data-i18n="espLi5">Floresta: percursos de lazer e pedagógicos</li>
-        <li data-i18n="espLi6">Clareira: espaço para festival</li>
-      </ul>
-    </div>
-    <p class="tile__caption" data-i18n="capEsp">18.000 m² · estúdio · igreja · alojamento · floresta · clareira</p>
   </article>
 
   <article class="tile tile--sky" id="como-chegar" data-screen-label="como chegar">
-    <div class="tile__head">
-      <h2 class="tile__title tile__title--tracked" data-i18n="chegarH2">Acessos</h2>
-      <button class="tile__toggle" type="button" data-tile="Chegar" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title tile__title--tracked" data-i18n="chegarH2">Acessos</h2>
+        <button class="tile__toggle" type="button" data-tile="Chegar" aria-expanded="false" aria-label="Mostrar mais">+</button>
+      </div>
+      <p class="tile__lead" data-i18n="chegarLi1">Metro Santa Clara / V. do Conde — 5–15 min</p>
+      <div class="tile__body" data-tile-body="Chegar">
+        <table class="access">
+          <thead>
+            <tr>
+              <th data-i18n="thDest">destino</th>
+              <th data-i18n="thFoot">a pé</th>
+              <th data-i18n="thCar">carro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="row1">Ponte de Retorta / Estação Aquícola</td>
+              <td>5 min</td>
+              <td>1 min</td>
+            </tr>
+            <tr>
+              <td data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</td>
+              <td>14 min</td>
+              <td>3 min</td>
+            </tr>
+            <tr>
+              <td data-i18n="row3">Metro Vila do Conde</td>
+              <td>24 min</td>
+              <td>4 min</td>
+            </tr>
+          </tbody>
+        </table>
+        <ul class="tile__list">
+          <li data-i18n="chegarLi2">Centro histórico — 10–20 min</li>
+          <li data-i18n="chegarLi3">Praias — 20–30 min</li>
+          <li data-i18n="chegarLi4">Metro Trindade / Porto — 40–60 min</li>
+          <li data-i18n="chegarLi5">Aeroporto Sá Carneiro — 20–50 min</li>
+        </ul>
+      </div>
+      <p class="tile__caption" data-i18n="capChegar">Ponte de Retorta 5 min · metro V. do Conde 4 min · Porto 40 min</p>
     </div>
-    <p class="tile__lead" data-i18n="chegarLi1">Metro Santa Clara / V. do Conde — 5–15 min</p>
-    <div class="tile__body" data-tile-body="Chegar">
-      <table class="access">
-        <thead>
-          <tr>
-            <th data-i18n="thDest">destino</th>
-            <th data-i18n="thFoot">a pé</th>
-            <th data-i18n="thCar">carro</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td data-i18n="row1">Ponte de Retorta / Estação Aquícola</td>
-            <td>5 min</td>
-            <td>1 min</td>
-          </tr>
-          <tr>
-            <td data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</td>
-            <td>14 min</td>
-            <td>3 min</td>
-          </tr>
-          <tr>
-            <td data-i18n="row3">Metro Vila do Conde</td>
-            <td>24 min</td>
-            <td>4 min</td>
-          </tr>
-        </tbody>
-      </table>
-      <ul class="tile__list">
-        <li data-i18n="chegarLi2">Centro histórico — 10–20 min</li>
-        <li data-i18n="chegarLi3">Praias — 20–30 min</li>
-        <li data-i18n="chegarLi4">Metro Trindade / Porto — 40–60 min</li>
-        <li data-i18n="chegarLi5">Aeroporto Sá Carneiro — 20–50 min</li>
-      </ul>
-    </div>
-    <p class="tile__caption" data-i18n="capChegar">Ponte de Retorta 5 min · metro V. do Conde 4 min · Porto 40 min</p>
   </article>
 
   <figure class="media">
@@ -685,34 +719,38 @@ a:hover { text-decoration: underline; }
   </figure>
 
   <article class="tile tile--olive" id="amigos" data-screen-label="amigos">
-    <div class="tile__head">
-      <h2 class="tile__title" data-i18n="amH2">Amigo da Sineira</h2>
-      <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title" data-i18n="amH2">Amigo da Sineira</h2>
+        <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+      </div>
+      <p class="tile__lead" data-i18n="amP">Adere e torna-te um “Amigo da Sineira”:</p>
+      <div class="tile__body" data-tile-body="Amigos">
+        <ul class="tile__list">
+          <li data-i18n="amLi1">Acesso gratuito a todos os eventos</li>
+          <li data-i18n="amLi2">Desconto em aulas regulares, workshops e cursos intensivos</li>
+          <li data-i18n="amLi3">Surpresas mensais</li>
+        </ul>
+      </div>
+      <a class="tile__cta" id="amigo-cta" data-i18n="amCta" href="mailto:ola@asineira.pt">Quero aderir</a>
+      <p class="tile__caption" data-i18n="capAm">Acesso gratuito · descontos · surpresas mensais</p>
     </div>
-    <p class="tile__lead" data-i18n="amP">Adere e torna-te um “Amigo da Sineira”:</p>
-    <div class="tile__body" data-tile-body="Amigos">
-      <ul class="tile__list">
-        <li data-i18n="amLi1">Acesso gratuito a todos os eventos</li>
-        <li data-i18n="amLi2">Desconto em aulas regulares, workshops e cursos intensivos</li>
-        <li data-i18n="amLi3">Surpresas mensais</li>
-      </ul>
-    </div>
-    <a class="tile__cta" id="amigo-cta" data-i18n="amCta" href="mailto:ola@asineira.pt">Quero aderir</a>
-    <p class="tile__caption" data-i18n="capAm">Acesso gratuito · descontos · surpresas mensais</p>
   </article>
 
   <article class="tile tile--peach" id="contactos" data-screen-label="contactos">
-    <div class="tile__head">
-      <h2 class="tile__title tile__title--italic" data-i18n="coH2">Fala connosco</h2>
-      <button class="tile__toggle" type="button" data-tile="Contactos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title tile__title--italic" data-i18n="coH2">Fala connosco</h2>
+        <button class="tile__toggle" type="button" data-tile="Contactos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+      </div>
+      <p class="tile__lead" data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
+      Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
+      <div class="tile__body tile__body--stack" data-tile-body="Contactos">
+        <a href="mailto:ola@asineira.pt">ola@asineira.pt</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+      </div>
+      <p class="tile__caption" data-i18n="coLegal">a Sineira — Associação Cultural · NIF 518858359</p>
     </div>
-    <p class="tile__lead" data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
-    Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
-    <div class="tile__body tile__body--stack" data-tile-body="Contactos">
-      <a href="mailto:ola@asineira.pt">ola@asineira.pt</a>
-      <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
-    </div>
-    <p class="tile__caption" data-i18n="coLegal">a Sineira — Associação Cultural · NIF 518858359</p>
   </article>
 
 </main>
@@ -924,15 +962,40 @@ a:hover { text-decoration: underline; }
     });
   });
 
-  /* ---------- grelha: quantas colunas cabem ---------- */
+  /* ---------- grelha: quantas colunas e quantas linhas cabem ---------- */
+
+  var MIN_CARD_H = 260;   /* abaixo disto um cartão fechado deixa de respirar */
+  var MAX_ROWS = 4;       /* nunca mostrar mais de 4 linhas de uma vez */
+
+  var marquee = document.querySelector('.marquee');
 
   function measure() {
     if (!grid) return;
     var cols = Math.max(1, Math.min(3, Math.floor(grid.clientWidth / 360)));
-    if (cols === state.cols) return;
-    state.cols = cols;
-    document.getElementById('amigos').style.gridColumn = cols >= 3 ? 'span 2' : 'auto';
-    document.getElementById('contactos').style.gridColumn = cols === 2 ? '1 / -1' : 'auto';
+    if (cols !== state.cols) {
+      state.cols = cols;
+      document.getElementById('amigos').style.gridColumn = cols >= 3 ? 'span 2' : 'auto';
+      document.getElementById('contactos').style.gridColumn = cols === 2 ? '1 / -1' : 'auto';
+    }
+    fitRows();
+  }
+
+  /* Altura de cada cartão = altura visível a dividir por um número inteiro de
+     linhas. Assim um ecrã mostra sempre linhas completas e, mesmo no fim do
+     scroll, não sobra fundo por baixo da última.
+
+     O número de linhas por ecrã nunca passa o total de linhas da grelha: se
+     passasse, a página ficava mais curta do que a janela e via-se fundo. */
+  function fitRows() {
+    var avail = window.innerHeight
+      - header.getBoundingClientRect().height
+      - (marquee ? marquee.getBoundingClientRect().height : 0);
+    if (avail <= 0) return;
+
+    var totalRows = getComputedStyle(grid).gridTemplateRows.split(' ').length;
+    var perScreen = Math.min(MAX_ROWS, totalRows, Math.max(1, Math.floor(avail / MIN_CARD_H)));
+
+    grid.style.setProperty('--card-h', (avail / perScreen).toFixed(2) + 'px');
   }
 
   state.cols = -1;
