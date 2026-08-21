@@ -97,8 +97,13 @@ body {
   padding-bottom: var(--marquee-h);   /* espaço para o marquee fixo */
 }
 
-/* Bloqueia o scroll do fundo enquanto o menu está aberto (classe posta pelo JS). */
-body.menu-open { overflow: hidden; touch-action: none; }
+/* Bloqueia o scroll do fundo enquanto o menu está aberto (classe posta pelo JS).
+   Tem de ser no <html> e não no <body>: no body, o overflow:hidden fá-lo virar
+   contentor de scroll e o cabeçalho sticky passa a colar-se a ele em vez do
+   ecrã — com a página descida, saltava para fora da vista mal a animação de
+   abertura começava. No <html> o valor propaga-se ao viewport e o sticky
+   continua a resolver contra a posição de scroll actual. */
+html.menu-open { overflow: hidden; touch-action: none; }
 
 /* Nenhuma barra de scroll à vista, em lado nenhum: nem na página, nem no menu,
    nem num cartão aberto em painel. O scroll continua a funcionar — roda do
@@ -158,6 +163,8 @@ a:hover { text-decoration: underline; }
   width: auto;
   fill: var(--blue);
   overflow: visible;   /* as letras saem da caixa a meio do salto */
+  shape-rendering: geometricPrecision;
+  image-rendering: optimizeQuality;
 }
 
 /* As letras saltam ao passar o rato e enquanto se faz scroll. A classe
@@ -230,7 +237,14 @@ a:hover { text-decoration: underline; }
   transform-origin: 41.7% 42.8%;
 }
 
-.menu-trigger__svg { display: block; width: 100%; height: auto; overflow: visible; }
+.menu-trigger__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  shape-rendering: geometricPrecision;
+  image-rendering: optimizeQuality;
+}
 .menu-trigger__shape { fill: var(--blue); }
 .menu-trigger__letters path { fill: var(--cream); }
 
@@ -631,6 +645,7 @@ a:hover { text-decoration: underline; }
   min-height: 100dvh;
   padding: min(9vh, 70px) var(--gutter) 160px;
   overflow-y: auto;
+  overscroll-behavior: contain;   /* ao chegar ao fim, não arrastar a página */
   color: var(--cream);
   background: transparent;
   visibility: hidden;
@@ -769,7 +784,7 @@ a:hover { text-decoration: underline; }
 <header class="site-header" id="site-header">
 
   <a class="wordmark" id="wm-link" href="#" aria-label="a Sineira">
-    <svg class="wordmark__svg" viewBox="48 42 194 58" role="img" aria-label="a Sineira" shape-rendering="geometricPrecision">
+    <svg class="wordmark__svg" viewBox="48 42 194 58" role="img" aria-label="a Sineira" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
       <g class="wm__letter wm__a" id="wm-a" transform="translate(61.805172,73.153994) rotate(0)"><path d="M69.823985,81.501434c-.890183,2.191852-2.012935,5.465021-2.104465,6.074494l-6.089234-2.473037c.006775-.527952.366541-1.795292.59178-2.381029-1.359507.954594-3.531095,1.809153-7.602648.155563-5.550884-2.254396-6.410494-6.854411-4.960295-10.425162c2.130009-5.244613,7.324404-5.953472,14.074134-3.212186l3.285291,1.334264.571407-1.406947c.664744-1.636765.729446-3.485605-2.226502-4.686112-2.690844-1.092839-3.744337-.188405-4.714542,1.359611l-6.061185-2.461646c2.007121-3.950634,5.881465-6.233827,12.864932-3.351763c6.150156,2.54363,8.527829,6.315106,6.30228,11.794964l-3.930953,9.678986ZM65.45233,74.446331l-2.596746-1.054624c-3.840831-1.559887-5.741204-.965669-6.642595,1.253779-.67687,1.666623-.224395,3.485186,2.066532,4.415607c4.050743,1.645139,5.691927-.96846,6.927159-4.00991l.24565-.604852Z" transform="translate(-61.805172,-73.153994)"></path></g>
       <g class="wm__letter wm__s" transform="translate(102.681297,70.45)"><path d="M96.421534,77.298584c.754883,3.323731,3.138672,4.780762,6.969727,4.780762c3.819336,0,5.453125-1.508789,5.453125-3.931641c0-2.693359-1.594727-3.862305-7.254883-5.179687-9.006836-2.114258-11.233398-5.390137-11.233398-9.858399c0-5.768554,4.314453-9.685547,12.149414-9.685547c8.787109,0,12.288086,4.723633,12.761719,9.564453h-7.209961c-.345703-2.036621-1.47168-4.248535-5.738281-4.248535-2.904297,0-4.657227,1.199707-4.657227,3.549317c0,2.301757,1.405273,3.234863,6.75293,4.475097c9.625976,2.268067,11.736328,5.849121,11.736328,10.515137c0,6.042969-4.572266,10.188965-13.321289,10.188965-8.400391,0-12.825196-4.135742-13.618165-10.169922h7.209961Z" transform="translate(-102.681297,-70.446289)"></path></g>
       <g class="wm__letter wm__i1-dot" transform="translate(122.109634,64.644287)"><rect width="6.87987" height="6.13574" transform="translate(-3.439634,-3.067887)"></rect></g>
@@ -790,7 +805,7 @@ a:hover { text-decoration: underline; }
   </div>
 
   <button class="menu-trigger" id="tri-btn" aria-label="Abrir menu" aria-expanded="false">
-    <svg class="menu-trigger__svg" viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg">
+    <svg class="menu-trigger__svg" viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
       <defs>
         <clipPath id="triClip" clipPathUnits="userSpaceOnUse">
           <path d="M95.7804 387L382 110.293L0 0L95.7804 387Z"></path>
@@ -1471,7 +1486,7 @@ a:hover { text-decoration: underline; }
   function openMenu() {
     if (state.menuOpen || closeLock) return;
     openingUntil = Date.now() + MENU_DUR + 80;
-    document.body.classList.add('menu-open');
+    document.documentElement.classList.add('menu-open');
     state.menuOpen = true;
     state.scale = coverScale();
     renderMenu();
@@ -1479,7 +1494,7 @@ a:hover { text-decoration: underline; }
 
   function closeMenu() {
     if (!state.menuOpen || Date.now() < openingUntil) return;
-    document.body.classList.remove('menu-open');
+    document.documentElement.classList.remove('menu-open');
     state.menuOpen = false;
     renderMenu();
     closeLock = true;
