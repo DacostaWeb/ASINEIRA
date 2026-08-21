@@ -100,6 +100,15 @@ body {
 /* Bloqueia o scroll do fundo enquanto o menu está aberto (classe posta pelo JS). */
 body.menu-open { overflow: hidden; touch-action: none; }
 
+/* Nenhuma barra de scroll à vista, em lado nenhum: nem na página, nem no menu,
+   nem num cartão aberto em painel. O scroll continua a funcionar — roda do
+   rato, dedo, teclado — só deixa de se ver a barra. Vai no selector universal
+   de propósito, para apanhar qualquer contentor que venha a rolar.
+   Nota: sem barra também se perde o arrastar da barra com o rato e a pista
+   visual de que há mais conteúdo por baixo. */
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; }
+
 h1, h2, h3, p, ul, ol, figure, table { margin: 0; }
 
 a { color: inherit; text-decoration: none; }
