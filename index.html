@@ -36,20 +36,11 @@
 
 :root {
   /* Paleta. Todas as cores do site saem daqui — não repetir hexadecimais. */
-  --blue:        #003C78;   /* azul principal: texto, fundo escuro, triângulo */
-  --blue-mid:    #0359B0;   /* mosaico "formação" */
-  --blue-light:  #477FB8;   /* mosaico "acessos" */
-  --cream:       #F2E7A9;   /* fundo do site */
-  --peach:       #F2BFA9;   /* mosaicos "eventos" e "contactos" */
-  --olive:       #888A65;   /* mosaico "amigos" */
+  --blue:        #003C78;   /* azul: fundo escuro, texto sobre creme, triângulo */
+  --cream:       #F2E7A9;   /* creme: fundo do site e fundo claro dos cartões */
   --gold:        #D8B44A;   /* cartão de Amigo da Sineira */
   --gold-light:  #F0DFA0;
   --gold-deep:   #A8842B;
-  --white:       #FFFFFF;
-
-  /* Filetes da tabela de acessos: creme translúcido sobre fundo azul. */
-  --rule:        rgba(242, 231, 169, .5);
-  --rule-soft:   rgba(242, 231, 169, .25);
 
   /* Tipografia */
   --font: Helvetica, Arial, sans-serif;
@@ -290,12 +281,8 @@ a:hover { text-decoration: underline; }
   max-width: var(--card-content);
 }
 
-.tile--peach { --tile-bg: var(--peach);      --tile-fg: var(--blue); }
-.tile--blue  { --tile-bg: var(--blue-mid);   --tile-fg: var(--white); }
-.tile--navy  { --tile-bg: var(--blue);       --tile-fg: var(--cream); }
-.tile--cream { --tile-bg: var(--cream);      --tile-fg: var(--blue); }
-.tile--sky   { --tile-bg: var(--blue-light); --tile-fg: var(--white); }
-.tile--olive { --tile-bg: var(--olive);      --tile-fg: var(--white); }
+.tile--cream { --tile-bg: var(--cream); --tile-fg: var(--blue); }
+.tile--blue  { --tile-bg: var(--blue);  --tile-fg: var(--cream); }
 
 .tile__head { display: flex; align-items: flex-start; gap: 18px; }
 
@@ -418,7 +405,7 @@ a:hover { text-decoration: underline; }
 }
 .tile__cta:hover {
   background: var(--cream);
-  color: var(--blue-mid);
+  color: var(--blue);
   text-decoration: none;
 }
 
@@ -603,11 +590,16 @@ a:hover { text-decoration: underline; }
 
 .access { width: 100%; border-collapse: collapse; font-size: 13px; }
 
+/* Os filetes saem da cor do texto do mosaico, não de um creme fixo: assim a
+   tabela funciona tanto num cartão azul como num creme. */
 .access th,
-.access td { padding: 6px 8px; border-bottom: 1px solid var(--rule-soft); }
+.access td {
+  padding: 6px 8px;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+}
 
 .access th {
-  border-bottom-color: var(--rule);
+  border-bottom-color: color-mix(in srgb, currentColor 50%, transparent);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .14em;
@@ -828,7 +820,7 @@ a:hover { text-decoration: underline; }
 
 <main class="tiles" id="grid">
 
-  <article class="tile tile--peach" id="eventos" data-screen-label="eventos">
+  <article class="tile tile--cream" id="eventos" data-screen-label="eventos">
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--regular" data-i18n="evH2">eventos</h2>
@@ -872,7 +864,7 @@ a:hover { text-decoration: underline; }
     <img src="./voar7-mt1lby5g-cd2e.jpg" data-i18n-alt="alt2" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy">
   </figure>
 
-  <article class="tile tile--navy" id="criacao" data-screen-label="criação">
+  <article class="tile tile--cream" id="criacao" data-screen-label="criação">
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--tracked" data-i18n="criaH2">criação</h2>
@@ -895,7 +887,7 @@ a:hover { text-decoration: underline; }
     </div>
   </article>
 
-  <article class="tile tile--cream" id="apresentacao" data-screen-label="apresentação">
+  <article class="tile tile--blue" id="apresentacao" data-screen-label="apresentação">
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title" data-i18n="apresH2">apresentação</h2>
@@ -949,7 +941,7 @@ a:hover { text-decoration: underline; }
     </div>
   </article>
 
-  <article class="tile tile--sky" id="como-chegar" data-screen-label="como chegar">
+  <article class="tile tile--blue" id="como-chegar" data-screen-label="como chegar">
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--tracked" data-i18n="chegarH2">Acessos</h2>
@@ -1017,7 +1009,7 @@ a:hover { text-decoration: underline; }
     <img src="./sc1-mt1lcwzm-0usn.png" data-i18n-alt="alt3" alt="Bailarina em ensaio com estrutura de madeira" loading="lazy">
   </figure>
 
-  <article class="tile tile--olive" id="amigos" data-screen-label="amigos">
+  <article class="tile tile--blue" id="amigos" data-screen-label="amigos">
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title" data-i18n="amH2">Amigo da Sineira</h2>
@@ -1043,7 +1035,7 @@ a:hover { text-decoration: underline; }
     </div>
   </article>
 
-  <article class="tile tile--peach" id="contactos" data-screen-label="contactos">
+  <article class="tile tile--cream" id="contactos" data-screen-label="contactos">
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--italic" data-i18n="coH2">Fala connosco</h2>
