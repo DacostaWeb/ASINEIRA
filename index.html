@@ -54,7 +54,7 @@
   /* Medidas do cabeçalho (redefinidas em ecrãs estreitos, secção 10) */
   --header-h:       78px;
   --header-gap:     34px;
-  --header-pad-x:   30px;
+  --gutter:         30px;   /* margem lateral: logótipo, cartões e menu, sempre igual */
   --wordmark-h:     40px;
   --trigger-w:      62px;
   --close-right:    30px;
@@ -64,7 +64,7 @@
   --tile-pad:       30px;
   --col-min:       360px;   /* largura mínima de coluna antes de quebrar */
   --col-max-n:         4;   /* número máximo de colunas */
-  --card-content: 420px;    /* o conteúdo pára de crescer aqui e fica centrado */
+  --card-content: 420px;    /* largura a que o conteúdo pára de crescer */
   --card-h:       320px;    /* altura de cada cartão; o JS recalcula-a (fitRows) */
   --scroll-offset:  80px;   /* folga para o cabeçalho ao saltar para uma âncora */
   --marquee-h:      40px;
@@ -130,7 +130,7 @@ a:hover { text-decoration: underline; }
   align-items: center;
   gap: var(--header-gap);
   height: var(--header-h);
-  padding: 0 var(--header-pad-x);
+  padding: 0 var(--gutter);
   background: var(--cream);
 }
 
@@ -243,15 +243,16 @@ a:hover { text-decoration: underline; }
 .tile {
   display: flex;
   flex-direction: column;
-  align-items: center;      /* centra o conteúdo em cartões largos */
-  padding: var(--tile-pad);
+  align-items: flex-start;  /* conteúdo encostado à esquerda, nunca centrado */
+  padding: var(--tile-pad) var(--gutter);
   background: var(--tile-bg);
   color: var(--tile-fg);
   scroll-margin-top: var(--scroll-offset);
 }
 
-/* Coluna interior: é ela que tem a largura de leitura e que empurra a
-   legenda para o fundo do cartão. */
+/* Coluna interior: é ela que tem a largura de leitura e que empurra a legenda
+   para o fundo do cartão. Fica encostada à esquerda, alinhada com o logótipo,
+   porque a margem lateral do cartão é o mesmo --gutter do cabeçalho. */
 .tile__inner {
   display: flex;
   flex-direction: column;
@@ -402,7 +403,7 @@ a:hover { text-decoration: underline; }
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  padding: min(9vh, 70px) var(--tile-pad) 160px;
+  padding: min(9vh, 70px) var(--gutter) 160px;
   overflow-y: auto;
   color: var(--cream);
   background: transparent;
@@ -515,7 +516,7 @@ a:hover { text-decoration: underline; }
   :root {
     --header-h:      66px;
     --header-gap:    16px;
-    --header-pad-x:  18px;
+    --gutter:        18px;
     --wordmark-h:    32px;
     --trigger-w:     52px;
     --close-right:   18px;
