@@ -503,6 +503,14 @@ a:hover { text-decoration: underline; }
 
 /* Só medidas do cabeçalho: sem isto o "PT — EN" centrado encavalita no
    logótipo abaixo dos ~390px. */
+/* Em janelas estreitas dá-se menos largura mínima a cada coluna: assim
+   aguentam-se 2 colunas a partir dos 600px em vez dos 720px. Acima dos
+   760px o valor normal volta, e as passagens a 3 e a 4 colunas ficam
+   onde estavam. */
+@media (max-width: 760px) {
+  :root { --col-min: 300px; }
+}
+
 @media (max-width: 640px) {
   :root {
     --header-h:      66px;
@@ -964,20 +972,63 @@ a:hover { text-decoration: underline; }
 
   /* ---------- grelha: quantas colunas e quantas linhas cabem ---------- */
 
-  var MIN_CARD_H = 260;   /* abaixo disto um cartão fechado deixa de respirar */
   var MAX_ROWS = 4;       /* nunca mostrar mais de 4 linhas de uma vez */
 
   var marquee = document.querySelector('.marquee');
+  var tiles = document.querySelectorAll('.tile');
+
+  /* Quantas colunas o CSS está mesmo a desenhar. Contar aqui em vez de repetir
+     a conta da folha de estilos evita que os dois discordem — se discordassem,
+     os cartões que ocupam duas colunas deixavam de o fazer na altura certa e
+     abria-se um buraco na última linha. */
+  function currentCols() {
+    return getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+  }
+
+  /* Altura a que um cartão fechado deixa de caber, medida em vez de adivinhada:
+     põe as linhas ao tamanho do conteúdo, tira o piso às figuras e fica com a
+     mais alta. Depende da largura das colunas, por isso é remedida a cada
+     redimensionamento da janela.
+
+     Nunca chamar isto de dentro do ResizeObserver: mexe no layout e força
+     medição, a página encolhe, a barra de scroll desaparece, a grelha alarga
+     — e o observer volta a disparar em ciclo até bloquear o separador. */
+  function naturalRowHeight() {
+    var rows = grid.style.gridAutoRows;
+    var h = grid.style.getPropertyValue('--card-h');
+    grid.style.setProperty('--card-h', '0px');
+    grid.style.gridAutoRows = 'min-content';
+
+    var max = 0;
+    for (var i = 0; i < tiles.length; i++) {
+      max = Math.max(max, tiles[i].getBoundingClientRect().height);
+    }
+
+    grid.style.gridAutoRows = rows;
+    if (h) grid.style.setProperty('--card-h', h); else grid.style.removeProperty('--card-h');
+    return Math.ceil(max);
+  }
 
   function measure() {
     if (!grid) return;
-    var cols = Math.max(1, Math.min(3, Math.floor(grid.clientWidth / 360)));
+
+    var cols = currentCols();
     if (cols !== state.cols) {
       state.cols = cols;
       document.getElementById('amigos').style.gridColumn = cols >= 3 ? 'span 2' : 'auto';
       document.getElementById('contactos').style.gridColumn = cols === 2 ? '1 / -1' : 'auto';
     }
+
     fitRows();
+  }
+
+  /* Remedir a altura natural e voltar a distribuir. Só a partir de eventos da
+     janela, nunca do observer. */
+  function remeasure() {
+    if (!grid) return;
+    var h = naturalRowHeight();
+    if (h > 0) state.minCardH = h;
+    measure();
   }
 
   /* Altura de cada cartão = altura visível a dividir por um número inteiro de
@@ -993,14 +1044,16 @@ a:hover { text-decoration: underline; }
     if (avail <= 0) return;
 
     var totalRows = getComputedStyle(grid).gridTemplateRows.split(' ').length;
-    var perScreen = Math.min(MAX_ROWS, totalRows, Math.max(1, Math.floor(avail / MIN_CARD_H)));
+    var perScreen = Math.min(MAX_ROWS, totalRows, Math.max(1, Math.floor(avail / state.minCardH)));
 
     grid.style.setProperty('--card-h', (avail / perScreen).toFixed(2) + 'px');
   }
 
   state.cols = -1;
-  measure();
-  window.addEventListener('resize', measure);
+  state.minCardH = 260;
+  remeasure();
+  window.addEventListener('resize', remeasure);
+  window.addEventListener('load', remeasure);
   if (window.ResizeObserver) new ResizeObserver(measure).observe(grid);
 
   /* ---------- menu (triângulo que cresce até cobrir o ecrã) ---------- */
