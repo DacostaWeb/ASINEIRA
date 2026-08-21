@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>a Sineira — Dossier de Mecenato</title>
+  <meta name="description" content="Dossier de apresentação da Sineira — Associação e Espaço Cultural em Retorta, Vila do Conde. Angariação de fundos e mecenato para a requalificação da antiga Igreja de Retorta.">
+  <link rel="canonical" href="https://asineira.pt/dossier/">
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+  <meta property="og:title" content="a Sineira — Dossier de Mecenato">
+  <meta property="og:description" content="Requalificação da antiga Igreja de Retorta. Um ponto de encontro intergeracional, com as artes e com a natureza.">
+  <meta property="og:image" content="https://asineira.pt/dossier/assets/hero.jpg">
+  <meta property="og:url" content="https://asineira.pt/dossier/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+    @font-face {
+      font-family: "Nimbus";
+      src: url("../fonts/NimbusSanL-Regu.ttf") format("truetype");
+      font-weight: 400; font-style: normal;
+    }
+    @font-face {
+      font-family: "Nimbus";
+      src: url("../fonts/NimbusSanL-Bold.ttf") format("truetype");
+      font-weight: 700; font-style: normal;
+    }
+    @font-face {
+      font-family: "Nimbus";
+      src: url("../fonts/NimbusSanL-ReguItal.ttf") format("truetype");
+      font-weight: 400; font-style: italic;
+    }
+    @font-face {
+      font-family: "Nimbus";
+      src: url("../fonts/NimbusSanL-BoldItal.ttf") format("truetype");
+      font-weight: 700; font-style: italic;
+    }
+    @font-face {
+      font-family: "Nimbus Cond";
+      src: url("../fonts/NimbusSanL-BoldCond.ttf") format("truetype");
+      font-weight: 700; font-style: normal;
+    }
+    @font-face {
+      font-family: "Nimbus Cond";
+      src: url("../fonts/NimbusSanL-BoldCondItal.ttf") format("truetype");
+      font-weight: 700; font-style: italic;
+    }
+
+    :root {
+      --blue:  #003C78;
+      --cream: #F2E7A9;
+      --banner-height: 70px;
+      --head-h: 56px;
+      --line: 1.5px solid var(--blue);
+      --menu-dur: 1.1s;
+    }
+
+    * { margin: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    html, body {
+      background: var(--cream);
+      color: var(--blue);
+      font-family: "Nimbus", Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+      padding-bottom: var(--banner-height);
+    }
+    body.menu-open {
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    a { color: inherit; }
+
+    .sheet-head {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--cream);
+      border-bottom: var(--line);
+      height: var(--head-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      gap: 12px;
+    }
+    .sheet-head .brand {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .sheet-head .where {
+      opacity: .7;
+      flex-shrink: 0;
+    }
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+    .lang-toggle button {
+      background: none;
+      border: none;
+      font: inherit;
+      color: inherit;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 4px 0;
+      opacity: .38;
+    }
+    .lang-toggle button[aria-pressed="true"] { opacity: 1; }
+    .lang-toggle .lang-sep { opacity: .38; }
+    @media (max-width: 760px) {
+      .sheet-head .where { display: none; }
+    }
+
+    .id {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    h1, h2 {
+      font-family: "Nimbus Cond", "Nimbus", Helvetica, Arial, sans-serif;
+      font-weight: 700;
+      line-height: .92;
+      text-transform: uppercase;
+      letter-spacing: -.02em;
+    }
+    h1 {
+      font-size: clamp(42px, 9vw, 72px);
+      margin-bottom: 18px;
+    }
+    h2 {
+      font-size: clamp(28px, 5.5vw, 42px);
+      margin-bottom: 16px;
+    }
+    p, li {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.55;
+    }
+    p { margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+    em, .em { font-style: italic; font-weight: 700; }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 14px;
+    }
+    ul:last-child { margin-bottom: 0; }
+    li { margin-bottom: 6px; }
+    li::before { content: "> "; font-weight: 700; }
+
+    .cta {
+      display: inline-block;
+      border: 1.5px solid currentColor;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      text-decoration: none;
+      letter-spacing: .06em;
+      margin-top: 18px;
+      align-self: flex-start;
+      transition: background .2s, color .2s;
+    }
+    .cta:hover { background: var(--blue); color: var(--cream); }
+    .fill .cta:hover { background: var(--cream); color: var(--blue); }
+
+    .hero {
+      position: relative;
+      border-bottom: var(--line);
+      line-height: 0;
+    }
+    .hero img.photo {
+      width: 100%;
+      height: min(78vh, 760px);
+      object-fit: cover;
+      object-position: center 58%;
+      display: block;
+    }
+    .hero-logo {
+      position: absolute;
+      top: clamp(18px, 4vw, 36px);
+      right: clamp(18px, 4vw, 40px);
+      width: min(46vw, 300px);
+      height: auto;
+    }
+
+    .sheet { border-bottom: var(--line); scroll-margin-top: var(--head-h); }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    .cell {
+      padding: 28px 22px 36px;
+      display: flex;
+      flex-direction: column;
+    }
+    .cell + .cell { border-top: var(--line); }
+    .cell .lead { margin-bottom: 14px; }
+
+    .thumb {
+      background: var(--blue);
+      margin: 0 -22px 18px;
+      line-height: 0;
+    }
+    .thumb img {
+      width: 100%;
+      height: 42vh;
+      max-height: 340px;
+      object-fit: cover;
+      display: block;
+    }
+    .thumb.tall img { max-height: 480px; height: 56vh; }
+
+    .fill {
+      background: var(--blue);
+      color: var(--cream);
+    }
+    .fill .thumb { background: var(--cream); }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .chips span {
+      border: 1.5px solid currentColor;
+      border-radius: 99px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .disciplines {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .dist-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 13px;
+      margin: 8px 0 4px;
+    }
+    .dist-table th, .dist-table td {
+      border: var(--line);
+      padding: 8px 10px;
+      text-align: left;
+    }
+    .dist-table th {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .fill .dist-table th,
+    .fill .dist-table td { border-color: var(--cream); }
+
+    .plan img {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #fff;
+    }
+
+    .tiers {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    .tier {
+      padding: 28px 22px 32px;
+      display: flex;
+      flex-direction: column;
+    }
+    .tier + .tier { border-top: var(--line); }
+    .tier h3 {
+      font-family: "Nimbus Cond", "Nimbus", Helvetica, Arial, sans-serif;
+      font-size: clamp(26px, 5vw, 34px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -.02em;
+      margin: 0 0 12px;
+    }
+    .tier .who {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      opacity: .75;
+      margin-bottom: 10px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    .gallery figure {
+      margin: 0;
+      border-top: var(--line);
+      line-height: 0;
+    }
+    .gallery img {
+      width: 100%;
+      height: 56vh;
+      max-height: 620px;
+      object-fit: cover;
+      display: block;
+    }
+    .gallery figcaption {
+      padding: 10px 22px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border-top: var(--line);
+      line-height: 1.4;
+    }
+
+    .note {
+      font-size: 13px;
+      opacity: .8;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 900px) {
+      .row.two { grid-template-columns: 1fr 1fr; }
+      .row.two .cell + .cell { border-top: none; border-left: var(--line); }
+      .cell { padding: 36px 32px 44px; }
+      .thumb { margin: 0 -32px 20px; }
+      .thumb img { height: 280px; max-height: none; }
+      .thumb.tall img { height: 420px; }
+      .tiers { grid-template-columns: repeat(3, 1fr); }
+      .tier { padding: 32px 28px 40px; }
+      .tier + .tier { border-top: none; border-left: var(--line); }
+      .gallery { grid-template-columns: 1fr 1fr; }
+      .gallery figure { border-top: none; border-right: var(--line); }
+      .gallery figure:nth-child(even) { border-right: none; }
+      .gallery figure:nth-child(-n+2) { border-bottom: var(--line); }
+      .gallery img { height: 420px; max-height: none; object-position: center 42%; }
+      h1 { font-size: 64px; }
+    }
+
+    .triangle {
+      position: fixed;
+      left: 18px;
+      bottom: calc(var(--banner-height) + 10px);
+      width: 92px;
+      z-index: 50;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+      transform-origin: 41.7% 42.8%;
+      transition: transform calc(var(--menu-dur) / 2) cubic-bezier(.6, .05, .25, 1) .12s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: visible;
+    }
+    .triangle::before { content: ""; position: absolute; inset: -20px; }
+    body.menu-open .triangle {
+      transform: rotate(-108deg) scale(var(--menu-scale, 60));
+      transition: transform var(--menu-dur) cubic-bezier(.6, .05, .25, 1) 0s;
+      cursor: default;
+      pointer-events: none;
+    }
+    .triangle svg { width: 100%; height: auto; display: block; overflow: visible; }
+    .triangle .shape-blue  { fill: var(--blue); }
+    .triangle .shape-cream { fill: var(--cream); }
+    .triangle .letters { transition: opacity .3s ease .45s; }
+    body.menu-open .triangle .letters {
+      opacity: 0;
+      transition: opacity .18s ease 0s;
+    }
+
+    .menu {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: min(9vh, 70px) 30px calc(var(--banner-height) + 90px);
+      color: var(--cream);
+      background: transparent;
+      visibility: hidden;
+      pointer-events: none;
+      overflow-y: auto;
+      transition: background 0s linear 0s;
+    }
+    body.menu-open .menu {
+      visibility: visible;
+      pointer-events: auto;
+      background: var(--blue);
+      transition: background 0s linear 0.8s;
+    }
+    .menu ol { list-style: none; padding: 0; max-width: 480px; margin: 0 auto; width: 100%; }
+    .menu li {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    body.menu-open .menu li {
+      opacity: 1;
+      transform: none;
+      transition: opacity .45s ease var(--d, .75s), transform .45s ease var(--d, .75s);
+    }
+    .menu li a {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      text-decoration: none;
+      font-family: "Nimbus Cond", "Nimbus", Helvetica, Arial, sans-serif;
+      font-size: clamp(24px, 5.4vw, 32px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -.02em;
+      padding: 9px 0;
+    }
+    .menu li a:hover .label { text-decoration: underline; }
+    .menu .n { min-width: 1.6em; }
+    .menu .label { flex: 1; }
+    .menu li.m1 .label { font-style: italic; }
+    .menu li.m2 .label { letter-spacing: .18em; }
+
+    .menu .pills {
+      max-width: 480px;
+      margin: 34px auto 0;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    body.menu-open .menu .pills {
+      opacity: 1;
+      transform: none;
+      transition: opacity .45s ease 1.55s, transform .45s ease 1.55s;
+    }
+    .menu .pills a {
+      border: 1.5px solid var(--cream);
+      border-radius: 99px;
+      padding: 7px 15px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      text-decoration: none;
+    }
+    .menu .pills a:hover { background: var(--cream); color: var(--blue); }
+
+    .menu-close {
+      position: fixed;
+      left: 40px;
+      bottom: calc(var(--banner-height) + 34px);
+      width: 40px;
+      height: 40px;
+      z-index: 70;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      opacity: 0;
+      transform: rotate(-120deg) scale(.4);
+      pointer-events: none;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    body.menu-open .menu-close {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+      pointer-events: auto;
+      transition: opacity .4s ease .12s, transform .45s cubic-bezier(.2, 1.4, .4, 1) .12s;
+    }
+    .menu-close svg { width: 100%; height: 100%; display: block; }
+    .menu-close path { fill: var(--cream); }
+
+    .banner {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      height: var(--banner-height);
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      z-index: 80;
+    }
+    .track {
+      display: flex;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+    .marquee-text {
+      white-space: nowrap;
+      color: var(--cream);
+      font-size: 20px;
+      text-transform: uppercase;
+      display: inline-flex;
+    }
+    .marquee-text::before {
+      content: var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 ";
+    }
+    .marquee-text::after {
+      content: var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 " var(--text) " \00a0\00a0\00a0\00a0 ";
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @media print {
+      .sheet-head, .triangle, .menu, .menu-close, .banner { display: none !important; }
+      body { padding: 0; background: #fff; }
+      .hero img.photo { height: 320px; }
+      .gallery img { height: 360px; max-height: none; }
+      a[href^="mailto:"]::after { content: " (" attr(href) ")"; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="sheet-head">
+    <a class="brand" href="../" data-i18n="brand">a Sineira — Dossier de Mecenato</a>
+    <span class="where">Retorta · Vila do Conde</span>
+    <div class="lang-toggle" role="group" aria-label="PT — EN">
+      <button type="button" id="langPt" aria-pressed="true">PT</button>
+      <span class="lang-sep" aria-hidden="true">—</span>
+      <button type="button" id="langEn" aria-pressed="false">EN</button>
+    </div>
+  </header>
+
+  <section class="hero" id="topo">
+    <img class="photo" src="../assets/hero.jpg" data-i18n-alt="altHero" alt="Antiga Igreja de Retorta e casa do padre, Vila do Conde">
+    <img class="hero-logo" src="../assets/logo.svg" alt="a Sineira">
+  </section>
+
+  <section class="sheet" id="associacao">
+    <div class="row two">
+      <article class="cell">
+        <p class="id" data-i18n="asId">00 · A associação</p>
+        <h1 data-i18n="asH1">A Sineira</h1>
+        <p class="lead" data-i18n="asSub">Associação &amp; Espaço Cultural</p>
+        <p data-i18n="asP1">Criada em 2025, a Sineira — Associação Cultural pretende colaborar com as demais estruturas existentes a nível nacional e internacional, para dar resposta às necessidades e interesses da comunidade artística local e a todo o público interessado em usufruir das actividades culturais e sociais por si promovidas.</p>
+        <p data-i18n-html="asP2">Surge como um colectivo, mas também como espaço físico, em Vila do Conde. Requalificando o complexo arquitectónico da antiga Igreja de Retorta, pretende-se aí criar um ponto de encontro <span class="em">intergeracional</span>, de conexão com as <span class="em">artes</span> e com a <span class="em">natureza</span>.</p>
+        <a class="cta" href="#mecenato" data-i18n="asCta">Apoiar o projecto</a>
+      </article>
+      <article class="cell">
+        <div class="thumb tall"><img src="../assets/altares.jpg" data-i18n-alt="altAltares" alt="Altar da antiga Igreja de Retorta"></div>
+        <p class="id" data-i18n="asSideId">Retorta · 18.000 m²</p>
+        <p data-i18n="asSideP">O complexo da antiga Igreja de Retorta é o chão deste projecto: património, floresta, clareira e um programa para artistas e para a comunidade.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheet" id="missao">
+    <div class="row two">
+      <article class="cell">
+        <p class="id" data-i18n="miId">01 · Missão</p>
+        <h2 data-i18n="miH2">Missão e objetivos</h2>
+        <ul>
+          <li data-i18n-html="miLi1">Fomentar e apoiar a <span class="em">formação, criação e divulgação</span> de projetos artísticos;</li>
+          <li data-i18n-html="miLi2">Reforçar a <span class="em">colaboração</span> entre artistas e entre artistas e comunidade local;</li>
+          <li data-i18n-html="miLi3">Promover a <span class="em">valorização</span> do património cultural e natural local;</li>
+          <li data-i18n-html="miLi4">Promover a <span class="em">literacia</span> artística;</li>
+          <li data-i18n-html="miLi5">Organizar <span class="em">workshops, cursos intensivos, residências artísticas, espetáculos</span> e outras actividades socio-culturais;</li>
+          <li data-i18n-html="miLi6">Organizar um <span class="em">festival anual de dança e música</span>.</li>
+        </ul>
+      </article>
+      <article class="cell fill">
+        <p class="id" data-i18n="miAudId">Para quem</p>
+        <h2 data-i18n="miAudH2">Programas para todas as idades</h2>
+        <p data-i18n="miAudP">A Sineira trabalha com bebés, crianças, jovens, adultos e séniores — no mesmo sítio, com o mesmo projecto.</p>
+        <div class="chips">
+          <span data-i18n="chip1">infância</span>
+          <span data-i18n="chip2">jovens</span>
+          <span data-i18n="chip3">adultos</span>
+          <span data-i18n="chip4">séniores</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheet" id="actividades">
+    <div class="row two">
+      <article class="cell">
+        <p class="id" data-i18n="atId">02 · Actividades</p>
+        <h2 data-i18n="atH2">Actividades</h2>
+        <p class="disciplines" data-i18n="atDisc">Dança · Música · Teatro · Arquitectura · Artes plásticas · Artes visuais</p>
+        <p class="id" data-i18n="atArtId">Artistas</p>
+        <ul>
+          <li data-i18n="atA1">Aulas regulares</li>
+          <li data-i18n="atA2">Workshops</li>
+          <li data-i18n="atA3">Cursos intensivos</li>
+          <li data-i18n="atA4">Residências artísticas</li>
+          <li data-i18n="atA5">Espetáculos</li>
+        </ul>
+      </article>
+      <article class="cell">
+        <p class="id" data-i18n="atComId">Comunidade</p>
+        <p data-i18n="atComSub">Bebés · Crianças · Jovens · Adultos · Séniores</p>
+        <ul>
+          <li data-i18n="atC1">Aulas regulares</li>
+          <li data-i18n="atC2">Workshops</li>
+          <li data-i18n="atC3">Campo de férias</li>
+          <li data-i18n="atC4">Sessões de cinema</li>
+          <li data-i18n="atC5">Produtos locais</li>
+          <li data-i18n="atC6">Experiências na natureza</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheet" id="espaco">
+    <div class="row two">
+      <article class="cell">
+        <p class="id" data-i18n="esId">03 · O espaço</p>
+        <h2 data-i18n="esH2">Vila do Conde (Retorta)</h2>
+        <p data-i18n="esP">Área aproximada: 18.000 m². Um complexo a requalificar — igreja, casa, mata e clareira — para formação, criação e apresentação.</p>
+        <ul>
+          <li data-i18n="esL1">Estúdio / palco</li>
+          <li data-i18n="esL2">Igreja: espaço multiusos</li>
+          <li data-i18n="esL3">Alojamento: programa de residências artísticas</li>
+          <li data-i18n="esL4">Restauração</li>
+          <li data-i18n="esL5">Estacionamento</li>
+          <li data-i18n="esL6">Floresta: percursos de lazer e pedagógicos</li>
+          <li data-i18n="esL7">Clareira: espaço para festival</li>
+        </ul>
+      </article>
+      <article class="cell">
+        <div class="thumb tall"><img src="../assets/vista-aerea.jpg" data-i18n-alt="altVista" alt="Implantação aérea do complexo da antiga Igreja de Retorta"></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheet" id="acessos">
+    <div class="row two">
+      <article class="cell">
+        <p class="id" data-i18n="acId">04 · Acessos</p>
+        <h2 data-i18n="acH2">Acessos</h2>
+        <table class="dist-table">
+          <thead>
+            <tr>
+              <th data-i18n="thDest">destino</th>
+              <th data-i18n="thA">modo A</th>
+              <th data-i18n="thB">modo B</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="rowMetro">Metro Santa Clara / Vila do Conde</td>
+              <td data-i18n="rowMetroA">bicicleta 5 min</td>
+              <td data-i18n="rowMetroB">a pé 15 min</td>
+            </tr>
+            <tr>
+              <td data-i18n="rowCentro">Centro histórico de Vila do Conde</td>
+              <td data-i18n="rowCentroA">bicicleta 10 min</td>
+              <td data-i18n="rowCentroB">a pé 30 min</td>
+            </tr>
+            <tr>
+              <td data-i18n="rowPraia">Praias de Vila do Conde</td>
+              <td data-i18n="rowPraiaA">bicicleta 20 min</td>
+              <td data-i18n="rowPraiaB">a pé 60 min</td>
+            </tr>
+            <tr>
+              <td data-i18n="rowPorto">Metro Trindade / Porto</td>
+              <td data-i18n="rowPortoA">metro 40 min</td>
+              <td data-i18n="rowPortoB">60 min</td>
+            </tr>
+            <tr>
+              <td data-i18n="rowAero">Aeroporto Francisco Sá Carneiro</td>
+              <td data-i18n="rowAeroA">carro 20 min</td>
+              <td data-i18n="rowAeroB">50 min</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+      <article class="cell">
+        <div class="thumb"><img src="../assets/vila-do-conde.jpg" data-i18n-alt="altMapa" alt="Vila do Conde, o rio Ave e o Atlântico"></div>
+        <p data-i18n="acMapP">Retorta fica entre o rio, a floresta e a cidade. Metro, centro histórico, praias e aeroporto estão a minutos.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheet" id="requalificacao">
+    <div class="row two">
+      <article class="cell">
+        <p class="id" data-i18n="reId">05 · Requalificação</p>
+        <h2 data-i18n="reH2">Plano de requalificação</h2>
+        <ul>
+          <li data-i18n="reL1">Levantamento topográfico e arquitectónico</li>
+          <li data-i18n="reL2">Projecto de arquitectura e especialidades</li>
+          <li data-i18n="reL3">Construção: redes de esgotos, água, electricidade e telecomunicações</li>
+          <li data-i18n="reL4">Sistema de aquecimento / arrefecimento</li>
+          <li data-i18n="reL5">Construção de acessos e estacionamento</li>
+          <li data-i18n="reL6">Execução de janelas</li>
+          <li data-i18n="reL7">Recuperação da porta principal da igreja</li>
+          <li data-i18n="reL8">Recuperação dos altares da igreja</li>
+          <li data-i18n="reL9">Execução de pavimentos</li>
+          <li data-i18n="reL10">Tratamento de paredes</li>
+          <li data-i18n="reL11">Criação de instalações sanitárias</li>
+          <li data-i18n="reL12">Recuperação do telhado da casa do padre</li>
+          <li data-i18n="reL13">Abertura de vão (proscénio) e demolição de laje</li>
+          <li data-i18n="reL14">Pinturas · iluminação interior e exterior</li>
+          <li data-i18n="reL15">Projecto de paisagismo e arranjos exteriores</li>
+        </ul>
+      </article>
+      <article class="cell">
+        <div class="thumb"><img src="../assets/scene-estudio.jpg" data-i18n-alt="altEstudio" alt="Proposta: estúdio de dança com plateia"></div>
+        <div class="thumb" style="margin-bottom:0"><img src="../assets/scene-aerea.jpg" data-i18n-alt="altNight" alt="Proposta: vista aérea nocturna do complexo"></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheet" id="faseamento">
+    <div class="row">
+      <article class="cell">
+        <p class="id" data-i18n="faId">06 · Faseamento</p>
+        <h2 data-i18n="faH2">Faseamento da intervenção</h2>
+        <ul>
+          <li data-i18n="fa1">Fase 1 — igreja, jardim e estacionamento</li>
+          <li data-i18n="fa2">Fase 2 — antiga casa do padre</li>
+          <li data-i18n="fa3">Fase 3 — antiga catequese</li>
+          <li data-i18n="fa4">Fase 4 — equipamento de restauração, eventos e melhoria do estacionamento</li>
+          <li data-i18n="fa5">Fase 5 — área de expansão futura (limites a verificar)</li>
+        </ul>
+      </article>
+    </div>
+    <div class="plan">
+      <img src="../assets/faseamento.jpg" data-i18n-alt="altFase" alt="Planta de faseamento da intervenção na antiga Igreja de Retorta">
+    </div>
+  </section>
+
+  <section class="sheet fill" id="mecenato">
+    <div class="row">
+      <article class="cell">
+        <p class="id" data-i18n="meId">07 · Mecenato</p>
+        <h2 data-i18n="meH2">Plano de apoio e mecenato</h2>
+        <p data-i18n="meP">A requalificação da antiga Igreja de Retorta e o programa artístico da Sineira pedem companhia. Pessoas, empresas e instituições podem apoiar o projecto — e fazer parte da comunidade que está a nascer.</p>
+        <ul>
+          <li data-i18n="meB1">Acesso gratuito a todos os eventos</li>
+          <li data-i18n="meB2">Desconto na frequência de aulas regulares, workshops e cursos intensivos</li>
+          <li data-i18n="meB3">Criação de dinâmica socio-cultural e económica em Vila do Conde</li>
+          <li data-i18n="meB4">Publicidade através de cartazes e demais materiais de comunicação</li>
+          <li data-i18n="meB5">Benefícios fiscais (Lei do Mecenato Cultural)</li>
+        </ul>
+        <p class="note" data-i18n="meNote">a Sineira — Associação Cultural · NIF 518858359. Apoios enquadráveis no Estatuto dos Benefícios Fiscais (mecenato cultural).</p>
+        <a class="cta" id="mecenasCta" href="mailto:ola@asineira.pt?subject=Mecenato%20a%20Sineira" data-i18n="meCta">Quero apoiar</a>
+      </article>
+    </div>
+    <div class="tiers">
+      <article class="tier">
+        <p class="who" data-i18n="t1who">01 · Pessoas</p>
+        <h3 data-i18n="t1h">Amigo</h3>
+        <p data-i18n="t1p">Entra na comunidade. Eventos, descontos e um lugar no que está a nascer em Retorta.</p>
+      </article>
+      <article class="tier">
+        <p class="who" data-i18n="t2who">02 · Pessoas e empresas</p>
+        <h3 data-i18n="t2h">Mecenas</h3>
+        <p data-i18n="t2p">Apoio ao abrigo da Lei do Mecenato Cultural: benefícios fiscais, visibilidade e acompanhamento do projecto.</p>
+      </article>
+      <article class="tier">
+        <p class="who" data-i18n="t3who">03 · Instituições</p>
+        <h3 data-i18n="t3h">Parceiro</h3>
+        <p data-i18n="t3p">Associação nomeada à dinâmica cultural de Vila do Conde — cartazes, site, eventos e território.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheet" id="parcerias">
+    <div class="row two">
+      <article class="cell">
+        <p class="id" data-i18n="paId">08 · Território</p>
+        <h2 data-i18n="paH2">Parcerias e apoios</h2>
+        <p class="id" data-i18n="paParId">Parcerias (à data)</p>
+        <ul>
+          <li>Curtas de Vila do Conde</li>
+          <li>Centro Ciência Viva</li>
+        </ul>
+        <p class="id" data-i18n="paApId">Apoios (à data)</p>
+        <ul>
+          <li data-i18n="paA1">Junta de Freguesia de Retorta e Tougues</li>
+          <li data-i18n="paA2">Câmara Municipal de Vila do Conde</li>
+        </ul>
+      </article>
+      <article class="cell">
+        <p class="id" data-i18n="poId">Pontos de interesse na proximidade</p>
+        <ul>
+          <li>Centro Ciência Viva</li>
+          <li data-i18n="po2">Pólo de investigação</li>
+          <li>ESMAD</li>
+          <li data-i18n="po4">Centro gimnodesportivo</li>
+          <li>Campo Rio Ave Futebol</li>
+          <li>Escola Sanches</li>
+          <li>Escola Saul Dias</li>
+          <li>Clube Fluvial Vilacondense</li>
+          <li data-i18n="po9">Rede ciclovia (futuramente)</li>
+          <li data-i18n="po10">Praia fluvial (futuramente)</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="sheet" id="intervencao">
+    <div class="row">
+      <article class="cell">
+        <p class="id" data-i18n="inId">09 · Intervenção</p>
+        <h2 data-i18n="inH2">Intervenção</h2>
+        <p data-i18n="inP">O trabalho já começou. A nave ganhou pavimento novo; os altares e o arco dourado aguardam recuperação.</p>
+      </article>
+    </div>
+    <div class="gallery">
+      <figure>
+        <img src="../assets/nave-2025.jpg" data-i18n-alt="altAntes" alt="Nave da igreja antes do pavimento">
+        <figcaption data-i18n="capAntes">Antes · nave</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/nave-2026.jpg" data-i18n-alt="altDepois" alt="Nave com pavimento novo, em obra">
+        <figcaption data-i18n="capDepois">Durante · pavimento novo</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/arco.jpg" data-i18n-alt="altArco" alt="Interior em obra, visto através do arco">
+        <figcaption data-i18n="capArco">Interior · arco e pavimento em execução</figcaption>
+      </figure>
+      <figure>
+        <img src="../assets/altares.jpg" data-i18n-alt="altAltares2" alt="Pormenor dos altares a recuperar">
+        <figcaption data-i18n="capAlt">Altares — recuperação prevista no plano</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sheet" id="contactos">
+    <div class="row two">
+      <article class="cell">
+        <p class="id" data-i18n="coId">10 · Contactos</p>
+        <h2 data-i18n="coH2">Mais informações</h2>
+        <ul>
+          <li><a href="https://asineira.pt">asineira.pt</a></li>
+          <li><a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+        <p data-i18n="coLegal">a Sineira — Associação Cultural · NIF 518858359</p>
+        <p data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
+        Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
+        <p><a href="mailto:ola@asineira.pt">ola@asineira.pt</a></p>
+        <a class="cta" id="contactCta" href="mailto:ola@asineira.pt?subject=Mecenato%20a%20Sineira" data-i18n="coCta">Escrever-nos</a>
+      </article>
+      <article class="cell fill">
+        <p class="id" data-i18n="endId">Convite</p>
+        <h2 data-i18n="endH2">Vem ver o sítio. Vem apoiar o que falta.</h2>
+        <p data-i18n="endP">Este dossier é um convite: à visita, ao mecenato, à parceria. A antiga Igreja de Retorta está a tornar-se casa para as artes — e precisa de quem queira fazer parte.</p>
+        <a class="cta" href="#mecenato" data-i18n="endCta">Plano de mecenato</a>
+      </article>
+    </div>
+  </section>
+
+  <button class="triangle" id="menuTriangle" data-i18n-aria="openMenu" aria-label="Abrir menu" aria-expanded="false">
+    <svg viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="triClip" clipPathUnits="userSpaceOnUse">
+          <path id="triClipPath" d="M95.7804 387L382 110.293L0 0L95.7804 387Z" />
+        </clipPath>
+      </defs>
+      <g id="triRot">
+        <path class="shape-blue" d="M95.7804 387L382 110.293L0 0L95.7804 387Z" />
+      </g>
+      <g class="letters" clip-path="url(#triClip)">
+        <path class="shape-cream" d="M237.388 200.34C247.689 213.363 261.205 214.741 278 206.656C294.744 198.596 298.733 188.514 293.636 177.859C287.97 166.014 278.519 164.239 250.934 170.39C207 180.098 190.348 170.391 180.948 150.741C168.813 125.373 179.487 99.0424 213.836 82.5088C252.358 63.9658 277.644 77.3509 289.904 97.6398L258.295 112.855C252.495 104.628 242.906 97.2765 224.201 106.28C211.468 112.409 206.307 121.384 211.25 131.717C216.092 141.839 224.216 142.977 250.269 137.146C297.241 126.807 314.026 138.102 323.842 158.622C336.554 185.197 325.231 213.078 286.876 231.541C250.048 249.268 221.95 240.417 205.779 215.554L237.388 200.34Z" />
+        <path class="shape-cream" d="M127.809 268.327C123.481 279.019 118.021 294.985 117.576 297.957L87.9668 285.895C87.9997 283.319 89.7491 277.138 90.8443 274.28C84.2336 278.937 73.674 283.105 53.8757 275.039C26.8839 264.043 22.704 241.605 29.7557 224.188C40.1131 198.606 65.3714 195.148 98.1927 208.519L114.168 215.028L116.946 208.165C120.179 200.181 120.493 191.163 106.12 185.307C93.0352 179.976 87.9124 184.388 83.1947 191.939L53.7216 179.932C63.4814 160.661 82.3208 149.524 116.279 163.582C146.184 175.99 157.746 194.386 146.924 221.116L127.809 268.327ZM106.552 233.914L93.9249 228.77C75.2484 221.161 66.0077 224.06 61.6246 234.886C58.3332 243.015 60.5334 251.886 71.6733 256.424C91.3705 264.449 99.3509 251.7 105.357 236.865L106.552 233.914Z" />
+      </g>
+    </svg>
+  </button>
+
+  <nav class="menu" id="menu" aria-hidden="true">
+    <ol>
+      <li class="m1" style="--d: .75s"><a href="#associacao"><span class="n">1.</span><span class="label" data-i18n="menu1">a associação</span><span class="arrow">→</span></a></li>
+      <li class="m2" style="--d: .85s"><a href="#missao"><span class="n">2.</span><span class="label" data-i18n="menu2">missão</span><span class="arrow">→</span></a></li>
+      <li class="m3" style="--d: .95s"><a href="#espaco"><span class="n">3.</span><span class="label" data-i18n="menu3">o espaço</span><span class="arrow">→</span></a></li>
+      <li class="m4" style="--d: 1.05s"><a href="#requalificacao"><span class="n">4.</span><span class="label" data-i18n="menu4">requalificação</span><span class="arrow">→</span></a></li>
+      <li class="m5" style="--d: 1.15s"><a href="#mecenato"><span class="n">5.</span><span class="label" data-i18n="menu5">mecenato</span><span class="arrow">→</span></a></li>
+    </ol>
+    <div class="pills">
+      <a href="../" data-i18n="pillHome">← site</a>
+      <a href="#actividades" data-i18n="pillAt">actividades</a>
+      <a href="#intervencao" data-i18n="pillIn">intervenção</a>
+      <a href="#parcerias" data-i18n="pillPa">parcerias</a>
+      <a href="#contactos" data-i18n="pillCo">contactos</a>
+    </div>
+  </nav>
+
+  <button class="menu-close" id="menuClose" data-i18n-aria="closeMenu" aria-label="Fechar menu">
+    <svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32.8795 0.0325423L37.6193 4.77237L23.5656 18.8261L37.5862 32.8467L32.8464 37.5865L18.8258 23.5659L4.77203 37.6197L0.0322052 32.8799L14.086 18.8261L-0.000940464 4.73922L4.73888 -0.000603347L18.8258 14.0863L32.8795 0.0325423Z"/>
+    </svg>
+  </button>
+
+  <div class="banner">
+    <div class="track">
+      <span class="marquee-text" id="marqueeText" style="--text: 'Apoia a requalifica\00e7\00e3o da antiga Igreja de Retorta. Torna-te mecenas da Sineira.';"></span>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const body = document.body;
+      const triangle = document.getElementById('menuTriangle');
+      const menu = document.getElementById('menu');
+      const closeBtn = document.getElementById('menuClose');
+      const langPt = document.getElementById('langPt');
+      const langEn = document.getElementById('langEn');
+      const marqueeText = document.getElementById('marqueeText');
+      const metaDesc = document.querySelector('meta[name="description"]');
+      const mecenasCta = document.getElementById('mecenasCta');
+      const contactCta = document.getElementById('contactCta');
+
+      const I18N = {
+        pt: {
+          title: 'a Sineira — Dossier de Mecenato',
+          desc: 'Dossier de apresentação da Sineira — Associação e Espaço Cultural em Retorta, Vila do Conde. Angariação de fundos e mecenato para a requalificação da antiga Igreja de Retorta.',
+          brand: 'a Sineira — Dossier de Mecenato',
+          openMenu: 'Abrir menu',
+          closeMenu: 'Fechar menu',
+          asId: '00 · A associação',
+          asH1: 'A Sineira',
+          asSub: 'Associação & Espaço Cultural',
+          asP1: 'Criada em 2025, a Sineira — Associação Cultural pretende colaborar com as demais estruturas existentes a nível nacional e internacional, para dar resposta às necessidades e interesses da comunidade artística local e a todo o público interessado em usufruir das actividades culturais e sociais por si promovidas.',
+          asP2: 'Surge como um colectivo, mas também como espaço físico, em Vila do Conde. Requalificando o complexo arquitectónico da antiga Igreja de Retorta, pretende-se aí criar um ponto de encontro <span class="em">intergeracional</span>, de conexão com as <span class="em">artes</span> e com a <span class="em">natureza</span>.',
+          asCta: 'Apoiar o projecto',
+          asSideId: 'Retorta · 18.000 m²',
+          asSideP: 'O complexo da antiga Igreja de Retorta é o chão deste projecto: património, floresta, clareira e um programa para artistas e para a comunidade.',
+          miId: '01 · Missão',
+          miH2: 'Missão e objetivos',
+          miLi1: 'Fomentar e apoiar a <span class="em">formação, criação e divulgação</span> de projetos artísticos;',
+          miLi2: 'Reforçar a <span class="em">colaboração</span> entre artistas e entre artistas e comunidade local;',
+          miLi3: 'Promover a <span class="em">valorização</span> do património cultural e natural local;',
+          miLi4: 'Promover a <span class="em">literacia</span> artística;',
+          miLi5: 'Organizar <span class="em">workshops, cursos intensivos, residências artísticas, espetáculos</span> e outras actividades socio-culturais;',
+          miLi6: 'Organizar um <span class="em">festival anual de dança e música</span>.',
+          miAudId: 'Para quem',
+          miAudH2: 'Programas para todas as idades',
+          miAudP: 'A Sineira trabalha com bebés, crianças, jovens, adultos e séniores — no mesmo sítio, com o mesmo projecto.',
+          chip1: 'infância', chip2: 'jovens', chip3: 'adultos', chip4: 'séniores',
+          atId: '02 · Actividades',
+          atH2: 'Actividades',
+          atDisc: 'Dança · Música · Teatro · Arquitectura · Artes plásticas · Artes visuais',
+          atArtId: 'Artistas',
+          atA1: 'Aulas regulares', atA2: 'Workshops', atA3: 'Cursos intensivos', atA4: 'Residências artísticas', atA5: 'Espetáculos',
+          atComId: 'Comunidade',
+          atComSub: 'Bebés · Crianças · Jovens · Adultos · Séniores',
+          atC1: 'Aulas regulares', atC2: 'Workshops', atC3: 'Campo de férias', atC4: 'Sessões de cinema', atC5: 'Produtos locais', atC6: 'Experiências na natureza',
+          esId: '03 · O espaço',
+          esH2: 'Vila do Conde (Retorta)',
+          esP: 'Área aproximada: 18.000 m². Um complexo a requalificar — igreja, casa, mata e clareira — para formação, criação e apresentação.',
+          esL1: 'Estúdio / palco', esL2: 'Igreja: espaço multiusos', esL3: 'Alojamento: programa de residências artísticas', esL4: 'Restauração', esL5: 'Estacionamento', esL6: 'Floresta: percursos de lazer e pedagógicos', esL7: 'Clareira: espaço para festival',
+          acId: '04 · Acessos', acH2: 'Acessos',
+          thDest: 'destino', thA: 'modo A', thB: 'modo B',
+          rowMetro: 'Metro Santa Clara / Vila do Conde', rowMetroA: 'bicicleta 5 min', rowMetroB: 'a pé 15 min',
+          rowCentro: 'Centro histórico de Vila do Conde', rowCentroA: 'bicicleta 10 min', rowCentroB: 'a pé 30 min',
+          rowPraia: 'Praias de Vila do Conde', rowPraiaA: 'bicicleta 20 min', rowPraiaB: 'a pé 60 min',
+          rowPorto: 'Metro Trindade / Porto', rowPortoA: 'metro 40 min', rowPortoB: '60 min',
+          rowAero: 'Aeroporto Francisco Sá Carneiro', rowAeroA: 'carro 20 min', rowAeroB: '50 min',
+          acMapP: 'Retorta fica entre o rio, a floresta e a cidade. Metro, centro histórico, praias e aeroporto estão a minutos.',
+          reId: '05 · Requalificação', reH2: 'Plano de requalificação',
+          reL1: 'Levantamento topográfico e arquitectónico',
+          reL2: 'Projecto de arquitectura e especialidades',
+          reL3: 'Construção: redes de esgotos, água, electricidade e telecomunicações',
+          reL4: 'Sistema de aquecimento / arrefecimento',
+          reL5: 'Construção de acessos e estacionamento',
+          reL6: 'Execução de janelas',
+          reL7: 'Recuperação da porta principal da igreja',
+          reL8: 'Recuperação dos altares da igreja',
+          reL9: 'Execução de pavimentos',
+          reL10: 'Tratamento de paredes',
+          reL11: 'Criação de instalações sanitárias',
+          reL12: 'Recuperação do telhado da casa do padre',
+          reL13: 'Abertura de vão (proscénio) e demolição de laje',
+          reL14: 'Pinturas · iluminação interior e exterior',
+          reL15: 'Projecto de paisagismo e arranjos exteriores',
+          faId: '06 · Faseamento', faH2: 'Faseamento da intervenção',
+          fa1: 'Fase 1 — igreja, jardim e estacionamento',
+          fa2: 'Fase 2 — antiga casa do padre',
+          fa3: 'Fase 3 — antiga catequese',
+          fa4: 'Fase 4 — equipamento de restauração, eventos e melhoria do estacionamento',
+          fa5: 'Fase 5 — área de expansão futura (limites a verificar)',
+          meId: '07 · Mecenato', meH2: 'Plano de apoio e mecenato',
+          meP: 'A requalificação da antiga Igreja de Retorta e o programa artístico da Sineira pedem companhia. Pessoas, empresas e instituições podem apoiar o projecto — e fazer parte da comunidade que está a nascer.',
+          meB1: 'Acesso gratuito a todos os eventos',
+          meB2: 'Desconto na frequência de aulas regulares, workshops e cursos intensivos',
+          meB3: 'Criação de dinâmica socio-cultural e económica em Vila do Conde',
+          meB4: 'Publicidade através de cartazes e demais materiais de comunicação',
+          meB5: 'Benefícios fiscais (Lei do Mecenato Cultural)',
+          meNote: 'a Sineira — Associação Cultural · NIF 518858359. Apoios enquadráveis no Estatuto dos Benefícios Fiscais (mecenato cultural).',
+          meCta: 'Quero apoiar',
+          meSubject: 'Mecenato a Sineira',
+          t1who: '01 · Pessoas', t1h: 'Amigo', t1p: 'Entra na comunidade. Eventos, descontos e um lugar no que está a nascer em Retorta.',
+          t2who: '02 · Pessoas e empresas', t2h: 'Mecenas', t2p: 'Apoio ao abrigo da Lei do Mecenato Cultural: benefícios fiscais, visibilidade e acompanhamento do projecto.',
+          t3who: '03 · Instituições', t3h: 'Parceiro', t3p: 'Associação nomeada à dinâmica cultural de Vila do Conde — cartazes, site, eventos e território.',
+          paId: '08 · Território', paH2: 'Parcerias e apoios',
+          paParId: 'Parcerias (à data)', paApId: 'Apoios (à data)',
+          paA1: 'Junta de Freguesia de Retorta e Tougues', paA2: 'Câmara Municipal de Vila do Conde',
+          poId: 'Pontos de interesse na proximidade',
+          po2: 'Pólo de investigação', po4: 'Centro gimnodesportivo',
+          po9: 'Rede ciclovia (futuramente)', po10: 'Praia fluvial (futuramente)',
+          inId: '09 · Intervenção', inH2: 'Intervenção',
+          inP: 'O trabalho já começou. A nave ganhou pavimento novo; os altares e o arco dourado aguardam recuperação.',
+          capAntes: 'Antes · nave',
+          capDepois: 'Durante · pavimento novo',
+          capArco: 'Interior · arco e pavimento em execução',
+          capAlt: 'Altares — recuperação prevista no plano',
+          coId: '10 · Contactos', coH2: 'Mais informações',
+          coLegal: 'a Sineira — Associação Cultural · NIF 518858359',
+          coAddr: 'Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>\n        Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
+          coCta: 'Escrever-nos',
+          endId: 'Convite', endH2: 'Vem ver o sítio. Vem apoiar o que falta.',
+          endP: 'Este dossier é um convite: à visita, ao mecenato, à parceria. A antiga Igreja de Retorta está a tornar-se casa para as artes — e precisa de quem queira fazer parte.',
+          endCta: 'Plano de mecenato',
+          menu1: 'a associação', menu2: 'missão', menu3: 'o espaço', menu4: 'requalificação', menu5: 'mecenato',
+          pillHome: '← site', pillAt: 'actividades', pillIn: 'intervenção', pillPa: 'parcerias', pillCo: 'contactos',
+          marquee: 'Apoia a requalificação da antiga Igreja de Retorta. Torna-te mecenas da Sineira.',
+          altHero: 'Antiga Igreja de Retorta e casa do padre, Vila do Conde',
+          altAltares: 'Altar da antiga Igreja de Retorta',
+          altAltares2: 'Pormenor dos altares a recuperar',
+          altVista: 'Implantação aérea do complexo da antiga Igreja de Retorta',
+          altMapa: 'Vila do Conde, o rio Ave e o Atlântico',
+          altEstudio: 'Proposta: estúdio de dança com plateia',
+          altNight: 'Proposta: vista aérea nocturna do complexo',
+          altFase: 'Planta de faseamento da intervenção na antiga Igreja de Retorta',
+          altAntes: 'Nave da igreja antes do pavimento',
+          altDepois: 'Nave com pavimento novo, em obra',
+          altArco: 'Interior em obra, visto através do arco'
+        },
+        en: {
+          title: 'a Sineira — Patronage Dossier',
+          desc: 'Presentation dossier for a Sineira — Cultural Association and Space in Retorta, Vila do Conde. Fundraising and patronage for the requalification of the former Retorta Church.',
+          brand: 'a Sineira — Patronage Dossier',
+          openMenu: 'Open menu',
+          closeMenu: 'Close menu',
+          asId: '00 · The association',
+          asH1: 'A Sineira',
+          asSub: 'Association & Cultural Space',
+          asP1: 'Founded in 2025, a Sineira — Cultural Association aims to work with existing structures nationally and internationally, answering the needs and interests of the local artistic community and of anyone who wishes to take part in the cultural and social activities it promotes.',
+          asP2: 'It is a collective, and also a physical space, in Vila do Conde. By requalifying the architectural complex of the former Retorta Church, the aim is to create an <span class="em">intergenerational</span> meeting point, connecting <span class="em">arts</span> and <span class="em">nature</span>.',
+          asCta: 'Support the project',
+          asSideId: 'Retorta · 18,000 m²',
+          asSideP: 'The former Retorta Church complex is the ground of this project: heritage, forest, clearing, and a programme for artists and for the community.',
+          miId: '01 · Mission',
+          miH2: 'Mission and aims',
+          miLi1: 'Foster and support the <span class="em">training, creation and dissemination</span> of artistic projects;',
+          miLi2: 'Strengthen <span class="em">collaboration</span> among artists, and between artists and the local community;',
+          miLi3: 'Promote the <span class="em">valuing</span> of local cultural and natural heritage;',
+          miLi4: 'Promote artistic <span class="em">literacy</span>;',
+          miLi5: 'Organise <span class="em">workshops, intensive courses, artistic residencies, performances</span> and other socio-cultural activities;',
+          miLi6: 'Organise an <span class="em">annual dance and music festival</span>.',
+          miAudId: 'For whom',
+          miAudH2: 'Programmes for every age',
+          miAudP: 'a Sineira works with babies, children, young people, adults and seniors — in the same place, on the same project.',
+          chip1: 'childhood', chip2: 'youth', chip3: 'adults', chip4: 'seniors',
+          atId: '02 · Activities',
+          atH2: 'Activities',
+          atDisc: 'Dance · Music · Theatre · Architecture · Fine arts · Visual arts',
+          atArtId: 'Artists',
+          atA1: 'Regular classes', atA2: 'Workshops', atA3: 'Intensive courses', atA4: 'Artistic residencies', atA5: 'Performances',
+          atComId: 'Community',
+          atComSub: 'Babies · Children · Young people · Adults · Seniors',
+          atC1: 'Regular classes', atC2: 'Workshops', atC3: 'Holiday camp', atC4: 'Film screenings', atC5: 'Local products', atC6: 'Nature experiences',
+          esId: '03 · The space',
+          esH2: 'Vila do Conde (Retorta)',
+          esP: 'Approximate area: 18,000 m². A complex to requalify — church, house, woodland and clearing — for training, creation and presentation.',
+          esL1: 'Studio / stage', esL2: 'Church: multipurpose space', esL3: 'Lodging: artistic residency programme', esL4: 'Food &amp; events', esL5: 'Parking', esL6: 'Forest: leisure and educational trails', esL7: 'Clearing: festival space',
+          acId: '04 · Access', acH2: 'Access',
+          thDest: 'destination', thA: 'mode A', thB: 'mode B',
+          rowMetro: 'Santa Clara / Vila do Conde metro', rowMetroA: 'bike 5 min', rowMetroB: 'on foot 15 min',
+          rowCentro: 'Vila do Conde historic centre', rowCentroA: 'bike 10 min', rowCentroB: 'on foot 30 min',
+          rowPraia: 'Vila do Conde beaches', rowPraiaA: 'bike 20 min', rowPraiaB: 'on foot 60 min',
+          rowPorto: 'Trindade / Porto metro', rowPortoA: 'metro 40 min', rowPortoB: '60 min',
+          rowAero: 'Francisco Sá Carneiro Airport', rowAeroA: 'car 20 min', rowAeroB: '50 min',
+          acMapP: 'Retorta sits between the river, the forest and the town. Metro, historic centre, beaches and airport are minutes away.',
+          reId: '05 · Requalification', reH2: 'Requalification plan',
+          reL1: 'Topographic and architectural survey',
+          reL2: 'Architecture and specialist design',
+          reL3: 'Construction: sewage, water, electricity and telecoms networks',
+          reL4: 'Heating / cooling system',
+          reL5: 'Access and parking',
+          reL6: 'Windows',
+          reL7: 'Restoration of the church’s main door',
+          reL8: 'Restoration of the church altars',
+          reL9: 'Floors',
+          reL10: 'Wall treatment',
+          reL11: 'Sanitary facilities',
+          reL12: 'Roof of the priest’s house',
+          reL13: 'Opening of the proscenium and slab demolition',
+          reL14: 'Paint · interior and exterior lighting',
+          reL15: 'Landscape design and exterior works',
+          faId: '06 · Phasing', faH2: 'Phasing of the works',
+          fa1: 'Phase 1 — church, garden and parking',
+          fa2: 'Phase 2 — former priest’s house',
+          fa3: 'Phase 3 — former catechesis building',
+          fa4: 'Phase 4 — restaurant, events and improved parking',
+          fa5: 'Phase 5 — future expansion (boundaries to be confirmed)',
+          meId: '07 · Patronage', meH2: 'Support and patronage plan',
+          meP: 'The requalification of the former Retorta Church and a Sineira’s artistic programme ask for company. People, companies and institutions can support the project — and take part in the community being born.',
+          meB1: 'Free access to all events',
+          meB2: 'Discount on regular classes, workshops and intensive courses',
+          meB3: 'A socio-cultural and economic dynamic in Vila do Conde',
+          meB4: 'Visibility on posters and other communication materials',
+          meB5: 'Tax benefits (Portuguese Cultural Patronage Law)',
+          meNote: 'a Sineira — Cultural Association · Tax ID 518858359. Support eligible under the Tax Benefits Statute (cultural patronage).',
+          meCta: 'I want to support',
+          meSubject: 'Patronage a Sineira',
+          t1who: '01 · People', t1h: 'Friend', t1p: 'Join the community. Events, discounts, and a place in what is taking shape in Retorta.',
+          t2who: '02 · People and companies', t2h: 'Patron', t2p: 'Support under the Cultural Patronage Law: tax benefits, visibility and project follow-up.',
+          t3who: '03 · Institutions', t3h: 'Partner', t3p: 'A named association with Vila do Conde’s cultural life — posters, website, events and place.',
+          paId: '08 · Territory', paH2: 'Partnerships and support',
+          paParId: 'Partnerships (to date)', paApId: 'Support (to date)',
+          paA1: 'Parish of Retorta and Tougues', paA2: 'Municipality of Vila do Conde',
+          poId: 'Nearby points of interest',
+          po2: 'Research hub', po4: 'Sports centre',
+          po9: 'Cycle network (forthcoming)', po10: 'River beach (forthcoming)',
+          inId: '09 · Works', inH2: 'Works underway',
+          inP: 'Work has begun. The nave has a new floor; the altars and gilded arch await restoration.',
+          capAntes: 'Before · nave',
+          capDepois: 'During · new floor',
+          capArco: 'Interior · arch and floor in progress',
+          capAlt: 'Altars — restoration in the plan',
+          coId: '10 · Contacts', coH2: 'Further information',
+          coLegal: 'a Sineira — Cultural Association · Tax ID 518858359',
+          coAddr: 'HQ: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>\n        Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
+          coCta: 'Write to us',
+          endId: 'Invitation', endH2: 'Come see the place. Come support what is still to be done.',
+          endP: 'This dossier is an invitation: to visit, to patronage, to partnership. The former Retorta Church is becoming a home for the arts — and needs those who want to take part.',
+          endCta: 'Patronage plan',
+          menu1: 'the association', menu2: 'mission', menu3: 'the space', menu4: 'requalification', menu5: 'patronage',
+          pillHome: '← site', pillAt: 'activities', pillIn: 'works', pillPa: 'partners', pillCo: 'contacts',
+          marquee: 'Support the requalification of the former Retorta Church. Become a patron of a Sineira.',
+          altHero: 'Former Retorta Church and priest’s house, Vila do Conde',
+          altAltares: 'Altar of the former Retorta Church',
+          altAltares2: 'Detail of the altars to be restored',
+          altVista: 'Aerial site plan of the former Retorta Church complex',
+          altMapa: 'Vila do Conde, the Ave river and the Atlantic',
+          altEstudio: 'Proposal: dance studio with seating',
+          altNight: 'Proposal: night aerial view of the complex',
+          altFase: 'Phasing plan for the works at the former Retorta Church',
+          altAntes: 'Church nave before the new floor',
+          altDepois: 'Nave with new floor, works underway',
+          altArco: 'Interior under construction, seen through the arch'
+        }
+      };
+
+      function applyLang(lang) {
+        const t = I18N[lang] || I18N.pt;
+        document.documentElement.lang = lang;
+        document.title = t.title;
+        if (metaDesc) metaDesc.setAttribute('content', t.desc);
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const v = t[el.getAttribute('data-i18n')];
+          if (v != null) el.textContent = v;
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach(el => {
+          const v = t[el.getAttribute('data-i18n-html')];
+          if (v != null) el.innerHTML = v;
+        });
+        document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+          const v = t[el.getAttribute('data-i18n-aria')];
+          if (v != null) el.setAttribute('aria-label', v);
+        });
+        document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+          const v = t[el.getAttribute('data-i18n-alt')];
+          if (v != null) el.setAttribute('alt', v);
+        });
+        if (marqueeText) marqueeText.style.setProperty('--text', JSON.stringify(t.marquee));
+        const mail = 'mailto:ola@asineira.pt?subject=' + encodeURIComponent(t.meSubject);
+        if (mecenasCta) mecenasCta.href = mail;
+        if (contactCta) contactCta.href = mail;
+        langPt.setAttribute('aria-pressed', String(lang === 'pt'));
+        langEn.setAttribute('aria-pressed', String(lang === 'en'));
+        try { localStorage.setItem('sineira-lang', lang); } catch (e) {}
+      }
+
+      langPt.addEventListener('click', () => applyLang('pt'));
+      langEn.addEventListener('click', () => applyLang('en'));
+      let startLang = 'pt';
+      try {
+        const saved = localStorage.getItem('sineira-lang');
+        if (saved === 'en' || saved === 'pt') startLang = saved;
+      } catch (e) {}
+      applyLang(startLang);
+
+      function coverScale() {
+        const w = triangle.offsetWidth;
+        const h = triangle.offsetHeight;
+        const vv = window.visualViewport;
+        const vw = Math.max(innerWidth, document.documentElement.clientWidth, vv ? vv.width : 0);
+        const vh = Math.max(innerHeight, document.documentElement.clientHeight, vv ? vv.height : 0);
+        const cs = getComputedStyle(triangle);
+        const left = parseFloat(cs.left) || 18;
+        const bottom = parseFloat(cs.bottom) || 80;
+        const top = vh - bottom - h;
+        const cx = left + w * 0.417;
+        const cy = top + h * 0.428;
+        const corners = [[0, 0], [vw, 0], [0, vh], [vw, vh]];
+        const maxDist = Math.max(...corners.map(([x, y]) => Math.hypot(x - cx, y - cy)));
+        const rIn = w * 0.30;
+        return (maxDist / rIn) * 1.25;
+      }
+
+      const MENU_DUR_MS = 1100;
+      let openLock = false;
+      let openingUntil = 0;
+      let lastInnerWidth = window.innerWidth;
+      let hitRect = { left: 0, right: 0, top: 0, bottom: 0 };
+
+      function isMenuOpen() { return body.classList.contains('menu-open'); }
+      function isOpening() { return Date.now() < openingUntil; }
+      function cacheHitRect() {
+        if (isMenuOpen() || isOpening()) return;
+        const r = triangle.getBoundingClientRect();
+        const pad = 20;
+        hitRect = { left: r.left - pad, right: r.right + pad, top: r.top - pad, bottom: r.bottom + pad };
+      }
+
+      function openMenu() {
+        if (isMenuOpen() || openLock) return;
+        openingUntil = Date.now() + MENU_DUR_MS + 80;
+        triangle.style.setProperty('--menu-scale', coverScale());
+        body.classList.add('menu-open');
+        triangle.setAttribute('aria-expanded', 'true');
+        menu.setAttribute('aria-hidden', 'false');
+      }
+
+      function closeMenu() {
+        if (!isMenuOpen()) return;
+        if (isOpening()) return;
+        body.classList.remove('menu-open');
+        triangle.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-hidden', 'true');
+        openLock = true;
+        setTimeout(() => { openLock = false; cacheHitRect(); }, 700);
+      }
+
+      function hitsTriangle(x, y) {
+        if (isMenuOpen() || openLock || isOpening()) return false;
+        return x >= hitRect.left && x <= hitRect.right && y >= hitRect.top && y <= hitRect.bottom;
+      }
+
+      cacheHitRect();
+      triangle.addEventListener('pointerenter', openMenu);
+      triangle.addEventListener('mouseenter', openMenu);
+      triangle.addEventListener('pointerdown', openMenu);
+      triangle.addEventListener('click', openMenu);
+
+      function maybeOpenFromTouch(e) {
+        if (isMenuOpen() || openLock || isOpening()) return;
+        const pts = e.touches || e.changedTouches;
+        if (!pts) return;
+        for (let i = 0; i < pts.length; i++) {
+          if (hitsTriangle(pts[i].clientX, pts[i].clientY)) { openMenu(); return; }
+        }
+      }
+      document.addEventListener('touchstart', maybeOpenFromTouch, { passive: true });
+      document.addEventListener('touchmove', maybeOpenFromTouch, { passive: true });
+      document.addEventListener('pointermove', e => {
+        if (isMenuOpen() || openLock || isOpening() || e.pointerType === 'mouse') return;
+        if (hitsTriangle(e.clientX, e.clientY)) openMenu();
+      }, { passive: true });
+
+      closeBtn.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && isMenuOpen()) closeMenu();
+      });
+      window.addEventListener('resize', () => {
+        const w = window.innerWidth;
+        const widthChanged = Math.abs(w - lastInnerWidth) > 50;
+        lastInnerWidth = w;
+        if (isOpening()) return;
+        cacheHitRect();
+        if (widthChanged && isMenuOpen()) closeMenu();
+      });
+
+      menu.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+          const el = document.querySelector(a.getAttribute('href'));
+          if (el) {
+            e.preventDefault();
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          closeMenu();
+        });
+      });
+
+      const triRot = document.getElementById('triRot');
+      const triClipPath = document.getElementById('triClipPath');
+      const ORIGIN = '159.26 165.764';
+      let targetAngle = 0;
+      let currentAngle = 0;
+      let spinning = false;
+
+      function applyAngle(a) {
+        const t = `rotate(${a.toFixed(2)} ${ORIGIN})`;
+        triRot.setAttribute('transform', t);
+        triClipPath.setAttribute('transform', t);
+      }
+      function spin() {
+        currentAngle += (targetAngle - currentAngle) * 0.09;
+        if (Math.abs(targetAngle - currentAngle) < 0.05) {
+          currentAngle = targetAngle;
+          applyAngle(currentAngle);
+          spinning = false;
+          return;
+        }
+        applyAngle(currentAngle);
+        requestAnimationFrame(spin);
+      }
+      function onTurn() {
+        if (isMenuOpen()) return;
+        targetAngle = -window.scrollY * 0.12;
+        if (!spinning) { spinning = true; requestAnimationFrame(spin); }
+      }
+      window.addEventListener('scroll', onTurn, { passive: true });
+    })();
+  </script>
+</body>
+</html>

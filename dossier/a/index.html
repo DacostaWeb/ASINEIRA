@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>a Sineira — Dossier · A · Documento</title>
+<meta name="description" content="Dossier de apresentação e mecenato da a Sineira — requalificação da antiga Igreja de Retorta, Vila do Conde.">
+<link rel="icon" href="../../favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../base.css">
+<style>
+
+/* Documento: uma coluna larga, secções numeradas, bandas alternadas.
+   O mais próximo de um dossier impresso — feito para ler de fio a pavio
+   e para imprimir. */
+
+/* Uma coluna centrada na página, mas com o texto encostado à esquerda dentro
+   dela — não usar margin-inline:auto nos filhos, que centraria cada bloco. */
+.faixa {
+  display: grid;
+  grid-template-columns: minmax(0, 1100px);
+  justify-content: center;
+  padding: clamp(48px, 7vw, 96px) var(--gutter);
+}
+.faixa + .faixa { border-top: 1.5px solid color-mix(in srgb, currentColor 30%, transparent); }
+.faixa.invertido + .faixa, .faixa + .faixa.invertido { border-top: none; }
+
+.capa { position: relative; }
+.capa img { width: 100%; height: clamp(320px, 62vh, 620px); object-fit: cover; }
+.capa__marca {
+  position: absolute; right: var(--gutter); bottom: 28px;
+  font-size: clamp(38px, 9vw, 104px); font-weight: 700; letter-spacing: -.03em;
+  line-height: .8; color: var(--blue);
+}
+
+.titulo {
+  margin-top: 6px;
+  font-size: clamp(30px, 4.6vw, 56px); font-weight: 700; line-height: .95;
+  letter-spacing: -.03em; text-transform: uppercase;
+}
+.faixa p + p, .faixa .titulo + p, .faixa p + ul, .faixa p + .duas,
+.faixa p + .tres, .faixa .titulo + ul, .faixa .titulo + .duas,
+.faixa .titulo + .tres, .faixa .titulo + table { margin-top: 22px; }
+.faixa p, .faixa .lista { max-width: var(--medida); }
+.sub { font-size: 18px; margin-top: 14px; }
+
+.duas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 34px; }
+.tres { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 34px; }
+
+.disciplinas {
+  font-size: clamp(15px, 1.7vw, 21px); font-weight: 700;
+  letter-spacing: .02em; text-transform: uppercase; line-height: 1.35;
+}
+
+.galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 22px; margin-top: 30px; }
+.faixa .larga { max-width: none; }
+
+.niveis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 30px; margin-top: 34px; }
+.nivel h3 { font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: -.02em; margin: 4px 0 10px; }
+
+.fecho .titulo { font-size: clamp(30px, 5.4vw, 66px); }
+
+</style>
+</head>
+<body class="exp exp--a">
+
+<svg class="svg-defs" aria-hidden="true">
+  <symbol id="mark-sineira" viewBox="0 0 382 387">
+    <path fill="var(--blue)" d="M95.7804 387L382 110.293L0 0L95.7804 387Z"></path>
+    <path fill="var(--cream)" d="M237.388 200.34C247.689 213.363 261.205 214.741 278 206.656C294.744 198.596 298.733 188.514 293.636 177.859C287.97 166.014 278.519 164.239 250.934 170.39C207 180.098 190.348 170.391 180.948 150.741C168.813 125.373 179.487 99.0424 213.836 82.5088C252.358 63.9658 277.644 77.3509 289.904 97.6398L258.295 112.855C252.495 104.628 242.906 97.2765 224.201 106.28C211.468 112.409 206.307 121.384 211.25 131.717C216.092 141.839 224.216 142.977 250.269 137.146C297.241 126.807 314.026 138.102 323.842 158.622C336.554 185.197 325.231 213.078 286.876 231.541C250.048 249.268 221.95 240.417 205.779 215.554L237.388 200.34Z"></path>
+    <path fill="var(--cream)" d="M127.809 268.327C123.481 279.019 118.021 294.985 117.576 297.957L87.9668 285.895C87.9997 283.319 89.7491 277.138 90.8443 274.28C84.2336 278.937 73.674 283.105 53.8757 275.039C26.8839 264.043 22.704 241.605 29.7557 224.188C40.1131 198.606 65.3714 195.148 98.1927 208.519L114.168 215.028L116.946 208.165C120.179 200.181 120.493 191.163 106.12 185.307C93.0352 179.976 87.9124 184.388 83.1947 191.939L53.7216 179.932C63.4814 160.661 82.3208 149.524 116.279 163.582C146.184 175.99 157.746 194.386 146.924 221.116L127.809 268.327ZM106.552 233.914L93.9249 228.77C75.2484 221.161 66.0077 224.06 61.6246 234.886C58.3332 243.015 60.5334 251.886 71.6733 256.424C91.3705 264.449 99.3509 251.7 105.357 236.865L106.552 233.914Z"></path>
+  </symbol>
+</svg>
+
+<header class="topo">
+  <a class="topo__marca" href="/">
+    <svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
+    <span>a Sineira</span>
+  </a>
+  <p class="topo__titulo">Dossier de apresentação</p>
+  <a class="topo__versao" href="../">A · Documento</a>
+</header>
+
+<div class="capa"><img src="../assets/hero.jpg" alt="Antiga Igreja de Retorta e casa do padre, Vila do Conde"><p class="capa__marca">a Sineira</p></div>
+
+<section class="faixa" id="intro"><p class="kicker">01 · Introdução</p>
+<h1 class="titulo">a Sineira</h1><p class="sub">Associação &amp; Espaço Cultural</p><p>Criada em 2025, a Sineira — Associação Cultural pretende colaborar com as demais estruturas existentes a nível nacional e internacional, para dar resposta às necessidades e interesses da comunidade artística local e a todo o público interessado em usufruir das actividades culturais e sociais por si promovidas.</p><p>Surge como um colectivo, mas também como espaço físico, em Vila do Conde. Requalificando o complexo arquitectónico da antiga Igreja de Retorta, pretende-se aí criar um ponto de encontro <em>intergeracional</em>, de conexão com as <em>artes</em> e com a <em>natureza</em>.</p><a class="botao" href="#mecenato"><span>Apoiar o projecto</span></a></section>
+
+<section class="faixa" id="missao"><p class="kicker">02 · Missão</p>
+<h2 class="titulo">Missão e objetivos</h2><ul class="lista">
+  <li>Fomentar a <em>criação e divulgação</em> de projetos artísticos, através de residências artísticas e performances;</li>
+  <li>Reforçar a <em>colaboração</em> entre artistas e entre estes e a comunidade local;</li>
+  <li>Promover a <em>valorização</em> do património cultural e natural de Vila do Conde;</li>
+  <li>Apoiar a <em>literacia</em> artística, promovendo atividades de <em>mediação e formação</em>, tais como workshops, cursos intensivos e aulas regulares;</li>
+  <li>Dinamizar um <em>festival</em> anual de dança e música.</li>
+</ul></section>
+
+<section class="faixa invertido" id="idades"><p class="kicker">Para quem</p>
+<h2 class="titulo">Programas para todas as idades</h2><p>A Sineira proporciona atividades para público geral e especializado, dedicando-se a todas as faixas etárias, através de diferentes propostas.</p><ul class="pills">
+  <li>Infância</li>
+  <li>Jovens</li>
+  <li>Adultos</li>
+  <li>Séniores</li>
+</ul></section>
+
+<section class="faixa" id="actividades"><p class="kicker">03 · Actividades</p>
+<h2 class="titulo">Actividades</h2><p class="disciplinas">Dança · Música · Teatro · Arquitectura · Artes plásticas · Artes visuais · Fotografia</p><div class="duas">
+  <div>
+    <p class="kicker">Artistas</p>
+    <ul class="lista">
+  <li>Aulas regulares</li>
+  <li>Workshops</li>
+  <li>Cursos intensivos</li>
+  <li>Residências artísticas</li>
+  <li>Espetáculos</li>
+</ul>
+  </div>
+  <div>
+    <p class="kicker">Comunidade</p>
+    <ul class="lista">
+  <li>Aulas regulares</li>
+  <li>Workshops</li>
+  <li>Campo de férias</li>
+  <li>Sessões de cinema</li>
+  <li>Produtos locais</li>
+  <li>Experiências na natureza</li>
+</ul>
+  </div>
+</div></section>
+
+<section class="faixa" id="espaco"><p class="kicker">04 · O espaço</p>
+<h2 class="titulo">Retorta — Vila do Conde</h2><p>Área aproximada: 18.000 m². Um complexo a requalificar — igreja, casa, mata e clareira — para formação, criação e apresentação.</p><div class="larga"><div class="mapa">
+  <figure class="mapa__figura"><img src="../assets/vista-aerea.jpg" alt="Implantação aérea do complexo da antiga Igreja de Retorta" loading="lazy"><span class="mapa__ponto" style="left:79%; top:43%">1</span><span class="mapa__ponto" style="left:77%; top:50%">2</span><span class="mapa__ponto" style="left:62%; top:50%">3</span><span class="mapa__ponto" style="left:57%; top:42%">4</span><span class="mapa__ponto" style="left:70%; top:34%">5</span><span class="mapa__ponto" style="left:40%; top:60%">6</span><span class="mapa__ponto" style="left:66%; top:84%">7</span></figure>
+  <div><ul class="mapa__legenda">
+    <li>Estúdio / palco</li>
+    <li>Igreja: espaço multiusos</li>
+    <li>Alojamento: programa de residências artísticas</li>
+    <li>Restauração</li>
+    <li>Estacionamento</li>
+    <li>Floresta: percursos de lazer e pedagógicos</li>
+    <li>Clareira: espaço para festival</li>
+  </ul><p class="mapa__nota">Implantação · 18.000 m²</p></div>
+</div></div></section>
+
+<section class="faixa" id="acessos"><p class="kicker">05 · Acessos</p>
+<h2 class="titulo">Acessos</h2><table class="acessos">
+  <thead><tr><th>Destino</th><th>Modo A</th><th>Modo B</th></tr></thead>
+  <tbody>
+    <tr><td>Metro Santa Clara / Vila do Conde</td><td>bicicleta 5 min</td><td>a pé 15 min</td></tr>
+    <tr><td>Centro histórico de Vila do Conde</td><td>bicicleta 10 min</td><td>a pé 30 min</td></tr>
+    <tr><td>Praias de Vila do Conde</td><td>bicicleta 20 min</td><td>a pé 60 min</td></tr>
+    <tr><td>Metro Trindade / Porto</td><td>metro 40 min</td><td>60 min</td></tr>
+    <tr><td>Aeroporto Francisco Sá Carneiro</td><td>carro 20 min</td><td>50 min</td></tr>
+  </tbody>
+</table><p>Retorta fica entre o rio, a floresta e a cidade. Metro, centro histórico, praias e aeroporto estão a minutos.</p><div class="larga galeria"><figure class="shot">
+  <img src="../assets/vila-do-conde.jpg" alt="Vila do Conde, o rio Ave e o Atlântico" loading="lazy">
+  <figcaption>Vila do Conde · o rio Ave e o Atlântico</figcaption>
+</figure></div></section>
+
+<section class="faixa" id="requalificacao"><p class="kicker">06 · Requalificação</p>
+<h2 class="titulo">Plano de requalificação</h2><ul class="lista">
+  <li>Levantamento topográfico e arquitectónico</li>
+  <li>Projecto de arquitectura e especialidades</li>
+  <li>Construção: redes de esgotos, água, electricidade e telecomunicações</li>
+  <li>Sistema de aquecimento / arrefecimento</li>
+  <li>Construção de acessos e estacionamento</li>
+  <li>Execução de janelas</li>
+  <li>Recuperação da porta principal da igreja</li>
+  <li>Recuperação dos altares da igreja</li>
+  <li>Execução de pavimentos</li>
+  <li>Tratamento de paredes</li>
+  <li>Criação de instalações sanitárias</li>
+  <li>Recuperação do telhado da casa do padre</li>
+  <li>Abertura de vão (proscénio) e demolição de laje</li>
+  <li>Pinturas · iluminação interior e exterior</li>
+  <li>Projecto de paisagismo e arranjos exteriores</li>
+</ul><div class="larga galeria"><figure class="shot">
+  <img src="../assets/scene-estudio.jpg" alt="Proposta: estúdio de dança com plateia" loading="lazy">
+  <figcaption>Proposta · estúdio de dança com plateia</figcaption>
+</figure><figure class="shot">
+  <img src="../assets/scene-aerea.jpg" alt="Proposta: vista aérea nocturna do complexo" loading="lazy">
+  <figcaption>Proposta · vista aérea nocturna</figcaption>
+</figure></div></section>
+
+<section class="faixa" id="faseamento"><p class="kicker">07 · Faseamento</p>
+<h2 class="titulo">Faseamento da intervenção</h2><ul class="lista">
+  <li><strong>Fase 1</strong> — igreja, jardim e estacionamento</li>
+  <li><strong>Fase 2</strong> — antiga casa do padre</li>
+  <li><strong>Fase 3</strong> — antiga catequese</li>
+  <li><strong>Fase 4</strong> — equipamento de restauração, eventos e melhoria do estacionamento</li>
+  <li><strong>Fase 5</strong> — área de expansão futura (limites a verificar)</li>
+</ul><div class="larga galeria"><figure class="shot">
+  <img src="../assets/faseamento.jpg" alt="Planta de faseamento da intervenção na antiga Igreja de Retorta" loading="lazy">
+  <figcaption>Planta de faseamento</figcaption>
+</figure></div></section>
+
+<section class="faixa invertido" id="mecenato"><p class="kicker">08 · Mecenato</p>
+<h2 class="titulo">Plano de apoio e mecenato</h2><p>A requalificação da antiga Igreja de Retorta e o programa artístico da Sineira pedem companhia. Pessoas, empresas e instituições podem apoiar o projecto — e fazer parte da comunidade que está a nascer.</p><ul class="lista">
+  <li>Acesso gratuito a todos os eventos</li>
+  <li>Desconto na frequência de aulas regulares, workshops e cursos intensivos</li>
+  <li>Criação de dinâmica socio-cultural e económica em Vila do Conde</li>
+  <li>Publicidade através de cartazes e demais materiais de comunicação</li>
+  <li>Benefícios fiscais (Lei do Mecenato Cultural)</li>
+</ul><p class="legal">a Sineira — Associação Cultural · NIF 518858359. Apoios enquadráveis no Estatuto dos Benefícios Fiscais (mecenato cultural).</p><a class="botao" href="mailto:ola@asineira.pt?subject=Apoiar%20a%20Sineira"><span>Quero apoiar</span></a><div class="niveis">
+  <article class="nivel">
+    <p class="kicker">01 · Pessoas</p>
+    <h3>Amigo</h3>
+    <p>Entra na comunidade. Eventos, descontos e um lugar no que está a nascer em Retorta.</p>
+    <div class="cartao-amigo"><svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg><div><b>Amigo da Sineira</b><br><small>Cartão de amigo</small></div></div>
+  </article>
+  <article class="nivel">
+    <p class="kicker">02 · Empresas e instituições</p>
+    <h3>Patrocínio</h3>
+    <p class="por-escrever">Texto por escrever pela associação.</p>
+  </article>
+  <article class="nivel">
+    <p class="kicker">03 · Instituições e associações</p>
+    <h3>Parceiro</h3>
+    <p>Associação nomeada à dinâmica cultural de Vila do Conde — cartazes, site, eventos e território.</p>
+  </article>
+</div></section>
+
+<section class="faixa" id="territorio"><p class="kicker">09 · Território</p>
+<h2 class="titulo">Parcerias e apoios</h2><div class="tres">
+  <div>
+    <p class="kicker">Parcerias (à data)</p>
+    <ul class="lista">
+  <li>Curtas de Vila do Conde</li>
+  <li>Centro Ciência Viva</li>
+</ul>
+  </div>
+  <div>
+    <p class="kicker">Apoios (à data)</p>
+    <ul class="lista">
+  <li>Junta de Freguesia de Retorta e Tougues</li>
+  <li>Câmara Municipal de Vila do Conde</li>
+</ul>
+  </div>
+  <div>
+    <p class="kicker">Pontos de interesse na proximidade</p>
+    <ul class="lista">
+  <li>Centro Ciência Viva</li>
+  <li>Pólo de investigação</li>
+  <li>ESMAD</li>
+  <li>Centro gimnodesportivo</li>
+  <li>Campo Rio Ave Futebol</li>
+  <li>Escola Sanches</li>
+  <li>Escola Saul Dias</li>
+  <li>Clube Fluvial Vilacondense</li>
+  <li>Rede ciclovia (futuramente)</li>
+  <li>Praia fluvial (futuramente)</li>
+</ul>
+  </div>
+</div></section>
+
+<section class="faixa" id="intervencao"><p class="kicker">10 · Intervenção</p>
+<h2 class="titulo">Intervenção</h2><p>O trabalho já começou. A nave ganhou pavimento novo; os altares e o arco dourado aguardam recuperação.</p><div class="larga galeria"><figure class="shot">
+  <img src="../assets/nave-2025.jpg" alt="Nave da igreja antes do pavimento" loading="lazy">
+  <figcaption>Antes · nave</figcaption>
+</figure><figure class="shot">
+  <img src="../assets/nave-2026.jpg" alt="Nave com pavimento novo, em obra" loading="lazy">
+  <figcaption>Durante · pavimento novo</figcaption>
+</figure><figure class="shot">
+  <img src="../assets/arco.jpg" alt="Interior em obra, visto através do arco" loading="lazy">
+  <figcaption>Interior · arco e pavimento em execução</figcaption>
+</figure><figure class="shot">
+  <img src="../assets/altares.jpg" alt="Pormenor dos altares a recuperar" loading="lazy">
+  <figcaption>Altares — recuperação prevista no plano</figcaption>
+</figure></div></section>
+
+<section class="faixa" id="contactos"><p class="kicker">11 · Contactos</p>
+<h2 class="titulo">Mais informações</h2><ul class="lista">
+  <li><a href="https://asineira.pt">asineira.pt</a></li>
+  <li><a href="https://instagram.com">Instagram</a></li>
+</ul><p class="legal">a Sineira — Associação Cultural · NIF 518858359<br>Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p><a class="botao" href="mailto:ola@asineira.pt"><span>Escrever-nos</span></a></section>
+
+<section class="faixa invertido fecho"><p class="kicker">Convite</p>
+<h2 class="titulo">Vem ver o sítio. Vem apoiar o que falta.</h2><p>Este dossier é um convite: à visita, ao mecenato, à parceria. A antiga Igreja de Retorta está a tornar-se casa para as artes — e precisa de quem queira fazer parte.</p><a class="botao" href="#mecenato"><span>Plano de mecenato</span></a></section>
+
+</body>
+</html>

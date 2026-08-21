@@ -1,0 +1,184 @@
+/* ==========================================================================
+   a Sineira — dossier · base partilhada pelas três experiências
+   A paleta, a tipografia e a margem são as do site.
+   ========================================================================== */
+
+:root {
+  --blue:  #003C78;
+  --cream: #F2E7A9;
+  --gold:       #D8B44A;
+  --gold-light: #F0DFA0;
+  --gold-deep:  #A8842B;
+
+  --font: Helvetica, Arial, sans-serif;
+  --gutter: 30px;
+  --medida: 62ch;          /* medida de leitura */
+}
+
+@media (max-width: 760px) { :root { --gutter: 18px; } }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+html, body { margin: 0; overflow-x: clip; }
+
+/* Nenhuma barra de scroll à vista, como no site. */
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; }
+
+body {
+  background: var(--cream);
+  color: var(--blue);
+  font-family: var(--font);
+  text-wrap: pretty;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+h1, h2, h3, h4, p, ul, ol, figure, table, blockquote { margin: 0; }
+ul { list-style: none; padding: 0; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+a:hover { text-decoration: underline; }
+em { font-style: italic; font-weight: 700; }
+
+.svg-defs { display: none; }
+
+/* --- cabeçalho comum --- */
+
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 62px;
+  padding: 0 var(--gutter);
+  background: var(--cream);
+  border-bottom: 1.5px solid var(--blue);
+}
+.topo__marca { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+.topo__marca:hover { text-decoration: none; }
+.topo__marca svg { width: 20px; height: auto; }
+.topo__marca span { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.topo__titulo {
+  font-size: 10px; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; opacity: .6;
+}
+.topo__versao {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  border: 1.5px solid currentColor; border-radius: 99px; padding: 4px 11px;
+}
+
+/* --- peças de texto --- */
+
+.kicker {
+  font-size: 10px; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; opacity: .65;
+}
+
+.lista li { position: relative; padding-left: 1.1em; margin-bottom: .35em; }
+.lista li::before { content: "›"; position: absolute; left: 0; font-weight: 700; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 9px; }
+.pills li {
+  border: 1.5px solid currentColor; border-radius: 99px; padding: 6px 15px;
+  font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+}
+
+.botao {
+  display: inline-block; margin-top: 26px;
+  justify-self: start; align-self: start; width: fit-content;
+  border: 1.5px solid currentColor; padding: 12px 22px;
+  font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+}
+.botao:hover { background: currentColor; text-decoration: none; }
+.botao:hover span { color: var(--cream); }
+.invertido .botao:hover span { color: var(--blue); }
+
+.legal { font-size: 12px; opacity: .75; margin-top: 20px; max-width: 60ch; }
+
+/* Onde a associação ainda não escreveu o texto. */
+.por-escrever {
+  border: 1.5px dashed currentColor; padding: 10px 14px;
+  font-size: 13px; font-style: italic; opacity: .7;
+}
+
+/* --- fotografias --- */
+
+.shot img { width: 100%; height: auto; }
+.shot figcaption {
+  margin-top: 7px;
+  font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  opacity: .8;
+}
+
+/* --- tabela de acessos --- */
+
+.acessos { width: 100%; border-collapse: collapse; font-size: 14px; }
+.acessos th, .acessos td {
+  padding: 9px 12px 9px 0; text-align: left;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+}
+.acessos th {
+  border-bottom-color: color-mix(in srgb, currentColor 55%, transparent);
+  font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+}
+.acessos td:not(:first-child) { white-space: nowrap; }
+
+/* --- bandas invertidas --- */
+
+.invertido { background: var(--blue); color: var(--cream); }
+
+/* --- cartão de amigo, como no site --- */
+
+.cartao-amigo {
+  width: min(100%, 300px); aspect-ratio: 1.586; margin-top: 22px; padding: 16px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  border-radius: 12px; color: var(--blue);
+  background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold) 38%, var(--gold-light) 62%, var(--gold-deep) 100%);
+}
+.cartao-amigo svg { width: 26px; height: auto; }
+.cartao-amigo b { font-size: 17px; font-weight: 700; text-transform: lowercase; letter-spacing: -.025em; }
+.cartao-amigo small { font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+
+
+/* --- o espaço identificado sobre a planta --------------------------------
+   A cliente tinha uma imagem com cada parte do complexo nomeada por setas.
+   Aqui a ideia mantém-se, mas com pontos numerados e legenda ao lado: não se
+   sobrepõem uns aos outros e lê-se em qualquer tamanho de ecrã. */
+
+.mapa { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 26px; align-items: start; }
+.mapa__figura { position: relative; line-height: 0; border: 1.5px solid currentColor; }
+.mapa__figura img { width: 100%; height: auto; }
+.mapa__ponto {
+  position: absolute; transform: translate(-50%, -50%);
+  width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--cream); color: var(--blue); border: 1.5px solid var(--blue);
+  font-size: 12px; font-weight: 700; line-height: 1;
+}
+.mapa__legenda { counter-reset: parte; }
+.mapa__legenda li {
+  position: relative; padding-left: 34px; margin-bottom: 9px;
+  font-size: 15px; line-height: 1.35;
+}
+.mapa__legenda li::before {
+  counter-increment: parte; content: counter(parte);
+  position: absolute; left: 0; top: -1px;
+  width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 1.5px solid currentColor; font-size: 11px; font-weight: 700;
+}
+.mapa__nota { font-size: 12px; opacity: .75; margin-top: 12px; }
+
+/* A igreja está na parte de cima da fotografia de capa: sem isto, um recorte
+   largo e baixo mostra só a calçada. */
+.capa img, .abertura img { object-position: 50% 32%; }
+
+@media print {
+  .topo { position: static; }
+  .exp * { animation: none !important; transition: none !important; }
+}
