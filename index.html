@@ -1998,6 +1998,11 @@ a:hover { text-decoration: underline; }
     triBtn.style.transition = 'none';
     var r = triBtn.getBoundingClientRect();
     triBtn.style.transition = transition;
+
+    /* Guardado para o armOpen. É a única altura em que o triângulo se pode
+       medir parado: aqui o transform ainda vale "none", e só o renderMenu a
+       seguir é que lhe põe a escala de abertura. */
+    triRest = r;
     var vw = window.innerWidth, vh = window.innerHeight;
     var cx = r.left + r.width * 0.417, cy = r.top + r.height * 0.428;
     var corners = [[0, 0], [vw, 0], [0, vh], [vw, vh]];
@@ -2069,6 +2074,7 @@ a:hover { text-decoration: underline; }
        noutro sítio qualquer. */
     closeArmed = false;
     document.addEventListener('mousemove', armClose);
+    document.removeEventListener('mousemove', armOpen);
   }
 
   function closeMenu() {
@@ -2077,6 +2083,13 @@ a:hover { text-decoration: underline; }
     state.menuOpen = false;
     closeLock = true;          /* antes do renderMenu, que o lê */
     renderMenu();
+
+    /* O simétrico do closeArmed. Quem fecha passando o rato pelo X fica com o
+       cursor pousado onde o triângulo reaparece; passados os 700ms ele volta
+       a aceitar o rato, e o primeiro estremecer contava como uma entrada e
+       reabria o menu. Só arma quando o rato sair mesmo dali. */
+    openArmed = false;
+    document.addEventListener('mousemove', armOpen);
     setTimeout(function () {
       closeLock = false;
       /* Devolve o triângulo ao rato — a não ser que entretanto o menu tenha
@@ -2108,6 +2121,11 @@ a:hover { text-decoration: underline; }
 
   var closeArmed = false;
 
+  /* Começa armado: numa página acabada de abrir ninguém tem o rato pousado no
+     triângulo por causa de um fecho que não houve. */
+  var openArmed = true;
+  var triRest = null;   /* rectângulo do triângulo parado, posto pelo coverScale */
+
   /* Arma o fecho ao primeiro movimento do rato fora do X, mas só depois de a
      abertura ter acabado. Os dois travões são precisos:
 
@@ -2121,6 +2139,22 @@ a:hover { text-decoration: underline; }
     if (closeBtn.contains(e.target)) return;
     closeArmed = true;
     document.removeEventListener('mousemove', armClose);
+  }
+
+  /* Arma a abertura assim que o rato sair da área do triângulo.
+
+     Por coordenadas, e não por e.target: durante a recolha o triângulo está
+     com pointer-events: none, e os eventos por cima dele passam a apontar
+     para o cabeçalho que está por baixo — bastava estremecer o rato sem sair
+     do sítio para isto se dar por armado. O rectângulo é o de repouso,
+     guardado pelo coverScale, porque o de agora é o da forma ainda a
+     encolher. */
+  function armOpen(e) {
+    if (triRest &&
+        e.clientX >= triRest.left && e.clientX <= triRest.right &&
+        e.clientY >= triRest.top && e.clientY <= triRest.bottom) return;
+    openArmed = true;
+    document.removeEventListener('mousemove', armOpen);
   }
 
   /* Abrir leva sempre ao topo do menu, ou seja, ao "sobre nós". Enquanto o
@@ -2143,8 +2177,11 @@ a:hover { text-decoration: underline; }
     el.addEventListener('click', function () { go(null); });
   });
 
-  /* Ao rato, só o triângulo e o X. O travão do fecho está no openMenuTop. */
-  triBtn.addEventListener('mouseenter', openMenuTop);
+  /* Ao rato, só o triângulo e o X. Cada um espera que o rato tenha saído de
+     cima dele desde a última troca; o clique não espera por nada. */
+  triBtn.addEventListener('mouseenter', function () {
+    if (openArmed) openMenuTop();
+  });
 
   closeBtn.addEventListener('mouseenter', function () {
     if (closeArmed) go(null);
