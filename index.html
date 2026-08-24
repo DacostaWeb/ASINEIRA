@@ -60,8 +60,7 @@
   --tile-pad:       30px;
   --col-min:       360px;   /* largura mínima de coluna antes de quebrar */
   --col-max-n:         4;   /* número máximo de colunas */
-  --card-content: 420px;    /* largura a que o conteúdo pára de crescer */
-  --panel-content: 900px;   /* o mesmo, com o cartão aberto em painel */
+  --panel-content: 900px;   /* largura de leitura do cartão aberto em painel */
   --card-h:       320px;    /* altura de cada cartão; o JS recalcula-a (fitRows) */
   --scroll-offset:  80px;   /* folga para o cabeçalho ao saltar para uma âncora */
   --marquee-h:      40px;
@@ -299,7 +298,6 @@ a:hover { text-decoration: underline; }
   flex-direction: column;
   flex: 1;
   width: 100%;
-  max-width: var(--card-content);
 }
 
 .tile--cream { --tile-bg: var(--cream); --tile-fg: var(--blue); }
@@ -345,12 +343,6 @@ a:hover { text-decoration: underline; }
     top: var(--tile-pad);
     right: var(--gutter);
   }
-
-  /* Num mosaico a duas colunas a coluna interior deixa de ter tecto: é a
-     tabela de eventos que precisa da largura toda. Os blocos de texto lá
-     dentro mantêm a sua própria medida de leitura (.tile__lead), por isso
-     não se esticam com ela. */
-  .tile--span .tile__inner { max-width: none; }
 
   /* O cartão de amigo ocupa a segunda coluna do mosaico, encostado ao fundo,
      como no rascunho. Fora da coluna de leitura de propósito: se entrasse
@@ -625,8 +617,7 @@ a:hover { text-decoration: underline; }
   width: 100%;
   margin-top: 34px;
   border-collapse: collapse;
-  font-size: 15px;
-  font-style: italic;
+  font-size: 13px;
   line-height: 1.45;
 }
 
@@ -641,7 +632,6 @@ a:hover { text-decoration: underline; }
 /* Em coluna estreita a tabela deixa de caber a quatro: o sítio e a natureza
    passam para baixo do título, na mesma célula visual. */
 @media (max-width: 860px) {
-  .events { font-size: 14px; }
   .events td:nth-child(3), .events td:last-child { display: none; }
   .events td:nth-child(1) { width: 40%; }
   .events td:nth-child(2) { width: 60%; }
@@ -1732,6 +1722,11 @@ a:hover { text-decoration: underline; }
   /* Escreve o endereço sem disparar o nosso próprio hashchange: quem chamou
      já sabe o que quer, e voltar a aplicar a rota só piscava o ecrã. */
   function go(route) {
+    /* O menu recusa fechar-se enquanto a animação de abertura corre (ver
+       closeMenu). Sem este travão o endereço mudava à mesma e ficava a dizer
+       "página inicial" com o menu ainda aberto por cima. */
+    if (!route && state.menuOpen && Date.now() < openingUntil) return;
+
     var slug = slugOf(route, state.lang);
     var url = location.pathname + location.search + (slug ? '#' + slug : '#');
     routing = true;
@@ -2090,11 +2085,16 @@ a:hover { text-decoration: underline; }
 
   var closeArmed = false;
 
-  /* Arma o fecho ao primeiro movimento do rato fora do X. Cobre os dois
-     casos: menu aberto por cima do próprio X (basta afastar o rato) e menu
-     aberto de outro sítio qualquer — um "+", ou o logótipo — com o rato já
-     longe, que arma ao primeiro movimento. */
+  /* Arma o fecho ao primeiro movimento do rato fora do X, mas só depois de a
+     abertura ter acabado. Os dois travões são precisos:
+
+       fora do X   para o X que nasce debaixo do cursor não disparar;
+       depois da   porque quem abriu passando o rato pelo triângulo ainda tem
+       abertura    a mão a andar naquele canto. Esse movimento armava o fecho
+                   de imediato, e o cursor, ao atravessar de volta os 26px do
+                   X, fechava o menu logo a seguir a abri-lo. */
   function armClose(e) {
+    if (Date.now() < openingUntil) return;
     if (closeBtn.contains(e.target)) return;
     closeArmed = true;
     document.removeEventListener('mousemove', armClose);
