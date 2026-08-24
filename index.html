@@ -755,20 +755,23 @@ html.menu-open .lang { color: var(--cream); }
   pointer-events: none;
 }
 
-/* Faixa que tapa o que rola por baixo do cabeçalho. Sem ela via-se o texto
-   do menu a passar por trás do logótipo e do PT—EN, que agora ficam à vista.
+/* O cabeçalho a fazer de faixa: tapa o que rola por baixo dele, para o texto
+   do menu não passar por trás do logótipo e do PT—EN.
 
-   Vive dentro do .menu, e portanto abaixo desses dois (que estão fora dele,
-   num z-index acima), mas acima do conteúdo que rola. Entra com o mesmo
-   atraso da troca de cor: durante a abertura tem de estar ausente, senão
-   tapava o triângulo a crescer; a fechar sai de imediato. */
+   Tem de ser desenhada aqui e não no próprio <header>, porque o cabeçalho
+   vive abaixo do menu (é de lá que o triângulo cresce) e o que lá se pinta
+   fica por baixo do que há a tapar. Fica dentro do .menu, e portanto abaixo
+   do logótipo e do PT—EN — que estão fora dele, num z-index acima —, mas
+   acima do conteúdo que rola. Entra com o mesmo atraso da troca de cor:
+   durante a abertura tem de estar ausente, senão tapava o triângulo a
+   crescer; a fechar sai de imediato. */
 .menu::before {
   content: "";
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  height: var(--menu-top);
+  height: var(--header-h);
   z-index: 2;
   background: var(--blue);
   opacity: 0;
