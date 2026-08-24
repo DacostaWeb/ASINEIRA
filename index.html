@@ -54,6 +54,7 @@
   --gutter:         30px;   /* margem lateral: logótipo, cartões e menu, sempre igual */
   --wordmark-h:     40px;
   --trigger-w:      62px;
+  --trigger-pull:   20px;   /* quanto o triângulo sai para fora da margem */
   --close-size:     26px;   /* o X que fecha o menu; posto por cima do triângulo */
 
   /* Medidas do corpo */
@@ -234,7 +235,10 @@ a:hover { text-decoration: underline; }
 
 .menu-trigger {
   margin-left: auto;
-  margin-right: -20px;
+  /* Sai para fora da margem lateral: a ponta do triângulo fica mais perto do
+     canto do que o resto do cabeçalho. O X que o substitui com o menu aberto
+     lê a mesma variável, para os dois nunca saírem do mesmo ponto. */
+  margin-right: calc(var(--trigger-pull) * -1);
   flex-shrink: 0;
   width: var(--trigger-w);
   padding: 0;
@@ -610,9 +614,9 @@ a:hover { text-decoration: underline; }
 
 
 /* Tabela de eventos do mosaico fechado: data, projeto, sítio e natureza.
-   Sem filetes nem cabeçalho — no rascunho são quatro colunas de texto em
-   itálico, e é a largura fixa de cada uma que as mantém alinhadas mesmo
-   quando um título é muito mais curto do que os outros. */
+   Sem filetes nem cabeçalho — são quatro colunas de texto corrido, e é a
+   largura fixa de cada uma que as mantém alinhadas mesmo quando um título é
+   muito mais curto do que os outros. */
 .events {
   width: 100%;
   margin-top: 34px;
@@ -903,11 +907,11 @@ a:hover { text-decoration: underline; }
      As contas saem das mesmas medidas que posicionam o triângulo no
      cabeçalho, em vez de valores à parte que teriam de ser reacertados a
      cada mudança de altura ou de margem.
-       — o triângulo encosta a (--gutter − 20px) da direita (a margem
-         negativa de .menu-trigger) e mede --trigger-w de largura;
+       — o triângulo encosta a (--gutter − --trigger-pull) da direita (a
+         margem negativa de .menu-trigger) e mede --trigger-w de largura;
        — está centrado na altura do cabeçalho.
      Centrar o X nesse mesmo ponto é tirar-lhe metade do que sobra. */
-  right: calc(var(--gutter) - 20px + (var(--trigger-w) - var(--close-size)) / 2);
+  right: calc(var(--gutter) - var(--trigger-pull) + (var(--trigger-w) - var(--close-size)) / 2);
   top: calc((var(--header-h) - var(--close-size)) / 2);
   padding: 0;
   border: none;
@@ -972,6 +976,7 @@ a:hover { text-decoration: underline; }
     --gutter:        18px;
     --wordmark-h:    32px;
     --trigger-w:     52px;
+    --trigger-pull:  15px;
   }
 }
 </style>
