@@ -50,7 +50,6 @@
 
   /* Medidas do cabeçalho (redefinidas em ecrãs estreitos, secção 10) */
   --header-h:       78px;
-  --header-gap:     34px;
   --gutter:         30px;   /* margem lateral: logótipo, cartões e menu, sempre igual */
   --wordmark-h:     40px;
   --trigger-w:      62px;
@@ -155,10 +154,12 @@ a:hover { text-decoration: underline; }
 .site-header {
   position: sticky;
   top: 0;
+  /* Abaixo do menu (60), de propósito: é aqui que mora o triângulo, e ele
+     tem de poder crescer por baixo do menu. O logótipo e o PT—EN estão fora
+     deste elemento, e sobem acima do menu por si. */
   z-index: 20;
   display: flex;
   align-items: center;
-  gap: var(--header-gap);
   height: var(--header-h);
   padding: 0 var(--gutter);
   background: var(--cream);
@@ -166,8 +167,27 @@ a:hover { text-decoration: underline; }
 
 /* --- Logótipo --- */
 
-.wordmark { flex-shrink: 0; display: block; line-height: 0; }
+/* Fixos ao ecrã e acima do menu (60): ficam à vista nos dois estados, e é
+   a mesma marca e o mesmo selector de idioma, não uma cópia. */
+.wordmark {
+  position: fixed;
+  left: var(--gutter);
+  top: calc((var(--header-h) - var(--wordmark-h)) / 2);
+  z-index: 90;
+  display: block;
+  line-height: 0;
+}
 .wordmark:hover { text-decoration: none; }
+
+/* Com o menu aberto o azul destes dois desapareceria contra o fundo, por
+   isso passam a creme — mas só no fim da animação, para a troca se dar já com
+   o menu montado em vez de estalar no primeiro fotograma. O atraso vem do JS
+   (--tint-delay), que é quem sabe quanto dura a abertura. */
+html.menu-open .wordmark__svg { fill: var(--cream); }
+html.menu-open .lang { color: var(--cream); }
+
+.wordmark__svg,
+.lang { transition: fill .4s ease var(--tint-delay, 0s), color .4s ease var(--tint-delay, 0s); }
 
 .wordmark__svg {
   display: block;
@@ -204,9 +224,10 @@ a:hover { text-decoration: underline; }
 /* --- Selector de idioma --- */
 
 .lang {
-  position: absolute;
+  position: fixed;
   left: 50%;
-  top: 50%;
+  top: calc(var(--header-h) / 2);
+  z-index: 90;
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
@@ -715,14 +736,16 @@ a:hover { text-decoration: underline; }
   display: block;
   min-height: 100dvh;
 
-  /* O título de cada secção assenta na mesma linha horizontal do logótipo:
-     ambos ficam centrados na altura do cabeçalho. Como a caixa de linha do
-     título vale exactamente o tamanho da letra (line-height: 1), centrá-la
-     é tirar-lhe metade do que sobra — a mesma conta que centra o logótipo.
-     Serve de padding ao menu e de scroll-margin às secções, para que uma
-     secção saltada de propósito pare onde a primeira começa. */
+  /* O conteúdo começa abaixo da faixa do cabeçalho, que agora fica à vista
+     por cima do menu. Chegou a assentar na linha do logótipo, mas o PT—EN é
+     centrado e caía em cima dos títulos mais compridos — "how to get here?"
+     passava-lhe 90px por baixo.
+
+     Altura do cabeçalho mais a folga que os mosaicos já usam. Serve de
+     padding ao menu e de scroll-margin às secções, para que uma secção
+     saltada de propósito pare onde a primeira começa. */
   --menu-h2: clamp(24px, 5.4vw, 34px);
-  --menu-top: calc((var(--header-h) - var(--menu-h2)) / 2);
+  --menu-top: calc(var(--header-h) + var(--tile-pad));
   padding: var(--menu-top) var(--gutter) 160px;
   overflow-y: auto;
   overscroll-behavior: contain;   /* ao chegar ao fim, não arrastar a página */
@@ -732,33 +755,27 @@ a:hover { text-decoration: underline; }
   pointer-events: none;
 }
 
-/* Cópia do logótipo do cabeçalho, que o menu tapa. Fixo ao ecrã e não ao
-   documento: com o menu descido continua no canto, como no rascunho.
+/* Faixa que tapa o que rola por baixo do cabeçalho. Sem ela via-se o texto
+   do menu a passar por trás do logótipo e do PT—EN, que agora ficam à vista.
 
-   Leva também a classe .wordmark, para apanhar as regras de hover que fazem
-   as letras saltar: dentro do menu o logótipo continua vivo ao passar o rato.
-   Daí não ter pointer-events: none — sem eventos não havia hover.
-
-   Nasce transparente; o JS só o acende no fim da animação de abertura (ver
-   renderMenu). Até lá o que se vê é o logótipo azul do cabeçalho a ser tapado
-   pelo triângulo que cresce, e a troca para creme faz-se em fade já com o
-   menu montado, em vez de estalar no primeiro fotograma. */
-.menu__wordmark {
+   Vive dentro do .menu, e portanto abaixo desses dois (que estão fora dele,
+   num z-index acima), mas acima do conteúdo que rola. Entra com o mesmo
+   atraso da troca de cor: durante a abertura tem de estar ausente, senão
+   tapava o triângulo a crescer; a fechar sai de imediato. */
+.menu::before {
+  content: "";
   position: fixed;
-  left: var(--gutter);
-  top: calc((var(--header-h) - var(--wordmark-h)) / 2);
-  line-height: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--menu-top);
+  z-index: 2;
+  background: var(--blue);
   opacity: 0;
-  cursor: pointer;   /* fecha o menu, tal como o X */
+  pointer-events: none;
+  transition: opacity .4s ease var(--tint-delay, 0s);
 }
-.menu__wordmark svg {
-  display: block;
-  height: var(--wordmark-h);
-  width: auto;
-  fill: var(--cream);
-  overflow: visible;   /* as letras saem da caixa a meio do salto */
-  shape-rendering: geometricPrecision;
-}
+html.menu-open .menu::before { opacity: 1; }
 
 /* Coluna de leitura do menu, centrada como no rascunho. */
 /* Centrada na página. O logótipo fica à esquerda, fora desta coluna: os
@@ -774,8 +791,8 @@ a:hover { text-decoration: underline; }
 .menu-section + .menu__social { margin-top: 54px; }
 
 /* Cada secção do menu é um alvo do encaminhamento por hash (#sobre, #onde):
-   o scroll-margin faz o título parar na linha do logótipo, e não colado ao
-   topo do ecrã. */
+   o scroll-margin faz o título parar abaixo do cabeçalho, e não debaixo
+   dele. */
 .menu-section { scroll-margin-top: var(--menu-top); }
 
 .menu__h2 {
@@ -972,7 +989,6 @@ a:hover { text-decoration: underline; }
 @media (max-width: 640px) {
   :root {
     --header-h:      66px;
-    --header-gap:    16px;
     --gutter:        18px;
     --wordmark-h:    32px;
     --trigger-w:     52px;
@@ -996,8 +1012,11 @@ a:hover { text-decoration: underline; }
 
 <!-- ===== Cabeçalho ====================================================== -->
 
-<header class="site-header" id="site-header">
-
+<!-- O logótipo e o selector de idioma vivem fora do <header> de propósito.
+     O cabeçalho tem z-index próprio e portanto contexto de empilhamento seu:
+     lá dentro, nada consegue subir acima do menu. Cá fora sobem, e ficam à
+     vista com o menu aberto — que é onde o triângulo tem de continuar, para
+     poder crescer por baixo do menu como sempre fez. -->
   <a class="wordmark" id="wm-link" href="#" aria-label="a Sineira">
     <svg class="wordmark__svg" viewBox="48 42 194 58" role="img" aria-label="a Sineira" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
       <g class="wm__letter wm__a" id="wm-a" transform="translate(61.805172,73.153994) rotate(0)"><path d="M69.823985,81.501434c-.890183,2.191852-2.012935,5.465021-2.104465,6.074494l-6.089234-2.473037c.006775-.527952.366541-1.795292.59178-2.381029-1.359507.954594-3.531095,1.809153-7.602648.155563-5.550884-2.254396-6.410494-6.854411-4.960295-10.425162c2.130009-5.244613,7.324404-5.953472,14.074134-3.212186l3.285291,1.334264.571407-1.406947c.664744-1.636765.729446-3.485605-2.226502-4.686112-2.690844-1.092839-3.744337-.188405-4.714542,1.359611l-6.061185-2.461646c2.007121-3.950634,5.881465-6.233827,12.864932-3.351763c6.150156,2.54363,8.527829,6.315106,6.30228,11.794964l-3.930953,9.678986ZM65.45233,74.446331l-2.596746-1.054624c-3.840831-1.559887-5.741204-.965669-6.642595,1.253779-.67687,1.666623-.224395,3.485186,2.066532,4.415607c4.050743,1.645139,5.691927-.96846,6.927159-4.00991l.24565-.604852Z" transform="translate(-61.805172,-73.153994)"></path></g>
@@ -1018,6 +1037,10 @@ a:hover { text-decoration: underline; }
     <span class="lang__sep" aria-hidden="true">—</span>
     <button class="lang__btn" id="lang-en" type="button" aria-pressed="false">EN</button>
   </div>
+
+<header class="site-header" id="site-header">
+
+
 
   <button class="menu-trigger" id="tri-btn" aria-label="Abrir menu" aria-expanded="false">
     <svg class="menu-trigger__svg" viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
@@ -1251,11 +1274,6 @@ a:hover { text-decoration: underline; }
 <!-- ===== Menu de ecrã inteiro =========================================== -->
 
 <nav class="menu" id="menu" aria-hidden="true">
-
-  <!-- O logótipo do cabeçalho fica tapado pelo menu; o JS clona-o para aqui,
-       em creme. A classe .wordmark é o que lhe dá o salto das letras ao
-       passar o rato, igual ao do cabeçalho. -->
-  <div class="wordmark menu__wordmark" id="menu-wordmark" aria-hidden="true"></div>
 
   <div class="menu__doc">
 
@@ -1581,22 +1599,6 @@ a:hover { text-decoration: underline; }
   Array.prototype.forEach.call(document.querySelectorAll('[data-tile-body]'), function (el) {
     tileBodies[el.getAttribute('data-tile-body')] = el;
   });
-
-  /* O menu tapa o cabeçalho, por isso leva a sua própria cópia do logótipo.
-     Clonada em vez de repetida no HTML: são dez formas, e duas cópias à mão
-     ficavam a divergir ao primeiro retoque. Sem ids nem animação — aqui o
-     logótipo é só uma marca, não um botão. */
-  var menuWordmark = document.getElementById('menu-wordmark');
-
-  (function cloneWordmark() {
-    var slot = menuWordmark;
-    var svg = wmLink && wmLink.querySelector('svg');
-    if (!slot || !svg) return;
-    var copy = svg.cloneNode(true);
-    copy.removeAttribute('class');
-    copy.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
-    slot.appendChild(copy);
-  }());
 
   var state = { lang: 'pt', menuOpen: false, cols: 3 };
   var openingUntil = 0;
@@ -1980,8 +1982,38 @@ a:hover { text-decoration: underline; }
   state.cols = -1;
   state.minCardH = 260;
   remeasure();
-  window.addEventListener('resize', remeasure);
-  window.addEventListener('load', remeasure);
+
+  /* No iOS a barra de endereço do Safari encolhe ao descer e volta a crescer
+     ao subir um pouco, e cada mudança dessas conta como um resize. Como o
+     fitRows tira a altura dos cartões da altura visível, cada uma refazia a
+     grelha a meio do gesto: a página mudava de altura debaixo do dedo e o
+     scroll dava os saltos.
+
+     A barra vale umas dezenas de píxeis e nunca mexe na largura. Rodar o
+     ecrã, que é a mudança que interessa mesmo, troca sempre a largura. Por
+     isso só se remede quando a largura muda, ou quando a altura muda tanto
+     que já não pode ser a barra. */
+  var lastW = window.innerWidth, lastH = window.innerHeight;
+  var BAR_MAX = 160;   /* folga acima de qualquer barra de endereço conhecida */
+
+  function onResize() {
+    var w = window.innerWidth, h = window.innerHeight;
+    if (w === lastW && Math.abs(h - lastH) <= BAR_MAX) return;
+    lastW = w;
+    lastH = h;
+    remeasure();
+  }
+
+  window.addEventListener('resize', onResize);
+  window.addEventListener('orientationchange', function () {
+    lastW = 0;   /* força a remedição, sem depender de a largura já ter mudado */
+    onResize();
+  });
+  window.addEventListener('load', function () {
+    lastW = window.innerWidth;
+    lastH = window.innerHeight;
+    remeasure();
+  });
   if (window.ResizeObserver) new ResizeObserver(measure).observe(grid);
 
   /* ---------- menu (triângulo que cresce até cobrir o ecrã) ---------- */
@@ -2026,13 +2058,11 @@ a:hover { text-decoration: underline; }
     triLetters.style.opacity = open ? '0' : '1';
     triLetters.style.transition = open ? 'opacity .18s ease 0s' : 'opacity .3s ease .45s';
 
-    /* O creme só entra quando a abertura acaba: atraso do tempo todo da
-       animação e depois um fade curto. A fechar sai depressa e sem atraso,
-       para não ficar aceso por cima do triângulo já a recolher. */
-    menuWordmark.style.opacity = open ? '1' : '0';
-    menuWordmark.style.transition = open
-      ? 'opacity .4s ease ' + (MENU_DUR / 1000) + 's'
-      : 'opacity .2s ease';
+
+    /* Quem sabe quanto dura a abertura é este ficheiro, não a folha de
+       estilos: o creme do logótipo e do PT—EN entra no fim dela. */
+    document.documentElement.style.setProperty('--tint-delay',
+      open ? (MENU_DUR / 1000) + 's' : '0s');
 
     menu.setAttribute('aria-hidden', String(!open));
     menu.style.visibility = open ? 'visible' : 'hidden';
@@ -2166,15 +2196,16 @@ a:hover { text-decoration: underline; }
     go(routeByMenu('menu-sobre'));
   }
 
-  /* Ao clique, os quatro. O preventDefault é para o logótipo: é um <a
-     href="#">, e sem ele o salto para a âncora colidia com o encaminhamento
-     por hash. */
-  [triBtn, wmLink].forEach(function (el) {
-    el.addEventListener('click', function (e) { e.preventDefault(); openMenuTop(); });
-  });
+  /* O triângulo abre, o X fecha. O logótipo alterna: agora fica à vista nos
+     dois estados, por isso um só botão faz as duas coisas. O preventDefault é
+     porque é um <a href="#">, e sem ele o salto para a âncora colidia com o
+     encaminhamento por hash. */
+  triBtn.addEventListener('click', openMenuTop);
+  closeBtn.addEventListener('click', function () { go(null); });
 
-  [closeBtn, menuWordmark].forEach(function (el) {
-    el.addEventListener('click', function () { go(null); });
+  wmLink.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (state.menuOpen) go(null); else openMenuTop();
   });
 
   /* Ao rato, só o triângulo e o X. Cada um espera que o rato tenha saído de
