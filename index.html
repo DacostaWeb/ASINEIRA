@@ -54,8 +54,7 @@
   --gutter:         30px;   /* margem lateral: logótipo, cartões e menu, sempre igual */
   --wordmark-h:     40px;
   --trigger-w:      62px;
-  --close-right:    30px;
-  --close-top:     104px;
+  --close-size:     26px;   /* o X que fecha o menu; posto por cima do triângulo */
 
   /* Medidas do corpo */
   --tile-pad:       30px;
@@ -129,9 +128,8 @@ a:hover { text-decoration: underline; }
 .marquee__text,
 .calendar__month,
 .calendar__weekday,
-.aerial__tag,
-.friend-card__name,
-.friend-card__label { font-family: var(--font-display); }
+.panel-section__title,
+.aerial__tag { font-family: var(--font-display); }
 
 
 /* 4. Animações ============================================================ */
@@ -321,6 +319,7 @@ a:hover { text-decoration: underline; }
 .tile__title--regular { font-weight: 400; }
 .tile__title--italic  { font-weight: 400; font-style: italic; line-height: .95; letter-spacing: -.005em; }
 .tile__title--tracked { font-weight: 400; line-height: 1;     letter-spacing: .32em; }
+.tile__title--strong  { font-weight: 700; }
 
 /* O "+" roda para "×" quando abre — a rotação é aplicada pelo JS. */
 .tile__toggle {
@@ -345,6 +344,33 @@ a:hover { text-decoration: underline; }
     position: absolute;
     top: var(--tile-pad);
     right: var(--gutter);
+  }
+
+  /* Num mosaico a duas colunas a coluna interior deixa de ter tecto: é a
+     tabela de eventos que precisa da largura toda. Os blocos de texto lá
+     dentro mantêm a sua própria medida de leitura (.tile__lead), por isso
+     não se esticam com ela. */
+  .tile--span .tile__inner { max-width: none; }
+
+  /* O cartão de amigo ocupa a segunda coluna do mosaico, encostado ao fundo,
+     como no rascunho. Fora da coluna de leitura de propósito: se entrasse
+     nela, empurrava o rodapé em versaletes para fora do mosaico. */
+  .tile--span .tile__aside {
+    position: absolute;
+    bottom: var(--tile-pad);
+    width: min(250px, 34%);
+    margin: 0;
+    /* Centrado na segunda metade do mosaico: metade (50%) mais o que sobra
+       de cada lado depois de lá pôr o cartão ((50% − 34%) / 2). */
+    left: 58%;
+  }
+
+  /* Aberto em painel não há segunda coluna que valha: o cartão volta ao fio
+     do conteúdo, senão ficava pendurado a meio de um painel vazio. */
+  .tile.is-expanded .tile__aside {
+    position: static;
+    width: auto;
+    margin: 0;
   }
 }
 
@@ -394,8 +420,6 @@ a:hover { text-decoration: underline; }
 
 /* Conteúdo escondido até se carregar no "+" (o JS troca o display). */
 .tile__body { display: none; margin-top: 16px; }
-.tile__body--stack { flex-direction: column; gap: 4px; }
-.tile__body--stack a { display: block; font-size: 14px; line-height: 1.6; }
 
 .tile__list {
   list-style: none;
@@ -532,33 +556,14 @@ a:hover { text-decoration: underline; }
   opacity: .8;
 }
 
-/* Cartão de Amigo da Sineira. */
+/* Cartão de Amigo da Sineira: o desenho vem inteiro do amigocard.svg, sombra
+   incluída. Fica em creme sobre creme de propósito — é o mesmo fundo do
+   mosaico, e é a sombra que o levanta da página. */
 .friend-card {
+  display: block;
   width: min(100%, 330px);
-  aspect-ratio: 1.586;
+  height: auto;
   margin-top: 22px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-radius: 12px;
-  color: var(--blue);
-  background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold) 38%, var(--gold-light) 62%, var(--gold-deep) 100%);
-}
-
-.friend-card__mark { width: 30px; height: auto; }
-.friend-card__name {
-  font-size: 19px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -.025em;
-  text-transform: lowercase;
-}
-.friend-card__label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .18em;
-  text-transform: uppercase;
 }
 
 /* Vista aérea com etiquetas, como na experiência 6. */
@@ -612,6 +617,58 @@ a:hover { text-decoration: underline; }
 }
 
 
+/* Tabela de eventos do mosaico fechado: data, projeto, sítio e natureza.
+   Sem filetes nem cabeçalho — no rascunho são quatro colunas de texto em
+   itálico, e é a largura fixa de cada uma que as mantém alinhadas mesmo
+   quando um título é muito mais curto do que os outros. */
+.events {
+  width: 100%;
+  margin-top: 34px;
+  border-collapse: collapse;
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.events td { padding: 4px 12px 4px 0; vertical-align: top; }
+.events td:nth-child(1) { width: 22%; }
+.events td:nth-child(2) { width: 32%; }
+.events td:nth-child(3) { width: 24%; }
+.events td:last-child { width: 22%; padding-right: 0; text-align: right; }
+
+.events__date { white-space: nowrap; }
+
+/* Em coluna estreita a tabela deixa de caber a quatro: o sítio e a natureza
+   passam para baixo do título, na mesma célula visual. */
+@media (max-width: 860px) {
+  .events { font-size: 14px; }
+  .events td:nth-child(3), .events td:last-child { display: none; }
+  .events td:nth-child(1) { width: 40%; }
+  .events td:nth-child(2) { width: 60%; }
+}
+
+
+/* Secções dentro de um cartão aberto. O rodapé em versaletes do mosaico
+   fechado nomeia-as uma a uma ("acessos - mapa - antiga igreja de retorta");
+   o painel repete esses mesmos nomes como títulos, para que quem abre o
+   cartão reconheça onde caiu. */
+.panel-section + .panel-section { margin-top: 26px; }
+
+.panel-section__title {
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.panel-section .tile__list,
+.panel-section .shot,
+.panel-section .aerial,
+.panel-section .calendar { margin-top: 12px; }
+
+
+
 /* 7. Tabela de acessos ==================================================== */
 
 .access { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -652,16 +709,27 @@ a:hover { text-decoration: underline; }
 
 /* 8. Menu de ecrã inteiro ================================================= */
 
-/* Estado de repouso. O JS trata da abertura: entrada do fundo, opacidade e
-   atrasos escalonados de cada item são escritos inline por ele. */
+/* O menu deixou de ser uma lista de atalhos: é onde vivem, por inteiro, o
+   "sobre nós" e o "como chegar" — os dois cartões cujo "+" abre aqui em vez
+   de abrir em painel — mais o formulário de contacto, a imprensa e as redes.
+   Estado de repouso; o JS trata da abertura (entrada do fundo, opacidade e
+   atrasos escalonados de cada secção são escritos inline por ele). */
 .menu {
   position: fixed;
   inset: 0;
   z-index: 60;
-  display: flex;
-  flex-direction: column;
+  display: block;
   min-height: 100dvh;
-  padding: min(9vh, 70px) var(--gutter) 160px;
+
+  /* O título de cada secção assenta na mesma linha horizontal do logótipo:
+     ambos ficam centrados na altura do cabeçalho. Como a caixa de linha do
+     título vale exactamente o tamanho da letra (line-height: 1), centrá-la
+     é tirar-lhe metade do que sobra — a mesma conta que centra o logótipo.
+     Serve de padding ao menu e de scroll-margin às secções, para que uma
+     secção saltada de propósito pare onde a primeira começa. */
+  --menu-h2: clamp(24px, 5.4vw, 34px);
+  --menu-top: calc((var(--header-h) - var(--menu-h2)) / 2);
+  padding: var(--menu-top) var(--gutter) 160px;
   overflow-y: auto;
   overscroll-behavior: contain;   /* ao chegar ao fim, não arrastar a página */
   color: var(--cream);
@@ -670,56 +738,170 @@ a:hover { text-decoration: underline; }
   pointer-events: none;
 }
 
-.menu__list { list-style: none; width: 100%; max-width: 480px; margin: 0 auto; padding: 0; }
+/* Cópia do logótipo do cabeçalho, que o menu tapa. Fixo ao ecrã e não ao
+   documento: com o menu descido continua no canto, como no rascunho. */
+.menu__wordmark {
+  position: fixed;
+  left: var(--gutter);
+  top: calc((var(--header-h) - var(--wordmark-h)) / 2);
+  line-height: 0;
+  pointer-events: none;
+}
+.menu__wordmark svg { display: block; height: var(--wordmark-h); width: auto; fill: var(--cream); }
+
+/* Coluna de leitura do menu, centrada como no rascunho. */
+/* Centrada na página. O logótipo fica à esquerda, fora desta coluna: os
+   dois nunca se cruzam, e é por isso que o título pode subir até à linha
+   dele sem lhe passar por cima. */
+.menu__doc { width: 100%; max-width: 560px; margin: 0 auto; }
 
 /* Nome de classe partilhado com o JS, que percorre .menu-item para escalonar
    a entrada — mudar aqui obriga a mudar lá. */
 .menu-item { opacity: 0; transform: translateY(14px); }
 
-.menu__link {
-  display: flex;
-  align-items: baseline;
-  gap: 20px;
-  padding: 9px 0;
-  font-size: clamp(24px, 5.4vw, 34px);
+.menu-section + .menu-section,
+.menu-section + .menu__social { margin-top: 54px; }
+
+/* Cada secção do menu é um alvo do encaminhamento por hash (#sobre, #onde):
+   o scroll-margin faz o título parar na linha do logótipo, e não colado ao
+   topo do ecrã. */
+.menu-section { scroll-margin-top: var(--menu-top); }
+
+.menu__h2 {
+  margin-bottom: 16px;
+  font-family: var(--font-display);
+  font-size: var(--menu-h2);
   font-weight: 700;
+  line-height: 1;
   letter-spacing: -.015em;
   text-transform: uppercase;
 }
-.menu__link:hover { text-decoration: none; }
 
-.menu__index { min-width: 1.6em; }
-.menu__label { flex: 1; }
-
-.menu__pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  width: 100%;
-  max-width: 480px;
-  margin: 34px auto 0;
-  opacity: 0;
-  transform: translateY(14px);
-}
-
-.pill {
-  padding: 7px 15px;
-  border: 1.5px solid currentColor;
-  border-radius: 99px;
-  font-size: 13px;
+.menu__h3 {
+  margin: 30px 0 8px;
+  font-family: var(--font-display);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: .04em;
+  letter-spacing: .16em;
   text-transform: uppercase;
 }
-.pill:hover { background: var(--cream); color: var(--blue); text-decoration: none; }
+
+.menu__lead { max-width: 50ch; font-style: italic; font-size: 15px; line-height: 1.45; }
+.menu__text { max-width: 62ch; margin-top: 8px; font-size: 14px; line-height: 1.65; }
+.menu__note { margin-top: 8px; font-size: 12px; font-style: italic; opacity: .75; }
+
+.menu__list-plain {
+  list-style: none;
+  margin-top: 14px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.menu__links { list-style: none; margin-top: 8px; padding: 0; font-size: 14px; line-height: 1.8; }
+.menu__links a { text-decoration: underline; }
+
+.menu .access { margin-bottom: 22px; }
+.menu .aerial { margin-top: 0; }
+
+/* "Abre no maps ↗", logo por baixo do mapa. */
+.menu__maps {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* Duas colunas: press e contactos, lado a lado como no rascunho. */
+.menu__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.menu__cols .menu__h3 { margin-top: 0; }
+
+/* --- Formulário "fala connosco" --- */
+
+/* O rótulo está desenhado dentro da caixa, por isso a etiqueta visível é o
+   placeholder. O <span> fica só para quem lê por leitor de ecrã, onde um
+   placeholder não chega para dizer o que o campo quer. */
+.cform__label {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.cform__row { display: block; margin-bottom: 12px; }
+
+.cform__input {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+}
+.cform__input::placeholder { color: inherit; opacity: .65; }
+.cform__input:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
+.cform__input--area { resize: vertical; }
+
+/* O <select> fechado é desenhado pelo sistema: sem isto as opções saíam em
+   creme sobre creme e ficavam ilegíveis na lista aberta. */
+.cform select.cform__input option { color: var(--blue); background: var(--cream); }
+
+.cform__send {
+  margin-top: 6px;
+  padding: 11px 20px;
+  border: 1.5px solid currentColor;
+  background: none;
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.cform__send:hover { background: var(--cream); color: var(--blue); }
+
+.cform__note { margin-top: 12px; font-size: 12px; font-style: italic; opacity: .75; }
+
+/* --- Redes --- */
+
+.menu__social { display: flex; gap: 16px; }
+.menu__social a { line-height: 0; }
+.menu__social svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: var(--cream);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.menu__social a:hover svg { stroke: var(--gold-light); }
+.menu__social-dot { fill: var(--cream); stroke: none; }
 
 .menu-close {
   position: fixed;
-  right: var(--close-right);
-  top: var(--close-top);
   z-index: 70;
-  width: 38px;
-  height: 38px;
+  width: var(--close-size);
+  height: var(--close-size);
+
+  /* Em cima do triângulo que abriu o menu, ao pixel: fecha-se onde se abriu.
+     As contas saem das mesmas medidas que posicionam o triângulo no
+     cabeçalho, em vez de valores à parte que teriam de ser reacertados a
+     cada mudança de altura ou de margem.
+       — o triângulo encosta a (--gutter − 20px) da direita (a margem
+         negativa de .menu-trigger) e mede --trigger-w de largura;
+       — está centrado na altura do cabeçalho.
+     Centrar o X nesse mesmo ponto é tirar-lhe metade do que sobra. */
+  right: calc(var(--gutter) - 20px + (var(--trigger-w) - var(--close-size)) / 2);
+  top: calc((var(--header-h) - var(--close-size)) / 2);
   padding: 0;
   border: none;
   background: none;
@@ -729,6 +911,11 @@ a:hover { text-decoration: underline; }
   pointer-events: none;
 }
 .menu-close svg { display: block; width: 100%; height: 100%; fill: var(--cream); }
+
+/* Em ecrã estreito o press e os contactos deixam de caber lado a lado. */
+@media (max-width: 560px) {
+  .menu__cols { grid-template-columns: 1fr; gap: 34px; }
+}
 
 
 /* 9. Rodapé (marquee) ===================================================== */
@@ -778,8 +965,6 @@ a:hover { text-decoration: underline; }
     --gutter:        18px;
     --wordmark-h:    32px;
     --trigger-w:     52px;
-    --close-right:   18px;
-    --close-top:     88px;
   }
 }
 </style>
@@ -845,6 +1030,9 @@ a:hover { text-decoration: underline; }
 <!-- ===== Grelha de mosaicos ============================================= -->
 
 <main class="tiles" id="grid">
+
+  <!-- Linha 1: fotografia | eventos (duas colunas) | fotografia -->
+
   <figure class="media">
     <img src="./voar4-mt1lbpkk-gskk.jpg" data-i18n-alt="alt1" alt="Crianças em atividade de formação em palco" loading="lazy">
   </figure>
@@ -855,40 +1043,63 @@ a:hover { text-decoration: underline; }
         <h2 class="tile__title tile__title--regular" data-i18n="evH2">eventos</h2>
         <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
-      <p class="tile__lead" data-i18n="evP1">Próximos, últimos e arquivo — brevemente.</p>
+
+      <!-- Data, projeto, sítio e natureza: as quatro colunas do rascunho. -->
+      <table class="events">
+        <tbody>
+          <tr>
+            <td class="events__date" data-i18n="ev1d">18 de Março</td>
+            <td data-i18n="ev1t">Voar Muito Perto do Sol</td>
+            <td data-i18n="ev1p">Auditório</td>
+            <td data-i18n="ev1k">Criação</td>
+          </tr>
+          <tr>
+            <td class="events__date" data-i18n="ev2d">24 de Março</td>
+            <td data-i18n="ev2t">Projeto A</td>
+            <td data-i18n="ev2p">Igreja</td>
+            <td data-i18n="ev2k">Formação</td>
+          </tr>
+          <tr>
+            <td class="events__date" data-i18n="ev3d">10 de Abril</td>
+            <td data-i18n="ev3t">Projeto B</td>
+            <td data-i18n="ev3p">Igreja</td>
+            <td data-i18n="ev3k">Apresentação</td>
+          </tr>
+          <tr>
+            <td class="events__date" data-i18n="ev4d">22 de Maio</td>
+            <td data-i18n="ev4t">Projeto C</td>
+            <td data-i18n="ev4p">Exterior</td>
+            <td data-i18n="ev4k">Criação</td>
+          </tr>
+        </tbody>
+      </table>
+
       <div class="tile__body" data-tile-body="Eventos">
-        <p class="tile__text" data-i18n="evP2">Segue-nos para saberes das primeiras atividades: aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza.</p>
-        <div class="calendar" id="calendario"></div>
-        <p class="tile__note" data-i18n="evNote">Ainda sem datas marcadas.</p>
+        <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secProx">Próximos</h3>
+          <p class="tile__text" data-i18n="evP2">Aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza. As datas acima são as primeiras marcadas; segue-nos para as restantes.</p>
+          <div class="calendar" id="calendario"></div>
+        </div>
+        <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secUlt">Últimos</h3>
+          <p class="tile__note" data-i18n="evNote">Ainda sem eventos passados para mostrar.</p>
+        </div>
+        <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secArq">Arquivo · fotografias e vídeos</h3>
+          <div class="shots">
+            <figure class="shot">
+              <img src="dossier/assets/arco.jpg" data-i18n-alt="altArco" alt="Interior em obra, visto através do arco" loading="lazy">
+              <figcaption data-i18n="capArco">Interior · arco e pavimento em execução</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="dossier/assets/nave-2025.jpg" data-i18n-alt="altNave" alt="Nave da antiga Igreja de Retorta antes da intervenção" loading="lazy">
+              <figcaption data-i18n="capNave">Nave · antes da intervenção</figcaption>
+            </figure>
+          </div>
+        </div>
       </div>
-      <p class="tile__caption" data-i18n="capEv">Próximos · últimos · arquivo — brevemente</p>
-    </div>
-  </article>
 
-  <figure class="media">
-    <img src="./voar7-mt1lby5g-cd2e.jpg" data-i18n-alt="alt2" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy">
-  </figure>
-
-  <article class="tile tile--blue" id="apresentacao" data-screen-label="apresentação">
-    <div class="tile__inner">
-      <div class="tile__head">
-        <h2 class="tile__title" data-i18n="apresH2">apresentação</h2>
-        <button class="tile__toggle" type="button" data-tile="Apresentacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
-      </div>
-      <p class="tile__lead" data-i18n="apresP">Divulgamos projetos artísticos no estúdio/palco e na igreja.</p>
-      <div class="tile__body" data-tile-body="Apresentacao">
-        <ul class="tile__list">
-          <li data-i18n="apresLi1">Espetáculos</li>
-          <li data-i18n="apresLi2">Sessões de cinema</li>
-          <li data-i18n="apresLi3">Exposições e convívios</li>
-          <li data-i18n="apresLi4">Festival anual de dança e música</li>
-        </ul>
-        <figure class="shot">
-          <img src="dossier/assets/arco.jpg" data-i18n-alt="altArco" alt="Interior em obra, visto através do arco" loading="lazy">
-          <figcaption data-i18n="capArco">Interior · arco e pavimento em execução</figcaption>
-        </figure>
-      </div>
-      <p class="tile__caption" data-i18n="capApres">Espetáculos · cinema · exposições · festival anual</p>
+      <p class="tile__caption" data-i18n="capEv">Próximos · últimos · arquivo - fotografias e vídeos</p>
     </div>
   </article>
 
@@ -896,226 +1107,322 @@ a:hover { text-decoration: underline; }
     <img src="./sc1-mt1lcwzm-0usn.png" data-i18n-alt="alt3" alt="Bailarina em ensaio com estrutura de madeira" loading="lazy">
   </figure>
 
-  <article class="tile tile--cream" id="criacao" data-screen-label="criação">
-    <div class="tile__inner">
-      <div class="tile__head">
-        <h2 class="tile__title tile__title--tracked" data-i18n="criaH2">criação</h2>
-        <button class="tile__toggle" type="button" data-tile="Criacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
-      </div>
-      <p class="tile__lead" data-i18n="criaP">Residências artísticas e apoio à criação, no antigo complexo da Igreja de Retorta.</p>
-      <div class="tile__body" data-tile-body="Criacao">
-        <ul class="tile__list">
-          <li data-i18n="criaLi1">Residências artísticas com alojamento</li>
-          <li data-i18n="criaLi2">Estúdio polivalente</li>
-          <li data-i18n="criaLi3">Estúdio de dança profissional</li>
-          <li data-i18n="criaLi4">Igreja: espaço multiusos</li>
-        </ul>
-        <figure class="shot">
-          <img src="dossier/assets/scene-estudio.jpg" data-i18n-alt="altEstudio" alt="Proposta: estúdio de dança com plateia" loading="lazy">
-          <figcaption data-i18n="capEstudio">Proposta · estúdio de dança com plateia</figcaption>
-        </figure>
-      </div>
-      <p class="tile__caption" data-i18n="capCria">Residências · estúdio polivalente · estúdio de dança · igreja</p>
-    </div>
-  </article>
+  <!-- Linha 2: atividades | fotografia | como chegar? | sobre nós -->
 
-  <article class="tile tile--blue" id="formacao" data-screen-label="formação">
+  <article class="tile tile--blue" id="atividades" data-screen-label="atividades">
     <div class="tile__inner">
       <div class="tile__head">
-        <h2 class="tile__title tile__title--italic" data-i18n="formH2">formação</h2>
-        <button class="tile__toggle" type="button" data-tile="Formacao" aria-expanded="false" aria-label="Mostrar mais">+</button>
+        <h2 class="tile__title tile__title--italic tile__title--strong" data-i18n="atH2">atividades</h2>
+        <button class="tile__toggle" type="button" data-tile="Atividades" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
-      <p class="tile__lead" data-i18n="formP1">Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.</p>
-      <div class="tile__body" data-tile-body="Formacao">
-        <ul class="tile__list">
-          <li data-i18n="formLi1">Aulas regulares</li>
-          <li data-i18n="formLi2">Workshops</li>
-          <li data-i18n="formLi3">Cursos intensivos</li>
-          <li data-i18n="formLi4">Campo de férias</li>
-        </ul>
-        <p class="tile__text" data-i18n="formP2">Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
-      </div>
-      <p class="tile__caption" data-i18n="capForm">Aulas regulares · workshops · cursos intensivos · campo de férias</p>
-    </div>
-  </article>
+      <p class="tile__lead" data-i18n="atP">Aulas regulares, residências artísticas, apoio à criação... Palco e igreja preparadas para todo o tipo de espetáculos, eventos culturais ou workshops. Artes para a comunidade e uma comunidade para as Artes!</p>
 
-  <article class="tile tile--cream" id="instituicao" data-screen-label="o espaço">
-    <div class="tile__inner">
-      <div class="tile__head">
-        <h2 class="tile__title tile__title--italic" data-i18n="espH2">Antiga Igreja de Retorta</h2>
-        <button class="tile__toggle" type="button" data-tile="Instituicao" aria-expanded="false" aria-label="Mostrar mais">+</button>
-      </div>
-      <p class="tile__lead" data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
-      <div class="tile__body" data-tile-body="Instituicao">
-        <ul class="tile__list">
-          <li data-i18n="espLi1">Estúdio / palco</li>
-          <li data-i18n="espLi2">Igreja: espaço multiusos</li>
-          <li data-i18n="espLi3">Alojamento: residências artísticas</li>
-          <li data-i18n="espLi4">Restauração · estacionamento</li>
-          <li data-i18n="espLi5">Floresta: percursos de lazer e pedagógicos</li>
-          <li data-i18n="espLi6">Clareira: espaço para festival</li>
-        </ul>
-        <div class="shots">
+      <div class="tile__body" data-tile-body="Atividades">
+        <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secApres">Apresentação</h3>
+          <p class="tile__text" data-i18n="apresP">Divulgamos projetos artísticos no estúdio/palco e na igreja.</p>
+          <ul class="tile__list">
+            <li data-i18n="apresLi1">Espetáculos</li>
+            <li data-i18n="apresLi2">Sessões de cinema</li>
+            <li data-i18n="apresLi3">Exposições e convívios</li>
+            <li data-i18n="apresLi4">Festival anual de dança e música</li>
+          </ul>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secCria">Criação</h3>
+          <p class="tile__text" data-i18n="criaP">Apoio à criação no antigo complexo da Igreja de Retorta.</p>
+          <ul class="tile__list">
+            <li data-i18n="criaLi2">Estúdio polivalente</li>
+            <li data-i18n="criaLi3">Estúdio de dança profissional</li>
+            <li data-i18n="criaLi4">Igreja: espaço multiusos</li>
+          </ul>
           <figure class="shot">
-            <img src="dossier/assets/vista-aerea.jpg" data-i18n-alt="altVista" alt="Implantação aérea do complexo da antiga Igreja de Retorta" loading="lazy">
-            <figcaption data-i18n="capVista">Implantação · 18.000 m²</figcaption>
-          </figure>
-          <figure class="shot">
-            <img src="dossier/assets/faseamento.jpg" data-i18n-alt="altFase" alt="Planta de faseamento da intervenção na antiga Igreja de Retorta" loading="lazy">
-            <figcaption data-i18n="capFase">Faseamento da intervenção</figcaption>
+            <img src="dossier/assets/scene-estudio.jpg" data-i18n-alt="altEstudio" alt="Proposta: estúdio de dança com plateia" loading="lazy">
+            <figcaption data-i18n="capEstudio">Proposta · estúdio de dança com plateia</figcaption>
           </figure>
         </div>
+
+        <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secForm">Formação</h3>
+          <p class="tile__text" data-i18n="formP1">Aulas regulares “a Sineirinha”, inscrições abertas! Até aos 14 anos.</p>
+          <ul class="tile__list">
+            <li data-i18n="formLi1">Aulas regulares</li>
+            <li data-i18n="formLi2">Workshops</li>
+            <li data-i18n="formLi3">Cursos intensivos</li>
+            <li data-i18n="formLi4">Campo de férias</li>
+          </ul>
+          <p class="tile__text" data-i18n="formP2">Dança, música, teatro, arquitectura, artes plásticas e artes visuais. Programas para bebés, crianças, jovens, adultos e séniores.</p>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secResid">Residências</h3>
+          <p class="tile__text" data-i18n="residP">Residências artísticas com alojamento no próprio complexo, para quem precisa de tempo e de espaço para criar.</p>
+        </div>
       </div>
-      <p class="tile__caption" data-i18n="capEsp">18.000 m² · estúdio · igreja · alojamento · floresta · clareira</p>
+
+      <p class="tile__caption" data-i18n="capAt">Apresentação - criação - formação - residências</p>
     </div>
   </article>
+
+  <figure class="media">
+    <img src="./voar7-mt1lby5g-cd2e.jpg" data-i18n-alt="alt2" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy">
+  </figure>
 
   <article class="tile tile--blue" id="como-chegar" data-screen-label="como chegar">
     <div class="tile__inner">
       <div class="tile__head">
-        <h2 class="tile__title tile__title--tracked" data-i18n="chegarH2">Acessos</h2>
-        <button class="tile__toggle" type="button" data-tile="Chegar" aria-expanded="false" aria-label="Mostrar mais">+</button>
+        <h2 class="tile__title tile__title--italic" data-i18n="chegarH2">como chegar?</h2>
+        <button class="tile__toggle" type="button" data-menu="menu-onde" aria-label="Mostrar mais">+</button>
       </div>
-      <p class="tile__lead" data-i18n="chegarLi1">Metro Santa Clara / V. do Conde — 5–15 min</p>
-      <div class="tile__body" data-tile-body="Chegar">
-        <table class="access">
-          <thead>
-            <tr>
-              <th data-i18n="thDest">destino</th>
-              <th data-i18n="thFoot">a pé</th>
-              <th data-i18n="thCar">carro</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td data-i18n="row1">Ponte de Retorta / Estação Aquícola</td>
-              <td>5 min</td>
-              <td>1 min</td>
-            </tr>
-            <tr>
-              <td data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</td>
-              <td>14 min</td>
-              <td>3 min</td>
-            </tr>
-            <tr>
-              <td data-i18n="row3">Metro Vila do Conde</td>
-              <td>24 min</td>
-              <td>4 min</td>
-            </tr>
-          </tbody>
-        </table>
-        <ul class="tile__list">
-          <li data-i18n="chegarLi2">Centro histórico — 10–20 min</li>
-          <li data-i18n="chegarLi3">Praias — 20–30 min</li>
-          <li data-i18n="chegarLi4">Metro Trindade / Porto — 40–60 min</li>
-          <li data-i18n="chegarLi5">Aeroporto Sá Carneiro — 20–50 min</li>
-        </ul>
-        <div class="aerial">
-          <img src="mapsbirdseye.png" data-i18n-alt="altAerea" alt="Vista aérea de Retorta: a Sineira, a ponte sobre o rio Ave, as escolas e a envolvente" loading="lazy">
-          <span class="aerial__tag aerial__tag--home">
-            <svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
-            a Sineira
-          </span>
-          <span class="aerial__tag aerial__tag--bridge">
-            <span data-i18n="row1">Ponte de Retorta / Estação Aquícola</span>
-            <span class="aerial__time">5 min 🚶 · 1 min 🚗</span>
-          </span>
-          <span class="aerial__tag aerial__tag--school">
-            <span data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</span>
-            <span class="aerial__time">14 min 🚶 · 3 min 🚗</span>
-          </span>
-          <span class="aerial__tag aerial__tag--metro">
-            <span data-i18n="row3">Metro Vila do Conde</span>
-            <span class="aerial__time">24 min 🚶 · 4 min 🚗</span>
-          </span>
-        </div>
-      </div>
-      <p class="tile__caption" data-i18n="capChegar">Ponte de Retorta 5 min · metro V. do Conde 4 min · Porto 40 min</p>
+      <p class="tile__lead" data-i18n="chegarP">Acessos de Metro, proximidade das escolas, tranquilidade da Natureza, mesmo ao lado de Vila do Conde.</p>
+
+
+      <p class="tile__caption" data-i18n="capChegar">Acessos - mapa - antiga Igreja de Retorta</p>
     </div>
   </article>
+
+  <article class="tile tile--cream" id="sobre-nos" data-screen-label="sobre nós">
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title tile__title--tracked" data-i18n="sobreH2">sobre nós</h2>
+        <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais">+</button>
+      </div>
+      <p class="tile__lead" data-i18n="sobreP">Conhece-nos melhor e fala connosco! Para famílias, amigos e até conteúdos oficiais para a imprensa.</p>
+
+
+      <p class="tile__caption" data-i18n="capSobre">Missão e valores - equipa - contactos</p>
+    </div>
+  </article>
+
+  <!-- Linha 3: amigo da sineira (duas colunas) | fotografia | fotografia -->
 
   <article class="tile tile--cream" id="amigos" data-screen-label="amigos">
     <div class="tile__inner">
       <div class="tile__head">
-        <h2 class="tile__title" data-i18n="amH2">Amigo da Sineira</h2>
+        <h2 class="tile__title" data-i18n="amH2">amigo da sineira</h2>
         <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
-      <p class="tile__lead" data-i18n="amP">Adere e torna-te um “Amigo da Sineira”:</p>
+      <p class="tile__lead" data-i18n-html="amP">Faz parte do futuro e apoia a Arte em Comunidade!<br>Torna-te um “Amigo da Sineira”</p>
+      <a class="tile__cta" id="amigo-cta" data-i18n="amCta" href="mailto:ola@asineira.pt">Quero aderir</a>
+
       <div class="tile__body" data-tile-body="Amigos">
         <ul class="tile__list">
-          <li data-i18n="amLi1">Acesso gratuito a todos os eventos</li>
-          <li data-i18n="amLi2">Desconto em aulas regulares, workshops e cursos intensivos</li>
-          <li data-i18n="amLi3">Surpresas mensais</li>
+          <li data-i18n="amLi1">Espetáculos gratuitos: acesso a todos os eventos</li>
+          <li data-i18n="amLi2">Descontos em aulas regulares, workshops e cursos intensivos</li>
+          <li data-i18n="amLi3">Conteúdo exclusivo e surpresas mensais</li>
         </ul>
-        <div class="friend-card">
-          <svg class="friend-card__mark" viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
-          <div>
-            <p class="friend-card__name" data-i18n="amH2">Amigo da Sineira</p>
-            <p class="friend-card__label" data-i18n="amCard">Cartão de amigo</p>
-          </div>
-        </div>
       </div>
-      <a class="tile__cta" id="amigo-cta" data-i18n="amCta" href="mailto:ola@asineira.pt">Quero aderir</a>
-      <p class="tile__caption" data-i18n="capAm">Acesso gratuito · descontos · surpresas mensais</p>
+
+      <!-- Com o mosaico a ocupar duas colunas, o cartão sai da coluna de
+           leitura e vai para a segunda metade (ver .tile--span .tile__aside).
+           Numa coluna só, e com o cartão aberto em painel, fica aqui mesmo:
+           a seguir ao conteúdo e antes do rodapé em versaletes. -->
+      <div class="tile__aside">
+        <img class="friend-card" src="amigocard.svg" data-i18n-alt="amCard" alt="Cartão de Amigo da Sineira">
+      </div>
+
+      <p class="tile__caption" data-i18n="capAm">Espetáculos gratuitos - descontos - conteúdo exclusivo</p>
     </div>
   </article>
 
-  <article class="tile tile--blue" id="contactos" data-screen-label="contactos">
-    <div class="tile__inner">
-      <div class="tile__head">
-        <h2 class="tile__title tile__title--italic" data-i18n="coH2">Fala connosco</h2>
-        <button class="tile__toggle" type="button" data-tile="Contactos" aria-expanded="false" aria-label="Mostrar mais">+</button>
-      </div>
-      <p class="tile__lead" data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
-      Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
-      <div class="tile__body tile__body--stack" data-tile-body="Contactos">
-        <a href="mailto:ola@asineira.pt">ola@asineira.pt</a>
-        <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
-      </div>
-      <p class="tile__caption" data-i18n="coLegal">a Sineira — Associação Cultural · NIF 518858359</p>
-    </div>
-  </article>
+  <figure class="media">
+    <img src="./chorof4.jpg" data-i18n-alt="alt4" alt="Intérprete em cena, com as mãos junto ao rosto" loading="lazy">
+  </figure>
+
+  <figure class="media" id="media-fim">
+    <img src="./teiaimg1.jpg" data-i18n-alt="alt5" alt="Intérprete a saltar num corredor de estantes" loading="lazy">
+  </figure>
 </main>
 
 
 <!-- ===== Menu de ecrã inteiro =========================================== -->
 
 <nav class="menu" id="menu" aria-hidden="true">
-  <ol class="menu__list">
-    <li class="menu-item" data-delay="1">
-      <a class="menu__link" href="#formacao">
-        <span class="menu__index">1.</span><span class="menu__label" data-i18n="formH2">formação</span><span aria-hidden="true">→</span>
-      </a>
-    </li>
-    <li class="menu-item" data-delay="2">
-      <a class="menu__link" href="#criacao">
-        <span class="menu__index">2.</span><span class="menu__label" data-i18n="criaH2">criação</span><span aria-hidden="true">→</span>
-      </a>
-    </li>
-    <li class="menu-item" data-delay="3">
-      <a class="menu__link" href="#apresentacao">
-        <span class="menu__index">3.</span><span class="menu__label" data-i18n="apresH2">apresentação</span><span aria-hidden="true">→</span>
-      </a>
-    </li>
-    <li class="menu-item" data-delay="4">
-      <a class="menu__link" href="#como-chegar">
-        <span class="menu__index">4.</span><span class="menu__label" data-i18n="menuChegar">como chegar</span><span aria-hidden="true">→</span>
-      </a>
-    </li>
-    <li class="menu-item" data-delay="5">
-      <a class="menu__link" href="#eventos">
-        <span class="menu__index">5.</span><span class="menu__label" data-i18n="evH2">eventos</span><span aria-hidden="true">→</span>
-      </a>
-    </li>
-  </ol>
 
-  <div class="menu__pills" id="menu-pills">
-    <a class="pill" href="#formacao"    data-i18n="pillAtiv">🤸 atividades</a>
-    <a class="pill" href="#como-chegar" data-i18n="pillChegar">📍 como chegar</a>
-    <a class="pill" href="#eventos"     data-i18n="pillEv">📅 eventos</a>
-    <a class="pill" href="#instituicao" data-i18n="pillInst">🏠 instituição</a>
-    <a class="pill" href="#contactos"   data-i18n="pillCo">☎️ contactos</a>
-    <a class="pill" href="#amigos"      data-i18n="pillAm">💳 amigos</a>
+  <!-- O logótipo do cabeçalho fica tapado pelo menu; o JS clona-o para aqui
+       (em creme, sem o salto das letras) para o canto de cima à esquerda não
+       ficar vazio. -->
+  <div class="menu__wordmark" id="menu-wordmark" aria-hidden="true"></div>
+
+  <div class="menu__doc">
+
+    <!-- ===== sobre nós ===== -->
+    <section class="menu-item menu-section" id="menu-sobre" data-delay="1">
+      <h2 class="menu__h2" data-i18n="sobreH2">sobre nós</h2>
+      <p class="menu__lead" data-i18n="sobreP">Associação e Espaço Cultural criado em 2025 por Sara Garcia etc.</p>
+
+      <h3 class="menu__h3" data-i18n="secMissao">missão e valores</h3>
+      <p class="menu__text" data-i18n="missaoP">Artes para a comunidade e uma comunidade para as Artes. Formação, criação e apresentação sob o mesmo tecto, abertos a quem cá vive e a quem cá chega.</p>
+      <p class="menu__text" data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
+
+      <h3 class="menu__h3" data-i18n="secEquipa">equipa</h3>
+      <p class="menu__note" data-i18n="equipaNote">Apresentação da equipa, brevemente.</p>
+    </section>
+
+    <!-- ===== como chegar ===== -->
+    <section class="menu-item menu-section" id="menu-onde" data-delay="2">
+      <h2 class="menu__h2" data-i18n="chegarH2">como chegar?</h2>
+
+      <table class="access">
+        <thead>
+          <tr>
+            <th data-i18n="thDest">destino</th>
+            <th data-i18n="thFoot">a pé</th>
+            <th data-i18n="thCar">carro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-i18n="row1">Ponte de Retorta / Estação Aquícola</td>
+            <td>5 min</td>
+            <td>1 min</td>
+          </tr>
+          <tr>
+            <td data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</td>
+            <td>14 min</td>
+            <td>3 min</td>
+          </tr>
+          <tr>
+            <td data-i18n="row3">Metro Vila do Conde</td>
+            <td>24 min</td>
+            <td>4 min</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="aerial">
+        <img src="mapsbirdseye.png" data-i18n-alt="altAerea" alt="Vista aérea de Retorta: a Sineira, a ponte sobre o rio Ave, as escolas e a envolvente" loading="lazy">
+        <span class="aerial__tag aerial__tag--home">
+          <svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
+          a Sineira
+        </span>
+        <span class="aerial__tag aerial__tag--bridge">
+          <span data-i18n="row1">Ponte de Retorta / Estação Aquícola</span>
+          <span class="aerial__time">5 min 🚶 · 1 min 🚗</span>
+        </span>
+        <span class="aerial__tag aerial__tag--school">
+          <span data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</span>
+          <span class="aerial__time">14 min 🚶 · 3 min 🚗</span>
+        </span>
+        <span class="aerial__tag aerial__tag--metro">
+          <span data-i18n="row3">Metro Vila do Conde</span>
+          <span class="aerial__time">24 min 🚶 · 4 min 🚗</span>
+        </span>
+      </div>
+
+      <a class="menu__maps" href="https://www.google.com/maps/search/?api=1&amp;query=Igreja+de+Retorta%2C+Vila+do+Conde" target="_blank" rel="noopener">
+        <span data-i18n="mapsLink">Abre no maps</span> <span aria-hidden="true">↗</span>
+      </a>
+
+      <ul class="menu__list-plain">
+        <li data-i18n="chegarLi1">Metro Santa Clara / V. do Conde — 5–15 min</li>
+        <li data-i18n="chegarLi2">Centro histórico — 10–20 min</li>
+        <li data-i18n="chegarLi3">Praias — 20–30 min</li>
+        <li data-i18n="chegarLi4">Metro Trindade / Porto — 40–60 min</li>
+        <li data-i18n="chegarLi5">Aeroporto Sá Carneiro — 20–50 min</li>
+      </ul>
+
+      <h3 class="menu__h3" data-i18n="secIgreja">antiga Igreja de Retorta</h3>
+      <ul class="menu__list-plain">
+        <li data-i18n="espLi1">Estúdio / palco</li>
+        <li data-i18n="espLi2">Igreja: espaço multiusos</li>
+        <li data-i18n="espLi3">Alojamento: residências artísticas</li>
+        <li data-i18n="espLi4">Restauração · estacionamento</li>
+        <li data-i18n="espLi5">Floresta: percursos de lazer e pedagógicos</li>
+        <li data-i18n="espLi6">Clareira: espaço para festival</li>
+      </ul>
+      <div class="shots">
+        <figure class="shot">
+          <img src="dossier/assets/vista-aerea.jpg" data-i18n-alt="altVista" alt="Implantação aérea do complexo da antiga Igreja de Retorta" loading="lazy">
+          <figcaption data-i18n="capVista">Implantação · 18.000 m²</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="dossier/assets/faseamento.jpg" data-i18n-alt="altFase" alt="Planta de faseamento da intervenção na antiga Igreja de Retorta" loading="lazy">
+          <figcaption data-i18n="capFase">Faseamento da intervenção</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===== fala connosco ===== -->
+    <section class="menu-item menu-section" id="menu-fala" data-delay="3">
+      <h2 class="menu__h2" data-i18n="falaH2">fala connosco!</h2>
+
+      <!-- Só o desenho: o site é estático e ainda não há para onde enviar.
+           O submit é travado no JS (ver bindContactForm) e mostra o aviso
+           abaixo. Para o pôr a funcionar basta dar um action ao <form> —
+           um serviço tipo Formspree — e apagar esse travão. -->
+      <form class="cform" id="cform" novalidate>
+        <label class="cform__row">
+          <span class="cform__label" data-i18n="fEmail">o seu email</span>
+          <input class="cform__input" type="email" name="email" autocomplete="email" data-i18n-ph="fEmail" placeholder="o seu email">
+        </label>
+
+        <label class="cform__row">
+          <span class="cform__label" data-i18n="fTopico">tópico</span>
+          <select class="cform__input" name="topico">
+            <option data-i18n="fT1">Sugestão / Reclamação</option>
+            <option data-i18n="fT2">Propostas</option>
+            <option data-i18n="fT3">Informação</option>
+          </select>
+        </label>
+
+        <label class="cform__row">
+          <span class="cform__label" data-i18n="fMsg">escreva a sua mensagem</span>
+          <textarea class="cform__input cform__input--area" name="mensagem" rows="5" data-i18n-ph="fMsg" placeholder="escreva a sua mensagem"></textarea>
+        </label>
+
+        <button class="cform__send" type="submit" data-i18n="fSend">Enviar</button>
+        <p class="cform__note" id="cform-note" role="status" data-i18n="fNote">Formulário ainda por ligar — por agora escreve-nos para ola@asineira.pt.</p>
+      </form>
+    </section>
+
+    <!-- ===== press | contactos ===== -->
+    <section class="menu-item menu-section menu__cols" data-delay="4">
+      <div>
+        <h3 class="menu__h3" data-i18n="secPress">press</h3>
+        <ul class="menu__links">
+          <li><a href="dossier/" data-i18n="coImprensa">Dossier de apresentação</a></li>
+          <li><a href="SVG%20a%20Sineira.svg" download data-i18n="prLogo">Logótipo (SVG)</a></li>
+          <li><a href="mailto:ola@asineira.pt?subject=Imprensa" data-i18n="prPedido">Pedidos de imprensa</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="menu__h3" data-i18n="secContactos">contactos</h3>
+        <p class="menu__text" data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
+        Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
+        <ul class="menu__links">
+          <li><a href="mailto:ola@asineira.pt">ola@asineira.pt</a></li>
+        </ul>
+        <p class="menu__note" data-i18n="coLegal">a Sineira — Associação Cultural · NIF 518858359</p>
+      </div>
+    </section>
+
+    <!-- ===== redes ===== -->
+    <div class="menu-item menu__social" data-delay="5">
+      <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+          <circle cx="12" cy="12" r="4"></circle>
+          <circle class="menu__social-dot" cx="17.2" cy="6.8" r="1.2"></circle>
+        </svg>
+      </a>
+      <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+          <path d="M15 8h-1.6c-.8 0-1.4.6-1.4 1.4V12H15M10 12h4M12.5 12v8"></path>
+        </svg>
+      </a>
+      <!-- Balão de fala, como está no rascunho. O número ainda falta: wa.me
+           só funciona com wa.me/351XXXXXXXXX. -->
+      <a href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 11.4c0 4-3.9 7.4-8.6 7.4-1 0-2-.15-2.9-.43L4.2 20.6l1.7-3.6C4.2 15.6 3.4 13.6 3.4 11.4 3.4 7.3 7.3 4 12 4s9 3.3 9 7.4z"></path>
+        </svg>
+      </a>
+    </div>
+
   </div>
 </nav>
 
@@ -1148,56 +1455,96 @@ a:hover { text-decoration: underline; }
     en: {
       title: 'a Sineira — Association & Cultural Space',
       desc: 'a Sineira — Cultural Association and Space in Retorta, Vila do Conde. Training, creation and presentation in the arts.',
-      formH2: 'training',
+
+      /* --- eventos --- */
+      evH2: 'events',
+      ev1d: '18 March', ev1t: 'Voar Muito Perto do Sol', ev1p: 'Auditorium', ev1k: 'Creation',
+      ev2d: '24 March', ev2t: 'Project A',               ev2p: 'Church',     ev2k: 'Training',
+      ev3d: '10 April', ev3t: 'Project B',               ev3p: 'Church',     ev3k: 'Presentation',
+      ev4d: '22 May',   ev4t: 'Project C',               ev4p: 'Outdoors',   ev4k: 'Creation',
+      secProx: 'Upcoming', secUlt: 'Recent', secArq: 'Archive · photographs and videos',
+      evP2: 'Regular classes, workshops, holiday camps, film screenings and nature experiences. The dates above are the first confirmed ones; follow us for the rest.',
+      evNote: 'No past events to show yet.',
+      capEv: 'Upcoming · recent · archive - photographs and videos',
+
+      /* --- atividades --- */
+      atH2: 'activities',
+      atP: 'Regular classes, artistic residencies, support for creation... Stage and church ready for every kind of performance, cultural event or workshop. Arts for the community and a community for the Arts!',
+      secApres: 'Presentation', secCria: 'Creation', secForm: 'Training', secResid: 'Residencies',
+      apresP: 'We present artistic projects in the studio/stage and in the church.',
+      apresLi1: 'Performances', apresLi2: 'Film screenings', apresLi3: 'Exhibitions and gatherings', apresLi4: 'Annual dance and music festival',
+      criaP: 'Support for creation at the former Retorta Church complex.',
+      criaLi2: 'Multipurpose studio', criaLi3: 'Professional dance studio', criaLi4: 'Church: multipurpose space',
       formP1: 'Regular classes “a Sineirinha”, enrolments open! Up to age 14.',
       formLi1: 'Regular classes', formLi2: 'Workshops', formLi3: 'Intensive courses', formLi4: 'Holiday camp',
       formP2: 'Dance, music, theatre, architecture, visual arts and fine arts. Programmes for babies, children, young people, adults and seniors.',
-      capForm: 'Regular classes · workshops · intensive courses · holiday camp',
-      criaH2: 'creation',
-      criaP: 'Artistic residencies and support for creation, at the former Retorta Church complex.',
-      criaLi1: 'Artistic residencies with lodging', criaLi2: 'Multipurpose studio', criaLi3: 'Professional dance studio', criaLi4: 'Church: multipurpose space',
-      capCria: 'Residencies · multipurpose studio · dance studio · church',
-      apresH2: 'presentation',
-      apresP: 'We present artistic projects in the studio/stage and in the church.',
-      apresLi1: 'Performances', apresLi2: 'Film screenings', apresLi3: 'Exhibitions and gatherings', apresLi4: 'Annual dance and music festival',
-      capApres: 'Performances · film · exhibitions · annual festival',
-      espH2: 'Former Retorta Church',
-      espP: 'Founded in 2025, a Sineira — Cultural Association is a collective, and also a physical space. Approximate area: 18,000 m².',
-      espLi1: 'Studio / stage', espLi2: 'Church: multipurpose space', espLi3: 'Lodging: artistic residencies',
-      espLi4: 'Food · parking', espLi5: 'Forest: leisure and educational trails', espLi6: 'Clearing: festival space',
-      capEsp: '18,000 m² · studio · church · lodging · forest · clearing',
-      chegarH2: 'Access',
+      residP: 'Artistic residencies with lodging on site, for those who need time and space to create.',
+      capAt: 'Presentation - creation - training - residencies',
+
+      /* --- como chegar? --- */
+      chegarH2: 'how to get here?',
+      chegarP: 'Metro access, close to the schools, the quiet of Nature, right next to Vila do Conde.',
+      secIgreja: 'Former Retorta Church',
       thDest: 'destination', thFoot: 'on foot', thCar: 'by car',
       row1: 'Retorta Bridge / Aquaculture Station', row2: 'Secondary and primary schools / Vocational school', row3: 'Vila do Conde metro',
       chegarLi1: 'Santa Clara / V. do Conde metro — 5–15 min', chegarLi2: 'Historic centre — 10–20 min', chegarLi3: 'Beaches — 20–30 min',
       chegarLi4: 'Trindade / Porto metro — 40–60 min', chegarLi5: 'Sá Carneiro Airport — 20–50 min',
-      capChegar: 'Retorta bridge 5 min · V. do Conde metro 4 min · Porto 40 min',
-      evH2: 'events',
-      evP1: 'Upcoming, recent and archive — coming soon.',
-      evP2: 'Follow us for the first activities: regular classes, workshops, holiday camps, film screenings and nature experiences.',
-      evNote: 'No dates scheduled yet.',
-      capEv: 'Upcoming · recent · archive — coming soon',
-      amH2: 'Friend of a Sineira', amP: 'Join and become a “Friend of a Sineira”:',
-      amLi1: 'Free access to all events', amLi2: 'Discount on regular classes, workshops and intensive courses', amLi3: 'Monthly surprises',
-      capAm: 'Free access · discounts · monthly surprises',
+      espP: 'Founded in 2025, a Sineira — Cultural Association is a collective, and also a physical space. Approximate area: 18,000 m².',
+      espLi1: 'Studio / stage', espLi2: 'Church: multipurpose space', espLi3: 'Lodging: artistic residencies',
+      espLi4: 'Food · parking', espLi5: 'Forest: leisure and educational trails', espLi6: 'Clearing: festival space',
+      capChegar: 'Access - map - former Retorta Church',
+      mapsLink: 'Open in maps',
+
+      /* --- fala connosco --- */
+      falaH2: 'talk to us!',
+      fEmail: 'your email', fTopico: 'topic', fMsg: 'write your message', fSend: 'Send',
+      fT1: 'Suggestion / Complaint', fT2: 'Proposals', fT3: 'Information',
+      fNote: 'Form not wired up yet — for now write to us at ola@asineira.pt.',
+
+      /* --- press --- */
+      secPress: 'press',
+      prLogo: 'Logotype (SVG)', prPedido: 'Press enquiries',
+
+      /* --- sobre nós --- */
+      sobreH2: 'about us',
+      sobreP: 'Get to know us better and talk to us! For families, friends and even official material for the press.',
+      secMissao: 'Mission and values', secEquipa: 'Team', secContactos: 'Contacts',
+      missaoP: 'Arts for the community and a community for the Arts. Training, creation and presentation under one roof, open to those who live here and to those who arrive.',
+      equipaNote: 'Introducing the team, coming soon.',
+      coAddr: 'HQ: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
+      coImprensa: 'Presentation dossier (press)',
+      coLegal: 'a Sineira — Cultural Association · Tax ID 518858359',
+      capSobre: 'Mission and values - team - contacts',
+
+      /* --- amigo da sineira --- */
+      amH2: 'friend of a sineira',
+      amP: 'Be part of the future and support Art in Community!<br>Become a “Friend of a Sineira”',
       amCta: 'I want to join', amSubject: 'I want to be a Friend of a Sineira',
-      amCard: 'Friend card',
+      amCard: 'Friend of a Sineira card',
+      amLi1: 'Free performances: access to every event',
+      amLi2: 'Discounts on regular classes, workshops and intensive courses',
+      amLi3: 'Exclusive content and monthly surprises',
+      capAm: 'Free performances - discounts - exclusive content',
+
+      /* --- legendas e textos alternativos --- */
       capEstudio: 'Proposal · dance studio with seating',
       altEstudio: 'Proposal: dance studio with seating',
       capArco: 'Interior · arch and new floor under way',
       altArco: 'Interior under construction, seen through the arch',
+      capNave: 'Nave · before the works',
+      altNave: 'Nave of the former Retorta Church before the works',
       capVista: 'Layout · 18,000 m²',
       altVista: 'Aerial layout of the former Retorta Church complex',
       capFase: 'Phasing of the works',
       altFase: 'Phasing plan for the works at the former Retorta Church',
       altAerea: 'Aerial view of Retorta: a Sineira, the bridge over the river Ave, the schools and surroundings',
-      coH2: 'Get in touch',
-      coLegal: 'a Sineira — Cultural Association · Tax ID 518858359',
-      coAddr: 'HQ: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
-      menuChegar: 'getting here',
-      pillAtiv: '🤸 activities', pillChegar: '📍 getting here', pillEv: '📅 events', pillInst: '🏠 institution', pillCo: '☎️ contacts', pillAm: '💳 friends',
-      marquee: 'Join now and become a "Friend of a Sineira" for discounts and monthly surprises!',
-      alt1: 'Children in a training activity on stage', alt2: 'Musician with guitar surrounded by children on stage', alt3: 'Dancer in rehearsal with a wooden structure'
+      alt1: 'Children in a training activity on stage',
+      alt2: 'Musician with guitar surrounded by children on stage',
+      alt3: 'Dancer in rehearsal with a wooden structure',
+      alt4: 'Performer on stage, hands raised to their face',
+      alt5: 'Performer leaping down an aisle of shelving',
+
+      marquee: 'Join now and become a "Friend of a Sineira" for discounts and monthly surprises!'
     }
   };
 
@@ -1215,7 +1562,6 @@ a:hover { text-decoration: underline; }
   var grid = document.getElementById('grid');
   var menu = document.getElementById('menu');
   var menuItems = Array.prototype.slice.call(document.querySelectorAll('.menu-item'));
-  var menuPills = document.getElementById('menu-pills');
   var closeBtn = document.getElementById('menu-close');
   var amigoCta = document.getElementById('amigo-cta');
   var tileBtns = Array.prototype.slice.call(document.querySelectorAll('[data-tile]'));
@@ -1223,6 +1569,20 @@ a:hover { text-decoration: underline; }
   Array.prototype.forEach.call(document.querySelectorAll('[data-tile-body]'), function (el) {
     tileBodies[el.getAttribute('data-tile-body')] = el;
   });
+
+  /* O menu tapa o cabeçalho, por isso leva a sua própria cópia do logótipo.
+     Clonada em vez de repetida no HTML: são dez formas, e duas cópias à mão
+     ficavam a divergir ao primeiro retoque. Sem ids nem animação — aqui o
+     logótipo é só uma marca, não um botão. */
+  (function cloneWordmark() {
+    var slot = document.getElementById('menu-wordmark');
+    var svg = wmLink && wmLink.querySelector('svg');
+    if (!slot || !svg) return;
+    var copy = svg.cloneNode(true);
+    copy.removeAttribute('class');
+    copy.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+    slot.appendChild(copy);
+  }());
 
   var state = { lang: 'pt', menuOpen: false, cols: 3 };
   var openingUntil = 0;
@@ -1232,10 +1592,11 @@ a:hover { text-decoration: underline; }
 
   function nodes(attr) { return Array.prototype.slice.call(document.querySelectorAll('[' + attr + ']')); }
 
-  var pt = { text: new Map(), html: new Map(), alt: new Map() };
+  var pt = { text: new Map(), html: new Map(), alt: new Map(), ph: new Map() };
   nodes('data-i18n').forEach(function (el) { pt.text.set(el, el.textContent); });
   nodes('data-i18n-html').forEach(function (el) { pt.html.set(el, el.innerHTML); });
   nodes('data-i18n-alt').forEach(function (el) { pt.alt.set(el, el.getAttribute('alt')); });
+  nodes('data-i18n-ph').forEach(function (el) { pt.ph.set(el, el.getAttribute('placeholder')); });
   var ptTitle = document.title;
   var descMeta = document.querySelector('meta[name="description"]');
   var ptDesc = descMeta ? descMeta.getAttribute('content') : '';
@@ -1258,6 +1619,10 @@ a:hover { text-decoration: underline; }
     nodes('data-i18n-alt').forEach(function (el) {
       var v = t ? t[el.getAttribute('data-i18n-alt')] : pt.alt.get(el);
       if (v != null) el.setAttribute('alt', v);
+    });
+    nodes('data-i18n-ph').forEach(function (el) {
+      var v = t ? t[el.getAttribute('data-i18n-ph')] : pt.ph.get(el);
+      if (v != null) el.setAttribute('placeholder', v);
     });
 
     btnPt.setAttribute('aria-pressed', String(lang === 'pt'));
@@ -1309,13 +1674,131 @@ a:hover { text-decoration: underline; }
 
   function setLang(lang) { state.lang = lang; applyLang(); renderCalendar(); }
 
-  btnPt.addEventListener('click', function () { setLang('pt'); });
-  btnEn.addEventListener('click', function () { setLang('en'); });
+  /* ---------- endereços ---------- */
+
+  /* Cada secção tem um endereço em cada idioma, e é o endereço que manda:
+     asineira.pt/#sobre e asineira.pt/#about são a mesma secção em português
+     e em inglês. A página inicial é a raiz em português (/#) e /#eng em
+     inglês. Trocar de idioma reescreve o endereço para o par do outro lado,
+     e não para a página inicial — quem está no mapa continua no mapa.
+
+     'tile' abre o cartão em painel, no sítio; 'menu' abre o menu de ecrã
+     inteiro naquela secção — é o que fazem os "+" do "como chegar?" e do
+     "sobre nós", cujo conteúdo mudou todo para lá. */
+  var HOME = { pt: '', en: 'eng' };
+  var ROUTES = [
+    { pt: 'eventos',    en: 'events',     tile: 'Eventos' },
+    { pt: 'atividades', en: 'activities', tile: 'Atividades' },
+    { pt: 'onde',       en: 'where',      menu: 'menu-onde' },
+    { pt: 'sobre',      en: 'about',      menu: 'menu-sobre' },
+    { pt: 'amigo',      en: 'friend',     tile: 'Amigos' }
+  ];
+
+  var routing = false;   /* trava a reentrada enquanto somos nós a escrever */
+
+  /* Um slug identifica ao mesmo tempo a secção e o idioma. */
+  function parseHash() {
+    var slug = (location.hash || '').replace(/^#/, '').toLowerCase();
+    if (slug === HOME.pt) return { route: null, lang: 'pt' };
+    if (slug === HOME.en) return { route: null, lang: 'en' };
+    for (var i = 0; i < ROUTES.length; i++) {
+      if (ROUTES[i].pt === slug) return { route: ROUTES[i], lang: 'pt' };
+      if (ROUTES[i].en === slug) return { route: ROUTES[i], lang: 'en' };
+    }
+    return null;   /* endereço desconhecido: fica como está */
+  }
+
+  function slugOf(route, lang) { return route ? route[lang] : HOME[lang]; }
+
+  /* Escreve o endereço sem disparar o nosso próprio hashchange: quem chamou
+     já sabe o que quer, e voltar a aplicar a rota só piscava o ecrã. */
+  function go(route) {
+    var slug = slugOf(route, state.lang);
+    var url = location.pathname + location.search + (slug ? '#' + slug : '#');
+    routing = true;
+    history.pushState(null, '', url);
+    routing = false;
+    state.route = route || null;
+    applyRoute(route);
+  }
+
+  /* Põe o título de uma secção na linha do logótipo — o mesmo sítio onde a
+     primeira secção já está parada.
+
+     À mão, e não com scrollIntoView(): as secções entram com um translateY,
+     e o scrollIntoView media a posição já deslocada, deixando a primeira
+     secção 14px fora do sítio depois de a animação assentar. O offsetTop
+     ignora transformações, e a conta com o padding do menu dá a mesma
+     margem ao topo que a primeira secção tem de origem. */
+  function scrollMenuTo(target) {
+    var pad = parseFloat(getComputedStyle(menu).paddingTop) || 0;
+    menu.scrollTop = Math.max(0, target.offsetTop - pad);
+  }
+
+  function applyRoute(route) {
+    closeTiles();
+
+    if (route && route.tile) {
+      closeMenu();
+      var btn = document.querySelector('[data-tile="' + route.tile + '"]');
+      if (btn) { setTile(btn, true); btn.closest('.tile').scrollTop = 0; }
+      return;
+    }
+
+    if (route && route.menu) {
+      openMenu();
+      var target = document.getElementById(route.menu);
+      if (target) scrollMenuTo(target);
+      return;
+    }
+
+    closeMenu();
+  }
+
+  function onHashChange() {
+    if (routing) return;
+    var at = parseHash();
+    if (!at) return;
+    if (at.lang !== state.lang) setLang(at.lang);
+    state.route = at.route;
+    applyRoute(at.route);
+  }
+
+  /* Trocar de idioma mantém a secção e troca só o slug. */
+  function switchLang(lang) {
+    if (lang === state.lang) return;
+    setLang(lang);
+    go(state.route || null);
+  }
+
+  btnPt.addEventListener('click', function () { switchLang('pt'); });
+  btnEn.addEventListener('click', function () { switchLang('en'); });
+
+  window.addEventListener('hashchange', onHashChange);
+  window.addEventListener('popstate', onHashChange);
 
   (function initLang() {
-    var lang = 'pt';
-    try { var s = localStorage.getItem('sineira-lang'); if (s === 'pt' || s === 'en') lang = s; } catch (e) {}
-    setLang(lang);
+    var at = parseHash();
+
+    /* Sem endereço nenhum, vale o idioma da última visita — e o endereço é
+       logo normalizado para o par certo, para que a barra do browser diga
+       sempre em que idioma se está. */
+    if (!at || !location.hash) {
+      var lang = 'pt';
+      try { var s = localStorage.getItem('sineira-lang'); if (s === 'pt' || s === 'en') lang = s; } catch (e) {}
+      setLang(lang);
+      routing = true;
+      history.replaceState(null, '', location.pathname + location.search + (HOME[lang] ? '#' + HOME[lang] : '#'));
+      routing = false;
+      state.route = null;
+      return;
+    }
+
+    setLang(at.lang);
+    state.route = at.route;
+    /* A abertura fica para depois do primeiro layout: o applyRoute mede
+       cartões, e antes disso a grelha ainda não tem alturas. */
+    window.addEventListener('load', function () { applyRoute(at.route); });
   }());
 
   /* ---------- mosaicos (+ / −) ---------- */
@@ -1331,7 +1814,7 @@ a:hover { text-decoration: underline; }
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'Fechar' : 'Mostrar mais');
     btn.style.transform = open ? 'rotate(45deg)' : 'none';
-    if (body) body.style.display = open ? (key === 'Contactos' ? 'flex' : 'block') : 'none';
+    if (body) body.style.display = open ? 'block' : 'none';
     if (tile) tile.classList.toggle('is-expanded', open);
   }
 
@@ -1341,14 +1824,28 @@ a:hover { text-decoration: underline; }
     });
   }
 
+  /* Os "+" não abrem nada à mão: mudam o endereço, e é o endereço que abre.
+     Um caminho só para o clique, para o link colado e para o botão "voltar". */
+  function routeByTile(key) {
+    for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i].tile === key) return ROUTES[i];
+    return null;
+  }
+  function routeByMenu(id) {
+    for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i].menu === id) return ROUTES[i];
+    return null;
+  }
+
   tileBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var open = btn.getAttribute('aria-expanded') !== 'true';
-      closeTiles();
-      if (open) {
-        setTile(btn, true);
-        btn.closest('.tile').scrollTop = 0;
-      }
+      go(open ? routeByTile(btn.getAttribute('data-tile')) : null);
+    });
+  });
+
+  /* Os "+" do "como chegar?" e do "sobre nós" abrem o menu na sua secção. */
+  document.querySelectorAll('[data-menu]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      go(routeByMenu(btn.getAttribute('data-menu')));
     });
   });
 
@@ -1365,6 +1862,33 @@ a:hover { text-decoration: underline; }
      abria-se um buraco na última linha. */
   function currentCols() {
     return getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+  }
+
+  /* Quem ocupa duas colunas, em cada largura. A grelha tem 10 células de
+     conteúdo; alargando as certas, o total passa a múltiplo do número de
+     colunas e a última linha fecha sem buracos:
+
+       4 colunas — eventos(2) + amigos(2) = 12 células = 3 linhas
+                   (é a distribuição do rascunho)
+       3 colunas — eventos(2) + última fotografia(2) = 12 células = 4 linhas
+       2 colunas — nenhum alarga: 10 células = 5 linhas
+       1 coluna  — nenhum alarga: 10 linhas
+
+     A ordem no HTML é a mesma em todos os casos; só muda quem se estica. */
+  var tileEventos = document.getElementById('eventos');
+  var tileAmigos = document.getElementById('amigos');
+  var mediaFim = document.getElementById('media-fim');
+
+  function span(el, wide) {
+    if (!el) return;
+    el.style.gridColumn = wide ? 'span 2' : 'auto';
+    el.classList.toggle('tile--span', wide && el.classList.contains('tile'));
+  }
+
+  function layout(cols) {
+    span(tileEventos, cols >= 3);
+    span(tileAmigos, cols >= 4);
+    span(mediaFim, cols === 3);
   }
 
   /* Altura a que um cartão fechado deixa de caber, medida em vez de adivinhada:
@@ -1401,12 +1925,7 @@ a:hover { text-decoration: underline; }
     var cols = currentCols();
     if (cols !== state.cols) {
       state.cols = cols;
-      var amigos = document.getElementById('amigos');
-      var contactos = document.getElementById('contactos');
-      amigos.style.gridColumn = cols >= 3 ? 'span 2' : 'auto';
-      amigos.classList.toggle('tile--span', cols >= 3);
-      contactos.style.gridColumn = cols === 2 ? '1 / -1' : 'auto';
-      contactos.classList.toggle('tile--span', cols === 2);
+      layout(cols);
     }
 
     fitRows();
@@ -1485,12 +2004,6 @@ a:hover { text-decoration: underline; }
         : 'opacity .3s ease, transform .3s ease';
     });
 
-    menuPills.style.opacity = open ? '1' : '0';
-    menuPills.style.transform = open ? 'none' : 'translateY(14px)';
-    menuPills.style.transition = open
-      ? 'opacity .45s ease 1.55s, transform .45s ease 1.55s'
-      : 'opacity .3s ease, transform .3s ease';
-
     closeBtn.style.opacity = open ? '1' : '0';
     closeBtn.style.transform = open ? 'rotate(0deg) scale(1)' : 'rotate(-120deg) scale(.4)';
     closeBtn.style.pointerEvents = open ? 'auto' : 'none';
@@ -1499,13 +2012,23 @@ a:hover { text-decoration: underline; }
       : 'opacity .35s ease, transform .35s ease';
   }
 
+  /* Sem o travão do closeLock de propósito: quem chega aqui pediu o menu por
+     um endereço, e um pedido explícito nunca deve ser engolido. O travão é só
+     contra o rato parado em cima do triângulo (ver o mouseenter). */
   function openMenu() {
-    if (state.menuOpen || closeLock) return;
+    if (state.menuOpen) return;
     openingUntil = Date.now() + MENU_DUR + 80;
     document.documentElement.classList.add('menu-open');
     state.menuOpen = true;
     state.scale = coverScale();
     renderMenu();
+
+    /* O X nasce debaixo do rato: o triângulo abre-se ao passar por cima e o X
+       aparece exactamente no mesmo sítio. Se fechasse já, o menu abria e
+       fechava no mesmo gesto — por isso só arma quando o rato se mostrar
+       noutro sítio qualquer. */
+    closeArmed = false;
+    document.addEventListener('mousemove', armClose);
   }
 
   function closeMenu() {
@@ -1515,16 +2038,51 @@ a:hover { text-decoration: underline; }
     renderMenu();
     closeLock = true;
     setTimeout(function () { closeLock = false; }, 700);
+    document.removeEventListener('mousemove', armClose);
   }
 
-  triBtn.addEventListener('click', openMenu);
-  triBtn.addEventListener('mouseenter', openMenu);
-  closeBtn.addEventListener('click', closeMenu);
-  document.querySelectorAll('#menu a').forEach(function (a) { a.addEventListener('click', closeMenu); });
+  /* O X fecha ao passar o rato, como o triângulo abre. Arma-se ao primeiro
+     movimento do rato fora dele: serve tanto para quando o menu foi aberto
+     por cima do próprio X (pelo triângulo, e basta afastar o rato) como para
+     quando foi aberto por um "+" do outro lado da página (onde o rato já
+     está longe, e arma logo ao primeiro movimento). */
+  var closeArmed = false;
+
+  function armClose(e) {
+    if (closeBtn.contains(e.target)) return;
+    closeArmed = true;
+    document.removeEventListener('mousemove', armClose);
+  }
+
+  closeBtn.addEventListener('mouseenter', function () {
+    if (closeArmed) go(null);
+  });
+
+  /* O triângulo abre o menu no topo, ou seja, no "sobre nós". */
+  function openMenuTop() { if (!state.menuOpen) go(routeByMenu('menu-sobre')); }
+
+  triBtn.addEventListener('click', openMenuTop);
+  /* Ao fechar, o rato fica muitas vezes parado onde o triângulo reaparece —
+     sem este travão o menu abria-se outra vez sozinho. */
+  triBtn.addEventListener('mouseenter', function () {
+    if (closeLock) return;
+    openMenuTop();
+  });
+  closeBtn.addEventListener('click', function () { go(null); });
   window.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    closeTiles();
-    closeMenu();
+    go(null);
+  });
+
+  /* O formulário está desenhado mas ainda não tem para onde enviar: o site é
+     estático. Travamos o envio e dizemo-lo em voz alta, em vez de deixar a
+     página recarregar e dar a entender que a mensagem seguiu. Para o ligar,
+     dá-se um action ao <form> e apaga-se este bloco. */
+  var cform = document.getElementById('cform');
+  if (cform) cform.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var note = document.getElementById('cform-note');
+    if (note) { note.style.opacity = '1'; note.style.fontWeight = '700'; }
   });
 
   wmLink.addEventListener('click', function (e) { e.preventDefault(); });
