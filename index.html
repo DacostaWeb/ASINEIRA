@@ -25,11 +25,18 @@
 
 /* 1. Tipos de letra ======================================================= */
 
-@font-face { font-family:"Nimbus"; src:url("fonts/NimbusSanL-Regu.ttf")     format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
-@font-face { font-family:"Nimbus"; src:url("fonts/NimbusSanL-Bold.ttf")     format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
-@font-face { font-family:"Nimbus"; src:url("fonts/NimbusSanL-ReguItal.ttf") format("truetype"); font-weight:400; font-style:italic; font-display:swap; }
-@font-face { font-family:"Nimbus"; src:url("fonts/NimbusSanL-BoldItal.ttf") format("truetype"); font-weight:700; font-style:italic; font-display:swap; }
-@font-face { font-family:"Nimbus Cond"; src:url("fonts/NimbusSanL-BoldCond.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+/* General Sans (Fontshare, SIL-like) para títulos e etiquetas;
+   Courier Prime (SIL OFL) para o texto. Servidas do próprio site — menos um
+   pedido a terceiros, e o tipo não desaparece se o serviço mudar. */
+@font-face { font-family:"General Sans"; src:url("fonts/GeneralSans-400.woff2") format("woff2"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"General Sans"; src:url("fonts/GeneralSans-500.woff2") format("woff2"); font-weight:500; font-style:normal; font-display:swap; }
+@font-face { font-family:"General Sans"; src:url("fonts/GeneralSans-600.woff2") format("woff2"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"General Sans"; src:url("fonts/GeneralSans-700.woff2") format("woff2"); font-weight:700; font-style:normal; font-display:swap; }
+
+@font-face { font-family:"Courier Prime"; src:url("fonts/CourierPrime-400.woff2")  format("woff2"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Courier Prime"; src:url("fonts/CourierPrime-400i.woff2") format("woff2"); font-weight:400; font-style:italic; font-display:swap; }
+@font-face { font-family:"Courier Prime"; src:url("fonts/CourierPrime-700.woff2")  format("woff2"); font-weight:700; font-style:normal; font-display:swap; }
+@font-face { font-family:"Courier Prime"; src:url("fonts/CourierPrime-700i.woff2") format("woff2"); font-weight:700; font-style:italic; font-display:swap; }
 
 
 /* 2. Variáveis ============================================================ */
@@ -43,7 +50,8 @@
   --gold-deep:   #A8842B;
 
   /* Tipografia */
-  --font: Helvetica, Arial, sans-serif;
+  --font:         "Courier Prime", "Courier New", monospace;  /* texto corrido */
+  --font-display: "General Sans", Helvetica, Arial, sans-serif; /* títulos e etiquetas */
 
   /* Medidas do cabeçalho (redefinidas em ecrãs estreitos, secção 10) */
   --header-h:       78px;
@@ -109,6 +117,26 @@ h1, h2, h3, p, ul, ol, figure, table { margin: 0; }
 
 a { color: inherit; text-decoration: none; }
 a:hover { text-decoration: underline; }
+
+/* Repartição das duas fontes, num sítio só em vez de espalhada pelas regras:
+   o texto corrido fica no Courier Prime (herdado do body) e tudo o que é
+   título, rótulo ou etiqueta passa para o General Sans. Aos 9px das legendas
+   o traço fino do Courier não aguenta, e nas etiquetas sobre a fotografia
+   aérea o monospace transbordava da caixa. */
+.tile__title,
+.tile__toggle,
+.tile__caption,
+.tile__cta,
+.access th,
+.lang,
+.menu__link,
+.pill,
+.marquee__text,
+.calendar__month,
+.calendar__weekday,
+.aerial__tag,
+.friend-card__name,
+.friend-card__label { font-family: var(--font-display); }
 
 
 /* 4. Animações ============================================================ */
@@ -327,7 +355,10 @@ a:hover { text-decoration: underline; }
 
 .tile__lead {
   margin-top: 18px;
-  max-width: 34ch;
+  /* Medidas em ch contam caracteres reais. Num monospace 34ch são 34 letras
+     por linha, quando na Helvetica a mesma regra dava perto de 50 — daí os
+     valores subirem com a troca de tipo. */
+  max-width: 50ch;
   font-style: italic;
   font-size: 15px;
   line-height: 1.45;
@@ -380,7 +411,7 @@ a:hover { text-decoration: underline; }
 }
 .tile__list li { font-size: 14px; line-height: 1.6; }
 
-.tile__text { max-width: 44ch; font-size: 14px; line-height: 1.65; }
+.tile__text { max-width: 62ch; font-size: 14px; line-height: 1.65; }
 .tile__list + .tile__text { margin-top: 12px; }
 
 /* Resumo em versaletes, colado ao fundo do mosaico. */
