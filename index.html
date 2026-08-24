@@ -739,15 +739,31 @@ a:hover { text-decoration: underline; }
 }
 
 /* Cópia do logótipo do cabeçalho, que o menu tapa. Fixo ao ecrã e não ao
-   documento: com o menu descido continua no canto, como no rascunho. */
+   documento: com o menu descido continua no canto, como no rascunho.
+
+   Leva também a classe .wordmark, para apanhar as regras de hover que fazem
+   as letras saltar: dentro do menu o logótipo continua vivo ao passar o rato.
+   Daí não ter pointer-events: none — sem eventos não havia hover.
+
+   Nasce transparente; o JS só o acende no fim da animação de abertura (ver
+   renderMenu). Até lá o que se vê é o logótipo azul do cabeçalho a ser tapado
+   pelo triângulo que cresce, e a troca para creme faz-se em fade já com o
+   menu montado, em vez de estalar no primeiro fotograma. */
 .menu__wordmark {
   position: fixed;
   left: var(--gutter);
   top: calc((var(--header-h) - var(--wordmark-h)) / 2);
   line-height: 0;
-  pointer-events: none;
+  opacity: 0;
 }
-.menu__wordmark svg { display: block; height: var(--wordmark-h); width: auto; fill: var(--cream); }
+.menu__wordmark svg {
+  display: block;
+  height: var(--wordmark-h);
+  width: auto;
+  fill: var(--cream);
+  overflow: visible;   /* as letras saem da caixa a meio do salto */
+  shape-rendering: geometricPrecision;
+}
 
 /* Coluna de leitura do menu, centrada como no rascunho. */
 /* Centrada na página. O logótipo fica à esquerda, fora desta coluna: os
@@ -1240,10 +1256,10 @@ a:hover { text-decoration: underline; }
 
 <nav class="menu" id="menu" aria-hidden="true">
 
-  <!-- O logótipo do cabeçalho fica tapado pelo menu; o JS clona-o para aqui
-       (em creme, sem o salto das letras) para o canto de cima à esquerda não
-       ficar vazio. -->
-  <div class="menu__wordmark" id="menu-wordmark" aria-hidden="true"></div>
+  <!-- O logótipo do cabeçalho fica tapado pelo menu; o JS clona-o para aqui,
+       em creme. A classe .wordmark é o que lhe dá o salto das letras ao
+       passar o rato, igual ao do cabeçalho. -->
+  <div class="wordmark menu__wordmark" id="menu-wordmark" aria-hidden="true"></div>
 
   <div class="menu__doc">
 
@@ -1574,8 +1590,10 @@ a:hover { text-decoration: underline; }
      Clonada em vez de repetida no HTML: são dez formas, e duas cópias à mão
      ficavam a divergir ao primeiro retoque. Sem ids nem animação — aqui o
      logótipo é só uma marca, não um botão. */
+  var menuWordmark = document.getElementById('menu-wordmark');
+
   (function cloneWordmark() {
-    var slot = document.getElementById('menu-wordmark');
+    var slot = menuWordmark;
     var svg = wmLink && wmLink.querySelector('svg');
     if (!slot || !svg) return;
     var copy = svg.cloneNode(true);
@@ -1988,6 +2006,14 @@ a:hover { text-decoration: underline; }
 
     triLetters.style.opacity = open ? '0' : '1';
     triLetters.style.transition = open ? 'opacity .18s ease 0s' : 'opacity .3s ease .45s';
+
+    /* O creme só entra quando a abertura acaba: atraso do tempo todo da
+       animação e depois um fade curto. A fechar sai depressa e sem atraso,
+       para não ficar aceso por cima do triângulo já a recolher. */
+    menuWordmark.style.opacity = open ? '1' : '0';
+    menuWordmark.style.transition = open
+      ? 'opacity .4s ease ' + (MENU_DUR / 1000) + 's'
+      : 'opacity .2s ease';
 
     menu.setAttribute('aria-hidden', String(!open));
     menu.style.visibility = open ? 'visible' : 'hidden';
