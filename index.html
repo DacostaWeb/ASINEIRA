@@ -2068,34 +2068,34 @@ a:hover { text-decoration: underline; }
     document.removeEventListener('mousemove', armClose);
   }
 
-  /* Quatro controlos, dois de cada lado do cabeçalho, e todos com o mesmo
-     feitio: basta passar o rato.
+  /* Quatro controlos, dois em cada canto do cabeçalho. Todos abrem ou fecham
+     o menu ao clique; só os do canto direito respondem também ao rato.
 
-       fechado    logótipo azul (canto esquerdo)  ·  triângulo (direito)
-       aberto     logótipo creme (mesmo canto)    ·  X (mesmo canto)
+                     canto esquerdo        canto direito
+       fechado       logótipo azul         triângulo      (rato ou clique)
+       aberto        logótipo creme        X              (rato ou clique)
 
-     Em cada canto o que abre e o que fecha ocupam o mesmo sítio, e a troca
-     é instantânea — sem cuidados, o rato parado num canto abria e fechava o
+     O logótipo fica de fora do hover de propósito: passar-lhe o rato faz as
+     letras saltar, e é só isso que deve acontecer — se abrisse o menu, quem
+     quisesse ver o salto abria o menu sem querer.
+
+     No canto direito o que abre e o que fecha ocupam o mesmo ponto, e a
+     troca é instantânea; sem cuidados o rato aí parado abria e fechava o
      menu em ciclo. Daí os dois travões, um para cada sentido:
 
-       a abrir  o closeArmed segura o fecho até o rato se mostrar noutro
-                sítio, para o controlo que nasce debaixo dele não disparar;
+       a abrir  o closeArmed segura o fecho até o rato se mostrar fora do X,
+                para o X que nasce debaixo dele não disparar logo;
        a fechar o closeLock segura a abertura durante 700ms, pela mesma
                 razão ao contrário. */
 
-  var opens = [triBtn, wmLink];        /* abrem  */
-  var closes = [closeBtn, menuWordmark];  /* fecham */
-
   var closeArmed = false;
 
-  /* Arma o fecho ao primeiro movimento do rato fora de qualquer um dos
-     controlos que fecham. Cobre os dois casos: menu aberto por cima do
-     próprio controlo (basta afastar o rato) e menu aberto por um "+" do
-     outro lado da página (o rato já está longe, arma logo). */
+  /* Arma o fecho ao primeiro movimento do rato fora do X. Cobre os dois
+     casos: menu aberto por cima do próprio X (basta afastar o rato) e menu
+     aberto de outro sítio qualquer — um "+", ou o logótipo — com o rato já
+     longe, que arma ao primeiro movimento. */
   function armClose(e) {
-    for (var i = 0; i < closes.length; i++) {
-      if (closes[i].contains(e.target)) return;
-    }
+    if (closeBtn.contains(e.target)) return;
     closeArmed = true;
     document.removeEventListener('mousemove', armClose);
   }
@@ -2103,19 +2103,25 @@ a:hover { text-decoration: underline; }
   /* Abrir leva sempre ao topo do menu, ou seja, ao "sobre nós". */
   function openMenuTop() { if (!state.menuOpen) go(routeByMenu('menu-sobre')); }
 
-  opens.forEach(function (el) {
+  /* Ao clique, os quatro. O preventDefault é para o logótipo: é um <a
+     href="#">, e sem ele o salto para a âncora colidia com o encaminhamento
+     por hash. */
+  [triBtn, wmLink].forEach(function (el) {
     el.addEventListener('click', function (e) { e.preventDefault(); openMenuTop(); });
-    el.addEventListener('mouseenter', function () {
-      if (closeLock) return;
-      openMenuTop();
-    });
   });
 
-  closes.forEach(function (el) {
+  [closeBtn, menuWordmark].forEach(function (el) {
     el.addEventListener('click', function () { go(null); });
-    el.addEventListener('mouseenter', function () {
-      if (closeArmed) go(null);
-    });
+  });
+
+  /* Ao rato, só o triângulo e o X. */
+  triBtn.addEventListener('mouseenter', function () {
+    if (closeLock) return;
+    openMenuTop();
+  });
+
+  closeBtn.addEventListener('mouseenter', function () {
+    if (closeArmed) go(null);
   });
   window.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
