@@ -755,6 +755,7 @@ a:hover { text-decoration: underline; }
   top: calc((var(--header-h) - var(--wordmark-h)) / 2);
   line-height: 0;
   opacity: 0;
+  cursor: pointer;   /* fecha o menu, tal como o X */
 }
 .menu__wordmark svg {
   display: block;
@@ -2067,34 +2068,55 @@ a:hover { text-decoration: underline; }
     document.removeEventListener('mousemove', armClose);
   }
 
-  /* O X fecha ao passar o rato, como o triângulo abre. Arma-se ao primeiro
-     movimento do rato fora dele: serve tanto para quando o menu foi aberto
-     por cima do próprio X (pelo triângulo, e basta afastar o rato) como para
-     quando foi aberto por um "+" do outro lado da página (onde o rato já
-     está longe, e arma logo ao primeiro movimento). */
+  /* Quatro controlos, dois de cada lado do cabeçalho, e todos com o mesmo
+     feitio: basta passar o rato.
+
+       fechado    logótipo azul (canto esquerdo)  ·  triângulo (direito)
+       aberto     logótipo creme (mesmo canto)    ·  X (mesmo canto)
+
+     Em cada canto o que abre e o que fecha ocupam o mesmo sítio, e a troca
+     é instantânea — sem cuidados, o rato parado num canto abria e fechava o
+     menu em ciclo. Daí os dois travões, um para cada sentido:
+
+       a abrir  o closeArmed segura o fecho até o rato se mostrar noutro
+                sítio, para o controlo que nasce debaixo dele não disparar;
+       a fechar o closeLock segura a abertura durante 700ms, pela mesma
+                razão ao contrário. */
+
+  var opens = [triBtn, wmLink];        /* abrem  */
+  var closes = [closeBtn, menuWordmark];  /* fecham */
+
   var closeArmed = false;
 
+  /* Arma o fecho ao primeiro movimento do rato fora de qualquer um dos
+     controlos que fecham. Cobre os dois casos: menu aberto por cima do
+     próprio controlo (basta afastar o rato) e menu aberto por um "+" do
+     outro lado da página (o rato já está longe, arma logo). */
   function armClose(e) {
-    if (closeBtn.contains(e.target)) return;
+    for (var i = 0; i < closes.length; i++) {
+      if (closes[i].contains(e.target)) return;
+    }
     closeArmed = true;
     document.removeEventListener('mousemove', armClose);
   }
 
-  closeBtn.addEventListener('mouseenter', function () {
-    if (closeArmed) go(null);
-  });
-
-  /* O triângulo abre o menu no topo, ou seja, no "sobre nós". */
+  /* Abrir leva sempre ao topo do menu, ou seja, ao "sobre nós". */
   function openMenuTop() { if (!state.menuOpen) go(routeByMenu('menu-sobre')); }
 
-  triBtn.addEventListener('click', openMenuTop);
-  /* Ao fechar, o rato fica muitas vezes parado onde o triângulo reaparece —
-     sem este travão o menu abria-se outra vez sozinho. */
-  triBtn.addEventListener('mouseenter', function () {
-    if (closeLock) return;
-    openMenuTop();
+  opens.forEach(function (el) {
+    el.addEventListener('click', function (e) { e.preventDefault(); openMenuTop(); });
+    el.addEventListener('mouseenter', function () {
+      if (closeLock) return;
+      openMenuTop();
+    });
   });
-  closeBtn.addEventListener('click', function () { go(null); });
+
+  closes.forEach(function (el) {
+    el.addEventListener('click', function () { go(null); });
+    el.addEventListener('mouseenter', function () {
+      if (closeArmed) go(null);
+    });
+  });
   window.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     go(null);
@@ -2111,7 +2133,6 @@ a:hover { text-decoration: underline; }
     if (note) { note.style.opacity = '1'; note.style.fontWeight = '700'; }
   });
 
-  wmLink.addEventListener('click', function (e) { e.preventDefault(); });
 
   state.scale = 60;
   renderMenu();
