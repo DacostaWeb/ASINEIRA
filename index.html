@@ -1987,7 +1987,17 @@ a:hover { text-decoration: underline; }
   /* ---------- menu (triângulo que cresce até cobrir o ecrã) ---------- */
 
   function coverScale() {
+    /* Mede o triângulo parado. A meio da recolha o rectângulo devolvido ainda
+       é o da forma gigante, e a conta dava uma escala minúscula — o menu
+       abria sem a mancha azul a crescer, que era o estranho que se via ao
+       reabrir por cima de um fecho. Cortar a transição fá-lo assentar já na
+       posição de repouso; o getBoundingClientRect a seguir força o cálculo, e
+       a transição é reposta antes de haver ocasião de pintar. Como o valor de
+       transform não muda, repô-la não arranca animação nenhuma. */
+    var transition = triBtn.style.transition;
+    triBtn.style.transition = 'none';
     var r = triBtn.getBoundingClientRect();
+    triBtn.style.transition = transition;
     var vw = window.innerWidth, vh = window.innerHeight;
     var cx = r.left + r.width * 0.417, cy = r.top + r.height * 0.428;
     var corners = [[0, 0], [vw, 0], [0, vh], [vw, vh]];
@@ -1999,7 +2009,10 @@ a:hover { text-decoration: underline; }
     var open = state.menuOpen;
 
     triBtn.setAttribute('aria-expanded', String(open));
-    triBtn.style.pointerEvents = open ? 'none' : 'auto';
+    /* Fechado mas ainda a recolher, o triângulo não aceita nada: é o mesmo
+       ponto onde estava o X que se acabou de carregar, e um clique aí
+       reabria o menu por cima da animação a meio. */
+    triBtn.style.pointerEvents = (open || closeLock) ? 'none' : 'auto';
     triBtn.style.transition = open
       ? 'transform ' + (MENU_DUR / 1000) + 's ' + EASE + ' 0s'
       : 'transform ' + (MENU_DUR / 2000) + 's ' + EASE + ' .12s';
@@ -2062,9 +2075,14 @@ a:hover { text-decoration: underline; }
     if (!state.menuOpen || Date.now() < openingUntil) return;
     document.documentElement.classList.remove('menu-open');
     state.menuOpen = false;
+    closeLock = true;          /* antes do renderMenu, que o lê */
     renderMenu();
-    closeLock = true;
-    setTimeout(function () { closeLock = false; }, 700);
+    setTimeout(function () {
+      closeLock = false;
+      /* Devolve o triângulo ao rato — a não ser que entretanto o menu tenha
+         voltado a abrir por outra via, um "+" ou um endereço. */
+      triBtn.style.pointerEvents = state.menuOpen ? 'none' : 'auto';
+    }, 700);
     document.removeEventListener('mousemove', armClose);
   }
 
@@ -2105,8 +2123,14 @@ a:hover { text-decoration: underline; }
     document.removeEventListener('mousemove', armClose);
   }
 
-  /* Abrir leva sempre ao topo do menu, ou seja, ao "sobre nós". */
-  function openMenuTop() { if (!state.menuOpen) go(routeByMenu('menu-sobre')); }
+  /* Abrir leva sempre ao topo do menu, ou seja, ao "sobre nós". Enquanto o
+     fecho corre, não abre nada: cobre o triângulo e o logótipo de uma vez, e
+     poupa a reabertura a meio de uma recolha. Ir directo a um endereço
+     (#sobre, um "+") continua a abrir — isso não passa por aqui. */
+  function openMenuTop() {
+    if (closeLock || state.menuOpen) return;
+    go(routeByMenu('menu-sobre'));
+  }
 
   /* Ao clique, os quatro. O preventDefault é para o logótipo: é um <a
      href="#">, e sem ele o salto para a âncora colidia com o encaminhamento
@@ -2119,11 +2143,8 @@ a:hover { text-decoration: underline; }
     el.addEventListener('click', function () { go(null); });
   });
 
-  /* Ao rato, só o triângulo e o X. */
-  triBtn.addEventListener('mouseenter', function () {
-    if (closeLock) return;
-    openMenuTop();
-  });
+  /* Ao rato, só o triângulo e o X. O travão do fecho está no openMenuTop. */
+  triBtn.addEventListener('mouseenter', openMenuTop);
 
   closeBtn.addEventListener('mouseenter', function () {
     if (closeArmed) go(null);
