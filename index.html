@@ -204,7 +204,20 @@ a:hover { text-decoration: underline; }
   100% { transform: translateY(0); }
 }
 
-/* "amigo da sineira", "fala connosco!": cada letra dá um abanão contente,
+/* "fala connosco!": as letras saltam todas ao mesmo tempo e abrem-se em
+   leque — a do meio fica direita, as das pontas são as que mais se inclinam,
+   e a inclinação vem do --f de cada letra. O leque abre e fecha; a abertura
+   total é a mesma em português e em inglês, ainda que uma palavra tenha mais
+   letras do que a outra, porque o --f não conta letras, conta distância ao
+   meio. */
+@keyframes art-leque {
+  0%        { transform: translateY(0) rotate(0deg); }
+  24%       { transform: translateY(-.22em) rotate(calc(var(--f) * var(--art-leque, 20deg))); }
+  44%       { transform: translateY(0) rotate(0deg); }
+  50%, 100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* "amigo da sineira", "equipa": cada letra dá um abanão contente,
    de pé assente na linha de base. */
 @keyframes art-festa {
   0%   { transform: rotate(0deg); }
@@ -550,10 +563,12 @@ html[lang="en"] .title-art {
 .title-art--pino      { --art-anim: art-pino;      --art-step: 0ms; }
 .title-art--onda      { --art-anim: art-onda;      --art-step: 60ms; }
 .title-art--festa     { --art-anim: art-festa;     --art-step: 45ms; }
+.title-art--leque     { --art-anim: art-leque;     --art-step: 0ms; --art-leque: 20deg; }
 
-/* O abanão é de pé assente: a letra roda pelo fundo da caixa, que é onde
-   está a linha de base, e não pelo meio. */
-.title-art--festa .title-art__l { transform-origin: 50% 100%; }
+/* O abanão e o leque são de pé assente: a letra roda pelo fundo da caixa,
+   que é onde está a linha de base, e não pelo meio. */
+.title-art--festa .title-art__l,
+.title-art--leque .title-art__l { transform-origin: 50% 100%; }
 
 /* Nada se mexe sem razão: com rato, ao passar por cima; em ecrã estreito,
    onde rato não há, sempre — mas só nos títulos que estão à vista, que o
@@ -1483,7 +1498,7 @@ html.menu-open .menu::before { opacity: 1; }
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--tracked"><span class="title-txt" data-i18n="sobreH2">sobre nós</span><span
-              class="title-art title-art--onda" aria-hidden="true"
+              class="title-art title-art--saltinhos" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/sobrenos.svg&quot;); --art-w-pt: 203.5097656; --art-h-pt: 36.0976562; --art-base-pt: 0.577;
                      --art-en: url(&quot;fonts/aboutus.svg&quot;); --art-w-en: 178.5458984; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
         <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais">+</button>
@@ -1548,7 +1563,7 @@ html.menu-open .menu::before { opacity: 1; }
     <!-- ===== sobre nós ===== -->
     <section class="menu-item menu-section" id="menu-sobre" data-delay="1">
       <h2 class="menu__h2"><span class="title-txt" data-i18n="sobreH2">sobre nós</span><span
-            class="title-art title-art--onda" aria-hidden="true"
+            class="title-art title-art--saltinhos" aria-hidden="true"
             style="--art-pt: url(&quot;fonts/sobrenos.svg&quot;); --art-w-pt: 203.5097656; --art-h-pt: 36.0976562; --art-base-pt: 0.577;
                    --art-en: url(&quot;fonts/aboutus.svg&quot;); --art-w-en: 178.5458984; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
       <p class="menu__lead" data-i18n="sobreP">Associação e Espaço Cultural criado em 2025 por Sara Garcia etc.</p>
@@ -1561,7 +1576,7 @@ html.menu-open .menu::before { opacity: 1; }
       <p class="menu__text" data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
 
       <h3 class="menu__h3 menu__h3--art"><span class="title-txt" data-i18n="secEquipa">equipa</span><span
-            class="title-art title-art--saltinhos" aria-hidden="true"
+            class="title-art title-art--festa" aria-hidden="true"
             style="--art-pt: url(&quot;fonts/equipa.svg&quot;); --art-w-pt: 138.1201172; --art-h-pt: 44.5571289; --art-base-pt: 9.516;
                    --art-en: url(&quot;fonts/team.svg&quot;); --art-w-en: 102.9433594; --art-h-en: 32.1513672; --art-base-en: 0.576;"></span></h3>
       <p class="menu__note" data-i18n="equipaNote">Apresentação da equipa, brevemente.</p>
@@ -1660,7 +1675,7 @@ html.menu-open .menu::before { opacity: 1; }
     <!-- ===== fala connosco ===== -->
     <section class="menu-item menu-section" id="menu-fala" data-delay="3">
       <h2 class="menu__h2"><span class="title-txt" data-i18n="falaH2">fala connosco!</span><span
-            class="title-art title-art--festa" aria-hidden="true"
+            class="title-art title-art--leque" aria-hidden="true"
             style="--art-pt: url(&quot;fonts/falaconnosco.svg&quot;); --art-w-pt: 299.5224609; --art-h-pt: 36.097168; --art-base-pt: 0.576;
                    --art-en: url(&quot;fonts/talktous.svg&quot;); --art-w-en: 199.7675781; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
 
@@ -1951,8 +1966,14 @@ html.menu-open .menu::before { opacity: 1; }
       }
       if (art.getAttribute('data-arte') === nome) return;
       var html = '';
-      for (var i = 0; i < cortes.length - 1; i++) {
+      var ultima = cortes.length - 2;
+      for (var i = 0; i <= ultima; i++) {
+        /* --l é a ordem, a contar de zero; --f é o mesmo dito de outra
+           maneira, de -1 na primeira letra a +1 na última, para os movimentos
+           que precisam de saber a que distância do meio da palavra é que a
+           letra está — é dele que sai a abertura do leque. */
         html += '<span class="title-art__l" style="--l:' + i +
+                ';--f:' + (ultima ? (2 * i / ultima - 1).toFixed(4) : 0) +
                 ';--x:' + cortes[i] +
                 ';--w:' + (cortes[i + 1] - cortes[i]).toFixed(3) + '"></span>';
       }
