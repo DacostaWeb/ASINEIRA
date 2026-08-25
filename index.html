@@ -406,6 +406,25 @@ html.menu-open .lang { color: var(--cream); }
 
 html[lang="pt"] .title-art { display: inline-block; }
 
+/* Dentro do menu, os subtítulos desenhados vão ao corpo dos títulos: as
+   palavras foram traçadas para se lerem a este tamanho, e em caixa baixa
+   ficariam a metade do peso dos versaletes que substituem. Cresce só o
+   desenho — o texto por baixo (inglês, leitor de ecrã) fica no corpo pequeno
+   do rótulo, que é onde o inglês continua a fazer sentido.
+
+   A este corpo o que desce já não cabe no espaço de um rótulo: a cauda do "q"
+   de "equipa" e a cedilha de "espaços" iam parar em cima da linha seguinte.
+   Por isso aqui o desenho desce por vertical-align e não por margem negativa
+   — assim o que fica abaixo da linha de base conta para a altura da linha, e
+   o espaço por baixo é o mesmo nas três palavras, desçam elas ou não. */
+.menu__h3--art .title-art {
+  font-size: var(--menu-h2);
+  vertical-align: calc(var(--art-base) / 48 * -1em);
+  margin-bottom: 0;
+}
+
+html[lang="pt"] .menu__h3--art { margin-bottom: 14px; }
+
 /* O texto sai da vista mas fica no documento: é ele que dá o título a quem
    lê por leitor de ecrã, onde uma máscara não diz nada. */
 html[lang="pt"] .title-txt {
@@ -1370,13 +1389,13 @@ html.menu-open .menu::before { opacity: 1; }
             style="--art: url(&quot;fonts/sobrenos.svg&quot;); --art-w: 203.5097656; --art-h: 36.0976562; --art-base: 0.577;"></span></h2>
       <p class="menu__lead" data-i18n="sobreP">Associação e Espaço Cultural criado em 2025 por Sara Garcia etc.</p>
 
-      <h3 class="menu__h3"><span class="title-txt" data-i18n="secMissao">missão e valores</span><span
+      <h3 class="menu__h3 menu__h3--art"><span class="title-txt" data-i18n="secMissao">missão e valores</span><span
             class="title-art" aria-hidden="true"
             style="--art: url(&quot;fonts/missaoevalores.svg&quot;); --art-w: 341.9599609; --art-h: 35.7900391; --art-base: 0.576;"></span></h3>
       <p class="menu__text" data-i18n="missaoP">Artes para a comunidade e uma comunidade para as Artes. Formação, criação e apresentação sob o mesmo tecto, abertos a quem cá vive e a quem cá chega.</p>
       <p class="menu__text" data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
 
-      <h3 class="menu__h3"><span class="title-txt" data-i18n="secEquipa">equipa</span><span
+      <h3 class="menu__h3 menu__h3--art"><span class="title-txt" data-i18n="secEquipa">equipa</span><span
             class="title-art" aria-hidden="true"
             style="--art: url(&quot;fonts/equipa.svg&quot;); --art-w: 138.1201172; --art-h: 44.5571289; --art-base: 9.516;"></span></h3>
       <p class="menu__note" data-i18n="equipaNote">Apresentação da equipa, brevemente.</p>
@@ -1447,7 +1466,7 @@ html.menu-open .menu::before { opacity: 1; }
         <li data-i18n="chegarLi5">Aeroporto Sá Carneiro — 20–50 min</li>
       </ul>
 
-      <h3 class="menu__h3"><span class="title-txt" data-i18n="secEspacos">espaços</span><span
+      <h3 class="menu__h3 menu__h3--art"><span class="title-txt" data-i18n="secEspacos">espaços</span><span
             class="title-art" aria-hidden="true"
             style="--art: url(&quot;fonts/espacos.svg&quot;); --art-w: 171.53125; --art-h: 37.1981288; --art-base: 11.774;"></span></h3>
       <ul class="menu__list-plain">
