@@ -163,7 +163,8 @@ a:hover { text-decoration: underline; }
 
 /* "eventos", "espaços": as letras afastam-se e voltam. Quanto mais adiante
    está a letra, mais anda: a primeira fica no sítio e a palavra estica.
-   --art-abre é o que se abre entre duas letras seguidas. */
+   --art-abre é o que se abre entre duas letras seguidas; vale .11em para
+   ambas, e o "eventos" pede mais no seu próprio style. */
 @keyframes art-espacar {
   0%        { transform: translateX(0); }
   30%       { transform: translateX(calc(var(--l) * var(--art-abre, .11em))); }
@@ -1329,7 +1330,8 @@ html.menu-open .menu::before { opacity: 1; }
         <h2 class="tile__title tile__title--regular"><span class="title-txt" data-i18n="evH2">eventos</span><span
               class="title-art title-art--espacar" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/eventos.svg&quot;); --art-w-pt: 160.7685547; --art-h-pt: 32.1513672; --art-base-pt: 0.576;
-                     --art-en: url(&quot;fonts/events.svg&quot;); --art-w-en: 135.171875; --art-h-en: 32.1513672; --art-base-en: 0.576;"></span></h2>
+                     --art-en: url(&quot;fonts/events.svg&quot;); --art-w-en: 135.171875; --art-h-en: 32.1513672; --art-base-en: 0.576;
+                     --art-abre: .2em;"></span></h2>
         <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
 
