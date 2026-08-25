@@ -318,8 +318,16 @@ html.menu-open .lang { color: var(--cream); }
   top: var(--header-h);
   bottom: var(--marquee-h);
   left: 0;
-  right: 0;
+
+  /* Um pixel mais larga do que o ecrã, e o que sobra é cortado pelo <html>.
+     As colunas em 1fr arredondam, e numa largura que não divida certo pelo
+     número de colunas o último mosaico fica uns centésimos de pixel aquém
+     da direita — num ecrã de 3x isso chega para se ver um fio do creme do
+     corpo ao lado de um mosaico azul. O pixel a mais tapa-o sem mexer em
+     mais nada. */
+  width: calc(100% + 1px);
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
 
   display: grid;
