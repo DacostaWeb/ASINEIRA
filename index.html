@@ -77,8 +77,7 @@
 html { scroll-behavior: smooth; }
 
 /* overflow-x:clip e não :hidden — hidden força overflow-y:auto, o que torna o
-   body num contentor de scroll e faz o cabeçalho sticky colar ao body (que
-   nunca rola) em vez do ecrã, desaparecendo logo aos primeiros píxeis. */
+   body num contentor de scroll e passa a apanhar o que devia ser do ecrã. */
 html, body { margin: 0; overflow-x: clip; }
 
 body {
@@ -86,15 +85,18 @@ body {
   color: var(--blue);
   font-family: var(--font);
   text-wrap: pretty;
-  padding-bottom: var(--marquee-h);   /* espaço para o marquee fixo */
+  /* O cabeçalho e o marquee estão os dois fora do fluxo; o corpo guarda-lhes
+     o lugar nas pontas. */
+  padding-top: var(--header-h);
+  padding-bottom: var(--marquee-h);
 }
 
 /* Bloqueia o scroll do fundo enquanto o menu está aberto (classe posta pelo JS).
    Tem de ser no <html> e não no <body>: no body, o overflow:hidden fá-lo virar
-   contentor de scroll e o cabeçalho sticky passa a colar-se a ele em vez do
+   contentor de scroll e o cabeçalho passa a colar-se a ele em vez do
    ecrã — com a página descida, saltava para fora da vista mal a animação de
-   abertura começava. No <html> o valor propaga-se ao viewport e o sticky
-   continua a resolver contra a posição de scroll actual. */
+   abertura começava. No <html> o valor propaga-se ao viewport e o que está
+   fixo continua a resolver contra o ecrã. */
 html.menu-open { overflow: hidden; touch-action: none; }
 
 /* Nenhuma barra de scroll à vista, em lado nenhum: nem na página, nem no menu,
@@ -151,9 +153,19 @@ a:hover { text-decoration: underline; }
 
 /* 5. Cabeçalho ============================================================ */
 
+/* Fixo e não sticky. O logótipo e o PT—EN tiveram de sair daqui para poderem
+   subir acima do menu, e ficaram fixos ao ecrã; com a barra em sticky, os dois
+   esquemas conviviam mal — no iOS o sticky é reposicionado pelo browser a um
+   ritmo diferente do fixed, e durante o scroll via-se a barra a mexer-se por
+   baixo do logótipo. Fixos os dois, andam juntos.
+
+   Não se perde nada: colado ao topo, o sticky nunca chegava a rolar. O espaço
+   que ocupava no fluxo é agora o padding-top do body. */
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   /* Abaixo do menu (60), de propósito: é aqui que mora o triângulo, e ele
      tem de poder crescer por baixo do menu. O logótipo e o PT—EN estão fora
      deste elemento, e sobem acima do menu por si. */
