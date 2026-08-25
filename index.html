@@ -369,19 +369,21 @@ html.menu-open .lang { color: var(--cream); }
 .tile__title--tracked { font-weight: 400; line-height: 1;     letter-spacing: .32em; }
 .tile__title--strong  { font-weight: 700; }
 
-/* Em português os títulos dos cartões não são texto composto: são os desenhos
-   da pasta fonts/, palavra a palavra, tal como saíram do original. Entram como
-   máscara e não como <img> para que a cor continue a ser a do cartão
-   (currentColor) — azul sobre creme, creme sobre azul.
+/* Em português os títulos não são texto composto: são os desenhos da pasta
+   fonts/, palavra a palavra, tal como saíram do original. Servem os cartões
+   do mosaico e os títulos das secções do menu. Entram como máscara e não como
+   <img> para que a cor continue a ser a de quem os recebe (currentColor) —
+   azul sobre creme, creme sobre azul.
 
    As medidas vêm do próprio ficheiro: --art-w e --art-h são o viewBox e
    --art-base o que fica por baixo da linha de base (o "g" de "chegar" e de
    "amigo"; nas outras palavras é só o transbordo das curvas). Os desenhos
    foram traçados num corpo de 48 unidades, por isso dividir por 48 devolve-os
-   ao tamanho exacto do título que substituem.
+   ao tamanho exacto do título que substituem — e em em, e não em pixéis, para
+   acompanharem o corpo fluido dos títulos do menu.
 
    Em inglês as palavras são outras e não há desenho: volta o texto. */
-.tile__title-art {
+.title-art {
   display: none;
   width:  calc(var(--art-w) / 48 * 1em);
   height: calc(var(--art-h) / 48 * 1em);
@@ -394,11 +396,11 @@ html.menu-open .lang { color: var(--cream); }
           mask: var(--art) no-repeat left center / contain;
 }
 
-html[lang="pt"] .tile__title-art { display: inline-block; }
+html[lang="pt"] .title-art { display: inline-block; }
 
-/* O texto sai da vista mas fica no documento: é ele que dá o título do cartão
-   a quem lê por leitor de ecrã, onde uma máscara não diz nada. */
-html[lang="pt"] .tile__title-txt {
+/* O texto sai da vista mas fica no documento: é ele que dá o título a quem
+   lê por leitor de ecrã, onde uma máscara não diz nada. */
+html[lang="pt"] .title-txt {
   position: absolute;
   width: 1px; height: 1px;
   margin: -1px; padding: 0;
@@ -1141,8 +1143,8 @@ html.menu-open .menu::before { opacity: 1; }
   <article class="tile tile--cream" id="eventos" data-screen-label="eventos">
     <div class="tile__inner">
       <div class="tile__head">
-        <h2 class="tile__title tile__title--regular"><span class="tile__title-txt" data-i18n="evH2">eventos</span><span
-              class="tile__title-art" aria-hidden="true"
+        <h2 class="tile__title tile__title--regular"><span class="title-txt" data-i18n="evH2">eventos</span><span
+              class="title-art" aria-hidden="true"
               style="--art: url(&quot;fonts/eventos.svg&quot;); --art-w: 160.7685547; --art-h: 32.1513672; --art-base: 0.576;"></span></h2>
         <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
@@ -1215,8 +1217,8 @@ html.menu-open .menu::before { opacity: 1; }
   <article class="tile tile--blue" id="atividades" data-screen-label="atividades">
     <div class="tile__inner">
       <div class="tile__head">
-        <h2 class="tile__title tile__title--italic tile__title--strong"><span class="tile__title-txt" data-i18n="atH2">atividades</span><span
-              class="tile__title-art" aria-hidden="true"
+        <h2 class="tile__title tile__title--italic tile__title--strong"><span class="title-txt" data-i18n="atH2">atividades</span><span
+              class="title-art" aria-hidden="true"
               style="--art: url(&quot;fonts/atividades.svg&quot;); --art-w: 211.9082031; --art-h: 35.6171875; --art-base: 0.576;"></span></h2>
         <button class="tile__toggle" type="button" data-tile="Atividades" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
@@ -1277,8 +1279,8 @@ html.menu-open .menu::before { opacity: 1; }
   <article class="tile tile--blue" id="como-chegar" data-screen-label="como chegar">
     <div class="tile__inner">
       <div class="tile__head">
-        <h2 class="tile__title tile__title--italic"><span class="tile__title-txt" data-i18n="chegarH2">como chegar?</span><span
-              class="tile__title-art" aria-hidden="true"
+        <h2 class="tile__title tile__title--italic"><span class="title-txt" data-i18n="chegarH2">como chegar?</span><span
+              class="title-art" aria-hidden="true"
               style="--art: url(&quot;fonts/comochegar.svg&quot;); --art-w: 293.65625; --art-h: 45.0375977; --art-base: 9.997;"></span></h2>
         <button class="tile__toggle" type="button" data-menu="menu-onde" aria-label="Mostrar mais">+</button>
       </div>
@@ -1292,8 +1294,8 @@ html.menu-open .menu::before { opacity: 1; }
   <article class="tile tile--cream" id="sobre-nos" data-screen-label="sobre nós">
     <div class="tile__inner">
       <div class="tile__head">
-        <h2 class="tile__title tile__title--tracked"><span class="tile__title-txt" data-i18n="sobreH2">sobre nós</span><span
-              class="tile__title-art" aria-hidden="true"
+        <h2 class="tile__title tile__title--tracked"><span class="title-txt" data-i18n="sobreH2">sobre nós</span><span
+              class="title-art" aria-hidden="true"
               style="--art: url(&quot;fonts/sobrenos.svg&quot;); --art-w: 203.5097656; --art-h: 36.0976562; --art-base: 0.577;"></span></h2>
         <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais">+</button>
       </div>
@@ -1309,8 +1311,8 @@ html.menu-open .menu::before { opacity: 1; }
   <article class="tile tile--cream" id="amigos" data-screen-label="amigos">
     <div class="tile__inner">
       <div class="tile__head">
-        <h2 class="tile__title"><span class="tile__title-txt" data-i18n="amH2">amigo da sineira</span><span
-              class="tile__title-art" aria-hidden="true"
+        <h2 class="tile__title"><span class="title-txt" data-i18n="amH2">amigo da sineira</span><span
+              class="title-art" aria-hidden="true"
               style="--art: url(&quot;fonts/amigodasineira.svg&quot;); --art-w: 341.7735316; --art-h: 45.0375977; --art-base: 9.997;"></span></h2>
         <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
@@ -1355,7 +1357,9 @@ html.menu-open .menu::before { opacity: 1; }
 
     <!-- ===== sobre nós ===== -->
     <section class="menu-item menu-section" id="menu-sobre" data-delay="1">
-      <h2 class="menu__h2" data-i18n="sobreH2">sobre nós</h2>
+      <h2 class="menu__h2"><span class="title-txt" data-i18n="sobreH2">sobre nós</span><span
+            class="title-art" aria-hidden="true"
+            style="--art: url(&quot;fonts/sobrenos.svg&quot;); --art-w: 203.5097656; --art-h: 36.0976562; --art-base: 0.577;"></span></h2>
       <p class="menu__lead" data-i18n="sobreP">Associação e Espaço Cultural criado em 2025 por Sara Garcia etc.</p>
 
       <h3 class="menu__h3" data-i18n="secMissao">missão e valores</h3>
@@ -1368,7 +1372,9 @@ html.menu-open .menu::before { opacity: 1; }
 
     <!-- ===== como chegar ===== -->
     <section class="menu-item menu-section" id="menu-onde" data-delay="2">
-      <h2 class="menu__h2" data-i18n="chegarH2">como chegar?</h2>
+      <h2 class="menu__h2"><span class="title-txt" data-i18n="chegarH2">como chegar?</span><span
+            class="title-art" aria-hidden="true"
+            style="--art: url(&quot;fonts/comochegar.svg&quot;); --art-w: 293.65625; --art-h: 45.0375977; --art-base: 9.997;"></span></h2>
 
       <table class="access">
         <thead>
@@ -1452,7 +1458,9 @@ html.menu-open .menu::before { opacity: 1; }
 
     <!-- ===== fala connosco ===== -->
     <section class="menu-item menu-section" id="menu-fala" data-delay="3">
-      <h2 class="menu__h2" data-i18n="falaH2">fala connosco!</h2>
+      <h2 class="menu__h2"><span class="title-txt" data-i18n="falaH2">fala connosco!</span><span
+            class="title-art" aria-hidden="true"
+            style="--art: url(&quot;fonts/falaconnosco.svg&quot;); --art-w: 299.5224609; --art-h: 36.097168; --art-base: 0.576;"></span></h2>
 
       <!-- Só o desenho: o site é estático e ainda não há para onde enviar.
            O submit é travado no JS (ver bindContactForm) e mostra o aviso
