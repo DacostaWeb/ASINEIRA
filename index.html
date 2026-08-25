@@ -76,28 +76,31 @@
 
 html { scroll-behavior: smooth; }
 
-/* overflow-x:clip e não :hidden — hidden força overflow-y:auto, o que torna o
-   body num contentor de scroll e passa a apanhar o que devia ser do ecrã. */
-html, body { margin: 0; overflow-x: clip; }
+/* O documento não rola: é a grelha que rola, dentro da moldura que o
+   cabeçalho e o marquee formam (ver .tiles).
+
+   Não é preferência de desenho, é o que põe as duas faixas quietas no iOS.
+   O Safari só encolhe a barra de endereço quando o documento rola, e ao
+   encolhê-la deixa o que está em position:fixed ancorado ao viewport antigo
+   — a faixa do rodapé descolava do fundo e ficava a meio do ecrã, com a
+   página a ver-se por baixo dela. Documento que não rola, barra que não
+   encolhe, viewport que não muda: o problema deixa de poder acontecer, e os
+   saltos de altura que vinham do mesmo sítio também.
+
+   O preço é a barra do Safari ficar sempre à vista no telemóvel. */
+html, body { margin: 0; height: 100%; overflow: hidden; }
 
 body {
   background: var(--cream);
   color: var(--blue);
   font-family: var(--font);
   text-wrap: pretty;
-  /* O cabeçalho e o marquee estão os dois fora do fluxo; o corpo guarda-lhes
-     o lugar nas pontas. */
-  padding-top: var(--header-h);
-  padding-bottom: var(--marquee-h);
 }
 
-/* Bloqueia o scroll do fundo enquanto o menu está aberto (classe posta pelo JS).
-   Tem de ser no <html> e não no <body>: no body, o overflow:hidden fá-lo virar
-   contentor de scroll e o cabeçalho passa a colar-se a ele em vez do
-   ecrã — com a página descida, saltava para fora da vista mal a animação de
-   abertura começava. No <html> o valor propaga-se ao viewport e o que está
-   fixo continua a resolver contra o ecrã. */
-html.menu-open { overflow: hidden; touch-action: none; }
+/* Estado do menu, posto pelo JS. Já não precisa de bloquear scroll nenhum —
+   o documento não rola de origem, e o menu tapa a grelha —, mas continua a
+   ser por aqui que o logótipo, o PT—EN e a faixa do topo sabem que o menu
+   está aberto. */
 
 /* Nenhuma barra de scroll à vista, em lado nenhum: nem na página, nem no menu,
    nem num cartão aberto em painel. O scroll continua a funcionar — roda do
@@ -309,6 +312,16 @@ html.menu-open .lang { color: var(--cream); }
    número certo de linhas e não sobre fundo em baixo. O minmax deixa a linha
    crescer se um cartão for aberto com mais conteúdo do que a altura dá. */
 .tiles {
+  /* A moldura: do fundo do cabeçalho ao topo do marquee. É este o único
+     contentor que rola em toda a página. */
+  position: fixed;
+  top: var(--header-h);
+  bottom: var(--marquee-h);
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(max(100% / var(--col-max-n), min(100%, var(--col-min))), 1fr));
   grid-auto-rows: minmax(var(--card-h), auto);
@@ -1644,7 +1657,6 @@ html.menu-open .menu::before { opacity: 1; }
   var MENU_DUR = 1100;
   var EASE = 'cubic-bezier(.6,.05,.25,1)';
 
-  var header = document.getElementById('site-header');
   var wmLink = document.getElementById('wm-link');
   var btnPt = document.getElementById('lang-pt');
   var btnEn = document.getElementById('lang-en');
@@ -1937,7 +1949,6 @@ html.menu-open .menu::before { opacity: 1; }
 
   var MAX_ROWS = 4;       /* nunca mostrar mais de 4 linhas de uma vez */
 
-  var marquee = document.querySelector('.marquee');
   var tiles = document.querySelectorAll('.tile');
 
   /* Quantas colunas o CSS está mesmo a desenhar. Contar aqui em vez de repetir
@@ -2031,9 +2042,10 @@ html.menu-open .menu::before { opacity: 1; }
      O número de linhas por ecrã nunca passa o total de linhas da grelha: se
      passasse, a página ficava mais curta do que a janela e via-se fundo. */
   function fitRows() {
-    var avail = window.innerHeight
-      - header.getBoundingClientRect().height
-      - (marquee ? marquee.getBoundingClientRect().height : 0);
+    /* A altura visível é a do próprio contentor, que o CSS já prende entre o
+       cabeçalho e o marquee. Medi-la é mais seguro do que voltar a fazer a
+       subtracção aqui e arriscar que os dois valores discordem. */
+    var avail = grid.clientHeight;
     if (avail <= 0) return;
 
     var totalRows = getComputedStyle(grid).gridTemplateRows.split(' ').length;
