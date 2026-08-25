@@ -172,7 +172,7 @@ a:hover { text-decoration: underline; }
   50%, 100% { transform: translateX(0); }
 }
 
-/* "atividades", "equipa": um saltinho de cada vez, na ordem das letras. O
+/* "sobre nós": um saltinho de cada vez, na ordem das letras. O
    salto é curto e o atraso entre letras é maior do que ele, para que se veja
    uma a uma e não todas em conjunto. */
 @keyframes art-saltinhos {
@@ -204,7 +204,8 @@ a:hover { text-decoration: underline; }
   100% { transform: translateY(0); }
 }
 
-/* "fala connosco!": as letras saltam todas ao mesmo tempo e abrem-se em
+/* "fala connosco!", "amigo da sineira": as letras saltam todas ao mesmo
+   tempo e abrem-se em
    leque — a do meio fica direita, as das pontas são as que mais se inclinam,
    e a inclinação vem do --f de cada letra. O leque abre e fecha; a abertura
    total é a mesma em português e em inglês, ainda que uma palavra tenha mais
@@ -217,8 +218,8 @@ a:hover { text-decoration: underline; }
   50%, 100% { transform: translateY(0) rotate(0deg); }
 }
 
-/* "amigo da sineira", "equipa": cada letra dá um abanão contente,
-   de pé assente na linha de base. */
+/* "atividades", "equipa": cada letra dá um abanão contente, de pé assente
+   na linha de base. */
 @keyframes art-festa {
   0%   { transform: rotate(0deg); }
   10%  { transform: rotate(6deg); }
@@ -1419,7 +1420,7 @@ html.menu-open .menu::before { opacity: 1; }
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--italic tile__title--strong"><span class="title-txt" data-i18n="atH2">atividades</span><span
-              class="title-art title-art--saltinhos" aria-hidden="true"
+              class="title-art title-art--festa" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/atividades.svg&quot;); --art-w-pt: 211.9082031; --art-h-pt: 35.6171875; --art-base-pt: 0.576;
                      --art-en: url(&quot;fonts/activities.svg&quot;); --art-w-en: 184.3037109; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
         <button class="tile__toggle" type="button" data-tile="Atividades" aria-expanded="false" aria-label="Mostrar mais">+</button>
@@ -1516,7 +1517,7 @@ html.menu-open .menu::before { opacity: 1; }
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title"><span class="title-txt" data-i18n="amH2">amigo da sineira</span><span
-              class="title-art title-art--festa" aria-hidden="true"
+              class="title-art title-art--leque" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/amigodasineira.svg&quot;); --art-w-pt: 341.7735316; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
                      --art-en: url(&quot;fonts/asineirafriend.svg&quot;); --art-w-en: 310.5738803; --art-h-en: 36.3850665; --art-base-en: 0.864;"></span></h2>
         <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais">+</button>
