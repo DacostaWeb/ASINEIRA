@@ -162,10 +162,11 @@ a:hover { text-decoration: underline; }
    .title-art mais abaixo. */
 
 /* "eventos", "espaços": as letras afastam-se e voltam. Quanto mais adiante
-   está a letra, mais anda: a primeira fica no sítio e a palavra estica. */
+   está a letra, mais anda: a primeira fica no sítio e a palavra estica.
+   --art-abre é o que se abre entre duas letras seguidas. */
 @keyframes art-espacar {
   0%        { transform: translateX(0); }
-  30%       { transform: translateX(calc(var(--l) * .055em)); }
+  30%       { transform: translateX(calc(var(--l) * var(--art-abre, .11em))); }
   45%       { transform: translateX(0); }
   50%, 100% { transform: translateX(0); }
 }
@@ -543,7 +544,7 @@ html[lang="en"] .title-art {
 /* Qual o movimento de cada palavra, e de quanto em quanto tempo entra a letra
    seguinte. É a palavra que manda, não a língua: o inglês de cada título faz
    o mesmo que o português. */
-.title-art--espacar   { --art-anim: art-espacar;   --art-step: 0ms; }
+.title-art--espacar   { --art-anim: art-espacar;   --art-step: 0ms; --art-abre: .11em; }
 .title-art--saltinhos { --art-anim: art-saltinhos; --art-step: 120ms; }
 .title-art--pino      { --art-anim: art-pino;      --art-step: 0ms; }
 .title-art--onda      { --art-anim: art-onda;      --art-step: 60ms; }
@@ -568,10 +569,16 @@ html[lang="en"] .title-art {
   html.menu-open .menu__h3 .title-art__l { animation-name: var(--art-anim); }
 }
 
-/* Quem pediu ao sistema para não ver coisas a mexer não vê. O !important é
-   para vencer os selectores de cima, que são mais específicos do que este. */
-@media (prefers-reduced-motion: reduce) {
-  .title-art__l { animation-name: none !important; }
+/* Quem pediu ao sistema para não ver coisas a mexer perde o que se mexe
+   sozinho — em ecrã estreito as palavras andam sem ninguém as mandar andar, e
+   é isso que incomoda quem tem a definição ligada. O que responde ao rato
+   fica: dura dois segundos, é uma vez, e só acontece a quem foi lá com o
+   cursor. Os mesmos selectores da regra de cima, para ganhar por vir depois
+   e não à força de !important. */
+@media (prefers-reduced-motion: reduce) and (max-width: 640px) {
+  .tile__head .title-art__l { animation-name: none; }
+  html.menu-open .menu__h2 .title-art__l,
+  html.menu-open .menu__h3 .title-art__l { animation-name: none; }
 }
 
 /* O texto sai da vista mas fica no documento: é ele que dá o título a quem
