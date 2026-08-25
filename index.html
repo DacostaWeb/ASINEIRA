@@ -67,6 +67,7 @@
 
   /* Movimento */
   --wm-dur: 2000ms;         /* ciclo do salto das letras do logótipo */
+  --art-dur: 2000ms;        /* ciclo do movimento das palavras desenhadas */
 }
 
 
@@ -152,6 +153,66 @@ a:hover { text-decoration: underline; }
 @keyframes wm-a2 { 0% { transform:translate(217.027161px,74.288059px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(217.027161px,69.29px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(217.027161px,69.29px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(217.027161px,74.288059px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(217.027161px,74.288059px); } }
 
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Movimento das palavras desenhadas. Como no logótipo, a pausa que vai dos
+   ~45% aos 100% é o repouso antes de repetir; o desencontro entre letras não
+   está aqui, vem do atraso que cada uma recebe (--art-step vezes a ordem).
+
+   Quem se mexe é a letra, que é uma fatia do desenho — ver a nota do
+   .title-art mais abaixo. */
+
+/* "eventos", "espaços": as letras afastam-se e voltam. Quanto mais adiante
+   está a letra, mais anda: a primeira fica no sítio e a palavra estica. */
+@keyframes art-espacar {
+  0%        { transform: translateX(0); }
+  30%       { transform: translateX(calc(var(--l) * .055em)); }
+  45%       { transform: translateX(0); }
+  50%, 100% { transform: translateX(0); }
+}
+
+/* "atividades", "equipa": um saltinho de cada vez, na ordem das letras. O
+   salto é curto e o atraso entre letras é maior do que ele, para que se veja
+   uma a uma e não todas em conjunto. */
+@keyframes art-saltinhos {
+  0%   { transform: translateY(0); }
+  6%   { transform: translateY(-.24em); }
+  13%  { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+
+/* "como chegar?": a palavra cai como um pino no mapa — sobe devagar, deixa-se
+   cair depressa e assenta com um ressalto pequeno. Sem atraso entre letras:
+   cai inteira. */
+@keyframes art-pino {
+  0%        { transform: translateY(0);      animation-timing-function: cubic-bezier(.33,0,.67,.25); }
+  14%       { transform: translateY(-.34em); animation-timing-function: cubic-bezier(.5,0,1,.6); }
+  28%       { transform: translateY(0);      animation-timing-function: cubic-bezier(.33,.6,.67,1); }
+  36%       { transform: translateY(-.09em); animation-timing-function: cubic-bezier(.5,0,1,.6); }
+  44%       { transform: translateY(0); }
+  50%, 100% { transform: translateY(0); }
+}
+
+/* "sobre nós", "missão e valores": uma onda que atravessa a palavra — sobe,
+   desce um pouco abaixo da linha e assenta. */
+@keyframes art-onda {
+  0%   { transform: translateY(0); }
+  16%  { transform: translateY(-.20em); }
+  32%  { transform: translateY(.07em); }
+  46%  { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+
+/* "amigo da sineira", "fala connosco!": cada letra dá um abanão contente,
+   de pé assente na linha de base. */
+@keyframes art-festa {
+  0%   { transform: rotate(0deg); }
+  10%  { transform: rotate(6deg); }
+  20%  { transform: rotate(-6deg); }
+  30%  { transform: rotate(4deg); }
+  40%  { transform: rotate(-2deg); }
+  48%  { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
 
 
 /* 5. Cabeçalho ============================================================ */
@@ -361,7 +422,10 @@ html.menu-open .lang { color: var(--cream); }
 .tile--cream { --tile-bg: var(--cream); --tile-fg: var(--blue); }
 .tile--blue  { --tile-bg: var(--blue);  --tile-fg: var(--cream); }
 
-.tile__head { display: flex; align-items: flex-start; gap: 18px; }
+/* Toda a cabeça abre o cartão, e não só o "+" — quem carrega no título está
+   a pedir o mesmo. O botão continua a ser o botão; o JS só lhe passa o
+   clique que caiu ao lado. */
+.tile__head { display: flex; align-items: flex-start; gap: 18px; cursor: pointer; }
 
 /* Três desenhos de título: compacto (base), itálico e espacejado. */
 .tile__title {
@@ -437,6 +501,78 @@ html[lang="en"] .title-art {
 }
 
 .menu__h3--art { margin-bottom: 14px; }
+
+/* Para se mexer letra a letra, a palavra parte-se em letras: cada uma é uma
+   fatia vertical do mesmo desenho, com a máscara corrida para a esquerda até
+   dar a letra que lhe toca (--x é onde a fatia começa, --w o que ela mede,
+   --l a ordem dentro da palavra). As fatias são seguidas e somadas dão o
+   desenho inteiro, por isso em repouso não há maneira de distinguir isto de
+   uma máscara só. Quem as corta é o JS, a partir da tabela CORTES.
+
+   Sem JS não se parte nada e fica a máscara única de sempre — daí a máscara
+   estar na palavra e só sair quando as letras entram. */
+.title-art.is-split {
+  background: none;
+  -webkit-mask: none;
+          mask: none;
+  position: relative;
+}
+
+/* As letras ficam fora do fluxo, cada uma no seu lugar. Não é gosto: uma
+   caixa inline-block sem nada dentro assenta pelo fundo, e é disso que vem a
+   linha de base de toda a palavra. Bastava uma letra em fluxo lá dentro para
+   a caixa passar a assentar pela linha de base das letras e o título descer
+   meia dúzia de pixéis. Fora do fluxo, a caixa continua vazia para quem a
+   mede — e ainda por cima as letras podem sair dela a meio do salto. */
+.title-art__l {
+  position: absolute;
+  top: 0;
+  left: calc(var(--x) / 48 * 1em);
+  width: calc(var(--w) / 48 * 1em);
+  height: 100%;
+  background: currentColor;
+  -webkit-mask: var(--art) no-repeat calc(var(--x) / 48 * -1em) 0 / calc(var(--art-w) / 48 * 1em) 100%;
+          mask: var(--art) no-repeat calc(var(--x) / 48 * -1em) 0 / calc(var(--art-w) / 48 * 1em) 100%;
+  animation-duration: var(--art-dur);
+  animation-delay: calc(var(--l) * var(--art-step, 0ms));
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+/* Qual o movimento de cada palavra, e de quanto em quanto tempo entra a letra
+   seguinte. É a palavra que manda, não a língua: o inglês de cada título faz
+   o mesmo que o português. */
+.title-art--espacar   { --art-anim: art-espacar;   --art-step: 0ms; }
+.title-art--saltinhos { --art-anim: art-saltinhos; --art-step: 120ms; }
+.title-art--pino      { --art-anim: art-pino;      --art-step: 0ms; }
+.title-art--onda      { --art-anim: art-onda;      --art-step: 60ms; }
+.title-art--festa     { --art-anim: art-festa;     --art-step: 45ms; }
+
+/* O abanão é de pé assente: a letra roda pelo fundo da caixa, que é onde
+   está a linha de base, e não pelo meio. */
+.title-art--festa .title-art__l { transform-origin: 50% 100%; }
+
+/* Nada se mexe sem razão: com rato, ao passar por cima; em ecrã estreito,
+   onde rato não há, sempre — mas só nos títulos que estão à vista, que o
+   menu fechado continua montado por baixo do mosaico. */
+@media (hover: hover) {
+  .tile__head:hover .title-art__l,
+  .menu__h2:hover   .title-art__l,
+  .menu__h3:hover   .title-art__l { animation-name: var(--art-anim); }
+}
+
+@media (max-width: 640px) {
+  .tile__head .title-art__l { animation-name: var(--art-anim); }
+  html.menu-open .menu__h2 .title-art__l,
+  html.menu-open .menu__h3 .title-art__l { animation-name: var(--art-anim); }
+}
+
+/* Quem pediu ao sistema para não ver coisas a mexer não vê. O !important é
+   para vencer os selectores de cima, que são mais específicos do que este. */
+@media (prefers-reduced-motion: reduce) {
+  .title-art__l { animation-name: none !important; }
+}
 
 /* O texto sai da vista mas fica no documento: é ele que dá o título a quem
    lê por leitor de ecrã, onde uma máscara não diz nada. */
@@ -1184,7 +1320,7 @@ html.menu-open .menu::before { opacity: 1; }
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--regular"><span class="title-txt" data-i18n="evH2">eventos</span><span
-              class="title-art" aria-hidden="true"
+              class="title-art title-art--espacar" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/eventos.svg&quot;); --art-w-pt: 160.7685547; --art-h-pt: 32.1513672; --art-base-pt: 0.576;
                      --art-en: url(&quot;fonts/events.svg&quot;); --art-w-en: 135.171875; --art-h-en: 32.1513672; --art-base-en: 0.576;"></span></h2>
         <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais">+</button>
@@ -1259,7 +1395,7 @@ html.menu-open .menu::before { opacity: 1; }
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--italic tile__title--strong"><span class="title-txt" data-i18n="atH2">atividades</span><span
-              class="title-art" aria-hidden="true"
+              class="title-art title-art--saltinhos" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/atividades.svg&quot;); --art-w-pt: 211.9082031; --art-h-pt: 35.6171875; --art-base-pt: 0.576;
                      --art-en: url(&quot;fonts/activities.svg&quot;); --art-w-en: 184.3037109; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
         <button class="tile__toggle" type="button" data-tile="Atividades" aria-expanded="false" aria-label="Mostrar mais">+</button>
@@ -1322,7 +1458,7 @@ html.menu-open .menu::before { opacity: 1; }
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--italic"><span class="title-txt" data-i18n="chegarH2">como chegar?</span><span
-              class="title-art" aria-hidden="true"
+              class="title-art title-art--pino" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/comochegar.svg&quot;); --art-w-pt: 293.65625; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
                      --art-en: url(&quot;fonts/howtogethere.svg&quot;); --art-w-en: 341.8886719; --art-h-en: 45.0375977; --art-base-en: 9.997;"></span></h2>
         <button class="tile__toggle" type="button" data-menu="menu-onde" aria-label="Mostrar mais">+</button>
@@ -1338,7 +1474,7 @@ html.menu-open .menu::before { opacity: 1; }
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--tracked"><span class="title-txt" data-i18n="sobreH2">sobre nós</span><span
-              class="title-art" aria-hidden="true"
+              class="title-art title-art--onda" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/sobrenos.svg&quot;); --art-w-pt: 203.5097656; --art-h-pt: 36.0976562; --art-base-pt: 0.577;
                      --art-en: url(&quot;fonts/aboutus.svg&quot;); --art-w-en: 178.5458984; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
         <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais">+</button>
@@ -1356,7 +1492,7 @@ html.menu-open .menu::before { opacity: 1; }
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title"><span class="title-txt" data-i18n="amH2">amigo da sineira</span><span
-              class="title-art" aria-hidden="true"
+              class="title-art title-art--festa" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/amigodasineira.svg&quot;); --art-w-pt: 341.7735316; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
                      --art-en: url(&quot;fonts/asineirafriend.svg&quot;); --art-w-en: 310.5738803; --art-h-en: 36.3850665; --art-base-en: 0.864;"></span></h2>
         <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais">+</button>
@@ -1403,20 +1539,20 @@ html.menu-open .menu::before { opacity: 1; }
     <!-- ===== sobre nós ===== -->
     <section class="menu-item menu-section" id="menu-sobre" data-delay="1">
       <h2 class="menu__h2"><span class="title-txt" data-i18n="sobreH2">sobre nós</span><span
-            class="title-art" aria-hidden="true"
+            class="title-art title-art--onda" aria-hidden="true"
             style="--art-pt: url(&quot;fonts/sobrenos.svg&quot;); --art-w-pt: 203.5097656; --art-h-pt: 36.0976562; --art-base-pt: 0.577;
                    --art-en: url(&quot;fonts/aboutus.svg&quot;); --art-w-en: 178.5458984; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
       <p class="menu__lead" data-i18n="sobreP">Associação e Espaço Cultural criado em 2025 por Sara Garcia etc.</p>
 
       <h3 class="menu__h3 menu__h3--art"><span class="title-txt" data-i18n="secMissao">missão e valores</span><span
-            class="title-art" aria-hidden="true"
+            class="title-art title-art--onda" aria-hidden="true"
             style="--art-pt: url(&quot;fonts/missaoevalores.svg&quot;); --art-w-pt: 341.9599609; --art-h-pt: 35.7900391; --art-base-pt: 0.576;
                    --art-en: url(&quot;fonts/missionandvalues.svg&quot;); --art-w-en: 391.4970703; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h3>
       <p class="menu__text" data-i18n="missaoP">Artes para a comunidade e uma comunidade para as Artes. Formação, criação e apresentação sob o mesmo tecto, abertos a quem cá vive e a quem cá chega.</p>
       <p class="menu__text" data-i18n="espP">Criada em 2025, a Sineira — Associação Cultural surge como um coletivo, mas também como espaço físico. Área aproximada: 18.000 m².</p>
 
       <h3 class="menu__h3 menu__h3--art"><span class="title-txt" data-i18n="secEquipa">equipa</span><span
-            class="title-art" aria-hidden="true"
+            class="title-art title-art--saltinhos" aria-hidden="true"
             style="--art-pt: url(&quot;fonts/equipa.svg&quot;); --art-w-pt: 138.1201172; --art-h-pt: 44.5571289; --art-base-pt: 9.516;
                    --art-en: url(&quot;fonts/team.svg&quot;); --art-w-en: 102.9433594; --art-h-en: 32.1513672; --art-base-en: 0.576;"></span></h3>
       <p class="menu__note" data-i18n="equipaNote">Apresentação da equipa, brevemente.</p>
@@ -1425,7 +1561,7 @@ html.menu-open .menu::before { opacity: 1; }
     <!-- ===== como chegar ===== -->
     <section class="menu-item menu-section" id="menu-onde" data-delay="2">
       <h2 class="menu__h2"><span class="title-txt" data-i18n="chegarH2">como chegar?</span><span
-            class="title-art" aria-hidden="true"
+            class="title-art title-art--pino" aria-hidden="true"
             style="--art-pt: url(&quot;fonts/comochegar.svg&quot;); --art-w-pt: 293.65625; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
                    --art-en: url(&quot;fonts/howtogethere.svg&quot;); --art-w-en: 341.8886719; --art-h-en: 45.0375977; --art-base-en: 9.997;"></span></h2>
 
@@ -1489,7 +1625,7 @@ html.menu-open .menu::before { opacity: 1; }
       </ul>
 
       <h3 class="menu__h3 menu__h3--art"><span class="title-txt" data-i18n="secEspacos">espaços</span><span
-            class="title-art" aria-hidden="true"
+            class="title-art title-art--espacar" aria-hidden="true"
             style="--art-pt: url(&quot;fonts/espacos.svg&quot;); --art-w-pt: 171.53125; --art-h-pt: 37.1981288; --art-base-pt: 11.774;
                    --art-en: url(&quot;fonts/spaces.svg&quot;); --art-w-en: 145.7802734; --art-h-en: 34.939828; --art-base-en: 9.516;"></span></h3>
       <ul class="menu__list-plain">
@@ -1515,7 +1651,7 @@ html.menu-open .menu::before { opacity: 1; }
     <!-- ===== fala connosco ===== -->
     <section class="menu-item menu-section" id="menu-fala" data-delay="3">
       <h2 class="menu__h2"><span class="title-txt" data-i18n="falaH2">fala connosco!</span><span
-            class="title-art" aria-hidden="true"
+            class="title-art title-art--festa" aria-hidden="true"
             style="--art-pt: url(&quot;fonts/falaconnosco.svg&quot;); --art-w-pt: 299.5224609; --art-h-pt: 36.097168; --art-base-pt: 0.576;
                    --art-en: url(&quot;fonts/talktous.svg&quot;); --art-w-en: 199.7675781; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
 
@@ -1757,6 +1893,66 @@ html.menu-open .menu::before { opacity: 1; }
   var descMeta = document.querySelector('meta[name="description"]');
   var ptDesc = descMeta ? descMeta.getAttribute('content') : '';
 
+
+  /* ---------- as palavras desenhadas partem-se em letras ---------- */
+
+  /* Onde acaba uma letra e começa a seguinte, dentro de cada desenho, nas
+     unidades do próprio ficheiro. Os cortes ficam a meio do branco entre
+     letras, e o primeiro e o último são as bordas do desenho — somadas, as
+     fatias dão a palavra inteira sem falta nem sobra.
+
+     Vêm daqui e não do ficheiro para não ser preciso ir buscar e medir
+     dezoito svg de cada vez que a página abre. Se um desenho for exportado
+     de novo com outro número de letras, é esta linha que muda. */
+  var CORTES = {
+    'eventos':          [0,23.178,47.053,71.573,96.162,112.824,138.271,160.7686],
+    'events':           [0,23.178,47.053,71.573,96.162,112.901,135.1719],
+    'atividades':       [0,23.129,40.662,49.593,75.654,84.84,111.938,136.962,163.865,189.343,211.9082],
+    'activities':       [0,23.67,48.134,65.295,74.227,100.288,108.885,126.6,136.198,161.739,184.3037],
+    'comochegar':       [0,23.508,50.128,88.646,120.909,151.382,176.408,202.015,228.243,253.925,271.72,293.6562],
+    'howtogethere':     [0,23.717,49.621,91.875,113.093,144.214,175.952,201.039,223.623,254.079,280.301,296.988,320.864,341.8887],
+    'sobrenos':         [0,22.591,49.266,76.318,93.053,123.789,154.477,181.013,203.5098],
+    'aboutus':          [0,24.322,51.19,77.905,102.205,125.345,155.359,178.5459],
+    'amigodasineira':   [0,24.322,64.018,74.445,101.316,133.512,165.396,195.964,230.945,240.936,266.48,292.542,302.597,319.35,341.7735],
+    'asineirafriend':   [0,32.857,68.374,78.365,103.91,129.972,140.027,156.779,185.404,207.31,224.044,233.367,259.673,284.889,310.5739],
+    'falaconnosco':     [0,14.988,39.474,49.665,80.348,110.723,137.352,163.189,188.972,215.507,238.716,262.937,290.164,299.5225],
+    'talktous':         [0,16.028,40.822,51.691,82.6,103.159,134.92,165.164,190.394,199.7676],
+    'missaoevalores':   [0,37.798,48.083,71.993,95.364,119.725,151.719,186.929,216.582,240.596,250.827,278.252,294.948,319.395,341.96],
+    'missionandvalues': [0,37.798,48.083,71.993,96.027,105.759,133.192,163.908,195.153,220.854,252.777,283.116,307.13,317.946,343.443,368.932,391.4971],
+    'equipa':           [0,24.202,51.077,77.215,88.224,114.99,138.1201],
+    'team':             [0,15.89,40.327,65.356,102.9434],
+    'espacos':          [0,24.072,48.019,74.114,98.491,123.246,149.034,171.5312],
+    'spaces':           [0,23.292,49.386,73.762,98.517,123.215,145.7803],
+  };
+
+  /* Uma <span> por letra, com a fatia que lhe toca. Corre outra vez a cada
+     troca de idioma, porque a palavra inglesa tem as suas letras — e não
+     corre à toa: se a palavra já está partida naquela língua, fica como
+     está, que refazê-la cortaria o movimento a meio. */
+  function partirTitulos() {
+    Array.prototype.forEach.call(document.querySelectorAll('.title-art'), function (art) {
+      var url = getComputedStyle(art).getPropertyValue('--art');
+      var nome = (url.match(/fonts\/([\w-]+)\.svg/) || [])[1];
+      var cortes = CORTES[nome];
+      if (!cortes) {                       /* desenho sem cortes: máscara só */
+        art.classList.remove('is-split');
+        art.innerHTML = '';
+        art.removeAttribute('data-arte');
+        return;
+      }
+      if (art.getAttribute('data-arte') === nome) return;
+      var html = '';
+      for (var i = 0; i < cortes.length - 1; i++) {
+        html += '<span class="title-art__l" style="--l:' + i +
+                ';--x:' + cortes[i] +
+                ';--w:' + (cortes[i + 1] - cortes[i]).toFixed(3) + '"></span>';
+      }
+      art.innerHTML = html;
+      art.setAttribute('data-arte', nome);
+      art.classList.add('is-split');
+    });
+  }
+
   function applyLang() {
     var lang = state.lang;
     var t = I18N[lang];
@@ -1787,6 +1983,9 @@ html.menu-open .menu::before { opacity: 1; }
     btnEn.style.opacity = lang === 'en' ? '1' : '.38';
     amigoCta.href = 'mailto:ola@asineira.pt?subject=' +
       encodeURIComponent(lang === 'en' ? I18N.en.amSubject : 'Quero ser Amigo da Sineira');
+
+    /* Depois do texto, porque é o lang do <html> que escolhe o desenho. */
+    partirTitulos();
 
     try { localStorage.setItem('sineira-lang', lang); } catch (e) {}
   }
@@ -2000,6 +2199,17 @@ html.menu-open .menu::before { opacity: 1; }
     btn.addEventListener('click', function () {
       var open = btn.getAttribute('aria-expanded') !== 'true';
       go(open ? routeByTile(btn.getAttribute('data-tile')) : null);
+    });
+  });
+
+  /* Carregar em qualquer sítio da cabeça do cartão é carregar no "+": o alvo
+     passa a ser o título inteiro e não um sinal de 38px. O clique que cai no
+     próprio botão segue o seu caminho, senão contava duas vezes. */
+  document.querySelectorAll('.tile__head').forEach(function (head) {
+    head.addEventListener('click', function (ev) {
+      if (ev.target.closest('.tile__toggle')) return;
+      var btn = head.querySelector('.tile__toggle');
+      if (btn) btn.click();
     });
   });
 
