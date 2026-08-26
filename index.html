@@ -748,10 +748,14 @@ html[lang="en"] .title-art {
 .tile__text { max-width: 62ch; font-size: 14px; line-height: 1.65; }
 .tile__list + .tile__text { margin-top: 12px; }
 
-/* Resumo em versaletes, colado ao fundo do mosaico. */
+/* Resumo em versaletes, colado ao fundo do mosaico. O padding é o mínimo que
+   fica entre ele e o que vem por cima: com as linhas à medida do conteúdo, é
+   quase sempre este mínimo que se vê, e por isso é ele que dá o ar ao
+   mosaico. O margin-top: auto empurra-o para o fundo quando a linha for mais
+   alta do que o conteúdo pediu. */
 .tile__caption {
   margin-top: auto;
-  padding-top: 26px;
+  padding-top: 52px;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .1em;
