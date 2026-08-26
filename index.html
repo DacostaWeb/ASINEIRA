@@ -818,6 +818,16 @@ html[lang="en"] .title-art {
   object-fit: cover;
 }
 
+/* A célula ao lado do cartão dos eventos tem lá dentro as quatro fotografias,
+   uma por evento, empilhadas na mesma casa da grelha: a troca é só de
+   opacidade, e assim não há um salto em branco à espera de carregar. */
+.media--eventos img { grid-area: 1 / 1; opacity: 0; transition: opacity .45s ease; }
+.media--eventos img.is-on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .media--eventos img { transition: none; }
+}
+
 
 /* --- Blocos de conteúdo dentro dos cartões abertos --- */
 
@@ -919,66 +929,6 @@ html[lang="en"] .title-art {
   .aerial__tag--home { font-size: 9.5px; }
   .aerial__tag--home svg { width: 12px; }
 }
-
-
-/* Cartão com fotografia ao lado: a fotografia do evento em foco à esquerda,
-   o resto do cartão à direita. A fotografia sangra até aos bordos — sai do
-   padding do cartão pelas margens negativas — e a moldura corta-a (o .tile
-   já é overflow: clip).
-
-   Só a partir de duas colunas: mais estreito do que isso, a fotografia vai
-   para cima, que é onde cabe. */
-.tile--foto { flex-direction: column; }
-
-.tile__figure {
-  position: relative;
-
-  /* O mosaico encosta o que tem dentro à esquerda (align-items: flex-start),
-     e a fotografia não tem conteúdo que lhe dê largura — as imagens estão
-     todas em posição absoluta. Sem isto ficava com zero de largura. */
-  align-self: stretch;
-
-  margin: calc(var(--tile-pad) * -1) calc(var(--gutter) * -1) 22px;
-  aspect-ratio: 16 / 10;
-  overflow: clip;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-}
-
-/* A fotografia não pede altura nenhuma: ocupa o que a caixa lhe der. Assim a
-   linha do mosaico continua a ser medida pelo texto, e não por ela. */
-.tile__figure img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* A troca é um esbatimento curto: com duas imagens sobrepostas, a que sai
-   apaga-se por cima da que entra. */
-.tile__figure img { opacity: 0; transition: opacity .45s ease; }
-.tile__figure img.is-on { opacity: 1; }
-
-@media (prefers-reduced-motion: reduce) {
-  .tile__figure img { transition: none; }
-}
-
-.tile--foto.tile--span {
-  flex-direction: row;
-  align-items: stretch;
-  gap: var(--gutter);
-}
-
-.tile--foto.tile--span .tile__figure {
-  flex: 0 0 38%;
-  margin: calc(var(--tile-pad) * -1) 0 calc(var(--tile-pad) * -1) calc(var(--gutter) * -1);
-  aspect-ratio: auto;
-}
-
-/* Aberto em painel a fotografia não tem papel nenhum — o painel traz as suas,
-   uma por evento — e o cartão volta a ser uma coluna só. */
-.tile.is-expanded .tile__figure { display: none; }
-.tile--foto.is-expanded { flex-direction: column; }
 
 
 /* Tabela de eventos do mosaico fechado: data, projeto, sítio e natureza.
@@ -1701,19 +1651,18 @@ html.menu-open .menu::before { opacity: 1; }
 
   <!-- Linha 1: fotografia | eventos (duas colunas) | fotografia -->
 
-  <figure class="media">
-    <img src="./voar4-mt1lbpkk-gskk.jpg" data-i18n-alt="alt1" alt="Crianças em atividade de formação em palco" loading="lazy">
-  </figure>
+  <!-- A fotografia dos eventos é esta célula da grelha, a que está ao lado do
+       cartão: é o JS que lhe põe dentro as quatro, uma por evento, e escolhe
+       qual delas se vê (ver evPintaFotos). Numa coluna só, a grelha põe-na
+       por cima do cartão, que é onde o rascunho a quer. -->
+  <figure class="media media--eventos" id="ev-foto"></figure>
 
-  <!-- O cartão dos eventos tem duas metades: a fotografia do que está em foco
-       e, ao lado, a lista. Quem passa o rato por uma linha troca a fotografia
-       e sublinha a linha; sem rato em cima, a lista anda sozinha de três em
-       três segundos. O que está aqui dentro é escrito pelo JS a partir de uma
-       lista só (ver EVENTOS), que é a mesma que enche a grelha do painel e o
-       calendário — três sítios a dizer o mesmo têm de o ler do mesmo lado. -->
-  <article class="tile tile--blue tile--foto" id="eventos" data-screen-label="eventos">
-    <figure class="tile__figure" id="ev-foto"></figure>
-
+  <!-- Quem passa o rato por uma linha sublinha-a e troca a fotografia do lado;
+       sem rato em cima, a lista anda sozinha de três em três segundos. O que
+       está aqui dentro é escrito pelo JS a partir de uma lista só (ver
+       EVENTOS), que é a mesma que enche a grelha do painel e o calendário —
+       três sítios a dizer o mesmo têm de o ler do mesmo lado. -->
+  <article class="tile tile--blue" id="eventos" data-screen-label="eventos">
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--regular"><span class="title-txt" data-i18n="evH2">eventos</span><span
@@ -2258,7 +2207,6 @@ html.menu-open .menu::before { opacity: 1; }
       capFase: 'Phasing of the works',
       altFase: 'Phasing plan for the works at the former Retorta Church',
       altAerea: 'Aerial view of Retorta: a Sineira, the bridge over the river Ave, the schools and surroundings',
-      alt1: 'Children in a training activity on stage',
       alt2: 'Musician with guitar surrounded by children on stage',
       alt3: 'Dancer in rehearsal with a wooden structure',
       alt5: 'Performer leaping down an aisle of shelving',
@@ -2534,7 +2482,7 @@ html.menu-open .menu::before { opacity: 1; }
   /* De três em três segundos, e só enquanto o cartão está fechado, à vista e
      sem ninguém a apontar-lhe. A quem pediu ao sistema para não ver coisas a
      mexer, a lista anda na mesma — é isso que ela é —, mas a troca deixa de
-     ser esbatida e passa a ser seca (ver .tile__figure img). */
+     ser esbatida e passa a ser seca (ver .media--eventos img). */
   function evAnda() {
     if (evParado || document.hidden) return;
     if (evTile && evTile.classList.contains('is-expanded')) return;
