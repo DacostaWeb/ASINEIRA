@@ -101,6 +101,7 @@ body {
   color: var(--blue);
   font-family: var(--font);
   font-weight: 300;            /* Light: é o peso do texto corrido do site */
+  font-size: 13px;             /* o corpo do texto; quem quer outro tamanho pede-o */
   text-wrap: pretty;
 }
 
@@ -721,7 +722,7 @@ html[lang="en"] .title-art {
      por linha, quando na Helvetica a mesma regra dava perto de 50 — daí os
      valores subirem com a troca de tipo. */
   max-width: 50ch;
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1.45;
 }
 
@@ -772,9 +773,9 @@ html[lang="en"] .title-art {
   flex-direction: column;
   gap: 2px;
 }
-.tile__list li { font-size: 14px; line-height: 1.6; }
+.tile__list li { font-size: 13px; line-height: 1.6; }
 
-.tile__text { max-width: 62ch; font-size: 14px; line-height: 1.65; }
+.tile__text { max-width: 62ch; font-size: 13px; line-height: 1.65; }
 .tile__list + .tile__text { margin-top: 12px; }
 
 /* Resumo em versaletes, colado ao fundo do mosaico. O padding é o mínimo que
@@ -1125,19 +1126,19 @@ html.menu-open .menu::before { opacity: 1; }
   text-transform: uppercase;
 }
 
-.menu__lead { max-width: 50ch; font-size: 15px; line-height: 1.45; }
-.menu__text { max-width: 62ch; margin-top: 8px; font-size: 14px; line-height: 1.65; }
+.menu__lead { max-width: 50ch; font-size: 13px; line-height: 1.45; }
+.menu__text { max-width: 62ch; margin-top: 8px; font-size: 13px; line-height: 1.65; }
 .menu__note { margin-top: 8px; font-size: 12px; opacity: .75; }
 
 .menu__list-plain {
   list-style: none;
   margin-top: 14px;
   padding: 0;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.7;
 }
 
-.menu__links { list-style: none; margin-top: 8px; padding: 0; font-size: 14px; line-height: 1.8; }
+.menu__links { list-style: none; margin-top: 8px; padding: 0; font-size: 13px; line-height: 1.8; }
 .menu__links a { text-decoration: underline; }
 
 
@@ -1180,7 +1181,7 @@ html.menu-open .menu::before { opacity: 1; }
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
 }
 .cform__input::placeholder { color: inherit; opacity: .65; }
 .cform__input:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
