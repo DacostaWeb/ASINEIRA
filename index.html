@@ -695,8 +695,16 @@ html[lang="en"] .title-art {
   /* Quem tem de assentar na margem é o cartão, não a sua sombra — e a sombra
      faz parte do desenho: são 13 das 201 unidades de largura do ficheiro e
      16 das 140 de altura. Empurrado por esse tanto, o corpo do cartão fica
-     na linha do "+" lá em cima e do rodapé em versaletes. */
-  .tile--span .friend-card { transform: translate(6.4677%, 11.4286%); }
+     na linha do "+" lá em cima e do rodapé em versaletes.
+
+     O empurrão é dado à caixa e não ao desenho: a caixa corta o que lhe sai
+     de dentro (ver .tile__aside), e o que lhe saía era a sombra. */
+  .tile--span .tile__aside { transform: translate(6.4677%, 11.4286%); }
+
+  /* A caixa tem de ficar do tamanho exacto do desenho, ou a fracção de cima
+     media-se numa altura que não é a dele. O ar por cima é do desenho em
+     coluna; aqui, encostado ao fundo, não serve para nada. */
+  .tile--span .friend-card { margin-top: 0; }
 
   /* Aberto em painel não há segunda coluna que valha: o cartão volta ao fio
      do conteúdo, senão ficava pendurado a meio de um painel vazio. */
@@ -1298,11 +1306,15 @@ html.menu-open .menu::before { opacity: 1; }
 
   /* Em telemóvel não há segunda coluna onde pousar o cartão de amigo: fica
      debaixo do "quero aderir", mais pequeno, com mais ar por cima e a puxar
-     um pouco para a margem, para não ficar alinhado com o texto. */
+     um pouco para a margem, para não ficar alinhado com o texto.
+
+     O puxão é dado à caixa, e não ao desenho: a caixa corta o que lhe sai de
+     dentro, e o que lhe saía era a sombra. */
+  .tile__aside { margin-left: -12px; }
+
   .friend-card {
     width: min(100%, 220px);
     margin-top: 50px;
-    margin-left: -12px;
   }
 }
 </style>
@@ -2437,11 +2449,11 @@ html.menu-open .menu::before { opacity: 1; }
 
     var oneCol = state.cols <= 1, tallest = 0, sum = 0, i;
     for (i = 0; i < rows.length; i++) {
-      /* A duas colunas ou mais nenhuma linha passa de um ecrã: mais alta do
-         que a janela obrigava a rolar dentro da própria linha para se chegar
-         ao fundo do cartão. Numa coluna só, quem precisa de mais fica com
-         mais — não há ninguém ao lado a quem responder. */
-      rows[i] = Math.max(MIN_ROW, oneCol ? rows[i] : Math.min(avail, rows[i]));
+      /* Nenhuma linha fica mais baixa do que o conteúdo que a pediu, seja
+         qual for o tamanho da janela: numa janela baixa é a grelha que rola
+         — é para isso que ela rola —, e não o cartão que se corta a meio de
+         uma frase. */
+      rows[i] = Math.max(MIN_ROW, rows[i]);
       tallest = Math.max(tallest, rows[i]);
       sum += rows[i];
     }
