@@ -692,6 +692,12 @@ html[lang="en"] .title-art {
     margin: 0;
   }
 
+  /* Quem tem de assentar na margem é o cartão, não a sua sombra — e a sombra
+     faz parte do desenho: são 13 das 201 unidades de largura do ficheiro e
+     16 das 140 de altura. Empurrado por esse tanto, o corpo do cartão fica
+     na linha do "+" lá em cima e do rodapé em versaletes. */
+  .tile--span .friend-card { transform: translate(6.4677%, 11.4286%); }
+
   /* Aberto em painel não há segunda coluna que valha: o cartão volta ao fio
      do conteúdo, senão ficava pendurado a meio de um painel vazio. */
   .tile.is-expanded .tile__aside {
