@@ -1090,11 +1090,17 @@ html.menu-open .menu::before { opacity: 1; }
 
 /* Uma linha do menu: título | corpo, partidos ao meio. O título encosta à
    divisão pela direita e o corpo começa do outro lado dela — as duas
-   colunas lêem-se como uma frase que atravessa o ecrã. */
+   colunas lêem-se como uma frase que atravessa o ecrã.
+
+   E lêem-se na mesma linha: o título assenta na linha de base da primeira
+   linha do corpo, seja ela um parágrafo, uma lista de ligações ou o primeiro
+   campo do formulário. Alinhar pelo topo punha cada um à altura do que tem
+   dentro, e a frase partia-se ao meio. Em coluna única cada um fica na sua
+   linha e isto não tem efeito nenhum. */
 .menu-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: start;
+  align-items: baseline;
 }
 .menu-row + .menu-row { margin-top: 34px; }
 
@@ -1121,11 +1127,21 @@ html.menu-open .menu::before { opacity: 1; }
 .menu__h3 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 12px;
+
+  /* O corpo e a entrelinha do h2, e não os do rótulo pequeno que aqui esteve.
+     Não é pelo texto — esse está fora da vista, para quem lê por leitor de
+     ecrã —, é pela linha: com uma linha curta, quem mandava na altura era o
+     desenho, e cada palavra punha a sua linha de base onde a sua letra mais
+     alta a punha. "equipa" e "missão e valores", que sobem, ficavam quase
+     certas; "espaços", "press" e "contactos", que não sobem, ficavam seis
+     pixéis acima das outras. Com esta linha, é ela que manda em todas. */
+  font-size: var(--menu-h2);
+  line-height: 1;
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
 }
+
 /* Os títulos do menu são os desenhos da pasta fonts/, e todos ao mesmo corpo
    — o de uma linha do texto que têm ao lado. Não há títulos grandes e
    rótulos pequenos: a coluna da esquerda lê-se toda de uma vez.
