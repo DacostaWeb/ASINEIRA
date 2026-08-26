@@ -2320,25 +2320,36 @@ html.menu-open .menu::before { opacity: 1; }
     return Math.ceil(max);
   }
 
-  function measure() {
-    if (!grid) return;
-
+  /* Pôr a esticar quem tem de esticar para o número de colunas do momento. */
+  function applyCols() {
     var cols = currentCols();
     if (cols !== state.cols) {
       state.cols = cols;
       layout(cols);
     }
+  }
 
+  function measure() {
+    if (!grid) return;
+    applyCols();
     fitRows();
   }
 
   /* Remedir a altura natural e voltar a distribuir. Só a partir de eventos da
-     janela, nunca do observer. */
+     janela, nunca do observer.
+
+     Primeiro quem se estica, só depois a medição: a altura natural de um
+     cartão depende da largura da coluna onde está, e quem ocupa duas colunas
+     muda com a largura da janela. Medir antes de repor os spans dava a altura
+     da distribuição anterior — e como o valor fica guardado até à próxima
+     medição, voltar à largura de origem trazia a medida errada da outra
+     largura e o número de linhas por ecrã só assentava com um refresh. */
   function remeasure() {
     if (!grid) return;
+    applyCols();
     var h = naturalRowHeight();
     if (h > 0) state.minCardH = h;
-    measure();
+    fitRows();
   }
 
   /* Altura de cada cartão = altura visível a dividir por um número inteiro de
