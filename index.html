@@ -129,7 +129,6 @@ a:hover { text-decoration: underline; }
    traço do Light não aguenta, e nas etiquetas sobre a fotografia aérea o
    monospace transbordava da caixa. */
 .tile__title,
-.tile__toggle,
 .tile__caption,
 .tile__cta,
 .lang,
@@ -662,9 +661,10 @@ html[lang="en"] .title-art {
   border: none;
   background: none;
   color: inherit;
+  /* O "+" é texto corrido como o resto: Roboto Mono, e no mesmo Light. */
   font: inherit;
   font-size: 38px;
-  font-weight: 700;
+  font-weight: 300;
   line-height: .75;
   cursor: pointer;
   transition: transform .25s ease;
