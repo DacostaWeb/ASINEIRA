@@ -1040,6 +1040,13 @@ html[lang="en"] .title-art {
   /* Os títulos valem uma linha do texto que têm ao lado: é a altura da
      linha do .menu__text (13px × 1.65) que lhes dá o corpo. */
   --menu-h2: calc(13px * 1.65);
+
+  /* A divisão das duas metades cai a meio do ecrã, e a meio do ecrã está o
+     PT — EN. A folga de cada lado é metade dele: assim o título acaba onde
+     começa o "PT" e o corpo começa onde acaba o "EN", e as três coisas lêem-
+     se na mesma vertical. São 62.4px de rótulo, em Helvetica de 12px — se um
+     dia ele mudar de corpo ou de palavras, é este número que muda. */
+  --menu-folga: 31.2px;
   --menu-top: calc(var(--header-h) + var(--tile-pad));
   padding: var(--menu-top) var(--gutter) 160px;
   overflow-y: auto;
@@ -1108,12 +1115,12 @@ html.menu-open .menu::before { opacity: 1; }
 .menu-row + .menu-row { margin-top: 34px; }
 
 .menu-row__title {
-  padding-right: clamp(16px, 3vw, 40px);
+  padding-right: var(--menu-folga);
   text-align: right;
 }
 
 .menu-row__body {
-  padding-left: clamp(16px, 3vw, 40px);
+  padding-left: var(--menu-folga);
   min-width: 0;
 }
 
@@ -1152,11 +1159,15 @@ html.menu-open .menu::before { opacity: 1; }
    O que desce abaixo da linha de base — o "p" de press, a cauda do "q" de
    equipa, a cedilha de "espaços" — desce por vertical-align e não por margem
    negativa: assim conta para a altura da linha, e o espaço por baixo é o
-   mesmo em todas as palavras, desçam elas ou não. */
+   mesmo em todas as palavras, desçam elas ou não.
+
+   E desce mais um pixel do que a conta pede: assente na linha de base ao
+   milímetro, o desenho lê-se alto ao lado do texto, que é fino e de caixa
+   baixa. O olho ganha ao que a conta perde. */
 .menu__h2 .title-art,
 .menu__h3 .title-art {
   font-size: var(--menu-h2);
-  vertical-align: calc(var(--art-base) / 48 * -1em);
+  vertical-align: calc(var(--art-base) / 48 * -1em - 1px);
   margin-bottom: 0;
 }
 
