@@ -61,7 +61,7 @@
   --col-min:       360px;   /* largura mínima de coluna antes de quebrar */
   --col-max-n:         4;   /* número máximo de colunas */
   --panel-content: 900px;   /* largura de leitura do cartão aberto em painel */
-  --card-h:       320px;    /* altura de cada cartão; o JS recalcula-a (fitRows) */
+  --card-h:       320px;    /* altura de recurso das linhas, antes de o JS as medir */
   --scroll-offset:  80px;   /* folga para o cabeçalho ao saltar para uma âncora */
   --marquee-h:      40px;
 
@@ -384,10 +384,10 @@ html.menu-open .lang { color: var(--cream); }
    mínima de leitura: o primeiro trava a contagem em 4 colunas, o segundo
    faz quebrar para 3, 2 e 1 à medida que a janela estreita.
 
-   As linhas seguem a mesma ideia na vertical: --card-h vem do JS e vale
-   sempre uma fração inteira da altura visível, para que um ecrã mostre um
-   número certo de linhas e não sobre fundo em baixo. O minmax deixa a linha
-   crescer se um cartão for aberto com mais conteúdo do que a altura dá. */
+   Na vertical cada linha vale o que o seu conteúdo pede: o JS mede-a e
+   escreve as alturas todas em grid-template-rows (ver measureRows). O
+   grid-auto-rows aqui é só o que se vê antes de o JS medir, e se não houver
+   JS nenhum. */
 .tiles {
   /* A moldura: do fundo do cabeçalho ao topo do marquee. É este o único
      contentor que rola em toda a página. */
@@ -412,6 +412,25 @@ html.menu-open .lang { color: var(--cream); }
   grid-auto-rows: minmax(var(--card-h), auto);
 }
 
+/* Estado de um instante, o da medição: as linhas ao tamanho do conteúdo e as
+   fotografias fora da conta, que a altura delas é a que sobrar. O JS põe e
+   tira estas classes dentro da mesma função, sem chegar a pintar. */
+.tiles.is-measuring {
+  grid-template-rows: none;
+  grid-auto-rows: max-content;
+}
+.tiles.is-measuring .media { height: 0; min-height: 0; }
+
+/* Na medição a coluna de conteúdo volta ao tamanho natural: o flex e o
+   min-height que a deixam encolher dentro do mosaico fá-la-iam valer quase
+   nada na conta, e a linha saía mais baixa do que o conteúdo que a pediu. */
+.tiles.is-measuring .tile__inner { flex: none; min-height: auto; }
+
+/* A duas colunas ou mais, o cartão de amigo também não conta: é ele que cede
+   o espaço para o mosaico acompanhar a altura do vizinho do lado. Numa
+   coluna só não há vizinho nenhum, e então conta como tudo o resto. */
+.tiles.is-measuring--tight .tile__aside { display: none; }
+
 /* Cada mosaico recebe o seu par fundo/texto por uma classe modificadora,
    para que nenhuma cor apareça solta dentro dos blocos. */
 .tile {
@@ -423,6 +442,9 @@ html.menu-open .lang { color: var(--cream); }
   background: var(--tile-bg);
   color: var(--tile-fg);
   scroll-margin-top: var(--scroll-offset);
+  /* A linha tem a altura do conteúdo que não se pode cortar; o que passar
+     disso é conteúdo que se corta de propósito, e é aqui que se corta. */
+  overflow: hidden;
 }
 
 /* Coluna interior: é ela que tem a largura de leitura e que empurra a legenda
@@ -433,7 +455,18 @@ html.menu-open .lang { color: var(--cream); }
   flex-direction: column;
   flex: 1;
   width: 100%;
+  /* Sem isto a coluna nunca ficava mais baixa do que o seu conteúdo (o
+     min-height automático de quem está dentro de um flex), e o mosaico
+     crescia por dentro em vez de cortar o que não cabe. */
+  min-height: 0;
 }
+
+/* Quando o cartão fica mais baixo do que o seu conteúdo, alguém tem de ceder.
+   O texto e o rodapé não cedem nada — é por eles que a linha foi medida —, e
+   o cartão de amigo encolhe até desaparecer. Sem isto, o que saía do mosaico
+   era o rodapé em versaletes, que está colado ao fundo. */
+.tile__inner > * { flex-shrink: 0; }
+.tile__aside { flex-shrink: 1; min-height: 0; overflow: hidden; }
 
 .tile--cream { --tile-bg: var(--cream); --tile-fg: var(--blue); }
 .tile--blue  { --tile-bg: var(--blue);  --tile-fg: var(--cream); }
@@ -741,14 +774,27 @@ html[lang="en"] .title-art {
   text-decoration: none;
 }
 
-/* Fotografias intercaladas na grelha. Ocupam o cartão todo — aqui o
-   conteúdo não é limitado, senão via-se fundo à volta da imagem. */
+/* Fotografias intercaladas na grelha. Tomam a altura da linha, seja ela qual
+   for: são conteúdo que se recorta sem se perder, e por isso não são elas que
+   mandam na altura — recortam-se para acompanhar o mosaico do lado. */
 .media {
-  display: grid;
+  position: relative;
   background: var(--blue);
-  min-height: var(--card-h);
+  overflow: hidden;
 }
-.media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* A imagem preenche a linha por fora do fluxo: encostada aos quatro cantos,
+   ela toma a altura que a linha tiver sem ter de a ir buscar a uma
+   percentagem — que só resolve quando o pai tem altura própria, e aqui a
+   altura vem de fora, da linha da grelha. */
+.media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 
 /* --- Blocos de conteúdo dentro dos cartões abertos --- */
@@ -2207,6 +2253,11 @@ html.menu-open .menu::before { opacity: 1; }
     btn.style.transform = open ? 'rotate(45deg)' : 'none';
     if (body) body.style.display = open ? 'block' : 'none';
     if (tile) tile.classList.toggle('is-expanded', open);
+
+    /* Enquanto o painel esteve aberto o mosaico esteve fora da grelha e as
+       medidas ficaram por fazer (ver remeasure). Ao fechar, volta ao seu
+       lugar — e é agora que a linha dele se mede. */
+    if (!open) remeasure();
   }
 
   function closeTiles() {
@@ -2253,9 +2304,8 @@ html.menu-open .menu::before { opacity: 1; }
 
   /* ---------- grelha: quantas colunas e quantas linhas cabem ---------- */
 
-  var MAX_ROWS = 4;       /* nunca mostrar mais de 4 linhas de uma vez */
-
-  var tiles = document.querySelectorAll('.tile');
+  var MIN_ROW    = 160;    /* nenhuma linha fica mais baixa do que isto */
+  var PHOTO_PART = 0.66;   /* linha só de fotografias: altura, em fração da largura da coluna */
 
   /* Quantas colunas o CSS está mesmo a desenhar. Contar aqui em vez de repetir
      a conta da folha de estilos evita que os dois discordem — se discordassem,
@@ -2292,32 +2342,61 @@ html.menu-open .menu::before { opacity: 1; }
     span(mediaFim, cols === 3);
   }
 
-  /* Altura a que um cartão fechado deixa de caber, medida em vez de adivinhada:
-     põe as linhas ao tamanho do conteúdo, tira o piso às figuras e fica com a
-     mais alta. Depende da largura das colunas, por isso é remedida a cada
-     redimensionamento da janela.
+  /* Agrupa os mosaicos por linha e devolve a altura que cada uma pede.
 
-     Nunca chamar isto de dentro do ResizeObserver: mexe no layout e força
-     medição, a página encolhe, a barra de scroll desaparece, a grelha alarga
-     — e o observer volta a disparar em ciclo até bloquear o separador. */
-  function naturalRowHeight() {
-    var rows = grid.style.gridAutoRows;
-    var h = grid.style.getPropertyValue('--card-h');
-    grid.style.setProperty('--card-h', '0px');
-    grid.style.gridAutoRows = 'min-content';
+     Quem pede altura é o conteúdo que não se pode cortar: cabeça, texto,
+     botão e rodapé. Ficam de fora as fotografias, que se recortam, e o cartão
+     de amigo, que encolhe até desaparecer — se contassem, uma linha inteira
+     crescia por causa de um desenho e o mosaico do lado ficava com meio ecrã
+     de vazio por baixo do texto, que era o que se via no "sobre nós".
 
-    var max = 0;
-    for (var i = 0; i < tiles.length; i++) {
-      /* Um cartão aberto está em painel sobre a secção toda: se entrasse na
-         conta, a altura natural passava a ser a do painel e as linhas da
-         grelha ficavam com o dobro do tamanho. */
-      if (tiles[i].classList.contains('is-expanded')) continue;
-      max = Math.max(max, tiles[i].getBoundingClientRect().height);
+     Numa coluna só ninguém tem vizinho para acompanhar: aí cada mosaico fica
+     com o seu conteúdo todo, desenho incluído, e quem precisa de mais altura
+     mantém-na.
+
+     Como isto mexe no layout e força cálculo, nunca pode ser chamado de
+     dentro do ResizeObserver: a página encolhe, a barra de scroll desaparece,
+     a grelha alarga — e o observer voltava a disparar em ciclo até bloquear
+     o separador. */
+  function measureRows() {
+    /* As alturas da vez anterior saem primeiro: estão no atributo style, e um
+       estilo em linha ganha sempre à folha de estilos — com elas postas, a
+       medição era feita dentro delas e uma linha podia encolher mas nunca
+       voltar a crescer. */
+    grid.style.gridTemplateRows = '';
+    grid.classList.add('is-measuring');
+    grid.classList.toggle('is-measuring--tight', state.cols > 1);
+
+    /* As linhas contam-se pelas colunas que cada mosaico ocupa, e não pela
+       posição medida: uma linha só de fotografias não tem altura nenhuma
+       enquanto se mede, e duas dessas seguidas seriam indistinguíveis uma da
+       outra se fossem pelo topo. Quem não cabe no que resta da linha passa
+       para a seguinte, tal como a grelha faz. */
+    var cols = Math.max(1, state.cols), kids = grid.children, rows = [], used = cols;
+    for (var i = 0; i < kids.length; i++) {
+      var el = kids[i];
+      /* Um cartão aberto está em painel sobre a secção toda: saiu da grelha,
+         e não há linha nenhuma dele para medir. */
+      if (el.classList.contains('is-expanded')) continue;
+
+      var w = el.style.gridColumn === 'span 2' ? Math.min(2, cols) : 1;
+      if (used + w > cols) { rows.push({ h: 0, tile: false }); used = 0; }
+      used += w;
+
+      var row = rows[rows.length - 1];
+      if (el.classList.contains('tile')) {
+        row.tile = true;
+        row.h = Math.max(row.h, el.offsetHeight);
+      }
     }
 
-    grid.style.gridAutoRows = rows;
-    if (h) grid.style.setProperty('--card-h', h); else grid.style.removeProperty('--card-h');
-    return Math.ceil(max);
+    grid.classList.remove('is-measuring');
+    grid.classList.remove('is-measuring--tight');
+
+    /* Linha sem mosaico nenhum é só fotografia: como nenhuma pede altura,
+       fica com uma paisagem à medida da largura da coluna. */
+    var photo = grid.clientWidth / Math.max(1, state.cols) * PHOTO_PART;
+    return rows.map(function (row) { return Math.ceil(row.tile ? row.h : photo); });
   }
 
   /* Pôr a esticar quem tem de esticar para o número de colunas do momento. */
@@ -2329,57 +2408,69 @@ html.menu-open .menu::before { opacity: 1; }
     }
   }
 
+  /* Só as colunas — é tudo o que o observer pode fazer sem perigo: não mede
+     nada, logo não mexe na altura da página nem se dá a si próprio motivo
+     para voltar a disparar. */
   function measure() {
     if (!grid) return;
     applyCols();
-    fitRows();
   }
 
-  /* Remedir a altura natural e voltar a distribuir. Só a partir de eventos da
+  /* Medir as linhas e escrevê-las na grelha. Só a partir de eventos da
      janela, nunca do observer.
 
-     Primeiro quem se estica, só depois a medição: a altura natural de um
+     Primeiro quem se estica, só depois a medição: a altura do conteúdo de um
      cartão depende da largura da coluna onde está, e quem ocupa duas colunas
      muda com a largura da janela. Medir antes de repor os spans dava a altura
-     da distribuição anterior — e como o valor fica guardado até à próxima
-     medição, voltar à largura de origem trazia a medida errada da outra
-     largura e o número de linhas por ecrã só assentava com um refresh. */
+     da distribuição anterior — e como o valor ficava guardado, voltar à
+     largura de origem trazia a medida errada da outra largura e a grelha só
+     assentava com um refresh. */
   function remeasure() {
     if (!grid) return;
+
+    /* Com um painel aberto a grelha está tapada e falta-lhe um mosaico:
+       medi-la agora era guardar uma grelha que não é a que se vai ver. Fica
+       para o fecho do painel, que volta a chamar isto. */
+    if (grid.querySelector('.tile.is-expanded')) return;
+
     applyCols();
-    var h = naturalRowHeight();
-    if (h > 0) state.minCardH = h;
-    fitRows();
-  }
 
-  /* Altura de cada cartão = altura visível a dividir por um número inteiro de
-     linhas. Assim um ecrã mostra sempre linhas completas e, mesmo no fim do
-     scroll, não sobra fundo por baixo da última.
-
-     O número de linhas por ecrã nunca passa o total de linhas da grelha: se
-     passasse, a página ficava mais curta do que a janela e via-se fundo. */
-  function fitRows() {
     /* A altura visível é a do próprio contentor, que o CSS já prende entre o
        cabeçalho e o marquee. Medi-la é mais seguro do que voltar a fazer a
        subtracção aqui e arriscar que os dois valores discordem. */
     var avail = grid.clientHeight;
     if (avail <= 0) return;
 
-    var totalRows = getComputedStyle(grid).gridTemplateRows.split(' ').length;
-    var perScreen = Math.min(MAX_ROWS, totalRows, Math.max(1, Math.floor(avail / state.minCardH)));
+    var rows = measureRows();
+    if (!rows.length) return;
 
-    grid.style.setProperty('--card-h', (avail / perScreen).toFixed(2) + 'px');
+    var oneCol = state.cols <= 1, sum = 0, i;
+    for (i = 0; i < rows.length; i++) {
+      /* A duas colunas ou mais nenhuma linha passa de um ecrã: mais alta do
+         que a janela obrigava a rolar dentro da própria linha para se chegar
+         ao fundo do cartão. Numa coluna só, quem precisa de mais fica com
+         mais — não há ninguém ao lado a quem responder. */
+      rows[i] = Math.max(MIN_ROW, oneCol ? rows[i] : Math.min(avail, rows[i]));
+      sum += rows[i];
+    }
+
+    /* Se o conteúdo todo não chegar para encher o ecrã, cresce tudo na mesma
+       proporção: umas linhas continuam mais baixas do que as outras, e não
+       sobra fundo por baixo da última. */
+    if (sum < avail) for (i = 0; i < rows.length; i++) rows[i] *= avail / sum;
+
+    grid.style.gridTemplateRows = rows.map(function (h) {
+      return h.toFixed(2) + 'px';
+    }).join(' ');
   }
 
   state.cols = -1;
-  state.minCardH = 260;
   remeasure();
 
   /* No iOS a barra de endereço do Safari encolhe ao descer e volta a crescer
-     ao subir um pouco, e cada mudança dessas conta como um resize. Como o
-     fitRows tira a altura dos cartões da altura visível, cada uma refazia a
-     grelha a meio do gesto: a página mudava de altura debaixo do dedo e o
-     scroll dava os saltos.
+     ao subir um pouco, e cada mudança dessas conta como um resize. Como a
+     medição refaz a grelha inteira, cada uma delas dava um salto a meio do
+     gesto: a página mudava de altura debaixo do dedo.
 
      A barra vale umas dezenas de píxeis e nunca mexe na largura. Rodar o
      ecrã, que é a mudança que interessa mesmo, troca sempre a largura. Por
@@ -2397,6 +2488,10 @@ html.menu-open .menu::before { opacity: 1; }
   }
 
   window.addEventListener('resize', onResize);
+  /* As linhas seguem a altura do texto, e o texto encolhe ou cresce quando a
+     Courier Prime chega e substitui a fonte de recurso (font-display: swap).
+     Sem isto, a grelha ficava com as medidas da fonte que não é a nossa. */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
   window.addEventListener('orientationchange', function () {
     lastW = 0;   /* força a remedição, sem depender de a largura já ter mudado */
     onResize();
