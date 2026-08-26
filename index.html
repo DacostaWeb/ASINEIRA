@@ -443,8 +443,14 @@ html.menu-open .lang { color: var(--cream); }
   color: var(--tile-fg);
   scroll-margin-top: var(--scroll-offset);
   /* A linha tem a altura do conteúdo que não se pode cortar; o que passar
-     disso é conteúdo que se corta de propósito, e é aqui que se corta. */
-  overflow: hidden;
+     disso é conteúdo que se corta de propósito, e é aqui que se corta.
+
+     "clip" e não "hidden": o hidden faz de cada mosaico uma caixa que se pode
+     rolar por dentro, e dez dessas dentro da grelha — que já rola e está
+     presa ao ecrã — punham o desenho do conteúdo a ir atrás do fundo do
+     cartão a cada gesto de scroll. O clip corta na mesma e não cria caixa
+     nenhuma. */
+  overflow: clip;
 }
 
 /* Coluna interior: é ela que tem a largura de leitura e que empurra a legenda
@@ -466,7 +472,7 @@ html.menu-open .lang { color: var(--cream); }
    o cartão de amigo encolhe até desaparecer. Sem isto, o que saía do mosaico
    era o rodapé em versaletes, que está colado ao fundo. */
 .tile__inner > * { flex-shrink: 0; }
-.tile__aside { flex-shrink: 1; min-height: 0; overflow: hidden; }
+.tile__aside { flex-shrink: 1; min-height: 0; overflow: clip; }
 
 .tile--cream { --tile-bg: var(--cream); --tile-fg: var(--blue); }
 .tile--blue  { --tile-bg: var(--blue);  --tile-fg: var(--cream); }
@@ -711,6 +717,10 @@ html[lang="en"] .title-art {
   top: var(--header-h);
   bottom: var(--marquee-h);
   z-index: 15;
+  /* O painel é a excepção: aqui o conteúdo rola mesmo, e por isso volta a ser
+     uma caixa de scroll. Os dois eixos declarados, que um "clip" ao lado de
+     um "auto" não é combinação que exista. */
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;   /* não arrastar a página ao chegar ao fim */
   animation: tile-open .18s ease;
@@ -782,21 +792,24 @@ html[lang="en"] .title-art {
    for: são conteúdo que se recorta sem se perder, e por isso não são elas que
    mandam na altura — recortam-se para acompanhar o mosaico do lado. */
 .media {
-  position: relative;
+  display: grid;
   background: var(--blue);
-  overflow: hidden;
+  overflow: clip;
 }
 
-/* A imagem preenche a linha por fora do fluxo: encostada aos quatro cantos,
-   ela toma a altura que a linha tiver sem ter de a ir buscar a uma
-   percentagem — que só resolve quando o pai tem altura própria, e aqui a
-   altura vem de fora, da linha da grelha. */
+/* A imagem estica-se com a célula, e o object-fit corta o que sobrar. A
+   altura fica em auto de propósito: uma altura declarada — nem que fosse
+   100% — desliga o esticar, e a percentagem nem resolvia, que a altura do
+   pai vem de fora, da linha da grelha. O min-height tira o piso que uma
+   imagem traz por ter proporção própria, senão não encolhia. */
 .media img {
-  position: absolute;
-  inset: 0;
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  min-height: 0;
+  /* Uma imagem não se estica sozinha como um bloco qualquer se esticaria:
+     para o desenho, "normal" vale por "start". Daí pedir-lhe o stretch. */
+  align-self: stretch;
   object-fit: cover;
 }
 
