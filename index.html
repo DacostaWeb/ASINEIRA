@@ -599,14 +599,18 @@ html[lang="en"] .title-art {
 .title-art--leque .title-art__l { transform-origin: 50% 100%; }
 
 /* Nada se mexe sem razão: com rato, ao passar por cima; em ecrã estreito,
-   onde rato não há, sempre. Só nos mosaicos — no menu os títulos são texto
-   composto, e não desenhos. */
+   onde rato não há, sempre — mas só nos títulos que estão à vista, que o
+   menu fechado continua montado por baixo do mosaico. */
 @media (hover: hover) {
-  .tile__head:hover .title-art__l { animation-name: var(--art-anim); }
+  .tile__head:hover .title-art__l,
+  .menu__h2:hover   .title-art__l,
+  .menu__h3:hover   .title-art__l { animation-name: var(--art-anim); }
 }
 
 @media (max-width: 640px) {
   .tile__head .title-art__l { animation-name: var(--art-anim); }
+  html.menu-open .menu__h2 .title-art__l,
+  html.menu-open .menu__h3 .title-art__l { animation-name: var(--art-anim); }
 }
 
 /* Quem pediu ao sistema para não ver coisas a mexer perde o que se mexe
@@ -617,6 +621,8 @@ html[lang="en"] .title-art {
    e não à força de !important. */
 @media (prefers-reduced-motion: reduce) and (max-width: 640px) {
   .tile__head .title-art__l { animation-name: none; }
+  html.menu-open .menu__h2 .title-art__l,
+  html.menu-open .menu__h3 .title-art__l { animation-name: none; }
 }
 
 /* O texto sai da vista mas fica no documento: é ele que dá o título a quem
@@ -1120,14 +1126,19 @@ html.menu-open .menu::before { opacity: 1; }
   letter-spacing: .16em;
   text-transform: uppercase;
 }
-/* "missão e valores", "equipa" e "espaços" eram palavras desenhadas, e no
-   rascunho pesavam tanto como os títulos das secções: ficam com o corpo
-   deles. É isso que os separa dos rótulos do press e dos contactos, que
-   sempre foram versaletes pequenos. */
-.menu__h3--titulo {
+/* Os títulos do menu são os desenhos da pasta fonts/, e todos ao mesmo corpo
+   — o de uma linha do texto que têm ao lado. Não há títulos grandes e
+   rótulos pequenos: a coluna da esquerda lê-se toda de uma vez.
+
+   O que desce abaixo da linha de base — o "p" de press, a cauda do "q" de
+   equipa, a cedilha de "espaços" — desce por vertical-align e não por margem
+   negativa: assim conta para a altura da linha, e o espaço por baixo é o
+   mesmo em todas as palavras, desçam elas ou não. */
+.menu__h2 .title-art,
+.menu__h3 .title-art {
   font-size: var(--menu-h2);
-  letter-spacing: -.015em;
-  line-height: 1;
+  vertical-align: calc(var(--art-base) / 48 * -1em);
+  margin-bottom: 0;
 }
 
 /* Cada bloco do corpo traz o seu ar por cima, para se poderem seguir uns aos
@@ -1653,7 +1664,10 @@ html.menu-open .menu::before { opacity: 1; }
     <section class="menu-item menu-section" id="menu-sobre" data-delay="1">
       <div class="menu-row">
         <div class="menu-row__title">
-          <h2 class="menu__h2" data-i18n="sobreH2">sobre nós</h2>
+          <h2 class="menu__h2"><span class="title-txt" data-i18n="sobreH2">sobre nós</span><span
+                class="title-art title-art--saltinhos" aria-hidden="true"
+                style="--art-pt: url(&quot;fonts/sobrenos.svg&quot;); --art-w-pt: 203.5097656; --art-h-pt: 36.0976562; --art-base-pt: 0.577;
+                       --art-en: url(&quot;fonts/aboutus.svg&quot;); --art-w-en: 178.5458984; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
         </div>
         <div class="menu-row__body">
           <p class="menu__lead" data-i18n="sobreP">Associação e Espaço Cultural criado em 2025 por Sara Garcia etc.</p>
@@ -1662,7 +1676,10 @@ html.menu-open .menu::before { opacity: 1; }
 
       <div class="menu-row">
         <div class="menu-row__title">
-          <h3 class="menu__h3 menu__h3--titulo" data-i18n="secMissao">missão e valores</h3>
+          <h3 class="menu__h3"><span class="title-txt" data-i18n="secMissao">missão e valores</span><span
+                class="title-art title-art--onda" aria-hidden="true"
+                style="--art-pt: url(&quot;fonts/missaoevalores.svg&quot;); --art-w-pt: 341.9599609; --art-h-pt: 35.7900391; --art-base-pt: 0.576;
+                       --art-en: url(&quot;fonts/missionandvalues.svg&quot;); --art-w-en: 391.4970703; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h3>
         </div>
         <div class="menu-row__body">
           <p class="menu__text" data-i18n="missaoP">Artes para a comunidade e uma comunidade para as Artes. Formação, criação e apresentação sob o mesmo tecto, abertos a quem cá vive e a quem cá chega.</p>
@@ -1672,7 +1689,10 @@ html.menu-open .menu::before { opacity: 1; }
 
       <div class="menu-row">
         <div class="menu-row__title">
-          <h3 class="menu__h3 menu__h3--titulo" data-i18n="secEquipa">equipa</h3>
+          <h3 class="menu__h3"><span class="title-txt" data-i18n="secEquipa">equipa</span><span
+                class="title-art title-art--festa" aria-hidden="true"
+                style="--art-pt: url(&quot;fonts/equipa.svg&quot;); --art-w-pt: 138.1201172; --art-h-pt: 44.5571289; --art-base-pt: 9.516;
+                       --art-en: url(&quot;fonts/team.svg&quot;); --art-w-en: 102.9433594; --art-h-en: 32.1513672; --art-base-en: 0.576;"></span></h3>
         </div>
         <div class="menu-row__body">
           <p class="menu__note" data-i18n="equipaNote">Apresentação da equipa, brevemente.</p>
@@ -1684,7 +1704,10 @@ html.menu-open .menu::before { opacity: 1; }
     <section class="menu-item menu-section" id="menu-onde" data-delay="2">
       <div class="menu-row">
         <div class="menu-row__title">
-          <h2 class="menu__h2" data-i18n="chegarH2">como chegar?</h2>
+          <h2 class="menu__h2"><span class="title-txt" data-i18n="chegarH2">como chegar?</span><span
+                class="title-art title-art--pino" aria-hidden="true"
+                style="--art-pt: url(&quot;fonts/comochegar.svg&quot;); --art-w-pt: 293.65625; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
+                       --art-en: url(&quot;fonts/howtogethere.svg&quot;); --art-w-en: 341.8886719; --art-h-en: 45.0375977; --art-base-en: 9.997;"></span></h2>
         </div>
         <div class="menu-row__body">
           <p class="menu__lead" data-i18n="chegarP">Um espaço ideal para criar! Proximidade do metro e das escolas. A tranquilidade da Natureza mesmo ao lado de Vila do Conde.</p>
@@ -1725,7 +1748,10 @@ html.menu-open .menu::before { opacity: 1; }
 
       <div class="menu-row">
         <div class="menu-row__title">
-          <h3 class="menu__h3 menu__h3--titulo" data-i18n="secEspacos">espaços</h3>
+          <h3 class="menu__h3"><span class="title-txt" data-i18n="secEspacos">espaços</span><span
+                class="title-art title-art--espacar" aria-hidden="true"
+                style="--art-pt: url(&quot;fonts/espacos.svg&quot;); --art-w-pt: 171.53125; --art-h-pt: 37.1981288; --art-base-pt: 11.774;
+                       --art-en: url(&quot;fonts/spaces.svg&quot;); --art-w-en: 145.7802734; --art-h-en: 34.939828; --art-base-en: 9.516;"></span></h3>
         </div>
         <div class="menu-row__body">
           <ul class="menu__list-plain">
@@ -1754,7 +1780,10 @@ html.menu-open .menu::before { opacity: 1; }
     <section class="menu-item menu-section" id="menu-fala" data-delay="3">
       <div class="menu-row">
         <div class="menu-row__title">
-          <h2 class="menu__h2" data-i18n="falaH2">fala connosco!</h2>
+          <h2 class="menu__h2"><span class="title-txt" data-i18n="falaH2">fala connosco!</span><span
+                class="title-art title-art--leque" aria-hidden="true"
+                style="--art-pt: url(&quot;fonts/falaconnosco.svg&quot;); --art-w-pt: 299.5224609; --art-h-pt: 36.097168; --art-base-pt: 0.576;
+                       --art-en: url(&quot;fonts/talktous.svg&quot;); --art-w-en: 199.7675781; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
         </div>
         <div class="menu-row__body">
           <!-- A mensagem segue por FormSubmit, e é o tópico que escolhe a caixa
@@ -1798,7 +1827,9 @@ html.menu-open .menu::before { opacity: 1; }
     <section class="menu-item menu-section" data-delay="4">
       <div class="menu-row">
         <div class="menu-row__title">
-          <h3 class="menu__h3" data-i18n="secPress">press</h3>
+          <h3 class="menu__h3"><span class="title-txt" data-i18n="secPress">press</span><span
+                class="title-art title-art--festa" aria-hidden="true"
+                style="--art-pt: url(&quot;fonts/press.svg&quot;); --art-w-pt: 112.4765625; --art-h-pt: 34.9394531; --art-base-pt: 9.516;"></span></h3>
         </div>
         <div class="menu-row__body">
           <ul class="menu__links">
@@ -1811,7 +1842,10 @@ html.menu-open .menu::before { opacity: 1; }
 
       <div class="menu-row">
         <div class="menu-row__title">
-          <h3 class="menu__h3" data-i18n="secContactos">contactos</h3>
+          <h3 class="menu__h3"><span class="title-txt" data-i18n="secContactos">contactos</span><span
+                class="title-art title-art--espacar" aria-hidden="true"
+                style="--art-pt: url(&quot;fonts/contactos.svg&quot;); --art-w-pt: 204.2900391; --art-h-pt: 32.1513672; --art-base-pt: 0.576;
+                       --art-en: url(&quot;fonts/contacts.svg&quot;); --art-w-en: 178.6914062; --art-h-en: 32.1513672; --art-base-en: 0.576;"></span></h3>
         </div>
         <div class="menu-row__body">
           <p class="menu__text" data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
@@ -2053,6 +2087,9 @@ html.menu-open .menu::before { opacity: 1; }
     'equipa':           [0,24.202,51.077,77.215,88.224,114.99,138.1201],
     'team':             [0,15.89,40.327,65.356,102.9434],
     'espacos':          [0,24.072,48.019,74.114,98.491,123.246,149.034,171.5312],
+    'press':            [0,25.438,42.146,66.594,89.863,112.4766],
+    'contactos':        [0,23.508,50.137,74.735,91.563,115.683,140.146,156.345,181.792,204.29],
+    'contacts':         [0,23.508,50.137,74.735,91.563,115.683,140.146,156.421,178.6914],
     'loja':             [0,8.312,33.953,45.364,69.1924],
     'shop':             [0,23.304,48.415,75.804,101.2295],
     'spaces':           [0,23.292,49.386,73.762,98.517,123.215,145.7803],
