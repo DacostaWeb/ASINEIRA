@@ -136,8 +136,12 @@ a:hover { text-decoration: underline; }
 .menu__link,
 .pill,
 .marquee__text,
-.calendar__month,
-.calendar__weekday,
+.cal__month,
+.cal__wd,
+.cal__lbl,
+.evcard__date,
+.events__head,
+.evbt,
 .panel-section__title,
 .aerial__tag { font-family: var(--font-display); }
 
@@ -827,54 +831,6 @@ html[lang="en"] .title-art {
    As cores vêm de variáveis herdadas, que atravessam a shadow tree do <use>. */
 .svg-defs { display: none; }
 
-/* Calendário do mês corrente, desenhado pelo JS. */
-.calendar { margin-top: 20px; }
-
-.calendar__month {
-  margin-bottom: 10px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-
-.calendar__grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-  width: 100%;
-  max-width: 300px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.calendar__weekday {
-  padding-bottom: 6px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  text-align: center;
-  opacity: .5;
-}
-
-.calendar__day {
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  line-height: 1;
-}
-
-/* O dia de hoje aparece em negativo — as cores saem do próprio mosaico. */
-.calendar__day--today {
-  background: var(--tile-fg);
-  color: var(--tile-bg);
-  border-radius: 2px;
-  font-weight: 700;
-}
-
 /* Fotografias dentro de um cartão aberto. */
 .shots {
   display: grid;
@@ -965,6 +921,66 @@ html[lang="en"] .title-art {
 }
 
 
+/* Cartão com fotografia ao lado: a fotografia do evento em foco à esquerda,
+   o resto do cartão à direita. A fotografia sangra até aos bordos — sai do
+   padding do cartão pelas margens negativas — e a moldura corta-a (o .tile
+   já é overflow: clip).
+
+   Só a partir de duas colunas: mais estreito do que isso, a fotografia vai
+   para cima, que é onde cabe. */
+.tile--foto { flex-direction: column; }
+
+.tile__figure {
+  position: relative;
+
+  /* O mosaico encosta o que tem dentro à esquerda (align-items: flex-start),
+     e a fotografia não tem conteúdo que lhe dê largura — as imagens estão
+     todas em posição absoluta. Sem isto ficava com zero de largura. */
+  align-self: stretch;
+
+  margin: calc(var(--tile-pad) * -1) calc(var(--gutter) * -1) 22px;
+  aspect-ratio: 16 / 10;
+  overflow: clip;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+/* A fotografia não pede altura nenhuma: ocupa o que a caixa lhe der. Assim a
+   linha do mosaico continua a ser medida pelo texto, e não por ela. */
+.tile__figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* A troca é um esbatimento curto: com duas imagens sobrepostas, a que sai
+   apaga-se por cima da que entra. */
+.tile__figure img { opacity: 0; transition: opacity .45s ease; }
+.tile__figure img.is-on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tile__figure img { transition: none; }
+}
+
+.tile--foto.tile--span {
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--gutter);
+}
+
+.tile--foto.tile--span .tile__figure {
+  flex: 0 0 38%;
+  margin: calc(var(--tile-pad) * -1) 0 calc(var(--tile-pad) * -1) calc(var(--gutter) * -1);
+  aspect-ratio: auto;
+}
+
+/* Aberto em painel a fotografia não tem papel nenhum — o painel traz as suas,
+   uma por evento — e o cartão volta a ser uma coluna só. */
+.tile.is-expanded .tile__figure { display: none; }
+.tile--foto.is-expanded { flex-direction: column; }
+
+
 /* Tabela de eventos do mosaico fechado: data, projeto, sítio e natureza.
    Sem filetes nem cabeçalho — são quatro colunas de texto corrido, e é a
    largura fixa de cada uma que as mantém alinhadas mesmo quando um título é
@@ -994,6 +1010,232 @@ html[lang="en"] .title-art {
 }
 
 
+/* A linha em foco — a que o rato aponta, ou a que a vez calhou — sublinha-se
+   e é a sua fotografia que está ao lado. O sublinhado é um filete por baixo
+   da linha inteira, e não do texto de cada célula. */
+.events tr { cursor: default; }
+.events tr td { border-bottom: 1.5px solid transparent; }
+.events tr.is-on td { border-bottom-color: currentColor; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .events tr td { transition: border-color .25s ease; }
+}
+
+/* "concluídos": o mesmo desenho da lista de cima, com os ícones do que ficou
+   de cada um — fotografias, vídeo, texto. */
+.events__head {
+  margin-top: 26px;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  opacity: .75;
+}
+
+.events--conc { margin-top: 6px; }
+.events--conc td:nth-child(1) { width: 62px; }
+
+.evmedia { display: inline-flex; gap: 5px; }
+.evmedia svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* --- Painel dos eventos: a grelha de cartazes --- */
+
+/* Quatro no máximo, e daí para baixo até uma só, pela mesma conta da grelha
+   do mosaico: cada coluna nunca é mais estreita do que o que lá cabe, nem
+   mais larga do que um quarto. As folgas entram na conta — sem isso, quatro
+   colunas mais três folgas passavam a largura toda e a grelha ficava-se por
+   três. */
+.evgrid {
+  --evgap: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max((100% - 3 * var(--evgap)) / 4, min(100%, 200px)), 1fr));
+  gap: var(--evgap);
+  margin-top: 14px;
+}
+
+.evgrid--conc {
+  grid-template-columns: repeat(auto-fit, minmax(max((100% - 2 * var(--evgap)) / 3, min(100%, 220px)), 1fr));
+}
+
+.evcard {
+  display: flex;
+  flex-direction: column;
+  border: 1.5px solid currentColor;
+}
+
+.evcard__foto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: clip;
+  border-bottom: 1.5px solid currentColor;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+.evcard__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.evcard__inner { display: flex; flex-direction: column; flex: 1; padding: 12px 14px 14px; }
+
+.evcard__date {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.evcard__title { margin-top: 6px; font-size: 13px; line-height: 1.3; }
+.evcard__meta { margin-top: 4px; font-size: 12px; opacity: .75; }
+
+/* O "+" abre o pouco que se sabe do evento, dentro do próprio cartaz. */
+.evcard__toggle {
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 20px;
+  line-height: .8;
+  cursor: pointer;
+}
+.evcard__toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+.evcard__body { display: none; margin-top: 8px; font-size: 12px; line-height: 1.55; }
+.evcard.is-open .evcard__body { display: block; }
+.evcard__body a { text-decoration: underline; text-underline-offset: 2px; }
+
+/* Os bilhetes ficam colados ao fundo do cartaz, todos à mesma altura seja
+   qual for o comprimento do título. */
+.evcard__bilhetes { margin-top: auto; padding-top: 12px; }
+
+.evbt {
+  display: inline-block;
+  padding: 7px 12px;
+  border: 1.5px solid currentColor;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.evbt:hover { background: var(--tile-fg); color: var(--tile-bg); text-decoration: none; }
+
+/* Sem bilhetes à venda não há botão nenhum a fingir que há: fica dito. */
+.evbt--soon {
+  border-style: dashed;
+  opacity: .6;
+  cursor: default;
+}
+.evbt--soon:hover { background: none; color: inherit; }
+
+
+/* --- Calendário do painel --- */
+
+/* Duas colunas: o mês à esquerda, e à direita o que acontece no dia
+   escolhido. Em ecrã estreito o detalhe passa para baixo. */
+.cal {
+  display: grid;
+  grid-template-columns: minmax(0, 292px) 1fr;
+  gap: 30px;
+  margin-top: 14px;
+}
+
+.cal__nav { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+
+.cal__arrow {
+  padding: 0 4px;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.cal__arrow:hover { opacity: .6; }
+.cal__arrow:last-of-type { margin-left: auto; }
+
+.cal__month {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cal__wd {
+  padding-bottom: 6px;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: .55;
+}
+
+.cal__day { aspect-ratio: 1; display: grid; place-items: center; font-size: 12px; line-height: 1; }
+
+/* Os dias com evento ganham o dourado do cartão de Amigo, que é o único
+   acento do site; o dia escolhido troca-o pelo creme com um filete grosso. */
+.cal__day button {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: var(--gold);
+  color: var(--blue);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cal__day button:hover { background: var(--gold-light); }
+.cal__day button[aria-pressed="true"] { background: var(--cream); box-shadow: inset 0 0 0 2.5px var(--gold-deep); }
+.cal__day button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+/* O dia de hoje, sem evento nenhum, fica em negativo — as cores saem do
+   próprio mosaico. */
+.cal__day--today { background: var(--tile-fg); color: var(--tile-bg); font-weight: 700; }
+
+.cal__detail { padding-left: 26px; border-left: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
+.cal__lbl {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  opacity: .75;
+}
+.cal__t { margin-top: 10px; font-size: 16px; line-height: 1.25; }
+.cal__m { margin-top: 8px; font-size: 12px; line-height: 1.6; opacity: .8; }
+.cal__cta { margin-top: 16px; }
+.cal__cta a { text-decoration: underline; text-underline-offset: 2px; font-size: 12px; }
+
+@media (max-width: 720px) {
+  .cal { grid-template-columns: 1fr; gap: 22px; }
+  .cal__detail { padding-left: 0; padding-top: 20px; border-left: none; border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
+}
+
+
 /* Secções dentro de um cartão aberto. O rodapé em versaletes do mosaico
    fechado nomeia-as uma a uma ("acessos - mapa - antiga igreja de retorta");
    o painel repete esses mesmos nomes como títulos, para que quem abre o
@@ -1011,7 +1253,7 @@ html[lang="en"] .title-art {
 .panel-section .tile__list,
 .panel-section .shot,
 .panel-section .aerial,
-.panel-section .calendar { margin-top: 12px; }
+.panel-section .cal { margin-top: 12px; }
 
 
 
@@ -1463,7 +1705,15 @@ html.menu-open .menu::before { opacity: 1; }
     <img src="./voar4-mt1lbpkk-gskk.jpg" data-i18n-alt="alt1" alt="Crianças em atividade de formação em palco" loading="lazy">
   </figure>
 
-  <article class="tile tile--blue" id="eventos" data-screen-label="eventos">
+  <!-- O cartão dos eventos tem duas metades: a fotografia do que está em foco
+       e, ao lado, a lista. Quem passa o rato por uma linha troca a fotografia
+       e sublinha a linha; sem rato em cima, a lista anda sozinha de três em
+       três segundos. O que está aqui dentro é escrito pelo JS a partir de uma
+       lista só (ver EVENTOS), que é a mesma que enche a grelha do painel e o
+       calendário — três sítios a dizer o mesmo têm de o ler do mesmo lado. -->
+  <article class="tile tile--blue tile--foto" id="eventos" data-screen-label="eventos">
+    <figure class="tile__figure" id="ev-foto"></figure>
+
     <div class="tile__inner">
       <div class="tile__head">
         <h2 class="tile__title tile__title--regular"><span class="title-txt" data-i18n="evH2">eventos</span><span
@@ -1475,61 +1725,39 @@ html.menu-open .menu::before { opacity: 1; }
       </div>
 
       <!-- Data, projeto, sítio e natureza: as quatro colunas do rascunho. -->
-      <table class="events">
-        <tbody>
-          <tr>
-            <td class="events__date" data-i18n="ev1d">18 de Março</td>
-            <td data-i18n="ev1t">Voar Muito Perto do Sol</td>
-            <td data-i18n="ev1p">Auditório</td>
-            <td data-i18n="ev1k">Criação</td>
-          </tr>
-          <tr>
-            <td class="events__date" data-i18n="ev2d">24 de Março</td>
-            <td data-i18n="ev2t">Projeto A</td>
-            <td data-i18n="ev2p">Igreja</td>
-            <td data-i18n="ev2k">Formação</td>
-          </tr>
-          <tr>
-            <td class="events__date" data-i18n="ev3d">10 de Abril</td>
-            <td data-i18n="ev3t">Projeto B</td>
-            <td data-i18n="ev3p">Igreja</td>
-            <td data-i18n="ev3k">Apresentação</td>
-          </tr>
-          <tr>
-            <td class="events__date" data-i18n="ev4d">22 de Maio</td>
-            <td data-i18n="ev4t">Projeto C</td>
-            <td data-i18n="ev4p">Exterior</td>
-            <td data-i18n="ev4k">Criação</td>
-          </tr>
-        </tbody>
-      </table>
+      <table class="events"><tbody id="ev-lista"></tbody></table>
+
+      <p class="events__head" data-i18n="secConc">concluídos</p>
+      <table class="events events--conc"><tbody id="ev-concluidos"></tbody></table>
 
       <div class="tile__body" data-tile-body="Eventos">
         <div class="panel-section">
           <h3 class="panel-section__title" data-i18n="secProx">Próximos</h3>
-          <p class="tile__text" data-i18n="evP2">Aulas regulares, workshops, campos de férias, sessões de cinema e experiências na natureza. As datas acima são as primeiras marcadas; segue-nos para as restantes.</p>
-          <div class="calendar" id="calendario"></div>
+          <div class="evgrid" id="ev-grelha"></div>
         </div>
+
         <div class="panel-section">
-          <h3 class="panel-section__title" data-i18n="secUlt">Últimos</h3>
-          <p class="tile__note" data-i18n="evNote">Ainda sem eventos passados para mostrar.</p>
+          <h3 class="panel-section__title" data-i18n="secConc">concluídos</h3>
+          <div class="evgrid evgrid--conc" id="ev-grelha-conc"></div>
         </div>
+
         <div class="panel-section">
-          <h3 class="panel-section__title" data-i18n="secArq">Arquivo · fotografias e vídeos</h3>
-          <div class="shots">
-            <figure class="shot">
-              <img src="dossier/assets/arco.jpg" data-i18n-alt="altArco" alt="Interior em obra, visto através do arco" loading="lazy">
-              <figcaption data-i18n="capArco">Interior · arco e pavimento em execução</figcaption>
-            </figure>
-            <figure class="shot">
-              <img src="dossier/assets/nave-2025.jpg" data-i18n-alt="altNave" alt="Nave da antiga Igreja de Retorta antes da intervenção" loading="lazy">
-              <figcaption data-i18n="capNave">Nave · antes da intervenção</figcaption>
-            </figure>
+          <h3 class="panel-section__title" data-i18n="secCal">Calendário</h3>
+          <div class="cal">
+            <div>
+              <div class="cal__nav">
+                <button class="cal__arrow" type="button" id="cal-ant" aria-label="Mês anterior">&#8249;</button>
+                <p class="cal__month" id="cal-mes"></p>
+                <button class="cal__arrow" type="button" id="cal-seg" aria-label="Mês seguinte">&#8250;</button>
+              </div>
+              <ul class="cal__grid" id="cal-grelha"></ul>
+            </div>
+            <div class="cal__detail" id="cal-detalhe" aria-live="polite"></div>
           </div>
         </div>
       </div>
 
-      <p class="tile__caption" data-i18n="capEv">Próximos · últimos · arquivo - fotografias e vídeos</p>
+      <p class="tile__caption" data-i18n="capEv">Próximos · concluídos · calendário</p>
     </div>
   </article>
 
@@ -1949,15 +2177,11 @@ html.menu-open .menu::before { opacity: 1; }
       desc: 'a Sineira — Cultural Association and Space in Retorta, Vila do Conde. Training, creation and presentation in the arts.',
 
       /* --- eventos --- */
+      /* Os eventos em si vivem na lista EVENTOS, lá em baixo, com as duas
+         línguas dentro: aqui ficam só os títulos das secções. */
       evH2: 'events',
-      ev1d: '18 March', ev1t: 'Voar Muito Perto do Sol', ev1p: 'Auditorium', ev1k: 'Creation',
-      ev2d: '24 March', ev2t: 'Project A',               ev2p: 'Church',     ev2k: 'Training',
-      ev3d: '10 April', ev3t: 'Project B',               ev3p: 'Church',     ev3k: 'Presentation',
-      ev4d: '22 May',   ev4t: 'Project C',               ev4p: 'Outdoors',   ev4k: 'Creation',
-      secProx: 'Upcoming', secUlt: 'Recent', secArq: 'Archive · photographs and videos',
-      evP2: 'Regular classes, workshops, holiday camps, film screenings and nature experiences. The dates above are the first confirmed ones; follow us for the rest.',
-      evNote: 'No past events to show yet.',
-      capEv: 'Upcoming · recent · archive - photographs and videos',
+      secProx: 'Upcoming', secConc: 'completed', secCal: 'Calendar',
+      capEv: 'Upcoming · completed · calendar',
 
       /* --- atividades --- */
       atH2: 'activities',
@@ -2029,10 +2253,6 @@ html.menu-open .menu::before { opacity: 1; }
       /* --- legendas e textos alternativos --- */
       capEstudio: 'Proposal · dance studio with seating',
       altEstudio: 'Proposal: dance studio with seating',
-      capArco: 'Interior · arch and new floor under way',
-      altArco: 'Interior under construction, seen through the arch',
-      capNave: 'Nave · before the works',
-      altNave: 'Nave of the former Retorta Church before the works',
       capVista: 'Layout · 18,000 m²',
       altVista: 'Aerial layout of the former Retorta Church complex',
       capFase: 'Phasing of the works',
@@ -2196,44 +2416,379 @@ html.menu-open .menu::before { opacity: 1; }
     try { localStorage.setItem('sineira-lang', lang); } catch (e) {}
   }
 
-  /* Calendário do mês corrente. Desenhado de raiz a cada mudança de idioma,
-     porque os nomes do mês e dos dias vêm do próprio browser. Não marca
-     eventos: não há datas confirmadas para mostrar. */
-  var calendarEl = document.getElementById('calendario');
+  /* ---------- eventos ---------- */
 
-  function renderCalendar() {
-    if (!calendarEl) return;
+  /* Os eventos aparecem em três sítios — a lista do mosaico fechado, a grelha
+     de cartazes do painel e o calendário —, e por isso vivem numa lista só.
+     Cada um traz as duas línguas: o resto do site tem o português no HTML e
+     o inglês no dicionário, mas aqui o HTML não tem onde os guardar, que é o
+     JS quem escreve as três vistas.
 
-    var locale = state.lang === 'en' ? 'en-GB' : 'pt-PT';
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = today.getMonth();
-    var first = new Date(year, month, 1);
-    var days = new Date(year, month + 1, 0).getDate();
-    var offset = (first.getDay() + 6) % 7;   /* a semana começa à segunda */
+     'bilhetes' é o endereço onde se compram. Enquanto for nulo, o cartaz diz
+     que é para breve em vez de fingir um botão que não leva a lado nenhum. */
+  var EVENTOS = [
+    { dia: 18, mes: 3, img: 'dossier/assets/scene-estudio.jpg',
+      bilhetes: 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Bilhetes — Voar Muito Perto do Sol'),
+      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditório', natureza: 'Criação' },
+      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditorium', natureza: 'Creation' },
+      alt: { pt: 'Proposta: estúdio de dança com plateia', en: 'Proposal: dance studio with seating' } },
 
-    var html = '<p class="calendar__month">' +
-      first.toLocaleDateString(locale, { month: 'long', year: 'numeric' }) +
-      '</p><ul class="calendar__grid">';
+    { dia: 24, mes: 3, img: 'dossier/assets/nave-2026.jpg', bilhetes: null,
+      pt: { titulo: 'Projeto A', sitio: 'Igreja', natureza: 'Formação' },
+      en: { titulo: 'Projeto A', sitio: 'Church', natureza: 'Training' },
+      alt: { pt: 'Nave da antiga Igreja de Retorta com o novo soalho', en: 'Nave of the former Retorta Church with its new floor' } },
+
+    { dia: 10, mes: 4, img: 'dossier/assets/nave-2025.jpg', bilhetes: null,
+      pt: { titulo: 'Projeto B', sitio: 'Igreja', natureza: 'Apresentação' },
+      en: { titulo: 'Projeto B', sitio: 'Church', natureza: 'Presentation' },
+      alt: { pt: 'Nave da antiga Igreja de Retorta antes da intervenção', en: 'Nave of the former Retorta Church before the works' } },
+
+    { dia: 22, mes: 5, img: 'dossier/assets/hero.jpg', bilhetes: null,
+      pt: { titulo: 'Projeto C', sitio: 'Exterior', natureza: 'Criação' },
+      en: { titulo: 'Projeto C', sitio: 'Outdoors', natureza: 'Creation' },
+      alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } }
+  ];
+
+  /* O que já aconteceu, e o que ficou de cada um: fotografias, vídeo, texto. */
+  var CONCLUIDOS = [
+    { ano: 2025, img: 'dossier/assets/arco.jpg', media: ['foto', 'video', 'texto'],
+      pt: { titulo: 'Projeto X', sitio: 'Igreja' },
+      en: { titulo: 'Projeto X', sitio: 'Church' },
+      alt: { pt: 'Interior em obra, visto através do arco', en: 'Interior under construction, seen through the arch' } },
+
+    { ano: 2025, img: './chorof4.jpg', media: ['texto'],
+      pt: { titulo: 'Projeto Y', sitio: 'Auditório' },
+      en: { titulo: 'Projeto Y', sitio: 'Auditorium' },
+      alt: { pt: 'Intérprete em cena, com as mãos junto ao rosto', en: 'Performer on stage, hands raised to their face' } }
+  ];
+
+  /* Os meses por extenso ficam aqui e não no browser: o toLocaleDateString
+     devolve-os em caixa baixa em português e em caixa alta em inglês, e a
+     lista precisa deles sempre da mesma maneira. */
+  var MESES = {
+    pt: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  };
+
+  var ICONES = {
+    foto:  '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="1.5"/><circle cx="8" cy="8.5" r="2.8"/></svg>',
+    video: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="1.5"/><path d="M6.8 6.4l3.6 2.1-3.6 2.1z"/></svg>',
+    texto: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5h9M8 3.5v9"/></svg>'
+  };
+
+  var EV_ANO = new Date().getFullYear();
+
+  function lg() { return state.lang === 'en' ? 'en' : 'pt'; }
+  function evTexto(e) { return e[lg()]; }
+  function evAlt(e) { return e.alt[lg()]; }
+  function evData(e) {
+    return lg() === 'en'
+      ? e.dia + ' ' + MESES.en[e.mes - 1]
+      : e.dia + ' de ' + MESES.pt[e.mes - 1];
+  }
+  function evAssunto(e) {
+    return 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Eventos · ' + evData(e) + ' · ' + evTexto(e).titulo);
+  }
+
+  var evFotoEl   = document.getElementById('ev-foto');
+  var evListaEl  = document.getElementById('ev-lista');
+  var evConcEl   = document.getElementById('ev-concluidos');
+  var evGrelhaEl = document.getElementById('ev-grelha');
+  var evGrelhaConcEl = document.getElementById('ev-grelha-conc');
+  var evTile     = document.getElementById('eventos');
+
+  var evEmFoco = 0;
+  var evParado = false;   /* com o rato em cima, a vez não anda */
+  var evRelogio = null;
+
+  /* A fotografia em foco. As quatro estão montadas por baixo umas das outras
+     desde o início — são quatro — e a troca é só de opacidade: assim não há
+     um salto em branco à espera de carregar. */
+  function evPintaFotos() {
+    if (!evFotoEl) return;
+    evFotoEl.textContent = '';
+    EVENTOS.forEach(function (e, i) {
+      var img = document.createElement('img');
+      img.src = e.img;
+      img.alt = evAlt(e);
+      img.loading = 'lazy';
+      if (i === evEmFoco) img.className = 'is-on';
+      evFotoEl.appendChild(img);
+    });
+  }
+
+  function evFoco(i) {
+    evEmFoco = (i + EVENTOS.length) % EVENTOS.length;
+    if (evFotoEl) {
+      Array.prototype.forEach.call(evFotoEl.children, function (img, n) {
+        img.classList.toggle('is-on', n === evEmFoco);
+      });
+    }
+    if (evListaEl) {
+      Array.prototype.forEach.call(evListaEl.children, function (tr, n) {
+        tr.classList.toggle('is-on', n === evEmFoco);
+      });
+    }
+  }
+
+  /* De três em três segundos, e só enquanto o cartão está fechado, à vista e
+     sem ninguém a apontar-lhe. A quem pediu ao sistema para não ver coisas a
+     mexer, a lista anda na mesma — é isso que ela é —, mas a troca deixa de
+     ser esbatida e passa a ser seca (ver .tile__figure img). */
+  function evAnda() {
+    if (evParado || document.hidden) return;
+    if (evTile && evTile.classList.contains('is-expanded')) return;
+    evFoco(evEmFoco + 1);
+  }
+
+  function evRelogioLiga() {
+    if (evRelogio) return;
+    evRelogio = setInterval(evAnda, 3000);
+  }
+
+  function evLinha(e, i) {
+    var tr = document.createElement('tr');
+    var t = evTexto(e);
+    [[evData(e), 'events__date'], [t.titulo, ''], [t.sitio, ''], [t.natureza, '']].forEach(function (par) {
+      var td = document.createElement('td');
+      td.className = par[1];
+      td.textContent = par[0];
+      tr.appendChild(td);
+    });
+    tr.addEventListener('mouseenter', function () { evParado = true; evFoco(i); });
+    tr.addEventListener('mouseleave', function () { evParado = false; });
+    return tr;
+  }
+
+  function evLinhaConc(c) {
+    var tr = document.createElement('tr');
+    var t = evTexto(c);
+    var media = document.createElement('td');
+    media.innerHTML = '<span class="evmedia">' + c.media.map(function (m) { return ICONES[m]; }).join('') + '</span>';
+    tr.appendChild(media);
+    [t.titulo, t.sitio, String(c.ano)].forEach(function (txt, n) {
+      var td = document.createElement('td');
+      td.textContent = txt;
+      tr.appendChild(td);
+    });
+    return tr;
+  }
+
+  /* Um cartaz: fotografia, data, título, e o "+" que abre o pouco que se sabe.
+     Os bilhetes ficam colados ao fundo, para que os quatro os tenham à mesma
+     altura mesmo com títulos de comprimentos diferentes. */
+  function evCartaz(e) {
+    var t = evTexto(e);
+    var art = document.createElement('article');
+    art.className = 'evcard';
+
+    var fig = document.createElement('div');
+    fig.className = 'evcard__foto';
+    var img = document.createElement('img');
+    img.src = e.img; img.alt = evAlt(e); img.loading = 'lazy';
+    fig.appendChild(img);
+    art.appendChild(fig);
+
+    var inner = document.createElement('div');
+    inner.className = 'evcard__inner';
+    inner.innerHTML =
+      '<p class="evcard__date"></p>' +
+      '<p class="evcard__title"></p>' +
+      '<button class="evcard__toggle" type="button" aria-expanded="false">+</button>' +
+      '<div class="evcard__body"><p class="evcard__meta"></p><p class="cal__cta"><a></a></p></div>' +
+      '<div class="evcard__bilhetes"></div>';
+    inner.querySelector('.evcard__date').textContent = evData(e);
+    inner.querySelector('.evcard__title').textContent = t.titulo;
+    inner.querySelector('.evcard__meta').textContent = t.sitio + ' · ' + t.natureza;
+
+    var link = inner.querySelector('.evcard__body a');
+    link.href = evAssunto(e);
+    link.textContent = lg() === 'en' ? 'I want to know more' : 'quero saber mais';
+
+    var bt = inner.querySelector('.evcard__toggle');
+    bt.setAttribute('aria-label', t.titulo);
+    bt.addEventListener('click', function () {
+      var aberto = art.classList.toggle('is-open');
+      bt.textContent = aberto ? '−' : '+';
+      bt.setAttribute('aria-expanded', String(aberto));
+    });
+
+    var caixa = inner.querySelector('.evcard__bilhetes');
+    if (e.bilhetes) {
+      var a = document.createElement('a');
+      a.className = 'evbt';
+      a.href = e.bilhetes;
+      a.textContent = lg() === 'en' ? 'Tickets' : 'Bilhetes';
+      caixa.appendChild(a);
+    } else {
+      var span = document.createElement('span');
+      span.className = 'evbt evbt--soon';
+      span.textContent = lg() === 'en' ? 'Soon' : 'Brevemente';
+      caixa.appendChild(span);
+    }
+
+    art.appendChild(inner);
+    return art;
+  }
+
+  function evCartazConc(c) {
+    var t = evTexto(c);
+    var art = document.createElement('article');
+    art.className = 'evcard';
+    art.innerHTML =
+      '<div class="evcard__foto"><img loading="lazy"></div>' +
+      '<div class="evcard__inner">' +
+        '<p class="evcard__date"></p>' +
+        '<p class="evcard__title"></p>' +
+        '<p class="evcard__meta"></p>' +
+        '<p class="evcard__bilhetes"><span class="evmedia"></span></p>' +
+      '</div>';
+    var img = art.querySelector('img');
+    img.src = c.img; img.alt = evAlt(c);
+    art.querySelector('.evcard__date').textContent = String(c.ano);
+    art.querySelector('.evcard__title').textContent = t.titulo;
+    art.querySelector('.evcard__meta').textContent = t.sitio;
+    art.querySelector('.evmedia').innerHTML = c.media.map(function (m) { return ICONES[m]; }).join('');
+    return art;
+  }
+
+  /* ---------- calendário ---------- */
+
+  var calGrelha  = document.getElementById('cal-grelha');
+  var calRotulo  = document.getElementById('cal-mes');
+  var calDetalhe = document.getElementById('cal-detalhe');
+  var calMes = (EVENTOS[0] && EVENTOS[0].mes) || (new Date().getMonth() + 1);
+  var calDia = null;
+
+  function calEventoDe(mes, dia) {
+    for (var i = 0; i < EVENTOS.length; i++) {
+      if (EVENTOS[i].mes === mes && EVENTOS[i].dia === dia) return EVENTOS[i];
+    }
+    return null;
+  }
+
+  function calEscreveDetalhe(e) {
+    if (!calDetalhe) return;
+    var en = lg() === 'en';
+    calDetalhe.textContent = '';
+
+    if (!e) {
+      var vazio = document.createElement('p');
+      vazio.className = 'cal__m';
+      vazio.textContent = en
+        ? 'Pick a day marked in gold to see what happens there.'
+        : 'Escolhe um dia marcado a dourado para ver o que lá acontece.';
+      calDetalhe.appendChild(vazio);
+      return;
+    }
+
+    var t = evTexto(e);
+    var lbl = document.createElement('p'); lbl.className = 'cal__lbl'; lbl.textContent = evData(e);
+    var tit = document.createElement('p'); tit.className = 'cal__t';   tit.textContent = t.titulo;
+    var met = document.createElement('p'); met.className = 'cal__m';   met.textContent = t.sitio + ' · ' + t.natureza;
+    var cta = document.createElement('p'); cta.className = 'cal__cta';
+    var a = document.createElement('a'); a.href = evAssunto(e);
+    a.textContent = en ? 'I want to know more' : 'quero saber mais';
+    cta.appendChild(a);
+    [lbl, tit, met, cta].forEach(function (n) { calDetalhe.appendChild(n); });
+  }
+
+  function calDesenha() {
+    if (!calGrelha) return;
+    var locale = lg() === 'en' ? 'en-GB' : 'pt-PT';
+    var hoje = new Date();
+
+    calRotulo.textContent = MESES[lg()][calMes - 1] + ' ' + EV_ANO;
+    calGrelha.textContent = '';
 
     for (var i = 0; i < 7; i++) {
       /* 1 de Janeiro de 2024 caiu a uma segunda-feira. */
-      var weekday = new Date(2024, 0, 1 + i);
-      html += '<li class="calendar__weekday">' +
-        weekday.toLocaleDateString(locale, { weekday: 'narrow' }) + '</li>';
-    }
-    for (var blank = 0; blank < offset; blank++) {
-      html += '<li class="calendar__day"></li>';
-    }
-    for (var day = 1; day <= days; day++) {
-      html += '<li class="calendar__day' +
-        (day === today.getDate() ? ' calendar__day--today' : '') + '">' + day + '</li>';
+      var li = document.createElement('li');
+      li.className = 'cal__wd';
+      li.textContent = new Date(2024, 0, 1 + i).toLocaleDateString(locale, { weekday: 'narrow' });
+      calGrelha.appendChild(li);
     }
 
-    calendarEl.innerHTML = html + '</ul>';
+    var dias  = new Date(EV_ANO, calMes, 0).getDate();
+    var salto = (new Date(EV_ANO, calMes - 1, 1).getDay() + 6) % 7;   /* a semana começa à segunda */
+
+    for (var b = 0; b < salto; b++) calGrelha.appendChild(document.createElement('li')).className = 'cal__day';
+
+    for (var d = 1; d <= dias; d++) {
+      (function (dia) {
+        var cel = document.createElement('li');
+        cel.className = 'cal__day';
+        var ev = calEventoDe(calMes, dia);
+
+        if (ev) {
+          var bt = document.createElement('button');
+          bt.type = 'button';
+          bt.textContent = String(dia);
+          bt.setAttribute('aria-pressed', String(calDia === dia));
+          bt.setAttribute('aria-label', evData(ev) + ' — ' + evTexto(ev).titulo);
+          bt.addEventListener('click', function () {
+            calDia = dia;
+            calDesenha();
+            calEscreveDetalhe(ev);
+          });
+          cel.appendChild(bt);
+        } else {
+          cel.textContent = String(dia);
+          if (dia === hoje.getDate() && calMes === hoje.getMonth() + 1 && EV_ANO === hoje.getFullYear()) {
+            cel.className += ' cal__day--today';
+          }
+        }
+        calGrelha.appendChild(cel);
+      })(d);
+    }
   }
 
-  function setLang(lang) { state.lang = lang; applyLang(); renderCalendar(); }
+  function calMuda(passo) {
+    calMes += passo;
+    if (calMes < 1) calMes = 12;
+    if (calMes > 12) calMes = 1;
+    calDia = null;
+    calDesenha();
+    calEscreveDetalhe(null);
+  }
+
+  var calAnt = document.getElementById('cal-ant');
+  var calSeg = document.getElementById('cal-seg');
+  if (calAnt) calAnt.addEventListener('click', function () { calMuda(-1); });
+  if (calSeg) calSeg.addEventListener('click', function () { calMuda(1); });
+
+  /* Tudo de raiz a cada mudança de idioma: os textos dos eventos vêm da lista
+     e não do dicionário, e por isso não passam pelo applyLang. */
+  function renderEventos() {
+    if (evListaEl) {
+      evListaEl.textContent = '';
+      EVENTOS.forEach(function (e, i) { evListaEl.appendChild(evLinha(e, i)); });
+    }
+    if (evConcEl) {
+      evConcEl.textContent = '';
+      CONCLUIDOS.forEach(function (c) { evConcEl.appendChild(evLinhaConc(c)); });
+    }
+    if (evGrelhaEl) {
+      evGrelhaEl.textContent = '';
+      EVENTOS.forEach(function (e) { evGrelhaEl.appendChild(evCartaz(e)); });
+    }
+    if (evGrelhaConcEl) {
+      evGrelhaConcEl.textContent = '';
+      CONCLUIDOS.forEach(function (c) { evGrelhaConcEl.appendChild(evCartazConc(c)); });
+    }
+    evPintaFotos();
+    evFoco(evEmFoco);
+    calDesenha();
+    calEscreveDetalhe(calDia ? calEventoDe(calMes, calDia) : null);
+  }
+
+  /* O rato em cima do cartão trava a vez; ao sair, ela volta a andar. */
+  if (evTile) {
+    evTile.addEventListener('mouseenter', function () { evParado = true; });
+    evTile.addEventListener('mouseleave', function () { evParado = false; });
+  }
+
+  function setLang(lang) { state.lang = lang; applyLang(); renderEventos(); }
 
   /* ---------- endereços ---------- */
 
@@ -2971,6 +3526,7 @@ html.menu-open .menu::before { opacity: 1; }
 
   state.scale = 60;
   renderMenu();
+  evRelogioLiga();
 
   /* ---------- wordmark salta enquanto se faz scroll ---------- */
 
