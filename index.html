@@ -126,7 +126,6 @@ a:hover { text-decoration: underline; }
 .tile__toggle,
 .tile__caption,
 .tile__cta,
-.access th,
 .lang,
 .menu__link,
 .pill,
@@ -1012,45 +1011,7 @@ html[lang="en"] .title-art {
 
 
 
-/* 7. Tabela de acessos ==================================================== */
-
-.access { width: 100%; border-collapse: collapse; font-size: 13px; }
-
-/* Os filetes saem da cor do texto do mosaico, não de um creme fixo: assim a
-   tabela funciona tanto num cartão azul como num creme. */
-.access th,
-.access td {
-  padding: 6px 8px;
-  border-bottom: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-}
-
-.access th {
-  border-bottom-color: color-mix(in srgb, currentColor 50%, transparent);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-
-/* Primeira coluna encostada à esquerda; tempos alinhados à direita e sem
-   quebrar. O cabeçalho e os dados diferem: só os destinos têm entrelinha
-   folgada, e só os tempos ficam em nowrap. */
-.access th:first-child,
-.access td:first-child { padding-left: 0; }
-
-.access th:last-child,
-.access td:last-child { padding-right: 0; }
-
-.access th:first-child { text-align: left; }
-.access th:not(:first-child) { text-align: right; }
-
-.access td:first-child { line-height: 1.35; }
-.access td:not(:first-child) { text-align: right; white-space: nowrap; }
-
-.access + .tile__list { margin-top: 12px; }
-
-
-/* 8. Menu de ecrã inteiro ================================================= */
+/* 7. Menu de ecrã inteiro ================================================= */
 
 /* O menu deixou de ser uma lista de atalhos: é onde vivem, por inteiro, o
    "sobre nós" e o "como chegar" — os dois cartões cujo "+" abre aqui em vez
@@ -1160,8 +1121,6 @@ html.menu-open .menu::before { opacity: 1; }
 .menu__links { list-style: none; margin-top: 8px; padding: 0; font-size: 14px; line-height: 1.8; }
 .menu__links a { text-decoration: underline; }
 
-.menu .access { margin-bottom: 22px; }
-.menu .aerial { margin-top: 0; }
 
 /* "Abre no maps ↗", logo por baixo do mapa. */
 .menu__maps {
@@ -1277,7 +1236,7 @@ html.menu-open .menu::before { opacity: 1; }
 }
 
 
-/* 9. Rodapé (marquee) ===================================================== */
+/* 8. Rodapé (marquee) ===================================================== */
 
 .marquee {
   position: fixed;
@@ -1305,7 +1264,7 @@ html.menu-open .menu::before { opacity: 1; }
 }
 
 
-/* 10. Ecrãs estreitos ===================================================== */
+/* 9. Ecrãs estreitos ===================================================== */
 
 /* Só medidas do cabeçalho: sem isto o "PT — EN" centrado encavalita no
    logótipo abaixo dos ~390px. */
@@ -1477,7 +1436,7 @@ html.menu-open .menu::before { opacity: 1; }
     <img src="./sc1-mt1lcwzm-0usn.png" data-i18n-alt="alt3" alt="Bailarina em ensaio com estrutura de madeira" loading="lazy">
   </figure>
 
-  <!-- Linha 2: atividades | fotografia | como chegar? | sobre nós -->
+  <!-- Linha 2: atividades | fotografia | informações | fotografia -->
 
   <article class="tile tile--cream" id="atividades" data-screen-label="atividades">
     <div class="tile__inner">
@@ -1542,37 +1501,30 @@ html.menu-open .menu::before { opacity: 1; }
     <img src="./voar7-mt1lby5g-cd2e.jpg" data-i18n-alt="alt2" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy">
   </figure>
 
-  <article class="tile tile--blue" id="como-chegar" data-screen-label="como chegar">
+  <!-- O "como chegar?" e o "sobre nós" eram dois cartões com o mesmo destino:
+       o menu de ecrã inteiro. Passaram a um só, e o rodapé em versaletes
+       nomeia as três secções que lá esperam. -->
+  <article class="tile tile--blue" id="informacoes" data-screen-label="informações">
     <div class="tile__inner">
       <div class="tile__head">
-        <h2 class="tile__title tile__title--italic"><span class="title-txt" data-i18n="chegarH2">como chegar?</span><span
-              class="title-art title-art--pino" aria-hidden="true"
-              style="--art-pt: url(&quot;fonts/comochegar.svg&quot;); --art-w-pt: 293.65625; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
-                     --art-en: url(&quot;fonts/howtogethere.svg&quot;); --art-w-en: 341.8886719; --art-h-en: 45.0375977; --art-base-en: 9.997;"></span></h2>
-        <button class="tile__toggle" type="button" data-menu="menu-onde" aria-label="Mostrar mais">+</button>
-      </div>
-      <p class="tile__lead" data-i18n="chegarP">Acessos de Metro, proximidade das escolas, tranquilidade da Natureza, mesmo ao lado de Vila do Conde.</p>
-
-
-      <p class="tile__caption" data-i18n="capChegar">Acessos - mapa - antiga Igreja de Retorta</p>
-    </div>
-  </article>
-
-  <article class="tile tile--cream" id="sobre-nos" data-screen-label="sobre nós">
-    <div class="tile__inner">
-      <div class="tile__head">
-        <h2 class="tile__title tile__title--tracked"><span class="title-txt" data-i18n="sobreH2">sobre nós</span><span
+        <h2 class="tile__title tile__title--italic"><span class="title-txt" data-i18n="infoH2">informações</span><span
               class="title-art title-art--saltinhos" aria-hidden="true"
-              style="--art-pt: url(&quot;fonts/sobrenos.svg&quot;); --art-w-pt: 203.5097656; --art-h-pt: 36.0976562; --art-base-pt: 0.577;
-                     --art-en: url(&quot;fonts/aboutus.svg&quot;); --art-w-en: 178.5458984; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
+              style="--art-pt: url(&quot;fonts/informacoes.svg&quot;); --art-w-pt: 254.4951172; --art-h-pt: 47.2954102; --art-base-pt: 11.774;
+                     --art-en: url(&quot;fonts/information.svg&quot;); --art-w-en: 234.0917969; --art-h-en: 36.0976562; --art-base-en: 0.576;"></span></h2>
         <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais">+</button>
       </div>
-      <p class="tile__lead" data-i18n="sobreP">Conhece-nos melhor e fala connosco! Para famílias, amigos e até conteúdos oficiais para a imprensa.</p>
+      <p class="tile__lead" data-i18n="infoP">Conhece-nos melhor e fala connosco! Para famílias, amigos e até conteúdos oficiais para a imprensa.</p>
 
 
-      <p class="tile__caption" data-i18n="capSobre">Missão e valores - equipa - contactos</p>
+      <p class="tile__caption" data-i18n="capInfo">Sobre nós - acessos - contactos</p>
     </div>
   </article>
+
+  <!-- A fotografia que ficou no lugar do cartão que saiu: são as dez células
+       de conteúdo que fecham a última linha em 4 e em 3 colunas. -->
+  <figure class="media">
+    <img src="dossier/assets/altares.jpg" data-i18n-alt="alt6" alt="Altar dourado da antiga Igreja de Retorta, junto à coluna de granito" loading="lazy">
+  </figure>
 
   <!-- Linha 3: amigo da sineira (duas colunas) | fotografia | fotografia -->
 
@@ -1653,32 +1605,7 @@ html.menu-open .menu::before { opacity: 1; }
             style="--art-pt: url(&quot;fonts/comochegar.svg&quot;); --art-w-pt: 293.65625; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
                    --art-en: url(&quot;fonts/howtogethere.svg&quot;); --art-w-en: 341.8886719; --art-h-en: 45.0375977; --art-base-en: 9.997;"></span></h2>
 
-      <table class="access">
-        <thead>
-          <tr>
-            <th data-i18n="thDest">destino</th>
-            <th data-i18n="thFoot">a pé</th>
-            <th data-i18n="thCar">carro</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td data-i18n="row1">Ponte de Retorta / Estação Aquícola</td>
-            <td>5 min</td>
-            <td>1 min</td>
-          </tr>
-          <tr>
-            <td data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</td>
-            <td>14 min</td>
-            <td>3 min</td>
-          </tr>
-          <tr>
-            <td data-i18n="row3">Metro Vila do Conde</td>
-            <td>24 min</td>
-            <td>4 min</td>
-          </tr>
-        </tbody>
-      </table>
+      <p class="menu__lead" data-i18n="chegarP">Um espaço ideal para criar! Proximidade do metro e das escolas. A tranquilidade da Natureza mesmo ao lado de Vila do Conde.</p>
 
       <div class="aerial">
         <img src="mapsbirdseye.png" data-i18n-alt="altAerea" alt="Vista aérea de Retorta: a Sineira, a ponte sobre o rio Ave, as escolas e a envolvente" loading="lazy">
@@ -1878,17 +1805,20 @@ html.menu-open .menu::before { opacity: 1; }
 
       /* --- como chegar? --- */
       chegarH2: 'how to get here?',
-      chegarP: 'Metro access, close to the schools, the quiet of Nature, right next to Vila do Conde.',
+      chegarP: 'The perfect place to create! Close to the metro and to the schools. The quiet of Nature, right next to Vila do Conde.',
       secEspacos: 'Spaces',
-      thDest: 'destination', thFoot: 'on foot', thCar: 'by car',
       row1: 'Retorta Bridge / Aquaculture Station', row2: 'Secondary and primary schools / Vocational school', row3: 'Vila do Conde metro',
       chegarLi1: 'Santa Clara / V. do Conde metro — 5–15 min', chegarLi2: 'Historic centre — 10–20 min', chegarLi3: 'Beaches — 20–30 min',
       chegarLi4: 'Trindade / Porto metro — 40–60 min', chegarLi5: 'Sá Carneiro Airport — 20–50 min',
       espP: 'Founded in 2025, a Sineira — Cultural Association is a collective, and also a physical space. Approximate area: 18,000 m².',
       espLi1: 'Studio / stage', espLi2: 'Church: multipurpose space', espLi3: 'Lodging: artistic residencies',
       espLi4: 'Food · parking', espLi5: 'Forest: leisure and educational trails', espLi6: 'Clearing: festival space',
-      capChegar: 'Access - map - former Retorta Church',
       mapsLink: 'Open in maps',
+
+      /* --- informações --- */
+      infoH2: 'information',
+      infoP: 'Get to know us better and talk to us! For families, friends and even official material for the press.',
+      capInfo: 'About us - access - contacts',
 
       /* --- fala connosco --- */
       falaH2: 'talk to us!',
@@ -1902,14 +1832,13 @@ html.menu-open .menu::before { opacity: 1; }
 
       /* --- sobre nós --- */
       sobreH2: 'about us',
-      sobreP: 'Get to know us better and talk to us! For families, friends and even official material for the press.',
+      sobreP: 'Cultural Association and Space founded in 2025 by Sara Garcia etc.',
       secMissao: 'Mission and values', secEquipa: 'Team', secContactos: 'Contacts',
       missaoP: 'Arts for the community and a community for the Arts. Training, creation and presentation under one roof, open to those who live here and to those who arrive.',
       equipaNote: 'Introducing the team, coming soon.',
       coAddr: 'HQ: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
       coImprensa: 'Presentation dossier (press)',
       coLegal: 'a Sineira — Cultural Association · Tax ID 518858359',
-      capSobre: 'Mission and values - team - contacts',
 
       /* --- amigo da sineira --- */
       amH2: 'a Sineira friend',
@@ -1938,6 +1867,7 @@ html.menu-open .menu::before { opacity: 1; }
       alt3: 'Dancer in rehearsal with a wooden structure',
       alt4: 'Performer on stage, hands raised to their face',
       alt5: 'Performer leaping down an aisle of shelving',
+      alt6: 'Gilded altarpiece at the former Retorta Church, beside the granite column',
 
       marquee: 'Join now and become a "Friend of a Sineira" for discounts and monthly surprises!'
     }
@@ -2001,6 +1931,8 @@ html.menu-open .menu::before { opacity: 1; }
     'howtogethere':     [0,23.717,49.621,91.875,113.093,144.214,175.952,201.039,223.623,254.079,280.301,296.988,320.864,341.8887],
     'sobrenos':         [0,22.591,49.266,76.318,93.053,123.789,154.477,181.013,203.5098],
     'aboutus':          [0,24.322,51.19,77.905,102.205,125.345,155.359,178.5459],
+    'informacoes':      [0,8.942,34.109,49.832,75.968,93.252,131.272,156.308,181.063,207.058,231.928,254.4951],
+    'information':      [0,8.942,34.109,49.832,75.968,93.252,131.272,155.768,173.3,182.859,210.293,234.0918],
     'amigodasineira':   [0,24.322,64.018,74.445,101.316,133.512,165.396,195.964,230.945,240.936,266.48,292.542,302.597,319.35,341.7735],
     'asineirafriend':   [0,32.857,68.374,78.365,103.91,129.972,140.027,156.779,185.404,207.31,224.044,233.367,259.673,284.889,310.5739],
     'falaconnosco':     [0,14.988,39.474,49.665,80.348,110.723,137.352,163.189,188.972,215.507,238.716,262.937,290.164,299.5225],
@@ -2132,8 +2064,8 @@ html.menu-open .menu::before { opacity: 1; }
      e não para a página inicial — quem está no mapa continua no mapa.
 
      'tile' abre o cartão em painel, no sítio; 'menu' abre o menu de ecrã
-     inteiro naquela secção — é o que fazem os "+" do "como chegar?" e do
-     "sobre nós", cujo conteúdo mudou todo para lá. */
+     inteiro naquela secção — é o que faz o "+" das "informações", cujo
+     conteúdo (sobre nós, acessos e contactos) vive todo lá. */
   var HOME = { pt: '', en: 'eng' };
   var ROUTES = [
     { pt: 'eventos',    en: 'events',     tile: 'Eventos' },
