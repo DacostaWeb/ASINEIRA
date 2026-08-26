@@ -1290,6 +1290,15 @@ html.menu-open .menu::before { opacity: 1; }
     --trigger-w:     52px;
     --trigger-pull:  15px;
   }
+
+  /* Em telemóvel não há segunda coluna onde pousar o cartão de amigo: fica
+     debaixo do "quero aderir", mais pequeno, com mais ar por cima e a puxar
+     um pouco para a margem, para não ficar alinhado com o texto. */
+  .friend-card {
+    width: min(100%, 220px);
+    margin-top: 50px;
+    margin-left: -12px;
+  }
 }
 </style>
 </head>
