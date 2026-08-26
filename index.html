@@ -680,17 +680,16 @@ html[lang="en"] .title-art {
     right: var(--gutter);
   }
 
-  /* O cartão de amigo ocupa a segunda coluna do mosaico, encostado ao fundo,
-     como no rascunho. Fora da coluna de leitura de propósito: se entrasse
-     nela, empurrava o rodapé em versaletes para fora do mosaico. */
+  /* O cartão de amigo ocupa a segunda coluna do mosaico, encostado ao fundo
+     e à direita — à mesma margem do "+" lá em cima, que é a margem de tudo
+     o resto. Fora da coluna de leitura de propósito: se entrasse nela,
+     empurrava o rodapé em versaletes para fora do mosaico. */
   .tile--span .tile__aside {
     position: absolute;
     bottom: var(--tile-pad);
+    right: var(--gutter);
     width: min(250px, 34%);
     margin: 0;
-    /* Centrado na segunda metade do mosaico: metade (50%) mais o que sobra
-       de cada lado depois de lá pôr o cartão ((50% − 34%) / 2). */
-    left: 58%;
   }
 
   /* Aberto em painel não há segunda coluna que valha: o cartão volta ao fio
