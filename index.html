@@ -480,6 +480,8 @@ html.menu-open .lang { color: var(--cream); }
    a pedir o mesmo. O botão continua a ser o botão; o JS só lhe passa o
    clique que caiu ao lado. */
 .tile__head { display: flex; align-items: flex-start; gap: 18px; cursor: pointer; }
+/* Sem "+" não há nada para abrir — e o cursor não deve prometê-lo. */
+.tile__head:not(:has(.tile__toggle)) { cursor: default; }
 
 /* Três desenhos de título: compacto (base), itálico e espacejado. */
 .tile__title {
@@ -1513,7 +1515,7 @@ html.menu-open .menu::before { opacity: 1; }
                      --art-en: url(&quot;fonts/information.svg&quot;); --art-w-en: 234.0917969; --art-h-en: 36.0976562; --art-base-en: 0.576;"></span></h2>
         <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais">+</button>
       </div>
-      <p class="tile__lead" data-i18n="infoP">Conhece-nos melhor e fala connosco! Para famílias, amigos e até conteúdos oficiais para a imprensa.</p>
+      <p class="tile__lead" data-i18n="infoP">Quem somos, onde estamos e como falar connosco: tudo o que há para saber sobre a Sineira.</p>
 
 
       <p class="tile__caption" data-i18n="capInfo">Sobre nós - acessos - contactos</p>
@@ -1560,13 +1562,26 @@ html.menu-open .menu::before { opacity: 1; }
     </div>
   </article>
 
-  <figure class="media">
-    <img src="./chorof4.jpg" data-i18n-alt="alt4" alt="Intérprete em cena, com as mãos junto ao rosto" loading="lazy">
-  </figure>
-
   <figure class="media" id="media-fim">
     <img src="./teiaimg1.jpg" data-i18n-alt="alt5" alt="Intérprete a saltar num corredor de estantes" loading="lazy">
   </figure>
+
+  <!-- Linha 4: a última fotografia (duas colunas em três) | loja -->
+
+  <article class="tile tile--blue" id="loja" data-screen-label="loja">
+    <div class="tile__inner">
+      <div class="tile__head">
+        <h2 class="tile__title tile__title--regular"><span class="title-txt" data-i18n="lojaH2">loja</span><span
+              class="title-art title-art--festa" aria-hidden="true"
+              style="--art-pt: url(&quot;fonts/loja.svg&quot;); --art-w-pt: 69.1923828; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
+                     --art-en: url(&quot;fonts/shop.svg&quot;); --art-w-en: 101.2294922; --art-h-en: 44.5571289; --art-base-en: 9.516;"></span></h2>
+      </div>
+      <p class="tile__lead" data-i18n="lojaP">Merchandising à venda.</p>
+      <p class="tile__note" data-i18n="lojaNote">Brevemente.</p>
+
+      <p class="tile__caption" data-i18n="capLoja">Tote bags - t-shirts - bonés - muito mais</p>
+    </div>
+  </article>
 </main>
 
 
@@ -1817,7 +1832,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       /* --- informações --- */
       infoH2: 'information',
-      infoP: 'Get to know us better and talk to us! For families, friends and even official material for the press.',
+      infoP: 'Who we are, where we are and how to reach us: everything there is to know about a Sineira.',
       capInfo: 'About us - access - contacts',
 
       /* --- fala connosco --- */
@@ -1850,6 +1865,12 @@ html.menu-open .menu::before { opacity: 1; }
       amLi3: 'Exclusive content and monthly surprises',
       capAm: 'Free performances - discounts - exclusive content',
 
+      /* --- loja --- */
+      lojaH2: 'shop',
+      lojaP: 'Merchandising for sale.',
+      lojaNote: 'Coming soon.',
+      capLoja: 'Tote bags - t-shirts - caps - and more',
+
       /* --- legendas e textos alternativos --- */
       capEstudio: 'Proposal · dance studio with seating',
       altEstudio: 'Proposal: dance studio with seating',
@@ -1865,7 +1886,6 @@ html.menu-open .menu::before { opacity: 1; }
       alt1: 'Children in a training activity on stage',
       alt2: 'Musician with guitar surrounded by children on stage',
       alt3: 'Dancer in rehearsal with a wooden structure',
-      alt4: 'Performer on stage, hands raised to their face',
       alt5: 'Performer leaping down an aisle of shelving',
       alt6: 'Gilded altarpiece at the former Retorta Church, beside the granite column',
 
@@ -1942,6 +1962,8 @@ html.menu-open .menu::before { opacity: 1; }
     'equipa':           [0,24.202,51.077,77.215,88.224,114.99,138.1201],
     'team':             [0,15.89,40.327,65.356,102.9434],
     'espacos':          [0,24.072,48.019,74.114,98.491,123.246,149.034,171.5312],
+    'loja':             [0,8.312,33.953,45.364,69.1924],
+    'shop':             [0,23.304,48.415,75.804,101.2295],
     'spaces':           [0,23.292,49.386,73.762,98.517,123.215,145.7803],
   };
 
@@ -2244,7 +2266,7 @@ html.menu-open .menu::before { opacity: 1; }
     });
   });
 
-  /* Os "+" do "como chegar?" e do "sobre nós" abrem o menu na sua secção. */
+  /* O "+" das informações abre o menu na sua secção. */
   document.querySelectorAll('[data-menu]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       go(routeByMenu(btn.getAttribute('data-menu')));
