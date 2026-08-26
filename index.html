@@ -2310,6 +2310,8 @@ html.menu-open .menu::before { opacity: 1; }
 
   var MIN_ROW    = 160;    /* nenhuma linha fica mais baixa do que isto */
   var PHOTO_PART = 0.66;   /* linha só de fotografias: altura, em fração da largura da coluna */
+  var MAX_ROWS   = 4;      /* nunca mostrar mais de 4 linhas de uma vez */
+  var SNAP_MAX   = 1.35;   /* quanto uma linha pode crescer para fechar o ecrã */
 
   /* Quantas colunas o CSS está mesmo a desenhar. Contar aqui em vez de repetir
      a conta da folha de estilos evita que os dois discordem — se discordassem,
@@ -2448,14 +2450,35 @@ html.menu-open .menu::before { opacity: 1; }
     var rows = measureRows();
     if (!rows.length) return;
 
-    var oneCol = state.cols <= 1, sum = 0, i;
+    var oneCol = state.cols <= 1, tallest = 0, sum = 0, i;
     for (i = 0; i < rows.length; i++) {
       /* A duas colunas ou mais nenhuma linha passa de um ecrã: mais alta do
          que a janela obrigava a rolar dentro da própria linha para se chegar
          ao fundo do cartão. Numa coluna só, quem precisa de mais fica com
          mais — não há ninguém ao lado a quem responder. */
       rows[i] = Math.max(MIN_ROW, oneCol ? rows[i] : Math.min(avail, rows[i]));
+      tallest = Math.max(tallest, rows[i]);
       sum += rows[i];
+    }
+
+    /* Sempre que der, as linhas ficam todas iguais e a dividir o ecrã em
+       partes certas: um ecrã mostra duas linhas inteiras, ou três, e nunca
+       meia linha cortada em baixo. São tantas quantas a linha mais alta
+       deixar — e nunca mais do que as linhas que a grelha tem, senão a
+       página ficava mais curta do que a janela e via-se fundo.
+
+       "Sempre que der": se para lá chegar as linhas tivessem de crescer
+       muito mais do que o conteúdo pede, cada uma fica com a sua altura. É
+       essa a diferença para o que havia antes — quando só cabia uma linha
+       por ecrã, um cartão de três linhas de texto acabava com meio ecrã de
+       vazio por baixo. */
+    if (!oneCol && tallest > 0) {
+      var n = Math.min(MAX_ROWS, rows.length, Math.floor(avail / tallest));
+      var even = n >= 1 ? avail / n : 0;
+      if (even >= tallest && even <= tallest * SNAP_MAX) {
+        for (i = 0; i < rows.length; i++) rows[i] = even;
+        sum = even * rows.length;
+      }
     }
 
     /* Se o conteúdo todo não chegar para encher o ecrã, cresce tudo na mesma
