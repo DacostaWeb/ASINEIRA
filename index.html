@@ -1191,15 +1191,24 @@ html[lang="en"] .title-art {
   flex-direction: column;
   align-items: flex-start;
   gap: 7px;
-  margin-top: 16px;
 }
 
-/* Tudo o que vem por baixo da fotografia entra um pouco, à conta da placa:
-   o cartaz fica com uma prumada só, e a fotografia com a largura toda. */
-.evcard__detalhes,
-.evcard__sinopse,
-.evcard__body,
-.evcard__bilhetes { margin-left: 25px; }
+/* Tudo o que vem por baixo da fotografia vive numa caixa só, e essa caixa
+   troca as cores com o cartão — creme com letra azul sobre o azul —, como
+   a placa que está pousada na fotografia. Desce um bom bocado, para que se
+   veja que são duas coisas e não um rodapé da imagem; a entrada de 27px é a
+   mesma da placa (14 de folga mais 13 de bordo), e assim o texto de baixo
+   cai a prumo com o título de cima. */
+.evcard__info {
+  margin-top: 26px;
+  padding: 20px 27px 22px;
+  background: var(--tile-fg);
+  color: var(--tile-bg);
+}
+
+/* Dentro da caixa as cores estão trocadas, e o botão dos bilhetes tem de
+   trocar com elas: por fora enche-se de creme, aqui de azul. */
+.evcard__info .evbt:hover { background: var(--tile-bg); color: var(--tile-fg); }
 
 /* A natureza do trabalho, sem caixa: é uma palavra, e uma palavra basta-se. */
 .evtag {
@@ -1236,8 +1245,7 @@ html[lang="en"] .title-art {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 33px;
-  margin-bottom: 18px;
+  margin-top: 26px;
 }
 
 .evbt {
@@ -2939,8 +2947,10 @@ html.menu-open .menu::before { opacity: 1; }
           '<button class="evcard__toggle" type="button" aria-expanded="false">+</button>' +
         '</div>' +
       '</div>' +
-      '<div class="evcard__detalhes"></div>' +
-      '<p class="evcard__sinopse"></p>';
+      '<div class="evcard__info">' +
+        '<div class="evcard__detalhes"></div>' +
+        '<p class="evcard__sinopse"></p>' +
+      '</div>';
 
     var foto = art.querySelector('img');
     foto.src = img; foto.alt = alt;
@@ -2981,7 +2991,7 @@ html.menu-open .menu::before { opacity: 1; }
     var det = art.querySelector('.evcard__detalhes');
     det.appendChild(evDetalhe('tipo', t.natureza));
     det.appendChild(evDetalhe('pin', t.sitio));
-    det.appendChild(evDetalhe('relogio', evQuando(e)));
+    det.appendChild(evDetalhe('relogio', evQuandoLongo(e)));
 
     var caixa = document.createElement('div');
     caixa.className = 'evcard__bilhetes';
@@ -2997,7 +3007,7 @@ html.menu-open .menu::before { opacity: 1; }
       span.textContent = lg() === 'en' ? 'Soon' : 'Brevemente';
       caixa.appendChild(span);
     }
-    art.appendChild(caixa);
+    art.querySelector('.evcard__info').appendChild(caixa);
 
     return art;
   }
@@ -3016,7 +3026,7 @@ html.menu-open .menu::before { opacity: 1; }
     var media = document.createElement('div');
     media.className = 'evmedia evcard__bilhetes';
     media.textContent = evMedia(c);
-    art.appendChild(media);
+    art.querySelector('.evcard__info').appendChild(media);
 
     return art;
   }
