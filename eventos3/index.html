@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>a sineira — eventos: o painel que abre com o "+"</title>
+
+<style>
+/* =====================================================================
+   Estudo do painel dos eventos — o que se vê depois de carregar no "+".
+   O que está no site tem mais do que o rascunho pedia: molduras a toda a
+   volta, rótulos em versaletes, um botão tracejado a dizer que não há
+   bilhetes e um mês inteiro de calendário. Aqui está o mesmo conteúdo
+   com menos, em três graus, para se escolher onde parar.
+
+   Nada de cores, tipos ou medidas novas: sai tudo do index.html.
+   ===================================================================== */
+
+@font-face { font-family:"Roboto Mono"; src:url("../fonts/RobotoMono.woff2") format("woff2"); font-weight:100 700; font-style:normal; font-display:swap; }
+
+:root {
+  --blue:  #003C78;
+  --cream: #F2E7A9;
+  --gold:  #D8B44A;
+
+  --font:         "Roboto Mono", "Courier New", monospace;
+  --font-display: Helvetica, Arial, sans-serif;
+
+  --gutter: 30px;
+  --pad:    30px;
+
+  /* Os filetes saem da cor de quem os recebe: servem o azul e o creme. */
+  --rule: color-mix(in srgb, currentColor 30%, transparent);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--blue);
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: 13px;
+  text-wrap: pretty;
+}
+
+h1, h2, h3, p, ul, figure { margin: 0; }
+a { color: inherit; }
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+button { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+/* Rótulos, títulos e etiquetas na Helvetica; o texto corrido no mono. */
+.mark, .nav a, .lbl, .h1, .plus, .bt, .day, .fita button { font-family: var(--font-display); }
+
+.lbl { font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+
+
+/* --- cabeçalho do estudo --- */
+
+.topbar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; gap: 24px;
+  height: 56px; padding: 0 var(--gutter);
+  background: var(--cream);
+  border-bottom: 1.5px solid var(--blue);
+}
+.mark { font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+.nav { display: flex; gap: 18px; margin-left: auto; }
+.nav a { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+.nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.intro { padding: 54px var(--gutter) 0; max-width: 900px; }
+.h1 { font-size: 31px; font-weight: 400; line-height: 1; letter-spacing: -.025em; text-transform: lowercase; }
+.intro p { margin-top: 18px; max-width: 62ch; line-height: 1.65; }
+
+.caso { padding: 44px var(--gutter) 0; }
+.caso__head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 12px; }
+.caso__head p:last-child { max-width: 54ch; opacity: .75; }
+
+
+/* --- o painel, tal como abre no cartão azul --- */
+
+.panel {
+  padding: var(--pad);
+  background: var(--blue);
+  color: var(--cream);
+}
+.panel .evs { margin-top: 14px; }
+.panel .evs + .lbl { display: block; margin-top: 34px; }
+
+/* A grelha dos cartazes: quatro no máximo, e daí para baixo até uma só —
+   a conta é a do mosaico do site, com as folgas incluídas.
+   Nos concluídos as colunas são as mesmas mas ficam de pé mesmo vazias
+   (auto-fill): com dois cartazes só, sem isso cada um esticava-se a meia
+   página e as fotografias ficavam do dobro das de cima. */
+.evs {
+  --evgap: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max((100% - 3 * var(--evgap)) / 4, min(100%, 180px)), 1fr));
+  gap: var(--evgap);
+}
+.evs--conc { grid-template-columns: repeat(auto-fill, minmax(max((100% - 3 * var(--evgap)) / 4, min(100%, 180px)), 1fr)); }
+
+.ev__foto { aspect-ratio: 4 / 3; overflow: clip; background: color-mix(in srgb, currentColor 12%, transparent); }
+
+/* O "+" fica na linha do título e encostado à direita, como no rascunho —
+   e como no próprio cartão, lá em cima. */
+.ev__head { display: flex; align-items: baseline; gap: 12px; margin-top: 10px; }
+.ev__t { flex: 1; line-height: 1.3; }
+.plus { font-size: 17px; font-weight: 300; line-height: 1; }
+.ev__m { margin-top: 4px; opacity: .7; }
+.ev__body { display: none; margin-top: 6px; line-height: 1.55; opacity: .7; }
+.ev.is-open .ev__body { display: block; }
+.ev__pe { margin-top: 10px; }
+
+/* As três marcas do que ficou de um evento: fotografia, vídeo, texto. */
+.media { display: flex; gap: 7px; margin-top: 10px; }
+.media svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+
+/* Sem bilhetes à venda não há botão a fingir que há: fica dito, e mais nada. */
+.soon { opacity: .55; }
+
+
+/* --- A · nu: só a fotografia e as linhas --- */
+
+.panel--a .ev__pe a { text-decoration: underline; text-underline-offset: 3px; }
+
+
+/* --- B · filete: um risco entre a fotografia e o texto, bilhetes em caixa --- */
+
+.panel--b .ev__foto { border-bottom: 1.5px solid currentColor; }
+.panel--b .ev__head { margin-top: 12px; }
+.bt {
+  display: inline-block; padding: 6px 11px;
+  border: 1.5px solid currentColor;
+  font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  text-decoration: none;
+}
+.bt:hover { background: var(--cream); color: var(--blue); }
+
+
+/* --- C · caixa: o cartaz todo emoldurado, como está agora --- */
+
+.panel--c .ev { display: flex; flex-direction: column; border: 1.5px solid currentColor; }
+.panel--c .ev__foto { border-bottom: 1.5px solid currentColor; }
+.panel--c .ev__head { margin: 0; padding: 12px 14px 0; }
+.panel--c .ev__m,
+.panel--c .ev__body { padding: 0 14px; }
+.panel--c .ev__pe { margin-top: auto; padding: 12px 14px 14px; }
+
+
+/* --- o calendário, em duas medidas --- */
+
+/* Fita: só os dias que têm alguma coisa, em linha, e ao lado o que é.
+   É o que o rascunho desenha — quatro números e uma linha. */
+.fita { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.fita button {
+  padding: 7px 10px;
+  border: 1.5px solid transparent;
+  font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+}
+.fita button:hover { border-color: var(--rule); }
+.fita button[aria-pressed="true"] { border-color: currentColor; }
+.calx { margin-top: 14px; }
+.calx__t { margin-top: 14px; line-height: 1.3; }
+.calx__m { margin-top: 4px; opacity: .7; }
+
+/* Mês: a grelha inteira. Os dias sem nada ficam apagados, os que têm ganham
+   o dourado do cartão de amigo, e o escolhido troca-o por um filete. */
+.mes { max-width: 320px; }
+.mes__nav { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.mes__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; list-style: none; margin: 0; padding: 0; }
+.mes__wd { font-family: var(--font-display); font-size: 9px; font-weight: 700; text-align: center; text-transform: uppercase; opacity: .5; padding-bottom: 4px; }
+.day { aspect-ratio: 1; display: grid; place-items: center; font-size: 11px; opacity: .45; }
+.day--ev { opacity: 1; }
+.day--ev button { width: 100%; height: 100%; background: var(--gold); color: var(--blue); font-weight: 700; }
+.day--ev button[aria-pressed="true"] { background: none; box-shadow: inset 0 0 0 1.5px currentColor; color: inherit; }
+
+.duo { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 30px; }
+
+
+/* --- fecho --- */
+
+.fim { padding: 54px var(--gutter) 80px; max-width: 900px; }
+.fim dl { margin: 18px 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 10px 22px; }
+.fim dt { font-family: var(--font-display); font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding-top: 3px; }
+.fim dd { margin: 0; line-height: 1.6; }
+
+@media (max-width: 640px) {
+  :root { --gutter: 18px; --pad: 18px; }
+  /* Numa linha só não cabem a marca e os quatro nomes: passam a duas. */
+  .topbar { height: auto; padding: 12px var(--gutter); flex-wrap: wrap; gap: 10px; }
+  .nav { width: 100%; margin-left: 0; gap: 14px; }
+  .h1 { font-size: 26px; }
+  .caso__head { display: block; }
+  .caso__head p:last-child { margin-top: 6px; }
+  .fim dl { grid-template-columns: 1fr; gap: 4px; }
+  .fim dd { margin-bottom: 14px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <span class="mark">a sineira</span>
+  <nav class="nav">
+    <a href="#a">a · nu</a>
+    <a href="#b">b · filete</a>
+    <a href="#c">c · caixa</a>
+    <a href="#cal">calendário</a>
+  </nav>
+</div>
+
+<section class="intro">
+  <p class="lbl">Eventos · o painel que abre com o "+"</p>
+  <h1 class="h1">o mesmo, com menos</h1>
+  <p>O rascunho pede quatro cartazes com uma linha, um "+" ao lado e os bilhetes por baixo; depois os concluídos, com as marcas do que ficou; e no fim o calendário, quatro números em linha. O que está no site tem isso e mais: molduras a toda a volta, datas em versaletes, um botão tracejado a dizer que não há bilhetes e um mês inteiro de dias.</p>
+  <p>As três experiências têm o mesmo conteúdo e a mesma ordem. O que muda de uma para a outra é só quanto desenho fica à volta dele. O calendário decide-se à parte: qualquer uma das duas medidas entra em qualquer uma das três.</p>
+</section>
+
+<section class="caso" id="a">
+  <div class="caso__head">
+    <p class="lbl">Experiência A · nu</p>
+    <p>Nem uma linha a mais: a fotografia, o título com o "+" ao lado, a data e o sítio por baixo, e os bilhetes como palavra sublinhada.</p>
+  </div>
+  <div class="panel panel--a" data-panel="a"></div>
+</section>
+
+<section class="caso" id="b">
+  <div class="caso__head">
+    <p class="lbl">Experiência B · filete</p>
+    <p>O mesmo, com um risco a separar a fotografia do texto e os bilhetes numa caixa pequena — as duas coisas que o rascunho desenha.</p>
+  </div>
+  <div class="panel panel--b" data-panel="b"></div>
+</section>
+
+<section class="caso" id="c">
+  <div class="caso__head">
+    <p class="lbl">Experiência C · caixa</p>
+    <p>O cartaz emoldurado, como está hoje no site, mas já sem a data em versaletes nem o botão tracejado.</p>
+  </div>
+  <div class="panel panel--c" data-panel="c"></div>
+</section>
+
+<section class="caso" id="cal">
+  <div class="caso__head">
+    <p class="lbl">O calendário · duas medidas</p>
+    <p>À esquerda só os dias que têm alguma coisa; à direita o mês inteiro. Carregar num dia muda a linha por baixo dos dois.</p>
+  </div>
+  <div class="panel">
+    <div class="duo">
+      <div>
+        <p class="lbl">Fita</p>
+        <div class="calx" id="cal-fita"></div>
+      </div>
+      <div>
+        <p class="lbl">Mês</p>
+        <div class="calx mes" id="cal-mes"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="fim">
+  <p class="lbl">Onde é que cada uma serve</p>
+  <dl>
+    <dt>A · nu</dt>
+    <dd>Quando o painel é para se ler de uma vez e as fotografias é que mandam. É o mais perto do rascunho e o que menos pesa no telemóvel, onde os cartazes ficam uns debaixo dos outros.</dd>
+    <dt>B · filete</dt>
+    <dd>Quando os cartazes precisam de se distinguir da fotografia que têm por cima sem passarem a caixas. O risco chega para isso, e os bilhetes ganham o botão que o rascunho lhes dá.</dd>
+    <dt>C · caixa</dt>
+    <dd>Quando o painel tiver de aguentar títulos de comprimentos muito diferentes: a moldura acerta-lhes as alturas e dá a todos o mesmo pé.</dd>
+    <dt>Fita</dt>
+    <dd>Com quatro ou cinco eventos por temporada, um mês inteiro é sobretudo quadrados vazios. A fita diz o mesmo em duas linhas.</dd>
+    <dt>Mês</dt>
+    <dd>Só quando houver eventos que cheguem para o encher — ou quando o calendário passar a ser o sítio onde se procura por data.</dd>
+  </dl>
+</section>
+
+<script>
+/* Os eventos vivem numa lista só, como no site: as três experiências e as
+   duas medidas do calendário leem todos daqui. */
+var EVENTOS = [
+  { dia: 18, mes: 3, img: '../dossier/assets/scene-estudio.jpg', bilhetes: true,
+    titulo: 'Voar Muito Perto do Sol', sitio: 'Auditório', natureza: 'Criação',
+    nota: 'Estreia da criação em residência, com conversa no fim.',
+    alt: 'Proposta: estúdio de dança com plateia' },
+  { dia: 24, mes: 3, img: '../dossier/assets/nave-2026.jpg', bilhetes: false,
+    titulo: 'Projeto A', sitio: 'Igreja', natureza: 'Formação',
+    nota: 'Duas semanas de formação aberta à comunidade.',
+    alt: 'Nave da antiga Igreja de Retorta com o novo soalho' },
+  { dia: 10, mes: 4, img: '../dossier/assets/nave-2025.jpg', bilhetes: false,
+    titulo: 'Projeto B', sitio: 'Igreja', natureza: 'Apresentação',
+    nota: 'Apresentação pública do trabalho feito na nave.',
+    alt: 'Nave da antiga Igreja de Retorta antes da intervenção' },
+  { dia: 22, mes: 5, img: '../dossier/assets/hero.jpg', bilhetes: false,
+    titulo: 'Projeto C', sitio: 'Exterior', natureza: 'Criação',
+    nota: 'Criação para o adro, à hora a que o sol se põe.',
+    alt: 'Antiga Igreja de Retorta vista da rua' }
+];
+
+var CONCLUIDOS = [
+  { ano: 2025, img: '../dossier/assets/arco.jpg', media: ['foto', 'video', 'texto'],
+    titulo: 'Projeto X', sitio: 'Igreja', nota: 'Fotografias, vídeo e um texto sobre o que se fez.',
+    alt: 'Interior em obra, visto através do arco' },
+  { ano: 2025, img: '../chorof4.jpg', media: ['texto'],
+    titulo: 'Projeto Y', sitio: 'Auditório', nota: 'Ficou o texto de quem lá esteve.',
+    alt: 'Intérprete em cena, com as mãos junto ao rosto' }
+];
+
+var MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+var ABREV = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+
+var ICONES = {
+  foto:  '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="1.5"/><circle cx="8" cy="8.5" r="2.8"/></svg>',
+  video: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="1.5"/><path d="M6.8 6.4l3.6 2.1-3.6 2.1z"/></svg>',
+  texto: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 4h11M2.5 8h11M2.5 12h7"/></svg>'
+};
+
+function el(tag, cls, txt) {
+  var n = document.createElement(tag);
+  if (cls) { n.className = cls; }
+  if (txt != null) { n.textContent = txt; }
+  return n;
+}
+
+/* Um cartaz. O "+" abre a nota, e é a única coisa que se mexe: o desenho de
+   cada experiência está todo na folha de estilos. */
+function cartaz(e, variante) {
+  var art = el('article', 'ev');
+
+  var fig = el('div', 'ev__foto');
+  var img = el('img');
+  img.src = e.img; img.alt = e.alt; img.loading = 'lazy';
+  fig.appendChild(img);
+  art.appendChild(fig);
+
+  var head = el('div', 'ev__head');
+  head.appendChild(el('p', 'ev__t', e.titulo));
+  var bt = el('button', 'plus', '+');
+  bt.type = 'button';
+  bt.setAttribute('aria-expanded', 'false');
+  bt.setAttribute('aria-label', e.titulo);
+  head.appendChild(bt);
+  art.appendChild(head);
+
+  /* Data e sítio, e mais nada: a natureza do evento fica para o "+", senão a
+     linha parte-se em duas numa coluna e os cartazes deixam de acertar. */
+  art.appendChild(el('p', 'ev__m', e.ano
+    ? e.ano + ' · ' + e.sitio
+    : e.dia + ' ' + ABREV[e.mes - 1] + ' · ' + e.sitio));
+  art.appendChild(el('p', 'ev__body', e.natureza ? e.natureza + '. ' + e.nota : e.nota));
+
+  bt.addEventListener('click', function () {
+    var aberto = art.classList.toggle('is-open');
+    bt.textContent = aberto ? '−' : '+';
+    bt.setAttribute('aria-expanded', String(aberto));
+  });
+
+  var pe = el('p', 'ev__pe');
+  if (e.media) {
+    pe.className = 'media';
+    pe.innerHTML = e.media.map(function (m) { return ICONES[m]; }).join('');
+  } else if (e.bilhetes) {
+    var a = el('a', variante === 'a' ? '' : 'bt', variante === 'a' ? 'bilhetes' : 'Bilhetes');
+    a.href = 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Bilhetes — ' + e.titulo);
+    pe.appendChild(a);
+  } else {
+    pe.appendChild(el('span', 'soon', 'brevemente'));
+  }
+  art.appendChild(pe);
+
+  return art;
+}
+
+function pinta(painel) {
+  var v = painel.getAttribute('data-panel');
+  painel.appendChild(el('p', 'lbl', 'Próximos'));
+  var g = el('div', 'evs');
+  EVENTOS.forEach(function (e) { g.appendChild(cartaz(e, v)); });
+  painel.appendChild(g);
+
+  painel.appendChild(el('p', 'lbl', 'Concluídos'));
+  var c = el('div', 'evs evs--conc');
+  CONCLUIDOS.forEach(function (e) { c.appendChild(cartaz(e, v)); });
+  painel.appendChild(c);
+}
+
+Array.prototype.forEach.call(document.querySelectorAll('[data-panel]'), pinta);
+
+
+/* ---------- calendário ---------- */
+
+var escolhido = 0;
+var fita = null;
+
+function linha(caixa) {
+  var e = EVENTOS[escolhido];
+  caixa.querySelector('.calx__t').textContent = e.titulo;
+  caixa.querySelector('.calx__m').textContent = e.dia + ' de ' + MESES[e.mes - 1] + ' · ' + e.sitio + ' · ' + e.natureza;
+}
+
+/* Fita: um botão por evento, e por baixo o que é o escolhido. */
+function montaFita() {
+  var caixa = document.getElementById('cal-fita');
+  fita = el('div', 'fita');
+  EVENTOS.forEach(function (e, i) {
+    var b = el('button', null, e.dia + ' ' + ABREV[e.mes - 1]);
+    b.type = 'button';
+    b.addEventListener('click', function () { escolhido = i; pintaTudo(); });
+    fita.appendChild(b);
+  });
+  caixa.appendChild(fita);
+  caixa.appendChild(el('p', 'calx__t'));
+  caixa.appendChild(el('p', 'calx__m'));
+}
+
+/* Mês: o mês do evento escolhido, com os dias que têm alguma coisa em dourado. */
+function pintaMes() {
+  var caixa = document.getElementById('cal-mes');
+  var mes = EVENTOS[escolhido].mes;
+  var ano = new Date().getFullYear();
+  caixa.innerHTML = '';
+
+  var nav = el('div', 'mes__nav');
+  nav.appendChild(el('p', 'lbl', MESES[mes - 1] + ' ' + ano));
+  caixa.appendChild(nav);
+
+  var g = el('ul', 'mes__grid');
+  ['s', 't', 'q', 'q', 's', 's', 'd'].forEach(function (w) { g.appendChild(el('li', 'mes__wd', w)); });
+
+  var primeiro = (new Date(ano, mes - 1, 1).getDay() + 6) % 7;   /* a semana começa à segunda */
+  var dias = new Date(ano, mes, 0).getDate();
+  var i;
+  for (i = 0; i < primeiro; i++) { g.appendChild(el('li', 'day')); }
+
+  for (var d = 1; d <= dias; d++) {
+    var qual = null;
+    EVENTOS.forEach(function (e, n) { if (e.mes === mes && e.dia === d) { qual = n; } });
+    var li = el('li', 'day' + (qual !== null ? ' day--ev' : ''));
+    if (qual !== null) {
+      var b = el('button', null, String(d));
+      b.type = 'button';
+      b.setAttribute('aria-pressed', String(qual === escolhido));
+      (function (n) { b.addEventListener('click', function () { escolhido = n; pintaTudo(); }); })(qual);
+      li.appendChild(b);
+    } else {
+      li.textContent = String(d);
+    }
+    g.appendChild(li);
+  }
+  caixa.appendChild(g);
+  caixa.appendChild(el('p', 'calx__t'));
+  caixa.appendChild(el('p', 'calx__m'));
+  linha(caixa);
+}
+
+function pintaTudo() {
+  Array.prototype.forEach.call(fita.children, function (o, n) {
+    o.setAttribute('aria-pressed', String(n === escolhido));
+  });
+  linha(document.getElementById('cal-fita'));
+  pintaMes();
+}
+
+montaFita();
+pintaTudo();
+</script>
+
+</body>
+</html>

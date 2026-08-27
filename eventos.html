@@ -55,16 +55,22 @@ a { color: inherit; text-decoration: none; }
   <nav class="tabs" role="tablist" aria-label="Estudos">
     <button class="tab" role="tab" id="tab-1" aria-controls="frame-1" aria-selected="true" data-hash="1">1 · experiências</button>
     <button class="tab" role="tab" id="tab-2" aria-controls="frame-2" aria-selected="false" data-hash="2">2 · telemóvel</button>
+    <button class="tab" role="tab" id="tab-3" aria-controls="frame-3" aria-selected="false" data-hash="3">3 · o painel</button>
   </nav>
 </header>
 <div class="stage">
   <iframe class="is-on" id="frame-1" title="Estudo 1: cinco maneiras de mostrar os eventos" src="eventos1/index.html"></iframe>
   <iframe id="frame-2" title="Estudo 2: cartão e painel, primeiro no telemóvel" src="eventos2/index.html"></iframe>
+  <iframe id="frame-3" title="Estudo 3: o painel que abre com o mais" src="eventos3/index.html"></iframe>
 </div>
 <script>
 (function () {
   var tabs = document.querySelectorAll('.tab');
-  var frames = { '1': document.getElementById('frame-1'), '2': document.getElementById('frame-2') };
+  var frames = {
+    '1': document.getElementById('frame-1'),
+    '2': document.getElementById('frame-2'),
+    '3': document.getElementById('frame-3')
+  };
 
   function show(id) {
     if (!frames[id]) id = '1';
