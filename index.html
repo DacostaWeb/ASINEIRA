@@ -136,16 +136,22 @@ a:hover { text-decoration: underline; }
 .menu__link,
 .pill,
 .marquee__text,
-.cal__month,
-.cal__wd,
-.cal__lbl,
-.evcard__kick,
 .evtag,
 .evmedia,
 .events__head,
-.evbt,
 .panel-section__title,
 .aerial__tag { font-family: var(--font-display); }
+
+/* Aberto, o painel dos eventos fica todo no mono do texto — os rótulos
+   deixam a Helvetica. O título "eventos" continua no desenho de cima. */
+#eventos.tile.is-expanded .panel-section__title,
+#eventos.tile.is-expanded .evcard__kick,
+#eventos.tile.is-expanded .evtag,
+#eventos.tile.is-expanded .evmedia,
+#eventos.tile.is-expanded .evbt,
+#eventos.tile.is-expanded .prjf {
+  font-family: var(--font);
+}
 
 
 /* 4. Animações ============================================================ */
@@ -1023,7 +1029,7 @@ html[lang="en"] .title-art {
 
    A diferença para o mosaico é a folga entre cartazes, que lá não existe. */
 .evgrid {
-  --evgap: 18px;
+  --evgap: 30px;
   display: grid;
   grid-template-columns: repeat(var(--ev-cols, 1), minmax(0, 1fr));
   gap: 40px var(--evgap);   /* mais ar entre linhas do que entre colunas */
@@ -1033,6 +1039,10 @@ html[lang="en"] .title-art {
 @media (min-width: 600px)  { .evgrid { --ev-cols: 2; } }
 @media (min-width: 1080px) { .evgrid { --ev-cols: 3; } }
 @media (min-width: 1440px) { .evgrid { --ev-cols: 4; } }
+
+/* Os concluídos são cartazes iguais aos de cima — mesma grelha, mesma
+   fotografia, mesma placa. O que os separa é o que dizem: no lugar da data
+   fica o ano, e no lugar dos bilhetes o que ficou de cada um. */
 
 .evcard { display: flex; flex-direction: column; }
 
@@ -1046,23 +1056,22 @@ html[lang="en"] .title-art {
 }
 .evcard__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
-/* A placa encostada ao fundo da fotografia, com a mesma folga dos dois lados
-   e do fundo. Troca as cores com o cartão que a recebe: creme sobre o azul,
-   azul sobre o creme — não há cor nova nenhuma. */
+/* A placa pousada sobre a fotografia, descolada das três margens: assim
+   lê-se como uma etiqueta lá posta e não como um rodapé da imagem. Troca as
+   cores com o cartão que a recebe: creme sobre o azul, azul sobre o creme. */
 .evcard__legenda {
   position: absolute;
   left: 14px; right: 14px; bottom: 14px;
   display: flex;
   gap: 10px;
-  padding: 14px 15px;
+  padding: 13px;
   background: var(--tile-fg);
   color: var(--tile-bg);
 }
 
 .evcard__col { flex: 1; min-width: 0; }
 
-/* "próximo · 18 de março" — o rótulo só diz "próximo" no primeiro da lista;
-   nos outros fica a data. */
+/* "18 de março" — só a data, em versaletes. */
 .evcard__kick { font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 
 /* O título ocupa uma linha e uma só: um título de duas linhas fazia a placa
@@ -1075,7 +1084,7 @@ html[lang="en"] .title-art {
   position: relative;
   margin-top: 6px;
   overflow: hidden;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 1.1;
   letter-spacing: -.02em;
   white-space: nowrap;
@@ -1145,6 +1154,13 @@ html[lang="en"] .title-art {
   margin-top: 16px;
 }
 
+/* Tudo o que vem por baixo da fotografia entra um pouco, à conta da placa:
+   o cartaz fica com uma prumada só, e a fotografia com a largura toda. */
+.evcard__detalhes,
+.evcard__sinopse,
+.evcard__body,
+.evcard__bilhetes { margin-left: 25px; }
+
 /* A natureza do trabalho, sem caixa: é uma palavra, e uma palavra basta-se. */
 .evtag {
   font-size: 9px;
@@ -1153,7 +1169,12 @@ html[lang="en"] .title-art {
   text-transform: uppercase;
 }
 
-.evdet { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; opacity: .8; }
+.evdet { display: inline-flex; align-items: center; gap: 10px; font-size: 12px; opacity: .8; }
+
+/* A natureza do trabalho é a única das três linhas que se diz em versaletes
+   e a negro: é um rótulo, não uma informação, e assim distingue-se do sítio
+   e da hora sem precisar de caixa nem de corpo próprio. */
+.evdet:has(.sinal--tipo) { font-weight: 700; text-transform: uppercase; }
 .evdet svg {
   flex-shrink: 0;
   width: 13px;
@@ -1175,14 +1196,14 @@ html[lang="en"] .title-art {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 18px;
+  margin-top: 33px;
+  margin-bottom: 18px;
 }
 
 .evbt {
   display: inline-block;
-  padding: 7px 12px;
+  padding: 5.5px 12px;
   border: 1.5px solid currentColor;
-  font-family: var(--font-display);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .12em;
@@ -1193,7 +1214,7 @@ html[lang="en"] .title-art {
 /* Sem bilhetes à venda não há botão nenhum a fingir que há — nem sequer a
    caixa dele: fica a palavra, e mais nada. */
 .evbt--soon {
-  padding: 7px 0;
+  padding: 5.5px 0;
   border: none;
   opacity: .6;
   cursor: default;
@@ -1212,7 +1233,6 @@ html[lang="en"] .title-art {
   border: 1.5px solid currentColor;
   background: none;
   color: inherit;
-  font-family: var(--font-display);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .12em;
@@ -1319,7 +1339,6 @@ html[lang="en"] .title-art {
 .cal__arrow:last-of-type { margin-left: auto; }
 
 .cal__month {
-  font-family: var(--font-display);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: .14em;
@@ -1337,7 +1356,6 @@ html[lang="en"] .title-art {
 
 .cal__wd {
   padding-bottom: 6px;
-  font-family: var(--font-display);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .06em;
@@ -1348,42 +1366,43 @@ html[lang="en"] .title-art {
 
 .cal__day { aspect-ratio: 1; display: grid; place-items: center; font-size: 12px; line-height: 1; }
 
-/* Os dias com evento ganham o dourado do cartão de Amigo, que é o único
-   acento do site; o dia escolhido troca-o pelo creme com um filete grosso. */
+/* Os dias com evento ganham o creme; o escolhido fica com um filete por dentro. */
 .cal__day button {
   width: 100%;
   height: 100%;
   padding: 0;
   border: none;
-  background: var(--gold);
+  background: var(--cream);
   color: var(--blue);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
 }
-.cal__day button:hover { background: var(--gold-light); }
-.cal__day button[aria-pressed="true"] { background: var(--cream); box-shadow: inset 0 0 0 2.5px var(--gold-deep); }
+.cal__day button:hover { opacity: .8; }
+.cal__day button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--blue); }
 .cal__day button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 
 /* O dia de hoje, sem evento nenhum, fica em negativo — as cores saem do
    próprio mosaico. */
 .cal__day--today { background: var(--tile-fg); color: var(--tile-bg); font-weight: 700; }
 
-.cal__detail { padding-left: 26px; border-left: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
+.cal__detail { padding-left: 26px; }
 .cal__lbl {
-  font-family: var(--font-display);
+  display: flex;
+  align-items: center;
+  height: 18px;
+  margin-bottom: 12px;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .14em;
   text-transform: uppercase;
-  opacity: .75;
 }
 /* Sem dia escolhido, a coluna da direita não fica à espera: mostra o que há
    no mês inteiro, uma linha por evento, e cada uma escolhe o seu dia. */
-.cal__lista { margin-top: 10px; padding: 0; list-style: none; }
-.cal__lista li + li { margin-top: 2px; }
+.cal__lista { margin-top: 0; padding: 0; list-style: none; }
 .cal__ev {
   display: flex;
+  align-items: baseline;
   gap: 12px;
   width: 100%;
   padding: 8px 0;
@@ -1395,9 +1414,12 @@ html[lang="en"] .title-art {
   text-align: left;
   cursor: pointer;
 }
+.cal__lista li:last-child .cal__ev {
+  border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+}
 .cal__ev:hover { opacity: .7; }
 .cal__ev:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
-.cal__ev b { flex-shrink: 0; width: 4.5em; font-family: var(--font-display); font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding-top: 3px; }
+.cal__ev b { flex-shrink: 0; width: 4.5em; font-weight: 400; text-transform: uppercase; }
 .cal__ev span { flex: 1; font-size: 13px; line-height: 1.3; }
 
 .cal__t { margin-top: 10px; font-size: 16px; line-height: 1.25; }
@@ -1919,7 +1941,7 @@ html.menu-open .menu::before { opacity: 1; }
 
         <div class="panel-section">
           <h3 class="panel-section__title" data-i18n="secConc">concluídos</h3>
-          <div class="evgrid" id="ev-grelha-conc"></div>
+          <div class="evgrid evgrid--conc" id="ev-grelha-conc"></div>
         </div>
 
         <div class="panel-section">
@@ -2879,8 +2901,7 @@ html.menu-open .menu::before { opacity: 1; }
      baixo, a sinopse a seguir e os bilhetes a fechar. */
   function evCartaz(e, i) {
     var t = evTexto(e);
-    /* O primeiro da lista é o próximo a acontecer, e o rótulo di-lo. */
-    var rotulo = (i === 0 ? (lg() === 'en' ? 'next · ' : 'próximo · ') : '') + evData(e);
+    var rotulo = evData(e);
     var art = evCaixa(t, evAlt(e), e.img, rotulo);
     evMais(art, evAssunto(e), t.titulo);
 
