@@ -1,0 +1,163 @@
+/* =====================================================================
+   a Sineira — a página de um projeto
+   Folha comum às três experiências. O que muda de uma para a outra está
+   no <style> de cada página; aqui está só o que é igual em todas: as
+   cores, os dois tipos de letra, a barra de cima, o pé e as fotografias.
+
+   Nada de cores, tipos ou medidas novas: sai tudo do index.html do site.
+   ===================================================================== */
+
+@font-face { font-family:"Roboto Mono"; src:url("../fonts/RobotoMono.woff2") format("woff2"); font-weight:100 700; font-style:normal; font-display:swap;
+             unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:"Roboto Mono"; src:url("../fonts/RobotoMono-ext.woff2") format("woff2"); font-weight:100 700; font-style:normal; font-display:swap;
+             unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+
+:root {
+  --blue:  #003C78;
+  --cream: #F2E7A9;
+  --gold:  #D8B44A;
+
+  --font:         "Roboto Mono", "Courier New", monospace;
+  --font-display: Helvetica, Arial, sans-serif;
+
+  --gutter: 30px;
+  --pad:    30px;
+
+  /* Os filetes saem da cor de quem os recebe: servem o azul e o creme. */
+  --rule: color-mix(in srgb, currentColor 30%, transparent);
+
+  /* O vídeo do "Voar" é vertical (o embed do Vimeo pede 177.8% de altura).
+     Fica numa variável porque o próximo projeto pode trazer um deitado, e
+     nesse caso muda-se aqui e mais nada. */
+  --video-ar: 9 / 16;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--blue);
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+h1, h2, h3, p, ul, figure, table, dl { margin: 0; }
+a { color: inherit; }
+img { display: block; width: 100%; }
+button { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* Rótulos, títulos e etiquetas na Helvetica; o texto corrido no mono —
+   a mesma repartição do site. */
+.mark, .nav a, .lbl, .tag, .h1, .fichas th, .fotos__conta, .pe a { font-family: var(--font-display); }
+
+.lbl { font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; line-height: 1.2; }
+
+/* A etiqueta da natureza do projeto: a mesma do cartaz do evento. */
+.tag {
+  display: inline-block; padding: 5px 10px;
+  border: 1.5px solid currentColor;
+  font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+}
+
+
+/* --- barra de cima ------------------------------------------------- */
+
+/* Numa página de projeto o cabeçalho do site encolhe ao que é preciso:
+   a marca, que leva a casa, e a porta por onde se voltou. */
+.topbar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; gap: 24px;
+  height: 56px; padding: 0 var(--gutter);
+  background: var(--cream);
+  border-bottom: 1.5px solid var(--blue);
+}
+.mark { font-size: 15px; font-weight: 700; letter-spacing: -.02em; text-decoration: none; }
+.nav { display: flex; gap: 18px; margin-left: auto; }
+.nav a { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+.nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+
+/* --- o título ------------------------------------------------------ */
+
+.h1 { font-size: 40px; font-weight: 400; line-height: 1.05; letter-spacing: -.025em; }
+.h1 small { font-size: .45em; font-weight: 400; letter-spacing: 0; opacity: .6; }
+
+/* A linha de baixo do título: onde, quando, o que é. */
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.meta p { opacity: .75; }
+
+
+/* --- o vídeo ------------------------------------------------------- */
+
+.video { position: relative; aspect-ratio: var(--video-ar); background: color-mix(in srgb, currentColor 12%, transparent); }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+
+/* --- a ficha técnica ----------------------------------------------- */
+
+/* Duas colunas de larguras diferentes: o rótulo mede-se pelo maior e o
+   resto fica para os nomes. Sem linhas nem fundos — é o mesmo desenho
+   da tabela de acessos do site. */
+.fichas { width: 100%; border-collapse: collapse; text-align: left; }
+.fichas tr { border-top: 1px solid var(--rule); }
+.fichas tr:last-child { border-bottom: 1px solid var(--rule); }
+.fichas th, .fichas td { padding: 10px 0; vertical-align: top; }
+.fichas th { width: max-content; padding-right: 22px; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; padding-top: 13px; }
+
+
+/* --- as fotografias ------------------------------------------------ */
+
+/* No sítio da Sara as nove fotografias estão umas por cima das outras e
+   passam-se à vez, com um "Fotografias ⟶" por baixo. Aqui mantém-se a
+   ideia — uma de cada vez, à medida da página — mas o que a faz andar
+   fica dito: as setas, o número de onde se vai, e o clique na própria
+   fotografia, que é o que toda a gente tenta primeiro. */
+.fotos { position: relative; }
+.fotos__palco { position: relative; aspect-ratio: 3 / 2; overflow: clip; background: color-mix(in srgb, currentColor 12%, transparent); cursor: pointer; }
+.fotos__palco img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 240ms ease; }
+.fotos__palco img.is-on { opacity: 1; }
+
+.fotos__pe { display: flex; align-items: center; gap: 14px; margin-top: 10px; }
+.fotos__conta { font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+.fotos__setas { display: flex; gap: 6px; margin-left: auto; }
+.fotos__setas button { width: 30px; height: 30px; display: grid; place-items: center; border: 1.5px solid var(--rule); font-size: 14px; line-height: 1; }
+.fotos__setas button:hover { border-color: currentColor; }
+
+/* Os pontos dizem quantas são sem ocupar uma linha inteira de números. */
+.fotos__pontos { display: flex; gap: 5px; }
+.fotos__pontos button { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in srgb, currentColor 30%, transparent); }
+.fotos__pontos button[aria-current="true"] { background: currentColor; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fotos__palco img { transition: none; }
+}
+
+
+/* --- o pé: o projeto anterior e o seguinte ------------------------- */
+
+.pe {
+  display: flex; align-items: baseline; gap: 20px;
+  padding: 22px var(--gutter);
+  border-top: 1.5px solid var(--blue);
+}
+.pe a { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+.pe a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.pe a:last-child { margin-left: auto; }
+
+
+/* --- ecrãs estreitos ------------------------------------------------ */
+
+@media (max-width: 640px) {
+  :root { --gutter: 18px; --pad: 18px; }
+  .topbar { height: auto; padding: 12px var(--gutter); flex-wrap: wrap; gap: 10px; }
+  .nav { width: 100%; margin-left: 0; gap: 14px; }
+  .h1 { font-size: 30px; }
+  .fichas th, .fichas td { display: block; }
+  .fichas th { padding: 12px 0 0; }
+  .fichas td { padding-top: 2px; }
+}

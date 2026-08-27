@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>a sineira — a página de um projeto</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="base.css">
+
+<style>
+/* =====================================================================
+   O índice da pasta: o que é a experiência, as três maneiras e o que
+   fica por decidir. Só arruma — o desenho está nas três páginas.
+   ===================================================================== */
+
+.intro { padding: 54px var(--gutter) 0; max-width: 900px; }
+.intro .h1 { text-transform: lowercase; }
+.intro p { margin-top: 18px; max-width: 62ch; }
+.intro .lbl { margin-bottom: 14px; }
+
+.tres {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 18px;
+  padding: 54px var(--gutter) 0;
+  max-width: 1280px;
+}
+
+.via { display: flex; flex-direction: column; text-decoration: none; }
+.via:hover .via__f { outline: 1.5px solid var(--blue); outline-offset: -1.5px; }
+.via:hover .via__t { text-decoration: underline; text-underline-offset: 4px; }
+
+.via__f { aspect-ratio: 4 / 3; overflow: clip; background: var(--blue); }
+.via__f img { width: 100%; height: 100%; object-fit: cover; }
+
+.via__t { margin-top: 12px; font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.via p { margin-top: 6px; opacity: .8; }
+
+.fim { padding: 54px var(--gutter) 80px; max-width: 900px; }
+.fim dl { margin: 18px 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 10px 22px; }
+.fim dt { font-family: var(--font-display); font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding-top: 3px; }
+.fim dd { margin: 0; }
+.fim + .fim { padding-top: 0; }
+
+/* Os nomes de ficheiro e de variável ficam no mesmo mono do texto, só com
+   um fundo a dizer que são código — o monospace do browser destoava. */
+code { font-family: var(--font); font-size: 12px; background: color-mix(in srgb, currentColor 12%, transparent); padding: 1px 5px; }
+
+@media (max-width: 640px) {
+  .fim dl { grid-template-columns: 1fr; gap: 4px; }
+  .fim dd { margin-bottom: 14px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <a class="mark" href="../index.html">a sineira</a>
+  <nav class="nav">
+    <a href="voar-a.html">a · painel</a>
+    <a href="voar-b.html">b · ficha</a>
+    <a href="voar-c.html">c · fita</a>
+  </nav>
+</div>
+
+<section class="intro">
+  <p class="lbl">Projetos · a página de cada um</p>
+  <h1 class="h1">um projeto, três páginas</h1>
+  <p>Hoje um projeto do site vive dentro do cartão dos eventos: uma fotografia, um título, uma linha e uma sinopse que abre com o "+". Chega para dizer que existe e quando é. Não chega para o contar a quem não estava lá, nem tem endereço que se possa mandar a alguém.</p>
+  <p>Estas três páginas são três maneiras de lhe dar esse endereço. O projeto é o mesmo — "Voar Muito Perto do Sol", com o texto, a ficha técnica, o vídeo e as nove fotografias do sítio da Sara Garcia, palavra por palavra e imagem por imagem. O que muda é a ordem por que se lê e quem manda na página: o texto, a identificação ou as fotografias.</p>
+  <p>As três leem o mesmo registo — o <code>voar.js</code>, um objeto só com tudo o que o site sabe do projeto. É o princípio da lista <code>EVENTOS</code> do <code>index.html</code>: o conteúdo num sítio, e cada vista a arrumá-lo à sua maneira. Escolhida uma, o segundo projeto é escrever outro registo e mais nada.</p>
+</section>
+
+<div class="tres">
+
+  <a class="via" href="voar-a.html">
+    <div class="via__f"><img src="img/voar8.jpg" alt="Crianças de costas a olhar para a janela iluminada da cenografia"></div>
+    <p class="via__t">A · painel</p>
+    <p>O cartão azul do mosaico, aberto até ao fim e com endereço próprio. Uma coluna, o vídeo primeiro, as fotografias no fim — a ordem do sítio da Sara. É a que se reconhece de imediato como sendo do site.</p>
+  </a>
+
+  <a class="via" href="voar-b.html">
+    <div class="via__f"><img src="img/voar6.jpg" alt="Vista de cima do grupo sentado no chão com formas de cartolina"></div>
+    <p class="via__t">B · ficha</p>
+    <p>Um registo de arquivo. A identificação fica quieta à esquerda enquanto se desce o que ficou do projeto. É a que menos se parece com o mosaico e a que melhor aguenta trinta projetos.</p>
+  </a>
+
+  <a class="via" href="voar-c.html">
+    <div class="via__f"><img src="img/voar5.jpg" alt="A apresentação final vista de trás da plateia"></div>
+    <p class="via__t">C · fita</p>
+    <p>As fotografias levam a página: abre com uma a ocupar o ecrã e o texto entra nos intervalos, sem carrossel. É a que conta melhor o projeto e a que mais exige das fotografias.</p>
+  </a>
+
+</div>
+
+<section class="fim">
+  <p class="lbl">Onde é que cada uma serve</p>
+  <dl>
+    <dt>A · painel</dt>
+    <dd>Se as páginas de projeto forem sobretudo o destino do "+" dos eventos. Quem chega vem do cartão e encontra o mesmo cartão, maior — não há degrau nenhum. É também a mais barata: o desenho já existe todo.</dd>
+    <dt>B · ficha</dt>
+    <dd>Se o que se quer é um arquivo. Com muitos projetos, saber sempre em qual se está e quem o fez vale mais do que abrir com a fotografia. É a única das três em que a ficha técnica não fica no fim, escondida.</dd>
+    <dt>C · fita</dt>
+    <dd>Se as páginas de projeto forem para mostrar a alguém de fora — a um programador, a um apoio, a quem nunca cá veio. Pede fotografias boas e a sério: com duas ou três medianas, desmonta-se.</dd>
+  </dl>
+</section>
+
+<section class="fim">
+  <p class="lbl">O que fica por decidir</p>
+  <dl>
+    <dt>Endereço</dt>
+    <dd>Aqui as páginas chamam-se <code>voar-a.html</code> por causa da experiência. A sério seria <code>/projetos/voar-muito-perto-do-sol/</code> — o nome do projeto no endereço, que é o que se manda a alguém e o que os motores de busca guardam.</dd>
+    <dt>Por onde se entra</dt>
+    <dd>O "+" da lista "Todos os projetos" abre hoje a sinopse ali mesmo. Ou passa a abrir a página, ou fica a abrir a sinopse e o título é que leva à página. As duas coisas cabem; só não cabem as duas ao mesmo tempo no mesmo sítio.</dd>
+    <dt>Português e inglês</dt>
+    <dd>O site tem as duas línguas e este registo só tem o português — é o que existe no sítio da Sara. O <code>voar.js</code> está feito para receber a segunda da mesma maneira que a lista <code>EVENTOS</code> a recebe: um <code>pt</code> e um <code>en</code> dentro de cada campo.</dd>
+    <dt>O vídeo</dt>
+    <dd>É vertical: 240 por 426, confirmado no Vimeo. Isso mexeu com as três páginas mais do que se esperava — no sítio da Sara o vídeo abre o projeto, e aqui, à largura de uma coluna, um vídeo ao alto é um ecrã inteiro antes de se ler uma palavra. Em A desceu para depois do texto, em B ficou ao lado dele e em C ganhou um momento só seu, a meio da fita. Se um dia vier um deitado, muda-se numa linha: <code>--video-ar</code>, no <code>base.css</code>.</dd>
+    <dt>As fotografias</dt>
+    <dd>A primeira das nove está ao alto e as outras oito deitadas. Em A e B entram inteiras dentro de uma caixa fixa, e por isso a que está ao alto fica mais pequena — a alternativa era cortá-la. Em C cada uma fica com a altura que o seu formato pede, que é o que a fita permite.</dd>
+    <dt>Legendas</dt>
+    <dd>Não há. Cada fotografia tem a descrição do que se vê, para leitores de ecrã, mas isso não é uma legenda — se a fita for a escolhida, vale a pena pedir à Sara uma linha por fotografia.</dd>
+    <dt>A natureza</dt>
+    <dd>No cartaz do evento este projeto está como "Criação"; no sítio da Sara está arrumado em "teaching", e o texto descreve uma oficina com apresentação final. Aqui ficou "Formação". É uma coisa a acertar na lista dos eventos, não na página.</dd>
+  </dl>
+</section>
+
+</body>
+</html>

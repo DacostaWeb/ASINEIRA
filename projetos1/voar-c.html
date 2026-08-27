@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voar Muito Perto do Sol — a Sineira (C · fita)</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="base.css">
+
+<style>
+/* =====================================================================
+   C · fita
+
+   Aqui as fotografias não vão para o fim: são elas que levam a página.
+   Abre-se com uma a ocupar o ecrã e o título por cima, e daí para baixo
+   o texto entra nos intervalos da fita, sem carrossel nenhum — vê-se
+   tudo descendo.
+
+   É a que precisa de melhores fotografias e a que mais pesa a descarregar
+   (nove em vez de uma), e a que melhor conta um projeto a quem nunca
+   ouviu falar dele.
+   ===================================================================== */
+
+:root { --fita: 1280px; }   /* a medida da fita, e a que a abertura segue */
+
+
+/* --- a abertura --- */
+
+/* A fotografia da abertura não é a primeira da lista: é a da apresentação
+   final, a única que mostra a plateia. Numa fita, a primeira imagem é o
+   cartaz do projeto, e por isso escolhe-se em vez de se herdar. */
+.abre { position: relative; height: min(76vh, 640px); overflow: clip; background: var(--blue); }
+.abre img { width: 100%; height: 100%; object-fit: cover; }
+
+/* O texto por cima da fotografia precisa de chão: as fotografias são
+   escuras em baixo, mas nem todas na mesma medida. */
+.abre__t {
+  position: absolute; inset: auto 0 0 0;
+  padding: 40px 0 30px;
+  color: var(--cream);
+  background: linear-gradient(to top, rgba(0,60,120,.92) 0%, rgba(0,60,120,.7) 45%, rgba(0,60,120,0) 100%);
+}
+/* A degradê tem de ir de borda a borda, mas o título alinha com a fita que
+   vem por baixo — daí a margem ir nos filhos e não na caixa. */
+.abre__t > * { max-width: var(--fita); margin: 0 auto; padding: 0 var(--gutter); }
+.abre__t .meta { margin-top: 14px; }
+.abre__t .meta p { opacity: .85; }
+
+
+/* --- a fita --- */
+
+.fita { padding: 0 var(--gutter) 80px; max-width: var(--fita); margin: 0 auto; }
+.fita > * { margin-top: 54px; }
+
+/* Um bloco de texto: nunca à largura toda, que a 1280px seriam linhas de
+   quase duzentos caracteres. */
+.tx { max-width: 62ch; }
+.tx p + p { margin-top: 16px; }
+
+/* O vídeo é vertical, e numa fita de fotografias deitadas isso nota-se: ao
+   lado do texto deixava meia página vazia, e à largura da fita seria uma
+   parede. Fica a meio do caminho, ao centro e do tamanho de um telemóvel,
+   como quem vira a página e encontra outra coisa. */
+.filme { text-align: center; }
+.filme .lbl { margin-bottom: 14px; }
+.filme .video { width: 300px; margin: 0 auto; }
+
+/* Duas fotografias a par. Ficam de pé sozinhas, cada uma com a altura que
+   o seu formato pede: a que está ao alto fica mais alta do que a deitada
+   ao lado, e é isso mesmo que se quer ver. */
+.par { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 18px; align-items: start; }
+
+/* Uma fotografia sozinha, do tamanho da fita. */
+.uma img { width: 100%; height: auto; }
+
+.fim { padding-top: 54px; border-top: 1.5px solid var(--rule); }
+.fim > .lbl { margin-bottom: 14px; }
+.fim .fichas { max-width: 720px; }
+
+@media (max-width: 640px) {
+  .abre { height: min(70vh, 480px); }
+  .abre__t { padding: 30px 0 22px; }
+  .filme .video { width: 100%; max-width: 300px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <a class="mark" href="../index.html">a sineira</a>
+  <nav class="nav">
+    <a href="index.html">as três experiências</a>
+    <a href="../index.html#eventos">todos os projetos</a>
+  </nav>
+</div>
+
+<article>
+
+  <header class="abre">
+    <img id="abre-img" alt="">
+    <div class="abre__t" id="cab"></div>
+  </header>
+
+  <div class="fita">
+
+    <div class="tx" id="tx1"></div>
+
+    <div class="par" id="par1"></div>
+
+    <div class="tx" id="tx2"></div>
+
+    <div class="par" id="par2"></div>
+
+    <section class="filme">
+      <p class="lbl">Vídeo</p>
+      <div id="video"></div>
+    </section>
+
+    <div class="uma" id="uma1"></div>
+
+    <div class="par" id="par3"></div>
+
+    <div class="uma" id="uma2"></div>
+
+    <section class="fim">
+      <p class="lbl">Ficha técnica</p>
+      <div id="ficha"></div>
+    </section>
+
+  </div>
+
+</article>
+
+<footer class="pe" id="pe"></footer>
+
+<script src="voar.js"></script>
+<script src="pagina.js"></script>
+<script>
+/* A abertura: a fotografia da apresentação final, e o título por cima. */
+var capa = PROJETO.fotos[4];
+var abreImg = document.getElementById('abre-img');
+abreImg.src = capa.src;
+abreImg.alt = capa.alt;
+
+montaTitulo(document.getElementById('cab'), PROJETO);
+montaVideo (document.getElementById('video'), PROJETO);
+montaFicha (document.getElementById('ficha'), PROJETO);
+montaPe    (document.getElementById('pe'),    PROJETO);
+
+/* O texto reparte-se pelos dois intervalos: as duas primeiras alíneas
+   dizem o que é e de onde veio, as duas últimas o que se fez e com quem. */
+function texto(id, de, ate) {
+  var caixa = document.getElementById(id);
+  PROJETO.texto.slice(de, ate).forEach(function (t) { caixa.appendChild(el('p', null, t)); });
+}
+texto('tx1', 0, 2);
+texto('tx2', 2, 4);
+
+/* A fita: as oito que sobram, pela ordem em que estão, aos pares e a solo.
+   As que estão a solo são as que ganham em ser vistas grandes. */
+function fotos(id, indices) {
+  var caixa = document.getElementById(id);
+  indices.forEach(function (i) {
+    var f = PROJETO.fotos[i];
+    var img = el('img');
+    img.src = f.src;
+    img.alt = f.alt;
+    img.loading = 'lazy';
+    caixa.appendChild(img);
+  });
+}
+fotos('par1', [0, 1]);
+fotos('par2', [2, 3]);
+fotos('uma1', [5]);
+fotos('par3', [6, 7]);
+fotos('uma2', [8]);
+</script>
+
+</body>
+</html>

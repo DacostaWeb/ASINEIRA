@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voar Muito Perto do Sol — a Sineira (A · painel)</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="base.css">
+
+<style>
+/* =====================================================================
+   A · painel
+
+   A página do projeto é o cartão azul do mosaico, aberto até ao fim. O
+   que se lê é o que já se via ao carregar no "+" — só que agora tem
+   endereço próprio, e por isso pode ser guardado e enviado a alguém.
+
+   Uma coluna, a largura de leitura do site (--panel-content), e a ordem
+   do sítio da Sara: o vídeo primeiro, o texto a seguir, a ficha técnica
+   e as fotografias no fim.
+   ===================================================================== */
+
+.painel {
+  min-height: calc(100vh - 56px);
+  padding: 54px var(--pad) 80px;
+  background: var(--blue);
+  color: var(--cream);
+}
+
+/* Tudo dentro da mesma coluna de leitura — é a --panel-content do site. */
+.col { max-width: 900px; margin: 0 auto; }
+
+.cab { margin-bottom: 44px; }
+.cab .meta { margin-top: 18px; }
+
+/* O vídeo é vertical (240x426, confirmado no Vimeo). Numa coluna só, pô-lo
+   à cabeça como está no sítio da Sara dava um ecrã inteiro de vídeo antes
+   de se ler uma palavra — e, a 900px de coluna, com metade dela vazia ao
+   lado. Desce para depois do texto, à medida de um telemóvel: quem chega lê
+   primeiro o que é, e vê a seguir. */
+.video { max-width: 340px; }
+
+.corpo { margin-top: 0; }
+.corpo p + p { margin-top: 16px; }
+.corpo p { max-width: 62ch; }
+
+.bloco { margin-top: 54px; }
+.bloco > .lbl { margin-bottom: 14px; }
+
+/* No azul, o filete da tabela e os pontos das fotografias saem do creme —
+   é o --rule da folha comum a fazer o seu trabalho sem se lhe tocar. */
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <a class="mark" href="../index.html">a sineira</a>
+  <nav class="nav">
+    <a href="index.html">as três experiências</a>
+    <a href="../index.html#eventos">todos os projetos</a>
+  </nav>
+</div>
+
+<article class="painel">
+  <div class="col">
+    <header class="cab" id="cab"></header>
+
+    <div class="corpo" id="texto"></div>
+
+    <section class="bloco">
+      <p class="lbl">Vídeo</p>
+      <div id="video"></div>
+    </section>
+
+    <section class="bloco">
+      <p class="lbl">Ficha técnica</p>
+      <div id="ficha"></div>
+    </section>
+
+    <section class="bloco">
+      <p class="lbl">Fotografias</p>
+      <div class="fotos" id="fotos"></div>
+    </section>
+  </div>
+</article>
+
+<footer class="pe" id="pe"></footer>
+
+<script src="voar.js"></script>
+<script src="pagina.js"></script>
+<script>
+montaTitulo(document.getElementById('cab'),   PROJETO);
+montaTexto (document.getElementById('texto'), PROJETO);
+montaVideo (document.getElementById('video'), PROJETO);
+montaFicha (document.getElementById('ficha'), PROJETO);
+montaFotos (document.getElementById('fotos'), PROJETO.fotos);
+montaPe    (document.getElementById('pe'),    PROJETO);
+</script>
+
+</body>
+</html>

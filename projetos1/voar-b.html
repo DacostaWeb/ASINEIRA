@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voar Muito Perto do Sol — a Sineira (B · ficha)</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="base.css">
+
+<style>
+/* =====================================================================
+   B · ficha
+
+   A página do projeto como um registo de arquivo. Duas colunas: à
+   esquerda a identificação — o título, a natureza, quando, onde e quem
+   —, que fica quieta enquanto se desce; à direita o que ficou do
+   projeto — o vídeo, o texto e as fotografias.
+
+   É a que menos se parece com o cartão do mosaico e a que melhor
+   aguenta um arquivo grande: com trinta projetos, saber sempre em qual
+   se está passa a valer mais do que abrir com a fotografia.
+   ===================================================================== */
+
+.folha {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: 60px;
+  align-items: start;
+  padding: 54px var(--gutter) 80px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* A coluna da esquerda pára quando chega ao cabeçalho e fica lá. Os 56px
+   são a altura da barra de cima; os 24 são a folga para não lhe encostar. */
+.id {
+  position: sticky;
+  top: calc(56px + 24px);
+}
+.id .meta { margin-top: 16px; flex-direction: column; align-items: flex-start; gap: 10px; }
+.id .h1 { font-size: 34px; }
+
+.id__resumo { margin-top: 22px; padding-top: 22px; border-top: 1.5px solid var(--rule); opacity: .8; }
+
+.id__ficha { margin-top: 26px; }
+.id__ficha > .lbl { margin-bottom: 10px; }
+/* Nesta coluna estreita a tabela não dá duas colunas: o rótulo fica por
+   cima do nome, como acontece no telemóvel. */
+.id__ficha .fichas th, .id__ficha .fichas td { display: block; padding-right: 0; }
+.id__ficha .fichas th { padding: 12px 0 0; }
+.id__ficha .fichas td { padding-top: 2px; }
+
+.mat > * + * { margin-top: 54px; }
+.mat .lbl { margin-bottom: 14px; }
+.mat .corpo p + p { margin-top: 16px; }
+.mat .corpo p { max-width: 62ch; }
+
+/* Aqui o vídeo vertical tem espaço para ser o que é: fica ao lado do
+   texto, e os dois começam à mesma altura. */
+.mat__abre { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 30px; align-items: start; }
+.mat__abre .video { max-width: none; }
+
+@media (max-width: 900px) {
+  .folha { grid-template-columns: 1fr; gap: 44px; }
+  .id { position: static; }
+  .mat__abre { grid-template-columns: 1fr; }
+  .mat__abre .video { max-width: 340px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <a class="mark" href="../index.html">a sineira</a>
+  <nav class="nav">
+    <a href="index.html">as três experiências</a>
+    <a href="../index.html#eventos">todos os projetos</a>
+  </nav>
+</div>
+
+<article class="folha">
+
+  <aside class="id">
+    <div id="cab"></div>
+    <p class="id__resumo" id="resumo"></p>
+    <div class="id__ficha">
+      <p class="lbl">Ficha técnica</p>
+      <div id="ficha"></div>
+    </div>
+  </aside>
+
+  <div class="mat">
+    <div class="mat__abre">
+      <div id="video"></div>
+      <div class="corpo" id="texto"></div>
+    </div>
+
+    <section>
+      <p class="lbl">Fotografias</p>
+      <div class="fotos" id="fotos"></div>
+    </section>
+  </div>
+
+</article>
+
+<footer class="pe" id="pe"></footer>
+
+<script src="voar.js"></script>
+<script src="pagina.js"></script>
+<script>
+montaTitulo(document.getElementById('cab'),   PROJETO);
+montaFicha (document.getElementById('ficha'), PROJETO);
+montaVideo (document.getElementById('video'), PROJETO);
+montaTexto (document.getElementById('texto'), PROJETO);
+montaFotos (document.getElementById('fotos'), PROJETO.fotos);
+montaPe    (document.getElementById('pe'),    PROJETO);
+
+document.getElementById('resumo').textContent = PROJETO.resumo;
+</script>
+
+</body>
+</html>
