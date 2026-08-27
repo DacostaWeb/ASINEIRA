@@ -1565,6 +1565,13 @@ html.menu-open .menu::before { opacity: 1; }
     --trigger-pull:  15px;
   }
 
+  /* Em ecrã estreito os títulos dos cartões descem ao corpo do logótipo: o
+     desenho do título e a marca lá em cima passam a ler-se ao mesmo tamanho.
+     A conta é a do próprio logótipo — a caixa dele mede 58 unidades para um
+     corpo de 48, o mesmo corpo em que os títulos foram traçados —, por isso
+     o tamanho acompanha o logótipo se ele mudar. */
+  .tile__title { font-size: calc(var(--wordmark-h) * 48 / 58); }
+
   /* Em telemóvel não há segunda coluna onde pousar o cartão de amigo: fica
      debaixo do "quero aderir", mais pequeno, com mais ar por cima e a puxar
      um pouco para a margem, para não ficar alinhado com o texto.
