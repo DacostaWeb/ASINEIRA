@@ -139,7 +139,8 @@ a:hover { text-decoration: underline; }
 .cal__month,
 .cal__wd,
 .cal__lbl,
-.evcard__sitio,
+.evcard__mes,
+.evtag,
 .evmedia,
 .events__head,
 .evbt,
@@ -1001,29 +1002,35 @@ html[lang="en"] .title-art {
 
 /* --- Painel dos eventos: a grelha de cartazes --- */
 
-/* Quatro no máximo, e daí para baixo até uma só, pela mesma conta da grelha
-   do mosaico: cada coluna nunca é mais estreita do que o que lá cabe, nem
-   mais larga do que um quarto. As folgas entram na conta — sem isso, quatro
-   colunas mais três folgas passavam a largura toda e a grelha ficava-se por
-   três. */
+/* A conta é a mesma da grelha da página inicial — nenhuma coluna mais
+   estreita do que --col-min, nunca mais do que --col-max-n colunas —, com a
+   diferença de que aqui há folga entre os cartazes e lá não há. As folgas
+   entram na conta: sem isso, quatro colunas mais três folgas passavam a
+   largura toda e a grelha ficava-se por três.
+
+   Nos 900px de leitura do painel dá duas colunas largas, e é isso que
+   permite a fotografia grande com a legenda por cima. */
 .evgrid {
   --evgap: 18px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(max((100% - 3 * var(--evgap)) / 4, min(100%, 200px)), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max((100% - (var(--col-max-n) - 1) * var(--evgap)) / var(--col-max-n), min(100%, var(--col-min))), 1fr));
   gap: var(--evgap);
   margin-top: 14px;
 }
 
 /* Os concluídos são dois, e por isso as colunas ficam de pé mesmo vazias
-   (auto-fill): sem isso cada um esticava-se a meia grelha e a fotografia
+   (auto-fill): sem isso cada um esticava-se a grelha toda e a fotografia
    ficava do dobro das de cima. */
 .evgrid--conc {
-  grid-template-columns: repeat(auto-fill, minmax(max((100% - 3 * var(--evgap)) / 4, min(100%, 200px)), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(max((100% - (var(--col-max-n) - 1) * var(--evgap)) / var(--col-max-n), min(100%, var(--col-min))), 1fr));
 }
 
-/* Sem moldura e sem filete: o cartaz e a fotografia que o abre. O que
-   arruma cada um é o alinhamento, e não uma caixa a toda a volta. */
+/* O cartaz é a fotografia com uma legenda pousada em cima, no rodapé: o
+   título, a sinopse e, à direita, o "+" e a data em corpo grande. Os outros
+   detalhes ficam fora da fotografia, numa linha por baixo. */
 .evcard { display: flex; flex-direction: column; }
+
+.evcard__cartaz { position: relative; }
 
 .evcard__foto {
   position: relative;
@@ -1033,56 +1040,96 @@ html[lang="en"] .title-art {
 }
 .evcard__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
-.evcard__inner { display: flex; flex-direction: column; flex: 1; padding-top: 10px; }
+/* A legenda troca as cores com o cartão que a recebe: creme sobre o azul,
+   azul sobre o creme. Não há cor nova nenhuma — são as duas do cartão. */
+.evcard__legenda {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  gap: 16px;
+  padding: 14px 16px 16px;
+  background: var(--tile-fg);
+  color: var(--tile-bg);
+}
 
-/* O "+" fica na linha do título e encostado à direita, como no cartão que o
-   abriu. O título leva a linha toda; o "+" é que se chega ao canto. */
-.evcard__head { display: flex; align-items: baseline; gap: 12px; }
-.evcard__title { flex: 1; font-size: 13px; line-height: 1.3; }
+.evcard__col { flex: 1; min-width: 0; }
+
+.evcard__title {
+  font-size: 17px;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+}
+.evcard__sinopse { margin-top: 8px; font-size: 12px; line-height: 1.5; opacity: .8; }
+
+/* A data em dois andares, como no rascunho: o dia grande e o mês por baixo.
+   O "+" fica-lhe por cima, encostado ao canto. */
+.evcard__data {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
 
 .evcard__toggle {
-  flex-shrink: 0;
   padding: 0;
   border: none;
   background: none;
   color: inherit;
   font: inherit;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 300;
-  line-height: 1;
+  line-height: .8;
   cursor: pointer;
 }
 .evcard__toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
-/* Dia, dia da semana e hora, nesta ordem e sem mais nada: é o que se precisa
-   de saber para marcar a ida. O sítio não vem aqui — vai lá abaixo, na linha
-   dos bilhetes. */
-.evcard__quando { margin-top: 4px; font-size: 12px; opacity: .75; }
+.evcard__dia { margin-top: 10px; font-size: 26px; font-weight: 700; line-height: .85; letter-spacing: -.03em; }
+.evcard__mes { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 
-.evcard__body { display: none; margin-top: 8px; font-size: 12px; line-height: 1.55; opacity: .75; }
+.evcard__body { display: none; margin-top: 8px; font-size: 12px; line-height: 1.55; }
 .evcard.is-open .evcard__body { display: block; }
-.evcard__body a { text-decoration: underline; text-underline-offset: 2px; opacity: 1; }
+.evcard__body a { text-decoration: underline; text-underline-offset: 2px; }
 
-/* O pé do cartaz: os bilhetes à esquerda, o sítio encostado à direita. Fica
-   colado ao fundo, para que os quatro o tenham à mesma altura seja qual for
-   o comprimento do título. */
-.evcard__pe {
+/* A linha dos detalhes, fora da fotografia: a natureza em etiqueta, o sítio
+   e a data por extenso com os seus sinais, e os bilhetes encostados ao fim. */
+.evcard__detalhes {
   display: flex;
-  flex-wrap: wrap;          /* numa coluna estreita o sítio passa para baixo */
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 4px 12px;
-  margin-top: auto;
-  padding-top: 12px;
+  gap: 8px 14px;
+  margin-top: 12px;
 }
 
-.evcard__sitio {
+.evtag {
+  padding: 4px 8px;
+  border: 1.5px solid currentColor;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
-  text-align: right;
-  opacity: .75;
+}
+
+.evdet { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; opacity: .8; }
+.evdet svg {
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Os bilhetes fecham a linha, e fecham-na sempre em linha própria: numa
+   coluna de grelha não cabem a seguir à data, e um cartaz com eles ao lado
+   e outro com eles por baixo ficavam de alturas diferentes. */
+.evcard__bilhetes {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .evbt {
@@ -1106,6 +1153,96 @@ html[lang="en"] .title-art {
   cursor: default;
 }
 .evbt--soon:hover { background: none; color: inherit; }
+
+
+/* --- Todos os projetos: a lista em linhas, com filtros --- */
+
+/* As etiquetas de filtro são as mesmas do cartaz, com a escolhida em
+   negativo — o mesmo par de cores, trocado. */
+.prjfiltros { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+.prjf {
+  padding: 5px 10px;
+  border: 1.5px solid currentColor;
+  background: none;
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.prjf[aria-pressed="true"] { background: var(--tile-fg); color: var(--tile-bg); }
+.prjf:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+.prj { margin-top: 18px; padding: 0; list-style: none; }
+.prj__l { border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
+.prj__l:last-child { border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
+.prj__l[hidden] { display: none; }
+
+/* Uma linha: a miniatura, o título, quando, onde, a natureza e o "+".
+   As colunas do meio partilham o que sobra; a miniatura e o "+" não. */
+.prj__linha {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1.6fr) minmax(0, 1.1fr) minmax(0, .9fr) max-content 20px;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+}
+
+.prj__mini { aspect-ratio: 1; overflow: clip; background: color-mix(in srgb, currentColor 12%, transparent); }
+.prj__mini img { width: 100%; height: 100%; object-fit: cover; }
+
+.prj__t { font-size: 13px; line-height: 1.3; }
+.prj__q, .prj__s { font-size: 12px; opacity: .75; }
+
+.prj__mais {
+  justify-self: end;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+}
+.prj__mais:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+.prj__sin {
+  display: none;
+  max-width: 62ch;
+  margin-left: 68px;   /* alinhada com o título, à direita da miniatura */
+  padding-bottom: 12px;
+  font-size: 12px;
+  line-height: 1.55;
+  opacity: .8;
+}
+.prj__l.is-open .prj__sin { display: block; }
+
+/* Em ecrã estreito a linha desdobra-se: a miniatura fica à esquerda de tudo
+   o resto, que passa a empilhar-se. */
+@media (max-width: 720px) {
+  .prj__linha {
+    grid-template-columns: 54px 1fr max-content;
+    grid-template-areas:
+      "mini titulo mais"
+      "mini quando mais"
+      "mini sitio  mais"
+      "mini tag    mais";
+    align-items: start;
+    gap: 4px 14px;
+  }
+  .prj__mini { grid-area: mini; align-self: start; }
+  .prj__t { grid-area: titulo; }
+  .prj__q { grid-area: quando; }
+  .prj__s { grid-area: sitio; }
+  .prj__linha .evtag { grid-area: tag; justify-self: start; margin-top: 4px; }
+  .prj__mais { grid-area: mais; }
+  .prj__sin { margin-left: 0; }
+}
 
 
 /* --- Calendário do painel --- */
@@ -1194,6 +1331,28 @@ html[lang="en"] .title-art {
   text-transform: uppercase;
   opacity: .75;
 }
+/* Sem dia escolhido, a coluna da direita não fica à espera: mostra o que há
+   no mês inteiro, uma linha por evento, e cada uma escolhe o seu dia. */
+.cal__lista { margin-top: 10px; padding: 0; list-style: none; }
+.cal__lista li + li { margin-top: 2px; }
+.cal__ev {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.cal__ev:hover { opacity: .7; }
+.cal__ev:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.cal__ev b { flex-shrink: 0; width: 4.5em; font-family: var(--font-display); font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding-top: 3px; }
+.cal__ev span { flex: 1; font-size: 13px; line-height: 1.3; }
+
 .cal__t { margin-top: 10px; font-size: 16px; line-height: 1.25; }
 .cal__m { margin-top: 8px; font-size: 12px; line-height: 1.6; opacity: .8; }
 .cal__cta { margin-top: 16px; }
@@ -1730,9 +1889,18 @@ html.menu-open .menu::before { opacity: 1; }
             <div class="cal__detail" id="cal-detalhe" aria-live="polite"></div>
           </div>
         </div>
+
+        <!-- Tudo o que já passou pela Sineira e tudo o que aí vem, em linhas
+             e por ordem. As etiquetas de cima filtram a lista; o "+" de cada
+             linha abre a sinopse, e há-de abrir a página do projeto. -->
+        <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secProj">Todos os projetos</h3>
+          <div class="prjfiltros" id="prj-filtros" role="group" aria-label="Filtrar projetos"></div>
+          <ul class="prj" id="prj-lista"></ul>
+        </div>
       </div>
 
-      <p class="tile__caption" data-i18n="capEv">Próximos · concluídos · calendário</p>
+      <p class="tile__caption" data-i18n="capEv">Próximos · concluídos · calendário · projetos</p>
     </div>
   </article>
 
@@ -2155,8 +2323,8 @@ html.menu-open .menu::before { opacity: 1; }
       /* Os eventos em si vivem na lista EVENTOS, lá em baixo, com as duas
          línguas dentro: aqui ficam só os títulos das secções. */
       evH2: 'events',
-      secProx: 'Upcoming', secConc: 'completed', secCal: 'Calendar',
-      capEv: 'Upcoming · completed · calendar',
+      secProx: 'Upcoming', secConc: 'completed', secCal: 'Calendar', secProj: 'Every project',
+      capEv: 'Upcoming · completed · calendar · projects',
 
       /* --- atividades --- */
       atH2: 'activities',
@@ -2403,36 +2571,48 @@ html.menu-open .menu::before { opacity: 1; }
   var EVENTOS = [
     { dia: 18, mes: 3, hora: '21h30', img: 'dossier/assets/scene-estudio.jpg',
       bilhetes: 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Bilhetes — Voar Muito Perto do Sol'),
-      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditório', natureza: 'Criação' },
-      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditorium', natureza: 'Creation' },
+      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditório', natureza: 'Criação',
+            sinopse: 'Uma criação sobre o desejo de subir e o preço da queda, feita em residência na antiga igreja.' },
+      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditorium', natureza: 'Creation',
+            sinopse: 'A creation about the wish to rise and the price of the fall, made in residence at the former church.' },
       alt: { pt: 'Proposta: estúdio de dança com plateia', en: 'Proposal: dance studio with seating' } },
 
     { dia: 24, mes: 3, hora: '18h', img: 'dossier/assets/nave-2026.jpg', bilhetes: null,
-      pt: { titulo: 'Projeto A', sitio: 'Igreja', natureza: 'Formação' },
-      en: { titulo: 'Projeto A', sitio: 'Church', natureza: 'Training' },
+      pt: { titulo: 'Projeto A', sitio: 'Igreja', natureza: 'Formação',
+            sinopse: 'Duas semanas de formação aberta à comunidade, com apresentação no último dia.' },
+      en: { titulo: 'Projeto A', sitio: 'Church', natureza: 'Training',
+            sinopse: 'Two weeks of training open to the community, with a showing on the last day.' },
       alt: { pt: 'Nave da antiga Igreja de Retorta com o novo soalho', en: 'Nave of the former Retorta Church with its new floor' } },
 
     { dia: 10, mes: 4, hora: '21h30', img: 'dossier/assets/nave-2025.jpg', bilhetes: null,
-      pt: { titulo: 'Projeto B', sitio: 'Igreja', natureza: 'Apresentação' },
-      en: { titulo: 'Projeto B', sitio: 'Church', natureza: 'Presentation' },
+      pt: { titulo: 'Projeto B', sitio: 'Igreja', natureza: 'Apresentação',
+            sinopse: 'Apresentação pública do trabalho feito na nave ao longo do ano.' },
+      en: { titulo: 'Projeto B', sitio: 'Church', natureza: 'Presentation',
+            sinopse: 'Public showing of the work made in the nave over the year.' },
       alt: { pt: 'Nave da antiga Igreja de Retorta antes da intervenção', en: 'Nave of the former Retorta Church before the works' } },
 
     { dia: 22, mes: 5, hora: '19h', img: 'dossier/assets/hero.jpg', bilhetes: null,
-      pt: { titulo: 'Projeto C', sitio: 'Exterior', natureza: 'Criação' },
-      en: { titulo: 'Projeto C', sitio: 'Outdoors', natureza: 'Creation' },
+      pt: { titulo: 'Projeto C', sitio: 'Exterior', natureza: 'Criação',
+            sinopse: 'Criação para o adro, à hora a que o sol se põe.' },
+      en: { titulo: 'Projeto C', sitio: 'Outdoors', natureza: 'Creation',
+            sinopse: 'A creation for the churchyard, at the hour the sun goes down.' },
       alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } }
   ];
 
   /* O que já aconteceu, e o que ficou de cada um: fotografias, vídeo, texto. */
   var CONCLUIDOS = [
     { ano: 2025, img: 'dossier/assets/arco.jpg', media: ['foto', 'video', 'texto'],
-      pt: { titulo: 'Projeto X', sitio: 'Igreja' },
-      en: { titulo: 'Projeto X', sitio: 'Church' },
+      pt: { titulo: 'Projeto X', sitio: 'Igreja', natureza: 'Apresentação',
+            sinopse: 'Ficaram as fotografias, o vídeo e um texto sobre o que se fez na nave.' },
+      en: { titulo: 'Projeto X', sitio: 'Church', natureza: 'Presentation',
+            sinopse: 'What remains: the photographs, the video and a text about the work in the nave.' },
       alt: { pt: 'Interior em obra, visto através do arco', en: 'Interior under construction, seen through the arch' } },
 
     { ano: 2025, img: './chorof4.jpg', media: ['texto'],
-      pt: { titulo: 'Projeto Y', sitio: 'Auditório' },
-      en: { titulo: 'Projeto Y', sitio: 'Auditorium' },
+      pt: { titulo: 'Projeto Y', sitio: 'Auditório', natureza: 'Criação',
+            sinopse: 'Ficou o texto de quem esteve em cena.' },
+      en: { titulo: 'Projeto Y', sitio: 'Auditorium', natureza: 'Creation',
+            sinopse: 'What remains is the text of those who were on stage.' },
       alt: { pt: 'Intérprete em cena, com as mãos junto ao rosto', en: 'Performer on stage, hands raised to their face' } }
   ];
 
@@ -2456,10 +2636,11 @@ html.menu-open .menu::before { opacity: 1; }
     en: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
   };
 
-  /* Domingo primeiro, que é a ordem que o getDay() devolve. */
+  /* Por extenso e sem o "-feira", que ninguém diz: "quarta". Domingo
+     primeiro, que é a ordem que o getDay() devolve. */
   var SEMANA = {
-    pt: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],
-    en: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+    pt: ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'],
+    en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   };
 
   var EV_ANO = new Date().getFullYear();
@@ -2468,18 +2649,40 @@ html.menu-open .menu::before { opacity: 1; }
   function evTexto(e) { return e[lg()]; }
   function evAlt(e) { return e.alt[lg()]; }
   function evData(e) {
+    if (!e.mes) return String(e.ano || '');
     return lg() === 'en'
       ? e.dia + ' ' + MESES.en[e.mes - 1]
       : e.dia + ' de ' + MESES.pt[e.mes - 1];
   }
-  /* "18 mar · seg · 21h30": dia, dia da semana e hora. O dia da semana sai da
+  /* "21h30 · quarta · 18 mar": a hora primeiro, que é o que falta saber a
+     quem já viu a data em corpo grande no cartaz. O dia da semana sai da
      data e não da lista — uma data escrita duas vezes é uma data para andar
      desencontrada. */
+  function evSemana(e) {
+    return SEMANA[lg()][new Date(EV_ANO, e.mes - 1, e.dia).getDay()];
+  }
+  function evDiaMes(e) {
+    return e.dia + ' ' + MESES_C[lg()][e.mes - 1];
+  }
   function evQuando(e) {
-    var d = new Date(EV_ANO, e.mes - 1, e.dia);
-    var partes = [e.dia + ' ' + MESES_C[lg()][e.mes - 1], SEMANA[lg()][d.getDay()]];
+    var partes = [];
     if (e.hora) partes.push(e.hora);
+    partes.push(evSemana(e), evDiaMes(e));
     return partes.join(' · ');
+  }
+
+  /* Os dois sinais da linha de detalhes: onde e quando. */
+  var SINAIS = {
+    pin:     '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14.2s4.6-4.3 4.6-7.4a4.6 4.6 0 0 0-9.2 0C3.4 9.9 8 14.2 8 14.2Z"/><circle cx="8" cy="6.6" r="1.7"/></svg>',
+    relogio: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.9"/><path d="M8 4.4V8l2.5 1.7"/></svg>'
+  };
+
+  function evDetalhe(sinal, texto) {
+    var n = document.createElement('span');
+    n.className = 'evdet';
+    n.innerHTML = SINAIS[sinal];
+    n.appendChild(document.createTextNode(texto));
+    return n;
   }
 
   function evAssunto(e) {
@@ -2575,65 +2778,75 @@ html.menu-open .menu::before { opacity: 1; }
     return tr;
   }
 
-  /* A caixa de um cartaz, que é a mesma nos próximos e nos concluídos:
-     fotografia, título com o "+" ao lado, uma linha por baixo com a data ou
-     o ano, o que o "+" abre, e um pé com duas pontas. */
-  function evCaixa(titulo, quando) {
+  /* A caixa de um cartaz, a mesma nos próximos e nos concluídos: a
+     fotografia, a legenda pousada em cima dela — título, sinopse, "+" e data
+     em corpo grande — e uma linha de detalhes por fora. */
+  function evCaixa(t, alt, img, dia, mes) {
     var art = document.createElement('article');
     art.className = 'evcard';
     art.innerHTML =
-      '<div class="evcard__foto"><img loading="lazy"></div>' +
-      '<div class="evcard__inner">' +
-        '<div class="evcard__head">' +
-          '<p class="evcard__title"></p>' +
+      '<div class="evcard__cartaz">' +
+        '<div class="evcard__foto"><img loading="lazy"></div>' +
+        '<div class="evcard__legenda">' +
+          '<div class="evcard__col">' +
+            '<p class="evcard__title"></p>' +
+            '<p class="evcard__sinopse"></p>' +
+          '</div>' +
+          '<div class="evcard__data">' +
+            '<button class="evcard__toggle" type="button" aria-expanded="false">+</button>' +
+            '<p class="evcard__dia"></p>' +
+            '<p class="evcard__mes"></p>' +
+          '</div>' +
         '</div>' +
-        '<p class="evcard__quando"></p>' +
-        '<div class="evcard__pe"><span class="evcard__bilhetes"></span><p class="evcard__sitio"></p></div>' +
-      '</div>';
-    art.querySelector('.evcard__title').textContent = titulo;
-    art.querySelector('.evcard__quando').textContent = quando;
+      '</div>' +
+      '<div class="evcard__detalhes"></div>';
+
+    var foto = art.querySelector('img');
+    foto.src = img; foto.alt = alt;
+
+    art.querySelector('.evcard__title').textContent = t.titulo;
+    art.querySelector('.evcard__sinopse').textContent = t.sinopse || '';
+    art.querySelector('.evcard__dia').textContent = dia;
+    art.querySelector('.evcard__mes').textContent = mes;
     return art;
   }
 
-  /* O "+" do cartaz abre o que dele se sabe, e fica na linha do título. */
-  function evMais(art, texto, href, rotulo) {
+  /* O "+" da legenda abre, por baixo da sinopse, o que mais se sabe. */
+  function evMais(art, href, rotulo) {
     var corpo = document.createElement('div');
     corpo.className = 'evcard__body';
-    corpo.innerHTML = '<p></p><p class="cal__cta"><a></a></p>';
-    corpo.querySelector('p').textContent = texto;
+    corpo.innerHTML = '<p><a></a></p>';
     var link = corpo.querySelector('a');
     link.href = href;
     link.textContent = lg() === 'en' ? 'I want to know more' : 'quero saber mais';
-    art.querySelector('.evcard__quando').after(corpo);
+    art.querySelector('.evcard__sinopse').after(corpo);
 
-    var bt = document.createElement('button');
-    bt.className = 'evcard__toggle';
-    bt.type = 'button';
-    bt.textContent = '+';
-    bt.setAttribute('aria-expanded', 'false');
+    var bt = art.querySelector('.evcard__toggle');
     bt.setAttribute('aria-label', rotulo);
     bt.addEventListener('click', function () {
       var aberto = art.classList.toggle('is-open');
       bt.textContent = aberto ? '−' : '+';
       bt.setAttribute('aria-expanded', String(aberto));
     });
-    art.querySelector('.evcard__head').appendChild(bt);
   }
 
-  /* Um cartaz dos próximos. O pé leva os bilhetes à esquerda e o sítio à
-     direita; fica colado ao fundo, para que os quatro o tenham à mesma altura
-     mesmo com títulos de comprimentos diferentes. */
+  /* Um cartaz dos próximos: natureza, sítio e data por extenso na linha de
+     baixo, e os bilhetes encostados ao fim dela. */
   function evCartaz(e) {
     var t = evTexto(e);
-    var art = evCaixa(t.titulo, evQuando(e));
+    var art = evCaixa(t, evAlt(e), e.img, String(e.dia), MESES_C[lg()][e.mes - 1]);
+    evMais(art, evAssunto(e), t.titulo);
 
-    var img = art.querySelector('img');
-    img.src = e.img; img.alt = evAlt(e);
+    var det = art.querySelector('.evcard__detalhes');
+    var tag = document.createElement('span');
+    tag.className = 'evtag';
+    tag.textContent = t.natureza;
+    det.appendChild(tag);
+    det.appendChild(evDetalhe('pin', t.sitio));
+    det.appendChild(evDetalhe('relogio', evQuando(e)));
 
-    evMais(art, t.natureza, evAssunto(e), t.titulo);
-    art.querySelector('.evcard__sitio').textContent = t.sitio;
-
-    var caixa = art.querySelector('.evcard__bilhetes');
+    var caixa = document.createElement('span');
+    caixa.className = 'evcard__bilhetes';
     if (e.bilhetes) {
       var a = document.createElement('a');
       a.className = 'evbt';
@@ -2646,24 +2859,31 @@ html.menu-open .menu::before { opacity: 1; }
       span.textContent = lg() === 'en' ? 'Soon' : 'Brevemente';
       caixa.appendChild(span);
     }
+    det.appendChild(caixa);
 
     return art;
   }
 
-  /* Um cartaz dos concluídos: no lugar dos bilhetes fica o que ficou dele. */
+  /* Um cartaz dos concluídos: no lugar da data fica o ano, e no lugar dos
+     bilhetes o que ficou dele. */
   function evCartazConc(c) {
     var t = evTexto(c);
-    var art = evCaixa(t.titulo, String(c.ano));
+    var art = evCaixa(t, evAlt(c), c.img, String(c.ano), '');
+    evMais(art, evAssunto(c), t.titulo);
 
-    var img = art.querySelector('img');
-    img.src = c.img; img.alt = evAlt(c);
-
-    art.querySelector('.evcard__sitio').textContent = t.sitio;
+    var det = art.querySelector('.evcard__detalhes');
+    if (t.natureza) {
+      var tag = document.createElement('span');
+      tag.className = 'evtag';
+      tag.textContent = t.natureza;
+      det.appendChild(tag);
+    }
+    det.appendChild(evDetalhe('pin', t.sitio));
 
     var media = document.createElement('span');
-    media.className = 'evmedia';
+    media.className = 'evmedia evcard__bilhetes';
     media.textContent = evMedia(c);
-    art.querySelector('.evcard__bilhetes').appendChild(media);
+    det.appendChild(media);
 
     return art;
   }
@@ -2683,25 +2903,61 @@ html.menu-open .menu::before { opacity: 1; }
     return null;
   }
 
+  function calDoMes(mes) {
+    return EVENTOS.filter(function (e) { return e.mes === mes; });
+  }
+
   function calEscreveDetalhe(e) {
     if (!calDetalhe) return;
     var en = lg() === 'en';
     calDetalhe.textContent = '';
 
+    /* Sem dia escolhido, a coluna não fica em branco à espera: diz o que há
+       no mês inteiro, e cada linha escolhe o seu dia. */
     if (!e) {
-      var vazio = document.createElement('p');
-      vazio.className = 'cal__m';
-      vazio.textContent = en
-        ? 'Pick a day marked in gold to see what happens there.'
-        : 'Escolhe um dia marcado a dourado para ver o que lá acontece.';
-      calDetalhe.appendChild(vazio);
+      var doMes = calDoMes(calMes);
+      var lbl = document.createElement('p');
+      lbl.className = 'cal__lbl';
+      lbl.textContent = en ? 'This month' : 'Neste mês';
+      calDetalhe.appendChild(lbl);
+
+      if (!doMes.length) {
+        var vazio = document.createElement('p');
+        vazio.className = 'cal__m';
+        vazio.textContent = en
+          ? 'Nothing on the calendar this month.'
+          : 'Não há nada marcado neste mês.';
+        calDetalhe.appendChild(vazio);
+        return;
+      }
+
+      var ul = document.createElement('ul');
+      ul.className = 'cal__lista';
+      doMes.forEach(function (ev) {
+        var li = document.createElement('li');
+        var bt = document.createElement('button');
+        bt.type = 'button';
+        bt.className = 'cal__ev';
+        bt.innerHTML = '<b></b><span></span>';
+        bt.querySelector('b').textContent = evDiaMes(ev);
+        bt.querySelector('span').textContent = evTexto(ev).titulo;
+        bt.addEventListener('click', function () {
+          calDia = ev.dia;
+          calDesenha();
+          calEscreveDetalhe(ev);
+        });
+        li.appendChild(bt);
+        ul.appendChild(li);
+      });
+      calDetalhe.appendChild(ul);
       return;
     }
 
     var t = evTexto(e);
     var lbl = document.createElement('p'); lbl.className = 'cal__lbl'; lbl.textContent = evData(e);
     var tit = document.createElement('p'); tit.className = 'cal__t';   tit.textContent = t.titulo;
-    var met = document.createElement('p'); met.className = 'cal__m';   met.textContent = t.sitio + ' · ' + t.natureza;
+    var met = document.createElement('p'); met.className = 'cal__m';
+    met.textContent = [evQuando(e), t.sitio, t.natureza].join(' · ');
     var cta = document.createElement('p'); cta.className = 'cal__cta';
     var a = document.createElement('a'); a.href = evAssunto(e);
     a.textContent = en ? 'I want to know more' : 'quero saber mais';
@@ -2773,6 +3029,92 @@ html.menu-open .menu::before { opacity: 1; }
   if (calAnt) calAnt.addEventListener('click', function () { calMuda(-1); });
   if (calSeg) calSeg.addEventListener('click', function () { calMuda(1); });
 
+  /* ---------- todos os projetos ---------- */
+
+  /* A lista junta os dois lados — o que aí vem e o que já foi — numa ordem
+     só, e as etiquetas de cima filtram-na pela natureza do trabalho. O "+"
+     de cada linha abre a sinopse; um dia abrirá a página do projeto. */
+  var prjListaEl = document.getElementById('prj-lista');
+  var prjFiltrosEl = document.getElementById('prj-filtros');
+  var prjFiltro = null;          /* null = todos */
+
+  function prjTodos() {
+    return EVENTOS.concat(CONCLUIDOS);
+  }
+
+  function prjLinha(e) {
+    var t = evTexto(e);
+    var li = document.createElement('li');
+    li.className = 'prj__l';
+    li.innerHTML =
+      '<div class="prj__linha">' +
+        '<div class="prj__mini"><img loading="lazy"></div>' +
+        '<p class="prj__t"></p>' +
+        '<p class="prj__q"></p>' +
+        '<p class="prj__s"></p>' +
+        '<span class="evtag"></span>' +
+        '<button class="prj__mais" type="button" aria-expanded="false">+</button>' +
+      '</div>' +
+      '<p class="prj__sin"></p>';
+
+    var img = li.querySelector('img');
+    img.src = e.img; img.alt = evAlt(e);
+
+    li.querySelector('.prj__t').textContent = t.titulo;
+    li.querySelector('.prj__q').textContent = e.mes ? evQuando(e) : String(e.ano);
+    li.querySelector('.prj__s').textContent = t.sitio;
+    li.querySelector('.evtag').textContent = t.natureza || '';
+    li.querySelector('.prj__sin').textContent = t.sinopse || '';
+
+    var bt = li.querySelector('.prj__mais');
+    bt.setAttribute('aria-label', t.titulo);
+    bt.addEventListener('click', function () {
+      var aberto = li.classList.toggle('is-open');
+      bt.textContent = aberto ? '−' : '+';
+      bt.setAttribute('aria-expanded', String(aberto));
+    });
+
+    return li;
+  }
+
+  function prjPinta() {
+    if (!prjListaEl) return;
+    prjListaEl.textContent = '';
+    prjTodos().forEach(function (e) {
+      var t = evTexto(e);
+      if (prjFiltro && t.natureza !== prjFiltro) return;
+      prjListaEl.appendChild(prjLinha(e));
+    });
+  }
+
+  /* As etiquetas saem das naturezas que existem na lista, e não de uma lista
+     à parte: acrescentar um projeto de outra natureza acrescenta o filtro. */
+  function prjPintaFiltros() {
+    if (!prjFiltrosEl) return;
+    prjFiltrosEl.textContent = '';
+
+    var naturezas = [];
+    prjTodos().forEach(function (e) {
+      var n = evTexto(e).natureza;
+      if (n && naturezas.indexOf(n) === -1) naturezas.push(n);
+    });
+
+    var todos = lg() === 'en' ? 'All' : 'Todos';
+    [null].concat(naturezas).forEach(function (n) {
+      var bt = document.createElement('button');
+      bt.type = 'button';
+      bt.className = 'prjf';
+      bt.textContent = n || todos;
+      bt.setAttribute('aria-pressed', String(prjFiltro === n));
+      bt.addEventListener('click', function () {
+        prjFiltro = n;
+        prjPintaFiltros();
+        prjPinta();
+      });
+      prjFiltrosEl.appendChild(bt);
+    });
+  }
+
   /* Tudo de raiz a cada mudança de idioma: os textos dos eventos vêm da lista
      e não do dicionário, e por isso não passam pelo applyLang. */
   function renderEventos() {
@@ -2796,6 +3138,12 @@ html.menu-open .menu::before { opacity: 1; }
     evFoco(evEmFoco);
     calDesenha();
     calEscreveDetalhe(calDia ? calEventoDe(calMes, calDia) : null);
+
+    /* O filtro escolhido guarda a natureza na língua em que foi escolhido:
+       ao trocar de língua não há como o reconhecer, e volta a "todos". */
+    prjFiltro = null;
+    prjPintaFiltros();
+    prjPinta();
   }
 
   /* O rato em cima do cartão trava a vez; ao sair, ela volta a andar. */
