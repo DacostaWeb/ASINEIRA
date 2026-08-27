@@ -1450,9 +1450,10 @@ html[lang="en"] .title-art {
    próprio mosaico. */
 .cal__day--today { background: var(--tile-fg); color: var(--tile-bg); font-weight: 700; }
 
-/* A lista ocupa a altura toda do calendário que tem ao lado — começa na
-   linha da barra do mês e acaba na última semana. */
-.cal__detail { position: relative; display: flex; flex-direction: column; padding-left: 26px; }
+/* A lista começa à altura da grelha e não à altura da barra do mês: os 30px
+   são a barra (18 de seta) mais a folga que ela deixa por baixo. Se a barra
+   mudar de corpo, é este número que muda. */
+.cal__detail { padding-left: 26px; padding-top: 30px; }
 .cal__lbl {
   display: flex;
   align-items: center;
@@ -1465,23 +1466,7 @@ html[lang="en"] .title-art {
 }
 /* Sem dia escolhido, a coluna da direita não fica à espera: mostra o que há
    no mês inteiro, uma linha por evento, e cada uma escolhe o seu dia. */
-/* Duas colunas e três linhas: o que há no mês cabe quase sempre em seis, e
-   assim a lista enche o lugar que tem em vez de deixar meia coluna vazia. As
-   três linhas repartem entre si a altura do calendário do lado, sem nunca
-   ficarem menores do que o que têm dentro — e um mês com mais de seis
-   eventos ganha as linhas que precisar, crescendo para baixo. */
-.cal__lista {
-  position: absolute;      /* o calendário é que manda na altura das duas
-                              colunas; a lista assenta nela e reparte-a */
-  inset: 0 0 0 26px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(3, 1fr);
-  column-gap: 24px;
-  margin-top: 0;
-  padding: 0;
-  list-style: none;
-}
+.cal__lista { margin-top: 0; padding: 0; list-style: none; }
 
 /* Cada linha do mês diz o mesmo que a lista dos projetos — título, hora e
    data, sítio e natureza —, com a fotografia em tamanho de se ver. O texto
@@ -1489,12 +1474,11 @@ html[lang="en"] .title-art {
    a coluna da direita é estreita e não se lhe pode fixar colunas. */
 .cal__ev {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-columns: 84px minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
-  height: 100%;
-  padding: 10px 0;
+  padding: 14px 0;
   border: none;
   border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent);
   background: none;
@@ -1507,15 +1491,13 @@ html[lang="en"] .title-art {
 .cal__mini { aspect-ratio: 4 / 3; overflow: clip; background: color-mix(in srgb, currentColor 12%, transparent); }
 .cal__mini img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-.cal__evtxt { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.cal__evt { font-size: 13.5px; line-height: 1.2; }
-.cal__evd { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
-.cal__evd .evdet { gap: 7px; font-size: 11px; line-height: 1.3; }
-.cal__evd .evdet svg { width: 11px; height: 11px; }
-.cal__evd .evtag.evdet { font-size: 8.5px; }
-/* O filete de fecho vai aos da última linha da grelha, que numa lista de
-   duas colunas já não é só o último (ver calFimDeLinha). */
-.cal__lista li.is-fim .cal__ev {
+.cal__evtxt { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
+.cal__evt { font-size: 15px; line-height: 1.25; }
+.cal__evd { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; }
+.cal__evd .evdet { font-size: 11.5px; }
+.cal__evd .evdet svg { width: 12px; height: 12px; }
+.cal__evd .evtag.evdet { font-size: 9px; }
+.cal__lista li:last-child .cal__ev {
   border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent);
 }
 .cal__ev:hover { opacity: .7; }
@@ -1528,10 +1510,6 @@ html[lang="en"] .title-art {
 
 @media (max-width: 720px) {
   .cal { grid-template-columns: 1fr; gap: 22px; }
-  /* Em coluna única a lista volta a correr no fio do texto. */
-  .cal__lista { position: static; display: block; }
-  /* Numa coluna só, a última linha da grelha é mesmo o último da lista. */
-  .cal__lista li.is-fim:not(:last-child) .cal__ev { border-bottom: none; }
   .cal__detail { padding-left: 0; padding-top: 20px; border-left: none; border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
 }
 
@@ -3140,7 +3118,6 @@ html.menu-open .menu::before { opacity: 1; }
         li.appendChild(bt);
         ul.appendChild(li);
       });
-      calFimDeLinha(ul);
       calDetalhe.appendChild(ul);
       return;
     }
@@ -3155,16 +3132,6 @@ html.menu-open .menu::before { opacity: 1; }
     a.textContent = en ? 'I want to know more' : 'quero saber mais';
     cta.appendChild(a);
     [lbl, tit, met, cta].forEach(function (n) { calDetalhe.appendChild(n); });
-  }
-
-  /* Numa grelha de duas colunas, o filete de baixo pertence a todos os da
-     última linha e não só ao último da lista. */
-  function calFimDeLinha(ul) {
-    var itens = ul.children;
-    var linhas = Math.ceil(itens.length / 2);
-    for (var i = 0; i < itens.length; i++) {
-      if (i >= (linhas - 1) * 2) itens[i].className = 'is-fim';
-    }
   }
 
   function calDesenha() {
