@@ -754,11 +754,21 @@ html[lang="en"] .title-art {
 /* Com o cartão em painel o fecho vai para o canto superior direito, onde se
    espera encontrá-lo; o conteúdo continua encostado à esquerda. Preso ao ecrã
    e não ao painel: em janelas baixas o conteúdo rola lá dentro e, se o fecho
-   rolasse com ele, deixava de haver como fechar num telemóvel. */
+   rolasse com ele, deixava de haver como fechar num telemóvel.
+
+   Está por cima de tudo o que rola por baixo dele — cartazes, fotografias,
+   texto —, e um "×" solto por cima de uma fotografia não se lê. Leva por
+   isso a cor do painel atrás de si, numa caixa que o folga dos quatro lados;
+   o recuo do topo e da direita é o mesmo da folga, para que o sinal fique
+   exactamente onde estava. O z-index é o que o põe à frente: fixo mas sem
+   ele, os cartazes — que vêm depois no documento — passavam-lhe por cima. */
 .tile.is-expanded .tile__toggle {
   position: fixed;
-  top: calc(var(--header-h) + var(--tile-pad));
-  right: var(--gutter);
+  z-index: 2;
+  top: calc(var(--header-h) + var(--tile-pad) - 8px);
+  right: calc(var(--gutter) - 11px);
+  padding: 8px 11px;
+  background: var(--tile-bg);
 }
 
 /* Aberto em painel, a lista de cima sai: tudo o que ela diz está logo a
@@ -1118,8 +1128,26 @@ html[lang="en"] .title-art {
 /* A sinopse não vive na placa: a placa é o cartaz — data, título e o "+" —,
    e o texto corrido fica por baixo da fotografia, com os detalhes. Assim a
    placa mantém-se do mesmo tamanho seja qual for o comprimento do texto, e
-   tapa menos fotografia. */
-.evcard__sinopse { margin-top: 16px; max-width: 62ch; font-size: 12px; line-height: 1.55; opacity: .8; }
+   tapa menos fotografia.
+
+   Três linhas é o que a sinopse tem, escreva-se o que se escrever: o que
+   passar disso fica cortado com reticências. Uma medida certa em todos os
+   cartazes é o que põe os bilhetes de todos na mesma linha — em coluna
+   única não há vizinho com quem alinhar, e aí a caixa encolhe ao texto. */
+.evcard__sinopse {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  margin-top: 16px;
+  max-width: 62ch;
+  font-size: 12px;
+  line-height: 1.55;
+  opacity: .8;
+}
+
+@media (min-width: 600px) { .evcard__sinopse { min-height: calc(3 * 1.55em); } }
 
 /* O "+" é o mesmo do mosaico, no mesmo corpo: quem o carrega no cartão
    reconhece-o no cartaz. */
