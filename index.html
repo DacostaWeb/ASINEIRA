@@ -139,7 +139,7 @@ a:hover { text-decoration: underline; }
 .cal__month,
 .cal__wd,
 .cal__lbl,
-.evcard__mes,
+.evcard__kick,
 .evtag,
 .evmedia,
 .events__head,
@@ -740,6 +740,11 @@ html[lang="en"] .title-art {
    aproveita a largura é o calendário, as fotografias e a vista aérea. */
 .tile.is-expanded .tile__inner { max-width: var(--panel-content); }
 
+/* Menos o dos eventos: lá quem manda são os cartazes, e esses seguem as
+   colunas do mosaico — para isso precisam da largura toda, e não da medida
+   de leitura. O calendário é que continua a tê-la (ver .cal). */
+#eventos.tile.is-expanded .tile__inner { max-width: none; }
+
 /* Com o cartão em painel o fecho vai para o canto superior direito, onde se
    espera encontrá-lo; o conteúdo continua encostado à esquerda. Preso ao ecrã
    e não ao painel: em janelas baixas o conteúdo rola lá dentro e, se o fecho
@@ -749,6 +754,12 @@ html[lang="en"] .title-art {
   top: calc(var(--header-h) + var(--tile-pad));
   right: var(--gutter);
 }
+
+/* Aberto em painel, a lista de cima sai: tudo o que ela diz está logo a
+   seguir, nos cartazes e na lista de todos os projetos, e escrito duas vezes
+   uma a seguir à outra não é lista nenhuma. Fechado, ela é o cartão. */
+.tile.is-expanded .events,
+.tile.is-expanded .events__head { display: none; }
 
 /* Conteúdo escondido até se carregar no "+" (o JS troca o display). */
 .tile__body { display: none; margin-top: 16px; }
@@ -1002,32 +1013,27 @@ html[lang="en"] .title-art {
 
 /* --- Painel dos eventos: a grelha de cartazes --- */
 
-/* A conta é a mesma da grelha da página inicial — nenhuma coluna mais
-   estreita do que --col-min, nunca mais do que --col-max-n colunas —, com a
-   diferença de que aqui há folga entre os cartazes e lá não há. As folgas
-   entram na conta: sem isso, quatro colunas mais três folgas passavam a
-   largura toda e a grelha ficava-se por três.
+/* As mesmas colunas do mosaico da página inicial, à mesma largura de ecrã.
+   A conta do mosaico vive em .tiles e não se pode repetir aqui — uma media
+   query não lê variáveis —, por isso ficam escritos os pontos onde ela muda:
+   com --col-min a 300px abaixo dos 760 e a 360px acima, e um máximo de
+   quatro colunas, o mosaico passa a duas aos 600px, a três aos 1080 e a
+   quatro aos 1440. Mexer em --col-min ou em --col-max-n obriga a mexer
+   nestes três números.
 
-   Nos 900px de leitura do painel dá duas colunas largas, e é isso que
-   permite a fotografia grande com a legenda por cima. */
+   A diferença para o mosaico é a folga entre cartazes, que lá não existe. */
 .evgrid {
   --evgap: 18px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(max((100% - (var(--col-max-n) - 1) * var(--evgap)) / var(--col-max-n), min(100%, var(--col-min))), 1fr));
+  grid-template-columns: repeat(var(--ev-cols, 1), minmax(0, 1fr));
   gap: var(--evgap);
   margin-top: 14px;
 }
 
-/* Os concluídos são dois, e por isso as colunas ficam de pé mesmo vazias
-   (auto-fill): sem isso cada um esticava-se a grelha toda e a fotografia
-   ficava do dobro das de cima. */
-.evgrid--conc {
-  grid-template-columns: repeat(auto-fill, minmax(max((100% - (var(--col-max-n) - 1) * var(--evgap)) / var(--col-max-n), min(100%, var(--col-min))), 1fr));
-}
+@media (min-width: 600px)  { .evgrid { --ev-cols: 2; } }
+@media (min-width: 1080px) { .evgrid { --ev-cols: 3; } }
+@media (min-width: 1440px) { .evgrid { --ev-cols: 4; } }
 
-/* O cartaz é a fotografia com uma legenda pousada em cima, no rodapé: o
-   título, a sinopse e, à direita, o "+" e a data em corpo grande. Os outros
-   detalhes ficam fora da fotografia, numa linha por baixo. */
 .evcard { display: flex; flex-direction: column; }
 
 .evcard__cartaz { position: relative; }
@@ -1040,52 +1046,46 @@ html[lang="en"] .title-art {
 }
 .evcard__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
-/* A legenda troca as cores com o cartão que a recebe: creme sobre o azul,
-   azul sobre o creme. Não há cor nova nenhuma — são as duas do cartão. */
+/* A placa encostada ao fundo da fotografia, com a mesma folga dos dois lados
+   e do fundo. Troca as cores com o cartão que a recebe: creme sobre o azul,
+   azul sobre o creme — não há cor nova nenhuma. A sombra é um deslocamento
+   seco, sem desfoque, para a placa se despegar de fotografias claras. */
 .evcard__legenda {
   position: absolute;
-  left: 0; right: 0; bottom: 0;
+  left: 14px; right: 14px; bottom: 14px;
   display: flex;
-  gap: 16px;
-  padding: 14px 16px 16px;
+  gap: 10px;
+  padding: 14px 15px;
   background: var(--tile-fg);
   color: var(--tile-bg);
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--tile-bg) 45%, transparent);
 }
 
 .evcard__col { flex: 1; min-width: 0; }
 
-.evcard__title {
-  font-size: 17px;
-  line-height: 1.15;
-  letter-spacing: -.01em;
-}
-.evcard__sinopse { margin-top: 8px; font-size: 12px; line-height: 1.5; opacity: .8; }
+/* "próximo · 18 de março" — o rótulo só diz "próximo" no primeiro da lista;
+   nos outros fica a data. */
+.evcard__kick { font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 
-/* A data em dois andares, como no rascunho: o dia grande e o mês por baixo.
-   O "+" fica-lhe por cima, encostado ao canto. */
-.evcard__data {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-}
+.evcard__title { margin-top: 6px; font-size: 20px; line-height: 1.1; letter-spacing: -.02em; }
+.evcard__sinopse { margin-top: 7px; font-size: 11px; line-height: 1.45; opacity: .85; }
 
+/* O "+" é o mesmo do mosaico, no mesmo corpo: quem o carrega no cartão
+   reconhece-o no cartaz. */
 .evcard__toggle {
+  flex-shrink: 0;
+  align-self: flex-start;
   padding: 0;
   border: none;
   background: none;
   color: inherit;
   font: inherit;
-  font-size: 20px;
+  font-size: 38px;
   font-weight: 300;
-  line-height: .8;
+  line-height: .75;
   cursor: pointer;
 }
 .evcard__toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
-
-.evcard__dia { margin-top: 10px; font-size: 26px; font-weight: 700; line-height: .85; letter-spacing: -.03em; }
-.evcard__mes { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 
 .evcard__body { display: none; margin-top: 8px; font-size: 12px; line-height: 1.55; }
 .evcard.is-open .evcard__body { display: block; }
@@ -1101,9 +1101,8 @@ html[lang="en"] .title-art {
   margin-top: 12px;
 }
 
+/* A natureza do trabalho, sem caixa: é uma palavra, e uma palavra basta-se. */
 .evtag {
-  padding: 4px 8px;
-  border: 1.5px solid currentColor;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .12em;
@@ -1124,11 +1123,12 @@ html[lang="en"] .title-art {
 
 /* Os bilhetes fecham a linha, e fecham-na sempre em linha própria: numa
    coluna de grelha não cabem a seguir à data, e um cartaz com eles ao lado
-   e outro com eles por baixo ficavam de alturas diferentes. */
+   e outro com eles por baixo ficavam de alturas diferentes. Encostados à
+   esquerda, debaixo do resto e não ao fundo da coluna do lado. */
 .evcard__bilhetes {
   flex-basis: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -1253,6 +1253,7 @@ html[lang="en"] .title-art {
   display: grid;
   grid-template-columns: minmax(0, 292px) 1fr;
   gap: 30px;
+  max-width: var(--panel-content);   /* o painel abre-se todo, o mês não */
   margin-top: 14px;
 }
 
@@ -1872,7 +1873,7 @@ html.menu-open .menu::before { opacity: 1; }
 
         <div class="panel-section">
           <h3 class="panel-section__title" data-i18n="secConc">concluídos</h3>
-          <div class="evgrid evgrid--conc" id="ev-grelha-conc"></div>
+          <div class="evgrid" id="ev-grelha-conc"></div>
         </div>
 
         <div class="panel-section">
@@ -2781,7 +2782,7 @@ html.menu-open .menu::before { opacity: 1; }
   /* A caixa de um cartaz, a mesma nos próximos e nos concluídos: a
      fotografia, a legenda pousada em cima dela — título, sinopse, "+" e data
      em corpo grande — e uma linha de detalhes por fora. */
-  function evCaixa(t, alt, img, dia, mes) {
+  function evCaixa(t, alt, img, rotulo) {
     var art = document.createElement('article');
     art.className = 'evcard';
     art.innerHTML =
@@ -2789,14 +2790,11 @@ html.menu-open .menu::before { opacity: 1; }
         '<div class="evcard__foto"><img loading="lazy"></div>' +
         '<div class="evcard__legenda">' +
           '<div class="evcard__col">' +
+            '<p class="evcard__kick"></p>' +
             '<p class="evcard__title"></p>' +
             '<p class="evcard__sinopse"></p>' +
           '</div>' +
-          '<div class="evcard__data">' +
-            '<button class="evcard__toggle" type="button" aria-expanded="false">+</button>' +
-            '<p class="evcard__dia"></p>' +
-            '<p class="evcard__mes"></p>' +
-          '</div>' +
+          '<button class="evcard__toggle" type="button" aria-expanded="false">+</button>' +
         '</div>' +
       '</div>' +
       '<div class="evcard__detalhes"></div>';
@@ -2804,10 +2802,9 @@ html.menu-open .menu::before { opacity: 1; }
     var foto = art.querySelector('img');
     foto.src = img; foto.alt = alt;
 
+    art.querySelector('.evcard__kick').textContent = rotulo;
     art.querySelector('.evcard__title').textContent = t.titulo;
     art.querySelector('.evcard__sinopse').textContent = t.sinopse || '';
-    art.querySelector('.evcard__dia').textContent = dia;
-    art.querySelector('.evcard__mes').textContent = mes;
     return art;
   }
 
@@ -2832,9 +2829,11 @@ html.menu-open .menu::before { opacity: 1; }
 
   /* Um cartaz dos próximos: natureza, sítio e data por extenso na linha de
      baixo, e os bilhetes encostados ao fim dela. */
-  function evCartaz(e) {
+  function evCartaz(e, i) {
     var t = evTexto(e);
-    var art = evCaixa(t, evAlt(e), e.img, String(e.dia), MESES_C[lg()][e.mes - 1]);
+    /* O primeiro da lista é o próximo a acontecer, e o rótulo di-lo. */
+    var rotulo = (i === 0 ? (lg() === 'en' ? 'next · ' : 'próximo · ') : '') + evData(e);
+    var art = evCaixa(t, evAlt(e), e.img, rotulo);
     evMais(art, evAssunto(e), t.titulo);
 
     var det = art.querySelector('.evcard__detalhes');
@@ -2868,7 +2867,7 @@ html.menu-open .menu::before { opacity: 1; }
      bilhetes o que ficou dele. */
   function evCartazConc(c) {
     var t = evTexto(c);
-    var art = evCaixa(t, evAlt(c), c.img, String(c.ano), '');
+    var art = evCaixa(t, evAlt(c), c.img, String(c.ano));
     evMais(art, evAssunto(c), t.titulo);
 
     var det = art.querySelector('.evcard__detalhes');
@@ -3128,7 +3127,7 @@ html.menu-open .menu::before { opacity: 1; }
     }
     if (evGrelhaEl) {
       evGrelhaEl.textContent = '';
-      EVENTOS.forEach(function (e) { evGrelhaEl.appendChild(evCartaz(e)); });
+      EVENTOS.forEach(function (e, i) { evGrelhaEl.appendChild(evCartaz(e, i)); });
     }
     if (evGrelhaConcEl) {
       evGrelhaConcEl.textContent = '';
