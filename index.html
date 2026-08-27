@@ -1078,17 +1078,14 @@ html[lang="en"] .title-art {
 }
 .evcard__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
-/* A placa pousada sobre a fotografia, descolada das três margens: assim
-   lê-se como uma etiqueta lá posta e não como um rodapé da imagem. Troca as
-   cores com o cartão que a recebe: creme sobre o azul, azul sobre o creme. */
+/* A data, o título e o "+": esteve pousada sobre a fotografia, descolada das
+   três margens, e passou para dentro da caixa de baixo — é agora o cimo dela,
+   à largura toda e logo por baixo da imagem. As cores já lhe vêm da caixa,
+   que é quem as troca com o cartão. */
 .evcard__legenda {
-  position: absolute;
-  left: 14px; right: 14px; bottom: 14px;
   display: flex;
   gap: 10px;
-  padding: 13px;
-  background: var(--tile-fg);
-  color: var(--tile-bg);
+  margin-bottom: 22px;
 }
 
 .evcard__col { flex: 1; min-width: 0; }
@@ -1121,7 +1118,7 @@ html[lang="en"] .title-art {
   top: 0;
   right: 0;
   padding-left: .3em;
-  background: var(--tile-fg);
+  background: var(--tile-fg);   /* o fundo da caixa, para as sustentar */
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1196,11 +1193,8 @@ html[lang="en"] .title-art {
 /* Tudo o que vem por baixo da fotografia vive numa caixa só, e essa caixa
    troca as cores com o cartão — creme com letra azul sobre o azul —, como
    a placa que está pousada na fotografia. Desce um bom bocado, para que se
-   veja que são duas coisas e não um rodapé da imagem; a entrada de 27px é a
-   mesma da placa (14 de folga mais 13 de bordo), e assim o texto de baixo
-   cai a prumo com o título de cima. */
+   é uma caixa só, encostada à fotografia, começada pela data e pelo título. */
 .evcard__info {
-  margin-top: 26px;
   padding: 20px 27px 22px;
   background: var(--tile-fg);
   color: var(--tile-bg);
@@ -2939,6 +2933,8 @@ html.menu-open .menu::before { opacity: 1; }
     art.innerHTML =
       '<div class="evcard__cartaz">' +
         '<div class="evcard__foto"><img loading="lazy"></div>' +
+      '</div>' +
+      '<div class="evcard__info">' +
         '<div class="evcard__legenda">' +
           '<div class="evcard__col">' +
             '<p class="evcard__kick"></p>' +
@@ -2946,8 +2942,6 @@ html.menu-open .menu::before { opacity: 1; }
           '</div>' +
           '<button class="evcard__toggle" type="button" aria-expanded="false">+</button>' +
         '</div>' +
-      '</div>' +
-      '<div class="evcard__info">' +
         '<div class="evcard__detalhes"></div>' +
         '<p class="evcard__sinopse"></p>' +
       '</div>';
