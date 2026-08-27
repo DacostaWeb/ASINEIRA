@@ -1068,7 +1068,12 @@ html[lang="en"] .title-art {
 .evcard__kick { font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 
 .evcard__title { margin-top: 6px; font-size: 20px; line-height: 1.1; letter-spacing: -.02em; }
-.evcard__sinopse { margin-top: 7px; font-size: 11px; line-height: 1.45; opacity: .85; }
+
+/* A sinopse não vive na placa: a placa é o cartaz — data, título e o "+" —,
+   e o texto corrido fica por baixo da fotografia, com os detalhes. Assim a
+   placa mantém-se do mesmo tamanho seja qual for o comprimento do texto, e
+   tapa menos fotografia. */
+.evcard__sinopse { margin-top: 10px; max-width: 62ch; font-size: 12px; line-height: 1.55; opacity: .8; }
 
 /* O "+" é o mesmo do mosaico, no mesmo corpo: quem o carrega no cartão
    reconhece-o no cartaz. */
@@ -1087,7 +1092,7 @@ html[lang="en"] .title-art {
 }
 .evcard__toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
-.evcard__body { display: none; margin-top: 8px; font-size: 12px; line-height: 1.55; }
+.evcard__body { display: none; margin-top: 6px; font-size: 12px; line-height: 1.55; }
 .evcard.is-open .evcard__body { display: block; }
 .evcard__body a { text-decoration: underline; text-underline-offset: 2px; }
 
@@ -1121,15 +1126,12 @@ html[lang="en"] .title-art {
   stroke-linejoin: round;
 }
 
-/* Os bilhetes fecham a linha, e fecham-na sempre em linha própria: numa
-   coluna de grelha não cabem a seguir à data, e um cartaz com eles ao lado
-   e outro com eles por baixo ficavam de alturas diferentes. Encostados à
-   esquerda, debaixo do resto e não ao fundo da coluna do lado. */
+/* Os bilhetes fecham o cartaz, por baixo de tudo e encostados à esquerda. */
 .evcard__bilhetes {
-  flex-basis: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  margin-top: 12px;
 }
 
 .evbt {
@@ -2792,12 +2794,12 @@ html.menu-open .menu::before { opacity: 1; }
           '<div class="evcard__col">' +
             '<p class="evcard__kick"></p>' +
             '<p class="evcard__title"></p>' +
-            '<p class="evcard__sinopse"></p>' +
           '</div>' +
           '<button class="evcard__toggle" type="button" aria-expanded="false">+</button>' +
         '</div>' +
       '</div>' +
-      '<div class="evcard__detalhes"></div>';
+      '<div class="evcard__detalhes"></div>' +
+      '<p class="evcard__sinopse"></p>';
 
     var foto = art.querySelector('img');
     foto.src = img; foto.alt = alt;
@@ -2828,7 +2830,7 @@ html.menu-open .menu::before { opacity: 1; }
   }
 
   /* Um cartaz dos próximos: natureza, sítio e data por extenso na linha de
-     baixo, e os bilhetes encostados ao fim dela. */
+     baixo, a sinopse a seguir e os bilhetes a fechar. */
   function evCartaz(e, i) {
     var t = evTexto(e);
     /* O primeiro da lista é o próximo a acontecer, e o rótulo di-lo. */
@@ -2844,7 +2846,7 @@ html.menu-open .menu::before { opacity: 1; }
     det.appendChild(evDetalhe('pin', t.sitio));
     det.appendChild(evDetalhe('relogio', evQuando(e)));
 
-    var caixa = document.createElement('span');
+    var caixa = document.createElement('div');
     caixa.className = 'evcard__bilhetes';
     if (e.bilhetes) {
       var a = document.createElement('a');
@@ -2858,7 +2860,7 @@ html.menu-open .menu::before { opacity: 1; }
       span.textContent = lg() === 'en' ? 'Soon' : 'Brevemente';
       caixa.appendChild(span);
     }
-    det.appendChild(caixa);
+    art.appendChild(caixa);
 
     return art;
   }
@@ -2879,10 +2881,10 @@ html.menu-open .menu::before { opacity: 1; }
     }
     det.appendChild(evDetalhe('pin', t.sitio));
 
-    var media = document.createElement('span');
+    var media = document.createElement('div');
     media.className = 'evmedia evcard__bilhetes';
     media.textContent = evMedia(c);
-    det.appendChild(media);
+    art.appendChild(media);
 
     return art;
   }
