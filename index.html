@@ -139,7 +139,8 @@ a:hover { text-decoration: underline; }
 .cal__month,
 .cal__wd,
 .cal__lbl,
-.evcard__date,
+.evcard__sitio,
+.evmedia,
 .events__head,
 .evbt,
 .panel-section__title,
@@ -971,8 +972,8 @@ html[lang="en"] .title-art {
   .events tr td { transition: border-color .25s ease; }
 }
 
-/* "concluídos": o mesmo desenho da lista de cima, com os ícones do que ficou
-   de cada um — fotografias, vídeo, texto. */
+/* "concluídos": o mesmo desenho da lista de cima, dizendo o que ficou de
+   cada um — fotografias, vídeo, texto. */
 .events__head {
   margin-top: 26px;
   font-family: var(--font-display);
@@ -986,15 +987,15 @@ html[lang="en"] .title-art {
 .events--conc { margin-top: 6px; }
 .events--conc td:nth-child(1) { width: 62px; }
 
-.evmedia { display: inline-flex; gap: 5px; }
-.evmedia svg {
-  width: 13px;
-  height: 13px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+/* O que ficou de cada evento dito por palavras. Estiveram aqui três ícones,
+   e o das fotografias não se percebia: uma máquina de 13 pixéis lê-se como
+   um rectângulo com um ponto. Três palavras curtas dizem-no sem enigma. */
+.evmedia {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .75;
 }
 
 
@@ -1013,60 +1014,76 @@ html[lang="en"] .title-art {
   margin-top: 14px;
 }
 
+/* Os concluídos são dois, e por isso as colunas ficam de pé mesmo vazias
+   (auto-fill): sem isso cada um esticava-se a meia grelha e a fotografia
+   ficava do dobro das de cima. */
 .evgrid--conc {
-  grid-template-columns: repeat(auto-fit, minmax(max((100% - 2 * var(--evgap)) / 3, min(100%, 220px)), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(max((100% - 3 * var(--evgap)) / 4, min(100%, 200px)), 1fr));
 }
 
-.evcard {
-  display: flex;
-  flex-direction: column;
-  border: 1.5px solid currentColor;
-}
+/* Sem moldura e sem filete: o cartaz e a fotografia que o abre. O que
+   arruma cada um é o alinhamento, e não uma caixa a toda a volta. */
+.evcard { display: flex; flex-direction: column; }
 
 .evcard__foto {
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: clip;
-  border-bottom: 1.5px solid currentColor;
   background: color-mix(in srgb, currentColor 12%, transparent);
 }
 .evcard__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
-.evcard__inner { display: flex; flex-direction: column; flex: 1; padding: 12px 14px 14px; }
+.evcard__inner { display: flex; flex-direction: column; flex: 1; padding-top: 10px; }
 
-.evcard__date {
-  font-family: var(--font-display);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
+/* O "+" fica na linha do título e encostado à direita, como no cartão que o
+   abriu. O título leva a linha toda; o "+" é que se chega ao canto. */
+.evcard__head { display: flex; align-items: baseline; gap: 12px; }
+.evcard__title { flex: 1; font-size: 13px; line-height: 1.3; }
 
-.evcard__title { margin-top: 6px; font-size: 13px; line-height: 1.3; }
-.evcard__meta { margin-top: 4px; font-size: 12px; opacity: .75; }
-
-/* O "+" abre o pouco que se sabe do evento, dentro do próprio cartaz. */
 .evcard__toggle {
-  align-self: flex-start;
-  margin-top: 10px;
+  flex-shrink: 0;
   padding: 0;
   border: none;
   background: none;
   color: inherit;
   font: inherit;
-  font-size: 20px;
-  line-height: .8;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1;
   cursor: pointer;
 }
 .evcard__toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
-.evcard__body { display: none; margin-top: 8px; font-size: 12px; line-height: 1.55; }
-.evcard.is-open .evcard__body { display: block; }
-.evcard__body a { text-decoration: underline; text-underline-offset: 2px; }
+/* Dia, dia da semana e hora, nesta ordem e sem mais nada: é o que se precisa
+   de saber para marcar a ida. O sítio não vem aqui — vai lá abaixo, na linha
+   dos bilhetes. */
+.evcard__quando { margin-top: 4px; font-size: 12px; opacity: .75; }
 
-/* Os bilhetes ficam colados ao fundo do cartaz, todos à mesma altura seja
-   qual for o comprimento do título. */
-.evcard__bilhetes { margin-top: auto; padding-top: 12px; }
+.evcard__body { display: none; margin-top: 8px; font-size: 12px; line-height: 1.55; opacity: .75; }
+.evcard.is-open .evcard__body { display: block; }
+.evcard__body a { text-decoration: underline; text-underline-offset: 2px; opacity: 1; }
+
+/* O pé do cartaz: os bilhetes à esquerda, o sítio encostado à direita. Fica
+   colado ao fundo, para que os quatro o tenham à mesma altura seja qual for
+   o comprimento do título. */
+.evcard__pe {
+  display: flex;
+  flex-wrap: wrap;          /* numa coluna estreita o sítio passa para baixo */
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.evcard__sitio {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-align: right;
+  opacity: .75;
+}
 
 .evbt {
   display: inline-block;
@@ -1080,9 +1097,11 @@ html[lang="en"] .title-art {
 }
 .evbt:hover { background: var(--tile-fg); color: var(--tile-bg); text-decoration: none; }
 
-/* Sem bilhetes à venda não há botão nenhum a fingir que há: fica dito. */
+/* Sem bilhetes à venda não há botão nenhum a fingir que há — nem sequer a
+   caixa dele: fica a palavra, e mais nada. */
 .evbt--soon {
-  border-style: dashed;
+  padding: 7px 0;
+  border: none;
   opacity: .6;
   cursor: default;
 }
@@ -2382,23 +2401,23 @@ html.menu-open .menu::before { opacity: 1; }
      'bilhetes' é o endereço onde se compram. Enquanto for nulo, o cartaz diz
      que é para breve em vez de fingir um botão que não leva a lado nenhum. */
   var EVENTOS = [
-    { dia: 18, mes: 3, img: 'dossier/assets/scene-estudio.jpg',
+    { dia: 18, mes: 3, hora: '21h30', img: 'dossier/assets/scene-estudio.jpg',
       bilhetes: 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Bilhetes — Voar Muito Perto do Sol'),
       pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditório', natureza: 'Criação' },
       en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditorium', natureza: 'Creation' },
       alt: { pt: 'Proposta: estúdio de dança com plateia', en: 'Proposal: dance studio with seating' } },
 
-    { dia: 24, mes: 3, img: 'dossier/assets/nave-2026.jpg', bilhetes: null,
+    { dia: 24, mes: 3, hora: '18h', img: 'dossier/assets/nave-2026.jpg', bilhetes: null,
       pt: { titulo: 'Projeto A', sitio: 'Igreja', natureza: 'Formação' },
       en: { titulo: 'Projeto A', sitio: 'Church', natureza: 'Training' },
       alt: { pt: 'Nave da antiga Igreja de Retorta com o novo soalho', en: 'Nave of the former Retorta Church with its new floor' } },
 
-    { dia: 10, mes: 4, img: 'dossier/assets/nave-2025.jpg', bilhetes: null,
+    { dia: 10, mes: 4, hora: '21h30', img: 'dossier/assets/nave-2025.jpg', bilhetes: null,
       pt: { titulo: 'Projeto B', sitio: 'Igreja', natureza: 'Apresentação' },
       en: { titulo: 'Projeto B', sitio: 'Church', natureza: 'Presentation' },
       alt: { pt: 'Nave da antiga Igreja de Retorta antes da intervenção', en: 'Nave of the former Retorta Church before the works' } },
 
-    { dia: 22, mes: 5, img: 'dossier/assets/hero.jpg', bilhetes: null,
+    { dia: 22, mes: 5, hora: '19h', img: 'dossier/assets/hero.jpg', bilhetes: null,
       pt: { titulo: 'Projeto C', sitio: 'Exterior', natureza: 'Criação' },
       en: { titulo: 'Projeto C', sitio: 'Outdoors', natureza: 'Creation' },
       alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } }
@@ -2425,10 +2444,22 @@ html.menu-open .menu::before { opacity: 1; }
     en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
   };
 
-  var ICONES = {
-    foto:  '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="1.5"/><circle cx="8" cy="8.5" r="2.8"/></svg>',
-    video: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="10" rx="1.5"/><path d="M6.8 6.4l3.6 2.1-3.6 2.1z"/></svg>',
-    texto: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5h9M8 3.5v9"/></svg>'
+  /* O que ficou de cada evento concluído, por palavras e não por ícones. */
+  var MEDIA = {
+    pt: { foto: 'fotos', video: 'vídeo', texto: 'texto' },
+    en: { foto: 'photos', video: 'video', texto: 'text' }
+  };
+
+  /* As mesmas datas em ponto pequeno, para o pé dos cartazes: "18 mar". */
+  var MESES_C = {
+    pt: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+    en: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+  };
+
+  /* Domingo primeiro, que é a ordem que o getDay() devolve. */
+  var SEMANA = {
+    pt: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],
+    en: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
   };
 
   var EV_ANO = new Date().getFullYear();
@@ -2441,6 +2472,16 @@ html.menu-open .menu::before { opacity: 1; }
       ? e.dia + ' ' + MESES.en[e.mes - 1]
       : e.dia + ' de ' + MESES.pt[e.mes - 1];
   }
+  /* "18 mar · seg · 21h30": dia, dia da semana e hora. O dia da semana sai da
+     data e não da lista — uma data escrita duas vezes é uma data para andar
+     desencontrada. */
+  function evQuando(e) {
+    var d = new Date(EV_ANO, e.mes - 1, e.dia);
+    var partes = [e.dia + ' ' + MESES_C[lg()][e.mes - 1], SEMANA[lg()][d.getDay()]];
+    if (e.hora) partes.push(e.hora);
+    return partes.join(' · ');
+  }
+
   function evAssunto(e) {
     return 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Eventos · ' + evData(e) + ' · ' + evTexto(e).titulo);
   }
@@ -2515,11 +2556,16 @@ html.menu-open .menu::before { opacity: 1; }
     return tr;
   }
 
+  function evMedia(c) {
+    return c.media.map(function (m) { return MEDIA[lg()][m]; }).join(' · ');
+  }
+
   function evLinhaConc(c) {
     var tr = document.createElement('tr');
     var t = evTexto(c);
     var media = document.createElement('td');
-    media.innerHTML = '<span class="evmedia">' + c.media.map(function (m) { return ICONES[m]; }).join('') + '</span>';
+    media.innerHTML = '<span class="evmedia"></span>';
+    media.firstChild.textContent = evMedia(c);
     tr.appendChild(media);
     [t.titulo, t.sitio, String(c.ano)].forEach(function (txt, n) {
       var td = document.createElement('td');
@@ -2529,46 +2575,65 @@ html.menu-open .menu::before { opacity: 1; }
     return tr;
   }
 
-  /* Um cartaz: fotografia, data, título, e o "+" que abre o pouco que se sabe.
-     Os bilhetes ficam colados ao fundo, para que os quatro os tenham à mesma
-     altura mesmo com títulos de comprimentos diferentes. */
-  function evCartaz(e) {
-    var t = evTexto(e);
+  /* A caixa de um cartaz, que é a mesma nos próximos e nos concluídos:
+     fotografia, título com o "+" ao lado, uma linha por baixo com a data ou
+     o ano, o que o "+" abre, e um pé com duas pontas. */
+  function evCaixa(titulo, quando) {
     var art = document.createElement('article');
     art.className = 'evcard';
+    art.innerHTML =
+      '<div class="evcard__foto"><img loading="lazy"></div>' +
+      '<div class="evcard__inner">' +
+        '<div class="evcard__head">' +
+          '<p class="evcard__title"></p>' +
+        '</div>' +
+        '<p class="evcard__quando"></p>' +
+        '<div class="evcard__pe"><span class="evcard__bilhetes"></span><p class="evcard__sitio"></p></div>' +
+      '</div>';
+    art.querySelector('.evcard__title').textContent = titulo;
+    art.querySelector('.evcard__quando').textContent = quando;
+    return art;
+  }
 
-    var fig = document.createElement('div');
-    fig.className = 'evcard__foto';
-    var img = document.createElement('img');
-    img.src = e.img; img.alt = evAlt(e); img.loading = 'lazy';
-    fig.appendChild(img);
-    art.appendChild(fig);
-
-    var inner = document.createElement('div');
-    inner.className = 'evcard__inner';
-    inner.innerHTML =
-      '<p class="evcard__date"></p>' +
-      '<p class="evcard__title"></p>' +
-      '<button class="evcard__toggle" type="button" aria-expanded="false">+</button>' +
-      '<div class="evcard__body"><p class="evcard__meta"></p><p class="cal__cta"><a></a></p></div>' +
-      '<div class="evcard__bilhetes"></div>';
-    inner.querySelector('.evcard__date').textContent = evData(e);
-    inner.querySelector('.evcard__title').textContent = t.titulo;
-    inner.querySelector('.evcard__meta').textContent = t.sitio + ' · ' + t.natureza;
-
-    var link = inner.querySelector('.evcard__body a');
-    link.href = evAssunto(e);
+  /* O "+" do cartaz abre o que dele se sabe, e fica na linha do título. */
+  function evMais(art, texto, href, rotulo) {
+    var corpo = document.createElement('div');
+    corpo.className = 'evcard__body';
+    corpo.innerHTML = '<p></p><p class="cal__cta"><a></a></p>';
+    corpo.querySelector('p').textContent = texto;
+    var link = corpo.querySelector('a');
+    link.href = href;
     link.textContent = lg() === 'en' ? 'I want to know more' : 'quero saber mais';
+    art.querySelector('.evcard__quando').after(corpo);
 
-    var bt = inner.querySelector('.evcard__toggle');
-    bt.setAttribute('aria-label', t.titulo);
+    var bt = document.createElement('button');
+    bt.className = 'evcard__toggle';
+    bt.type = 'button';
+    bt.textContent = '+';
+    bt.setAttribute('aria-expanded', 'false');
+    bt.setAttribute('aria-label', rotulo);
     bt.addEventListener('click', function () {
       var aberto = art.classList.toggle('is-open');
       bt.textContent = aberto ? '−' : '+';
       bt.setAttribute('aria-expanded', String(aberto));
     });
+    art.querySelector('.evcard__head').appendChild(bt);
+  }
 
-    var caixa = inner.querySelector('.evcard__bilhetes');
+  /* Um cartaz dos próximos. O pé leva os bilhetes à esquerda e o sítio à
+     direita; fica colado ao fundo, para que os quatro o tenham à mesma altura
+     mesmo com títulos de comprimentos diferentes. */
+  function evCartaz(e) {
+    var t = evTexto(e);
+    var art = evCaixa(t.titulo, evQuando(e));
+
+    var img = art.querySelector('img');
+    img.src = e.img; img.alt = evAlt(e);
+
+    evMais(art, t.natureza, evAssunto(e), t.titulo);
+    art.querySelector('.evcard__sitio').textContent = t.sitio;
+
+    var caixa = art.querySelector('.evcard__bilhetes');
     if (e.bilhetes) {
       var a = document.createElement('a');
       a.className = 'evbt';
@@ -2582,28 +2647,24 @@ html.menu-open .menu::before { opacity: 1; }
       caixa.appendChild(span);
     }
 
-    art.appendChild(inner);
     return art;
   }
 
+  /* Um cartaz dos concluídos: no lugar dos bilhetes fica o que ficou dele. */
   function evCartazConc(c) {
     var t = evTexto(c);
-    var art = document.createElement('article');
-    art.className = 'evcard';
-    art.innerHTML =
-      '<div class="evcard__foto"><img loading="lazy"></div>' +
-      '<div class="evcard__inner">' +
-        '<p class="evcard__date"></p>' +
-        '<p class="evcard__title"></p>' +
-        '<p class="evcard__meta"></p>' +
-        '<p class="evcard__bilhetes"><span class="evmedia"></span></p>' +
-      '</div>';
+    var art = evCaixa(t.titulo, String(c.ano));
+
     var img = art.querySelector('img');
     img.src = c.img; img.alt = evAlt(c);
-    art.querySelector('.evcard__date').textContent = String(c.ano);
-    art.querySelector('.evcard__title').textContent = t.titulo;
-    art.querySelector('.evcard__meta').textContent = t.sitio;
-    art.querySelector('.evmedia').innerHTML = c.media.map(function (m) { return ICONES[m]; }).join('');
+
+    art.querySelector('.evcard__sitio').textContent = t.sitio;
+
+    var media = document.createElement('span');
+    media.className = 'evmedia';
+    media.textContent = evMedia(c);
+    art.querySelector('.evcard__bilhetes').appendChild(media);
+
     return art;
   }
 
