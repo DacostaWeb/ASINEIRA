@@ -1386,9 +1386,18 @@ html[lang="en"] .title-art {
 .prj__l[hidden] { display: none; }
 
 /* Uma linha: a miniatura, o título, quando, onde, a natureza e o "+".
-   As quatro colunas de texto encostam-se todas à esquerda e andam juntas —
-   é a sexta coluna, vazia, que come o que sobra da largura, para que o "+"
-   fique lá ao fundo com ar à sua volta e não colado à natureza.
+   As quatro colunas de texto repartem entre si toda a largura da lista, e
+   não só a metade esquerda: antes andavam encostadas umas às outras — com
+   a data a partir-se em duas linhas — enquanto um terço do painel ficava
+   em branco à espera do "+". A sexta coluna é hoje só uma folga curta, o
+   ar de que o "+" precisa para não encostar à natureza.
+
+   As quatro frações são quase iguais de propósito: é isso que dá à lista o
+   compasso de uma tabela, com as colunas a começar de 260 em 260 e não aos
+   saltos. As pequenas diferenças entre elas são o que cada uma tem para
+   dizer — o quando é a mais larga porque tem de caber "21h30 · domingo ·
+   28 de fevereiro", a data mais comprida que o formato dá, numa linha só;
+   a natureza é a mais estreita porque nunca passa de uma etiqueta.
 
    As larguras têm de ser frações e não max-content: cada linha é uma grelha
    sua, e é só por serem as mesmas frações da mesma largura que as colunas
@@ -1396,7 +1405,7 @@ html[lang="en"] .title-art {
    própria e a lista ficava aos degraus. */
 .prj__linha {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1.4fr) minmax(0, 1.25fr) minmax(0, .7fr) minmax(0, .8fr) 2fr 22px;
+  grid-template-columns: 46px minmax(0, 2.5fr) minmax(0, 2.7fr) minmax(0, 2.4fr) minmax(0, 2fr) minmax(0, .4fr) 22px;
   align-items: center;
   gap: 18px;
   padding: 10px 0;
