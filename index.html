@@ -4291,16 +4291,29 @@ html.menu-open .menu::before { opacity: 1; }
     go(routeByMenu('menu-sobre'));
   }
 
-  /* O triângulo abre, o X fecha. O logótipo alterna: agora fica à vista nos
-     dois estados, por isso um só botão faz as duas coisas. O preventDefault é
-     porque é um <a href="#">, e sem ele o salto para a âncora colidia com o
-     encaminhamento por hash. */
+  /* Está alguma coisa aberta por cima da página inicial? O menu de ecrã
+     inteiro é uma delas, os painéis dos cartões são as outras — e para quem
+     está lá dentro são a mesma coisa: uma secção aberta, com o logótipo em
+     cima dela. */
+  function algoAberto() {
+    if (state.menuOpen) return true;
+    return tileBtns.some(function (btn) {
+      return btn.getAttribute('aria-expanded') === 'true';
+    });
+  }
+
+  /* O triângulo abre, o X fecha. O logótipo é sempre a saída: de dentro de
+     qualquer secção — o menu ou um painel — leva à página inicial, e só de
+     lá, sem nada aberto, é que abre o menu no "sobre nós". Olhava só para o
+     menu, e por isso dentro de um painel abria o menu por cima em vez de
+     sair dele. O preventDefault é porque é um <a href="#">, e sem ele o
+     salto para a âncora colidia com o encaminhamento por hash. */
   triBtn.addEventListener('click', openMenuTop);
   closeBtn.addEventListener('click', function () { go(null); });
 
   wmLink.addEventListener('click', function (e) {
     e.preventDefault();
-    if (state.menuOpen) go(null); else openMenuTop();
+    if (algoAberto()) go(null); else openMenuTop();
   });
 
   /* Ao rato, só o triângulo e o X. Cada um espera que o rato tenha saído de
