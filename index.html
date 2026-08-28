@@ -1101,6 +1101,23 @@ html[lang="en"] .title-art {
 }
 .evcard--conc .evcard__title.is-longo::after { background: var(--tile-bg); }
 
+/* Experiência A: o filete fica só na placa, por baixo da fotografia —
+   o desfile não leva bordo amarelo. */
+.evcard--conc.evcard--conc-a,
+.evcard--conc.evcard--conc-b {
+  border: none;
+  overflow: visible;
+}
+.evcard--conc-a .evcard__info {
+  border: 1.5px solid var(--tile-fg);
+}
+
+/* Experiência B: a mesma placa, mas o filete é tracejado. */
+.evcard--conc-b .evcard__info {
+  border: 1.5px dashed var(--tile-fg);
+}
+.evcard--conc-b .evcard__marca svg { stroke-width: 1.15; }
+
 .evcard__cartaz { position: relative; }
 
 .evcard__foto {
@@ -2109,6 +2126,16 @@ html.menu-open .menu::before { opacity: 1; }
         </div>
 
         <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secConcA">concluídos — filete só na placa</h3>
+          <div class="evgrid evgrid--conc" id="ev-grelha-conc-a"></div>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-section__title" data-i18n="secConcB">concluídos — tracejado</h3>
+          <div class="evgrid evgrid--conc" id="ev-grelha-conc-b"></div>
+        </div>
+
+        <div class="panel-section">
           <div class="cal">
             <div class="cal__side">
               <h3 class="panel-section__title" data-i18n="secCal">Calendário</h3>
@@ -2556,7 +2583,10 @@ html.menu-open .menu::before { opacity: 1; }
       /* Os eventos em si vivem na lista EVENTOS, lá em baixo, com as duas
          línguas dentro: aqui ficam só os títulos das secções. */
       evH2: 'events',
-      secProx: 'Upcoming', secConc: 'completed', secCal: 'Calendar', secProj: 'Every project',
+      secProx: 'Upcoming', secConc: 'completed',
+      secConcA: 'completed — border on the plate only',
+      secConcB: 'completed — dashed',
+      secCal: 'Calendar', secProj: 'Every project',
       capEv: 'Upcoming · completed · calendar · projects',
 
       /* --- atividades --- */
@@ -2966,6 +2996,27 @@ html.menu-open .menu::before { opacity: 1; }
              pt: 'vídeo', en: 'video' }
   };
 
+  /* Experiência A: linhas só (sem folha), câmara com flash, play tipo YouTube. */
+  var MARCAS_A = {
+    texto: { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 4.6h9.6M3.2 8h9.6M3.2 11.4h6"/></svg>',
+             pt: 'texto', en: 'text' },
+    foto:  { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><path class="evcard__marca--cheio" d="M9.85 1.05 8.05 4.35h1.7L7.7 8.05 11.15 3.7H9.4z"/><path d="M2.35 6.55h2.05l1.1-1.4h5.1l1.1 1.4H13.65v6.7H2.35z"/><circle cx="8" cy="9.7" r="2.1"/></svg>',
+             pt: 'fotografias', en: 'photographs' },
+    video: { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.45" y="3.55" width="13.1" height="8.9" rx="2.35"/><path class="evcard__marca--cheio" d="M6.55 6.15v3.7L10.15 8z"/></svg>',
+             pt: 'vídeo', en: 'video' }
+  };
+
+  /* Experiência B: os três sinais mais nus — linhas, câmara de pictograma,
+     triângulo de play. */
+  var MARCAS_B = {
+    texto: { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.6 4.8h10.8M2.6 8h10.8M2.6 11.2h5.6"/></svg>',
+             pt: 'texto', en: 'text' },
+    foto:  { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.3" y="5.7" width="11.4" height="7.5" rx=".35"/><circle cx="8" cy="9.5" r="2.25"/><rect x="10.35" y="4" width="2.35" height="1.7" rx=".2"/></svg>',
+             pt: 'fotografias', en: 'photographs' },
+    video: { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><path class="evcard__marca--cheio" d="M5.15 3.35v9.3L13.35 8z"/></svg>',
+             pt: 'vídeo', en: 'video' }
+  };
+
   function evDetalhe(sinal, texto) {
     var n = document.createElement('span');
     n.className = 'evdet';
@@ -2983,6 +3034,8 @@ html.menu-open .menu::before { opacity: 1; }
   var evConcEl   = document.getElementById('ev-concluidos');
   var evGrelhaEl = document.getElementById('ev-grelha');
   var evGrelhaConcEl = document.getElementById('ev-grelha-conc');
+  var evGrelhaConcAEl = document.getElementById('ev-grelha-conc-a');
+  var evGrelhaConcBEl = document.getElementById('ev-grelha-conc-b');
   var evTile     = document.getElementById('eventos');
 
   var evEmFoco = 0;
@@ -3251,21 +3304,23 @@ html.menu-open .menu::before { opacity: 1; }
   /* Um cartaz dos concluídos: no lugar da data fica o ano; as marcas do que
      ficou (texto, fotos, vídeo) vão para ao lado do "+", e a linha de baixo
      sai. */
-  function evCartazConc(c) {
+  function evCartazConc(c, variante) {
     var t = evTexto(c);
     var art = evCaixa(t, evAlt(c), evFotosDe(c), String(c.ano));
     art.classList.add('evcard--conc');
+    if (variante) art.classList.add('evcard--conc-' + variante);
     evMais(art, evAssunto(c), t.titulo);
 
     var det = art.querySelector('.evcard__detalhes');
     if (t.natureza) det.appendChild(evDetalhe('tipo', t.natureza));
     det.appendChild(evDetalhe('pin', t.sitio));
 
+    var set = variante === 'a' ? MARCAS_A : variante === 'b' ? MARCAS_B : MARCAS;
     var marcas = document.createElement('div');
     marcas.className = 'evcard__marcas';
     ['texto', 'foto', 'video'].forEach(function (m) {
       if ((c.media || []).indexOf(m) === -1) return;
-      var spec = MARCAS[m];
+      var spec = set[m];
       if (!spec) return;
       var span = document.createElement('span');
       span.className = 'evcard__marca';
@@ -3552,6 +3607,14 @@ html.menu-open .menu::before { opacity: 1; }
     if (evGrelhaConcEl) {
       evGrelhaConcEl.textContent = '';
       CONCLUIDOS.forEach(function (c) { evGrelhaConcEl.appendChild(evCartazConc(c)); });
+    }
+    if (evGrelhaConcAEl) {
+      evGrelhaConcAEl.textContent = '';
+      CONCLUIDOS.forEach(function (c) { evGrelhaConcAEl.appendChild(evCartazConc(c, 'a')); });
+    }
+    if (evGrelhaConcBEl) {
+      evGrelhaConcBEl.textContent = '';
+      CONCLUIDOS.forEach(function (c) { evGrelhaConcBEl.appendChild(evCartazConc(c, 'b')); });
     }
     evPintaFotos();
     evFoco(evEmFoco);
