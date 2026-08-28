@@ -1778,6 +1778,15 @@ html.menu-open .menu::before { opacity: 1; }
 .cform__input:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
 .cform__input--area { resize: vertical; min-height: 120px; }
 
+/* O iOS aproxima a página sozinho quando se toca num campo com letra abaixo
+   de 16px, e depois deixa-a aproximada. Nos ecrãs de toque os campos sobem
+   para 16px: o salto deixa de acontecer, e quem quiser continua a poder
+   aproximar a página com os dedos — ao contrário do que faria travar o zoom
+   no <meta viewport>. */
+@media (pointer: coarse) {
+  .cform__input { font-size: 16px; }
+}
+
 /* O campo que ficou por preencher, depois de se ter tentado enviar. */
 .cform__input[aria-invalid="true"] { border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); }
 
