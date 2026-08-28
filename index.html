@@ -1385,12 +1385,21 @@ html[lang="en"] .title-art {
 .prj__l:last-child { border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
 .prj__l[hidden] { display: none; }
 
-/* Uma linha: a miniatura, o título, quando, onde, a natureza e o "+".
+/* Os concluídos dizem-se pela linha: em cima, no cartaz, é um filete
+   pontilhado à volta de tudo; aqui é o filete da própria linha a passar a
+   tracejado. Como vêm todos no fim da lista, o tracejado começa no primeiro
+   deles e segue até ao fim. */
+.prj__l--conc { border-top-style: dashed; }
+.prj__l--conc:last-child { border-bottom-style: dashed; }
+
+/* Uma linha: a miniatura, o título, a natureza, onde, quando e o "+" — a
+   mesma ordem dos cartazes de cima, que dizem primeiro o que é, depois onde
+   é e por fim quando é.
    As quatro colunas de texto repartem entre si toda a largura da lista, e
    não só a metade esquerda: antes andavam encostadas umas às outras — com
    a data a partir-se em duas linhas — enquanto um terço do painel ficava
    em branco à espera do "+". A sexta coluna é hoje só uma folga curta, o
-   ar de que o "+" precisa para não encostar à natureza.
+   ar de que o "+" precisa para não encostar ao quando.
 
    As quatro frações são quase iguais de propósito: é isso que dá à lista o
    compasso de uma tabela, com as colunas a começar de 260 em 260 e não aos
@@ -1405,7 +1414,7 @@ html[lang="en"] .title-art {
    própria e a lista ficava aos degraus. */
 .prj__linha {
   display: grid;
-  grid-template-columns: 46px minmax(0, 2.5fr) minmax(0, 2.7fr) minmax(0, 2.4fr) minmax(0, 2fr) minmax(0, .4fr) 22px;
+  grid-template-columns: 46px minmax(0, 2.5fr) minmax(0, 2fr) minmax(0, 2.4fr) minmax(0, 2.7fr) minmax(0, .4fr) 22px;
   align-items: center;
   gap: 18px;
   padding: 10px 0;
@@ -1460,9 +1469,9 @@ html[lang="en"] .title-art {
     grid-template-columns: 54px 1fr max-content;
     grid-template-areas:
       "mini titulo mais"
-      "mini quando mais"
+      "mini tag    mais"
       "mini sitio  mais"
-      "mini tag    mais";
+      "mini quando mais";
     align-items: start;
     gap: 4px 14px;
   }
@@ -2889,9 +2898,13 @@ html.menu-open .menu::before { opacity: 1; }
       alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } }
   ];
 
-  /* O que já aconteceu, e o que ficou de cada um: fotografias, vídeo, texto. */
+  /* O que já aconteceu, e o que ficou de cada um: fotografias, vídeo, texto.
+     Trazem a data inteira, como os próximos: a lista de todos os projetos
+     mistura uns e outros, e um ano sozinho ao lado de "21h30 · segunda · 7
+     de setembro" não é uma data, é o que resta de uma. Os cartazes de cima
+     continuam a mostrar só o ano, que lá é a legenda de um só. */
   var CONCLUIDOS = [
-    { ano: 2025, img: 'dossier/assets/arco.jpg',
+    { dia: 18, mes: 8, ano: 2026, img: 'dossier/assets/arco.jpg',
       imgs: ['dossier/assets/arco.jpg', 'dossier/assets/nave-2025.jpg', 'dossier/assets/altares.jpg'],
       media: ['foto', 'video', 'texto'],
       pt: { titulo: 'Projeto X', sitio: 'Igreja', natureza: 'Apresentação',
@@ -2900,7 +2913,7 @@ html.menu-open .menu::before { opacity: 1; }
             sinopse: 'What remains: the photographs, the video and a text about the work in the nave.' },
       alt: { pt: 'Interior em obra, visto através do arco', en: 'Interior under construction, seen through the arch' } },
 
-    { ano: 2025, img: './chorof4.jpg',
+    { dia: 3, mes: 5, ano: 2026, img: './chorof4.jpg',
       imgs: ['./chorof4.jpg', 'dossier/assets/scene-estudio.jpg'],
       media: ['texto'],
       pt: { titulo: 'Projeto Y', sitio: 'Auditório', natureza: 'Criação',
@@ -3509,25 +3522,28 @@ html.menu-open .menu::before { opacity: 1; }
     return EVENTOS.concat(CONCLUIDOS);
   }
 
+  function prjConcluido(e) { return CONCLUIDOS.indexOf(e) !== -1; }
+
   /* O quando de cada linha: nos que aí vêm, a hora e a data por extenso; nos
-     que já passaram, o ano com a palavra que o diz — a lista mistura uns e
-     outros, e sem ela não se sabia qual era qual. */
+     que já passaram, a data com o ano e sem hora — a que horas começou já
+     não interessa a ninguém, o ano interessa, e qual é qual diz-se agora
+     pelo tracejado da linha e não por uma palavra entre parênteses. */
   function prjQuando(e) {
-    if (e.mes) return evQuandoLongo(e);
-    return String(e.ano) + (lg() === 'en' ? ' (completed)' : ' (concluído)');
+    if (!prjConcluido(e)) return evQuandoLongo(e);
+    return evSemana(e) + ' · ' + evDiaMesLongo(e) + (lg() === 'en' ? ' ' : ' de ') + e.ano;
   }
 
   function prjLinha(e) {
     var t = evTexto(e);
     var li = document.createElement('li');
-    li.className = 'prj__l';
+    li.className = prjConcluido(e) ? 'prj__l prj__l--conc' : 'prj__l';
     li.innerHTML =
       '<div class="prj__linha">' +
         '<div class="prj__mini"><img loading="lazy"></div>' +
         '<p class="prj__t"></p>' +
-        '<p class="prj__q evdet">' + SINAIS.relogio + '<span></span></p>' +
-        '<p class="prj__s evdet">' + SINAIS.pin + '<span></span></p>' +
         '<span class="evtag evdet">' + SINAIS.tipo + '<span></span></span>' +
+        '<p class="prj__s evdet">' + SINAIS.pin + '<span></span></p>' +
+        '<p class="prj__q evdet">' + SINAIS.relogio + '<span></span></p>' +
         '<button class="prj__mais" type="button" aria-expanded="false">+</button>' +
       '</div>' +
       '<p class="prj__sin"></p>';
