@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<style>
+/* Bloqueia o modo escuro forçado dos navegadores (Brave/Safari iOS, Chrome
+   Android): sem isto o motor reescreve as cores da marca e inverte fundos. */
+:root { color-scheme: only light; }
+html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light; }
+@media (prefers-color-scheme: dark) {
+  :root, html, body { color-scheme: only light; forced-color-adjust: none; }
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voar Muito Perto do Sol — a Sineira</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="casa.css">
+<link rel="stylesheet" href="ficha.css">
+
+<style>
+/* =====================================================================
+   c · índice
+
+   A mesma ficha, com duas coisas a mais.
+
+   A primeira: a página abre com uma fotografia à largura toda, antes das
+   colunas. Quem chega vê o projeto antes de o ler.
+
+   A segunda: a coluna da identificação, que estava quieta a não fazer
+   nada enquanto o material passava, ganha um índice do que há na página
+   e diz em que ponto se vai. Com cinco secções é um luxo; com um
+   projeto que traga textos de imprensa, uma segunda série de
+   fotografias e um dossier, passa a ser o que faz a página navegável.
+   ===================================================================== */
+
+/* --- a abertura --- */
+
+/* À largura toda da moldura, sem margens: é a única coisa da página que
+   não alinha com o logótipo, e é de propósito — as fotografias do site
+   também vão de lado a lado dentro da célula que ocupam. */
+.abre { height: min(52vh, 460px); overflow: clip; background: var(--blue); }
+.abre img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Com a fotografia por cima, a ficha já não precisa de tanto ar. */
+.ficha { padding-top: 34px; }
+
+.ficha__id {
+  position: sticky;
+  top: var(--pad);
+}
+.ficha__id .lbl { display: block; margin-top: 26px; }
+
+
+/* --- o índice --- */
+
+.idx { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--rule); }
+.idx ul { list-style: none; margin: 8px 0 0; padding: 0; }
+.idx li + li { margin-top: 2px; }
+
+.idx a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .45;
+}
+.idx a:hover { opacity: .8; text-decoration: none; }
+
+/* O traço à esquerda cresce quando é aquela a secção que se está a ler:
+   é a única coisa que se mexe, e chega para se saber onde se está. */
+.idx a::before {
+  content: "";
+  width: 10px;
+  height: 1.5px;
+  background: currentColor;
+  transition: width 200ms ease;
+}
+.idx a[aria-current="true"] { opacity: 1; }
+.idx a[aria-current="true"]::before { width: 24px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .idx a::before { transition: none; }
+}
+
+/* Numa coluna só o índice não serve de nada: o que ele indexa está logo
+   por baixo dele, à distância de um dedo. */
+@media (max-width: 900px) {
+  .idx { display: none; }
+  .abre { height: min(42vh, 320px); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="folha" id="folha">
+
+  <header class="abre"><img id="abre-img" alt=""></header>
+
+  <article class="ficha">
+    <aside class="ficha__id" id="id">
+      <div id="id-corpo"></div>
+      <nav class="idx" id="idx" aria-label="Nesta página"></nav>
+    </aside>
+    <div class="ficha__mat" id="mat"></div>
+  </article>
+
+</div>
+
+<script src="casa.js"></script>
+<script src="voar.js"></script>
+<script src="ficha.js"></script>
+<script>
+montaCasa('../index.html');
+
+/* A fotografia da abertura não é a primeira da série: é a da apresentação
+   final, a única que mostra a peça a acontecer diante de gente. Numa
+   abertura, a fotografia é o cartaz — escolhe-se, não se herda. */
+var capa = PROJETO.fotos[4];
+var abreImg = document.getElementById('abre-img');
+abreImg.src = capa.src;
+
+var folha = document.getElementById('folha');
+var idxEl = document.getElementById('idx');
+
+CASA.aoMudar(function () {
+  var mat = document.getElementById('mat');
+  mat.textContent = '';
+
+  /* Sem a ficha técnica: aqui ela desce para o material, para a coluna
+     ficar mais baixa do que a janela e o índice se ver sempre. */
+  montaId(document.getElementById('id-corpo'), false);
+  montaTexto(mat);
+  montaVideo(mat);
+  montaFotos(mat);
+  montaFichaSec(mat);
+  montaOutros(mat);
+
+  abreImg.alt = TF(capa);
+  document.title = PROJETO.titulo + ' — a Sineira';
+
+  montaIndice();
+});
+
+/* O índice sai das secções que a página escreveu, e não de uma lista à
+   parte: acrescentar uma secção acrescenta a entrada. */
+function montaIndice() {
+  var t = T().rotulos;
+  idxEl.textContent = '';
+  var ul = document.createElement('ul');
+
+  [['sobre', t.sobre], ['video', t.video], ['fotos', t.fotos], ['ficha', t.ficha], ['outros', t.outros]].forEach(function (par) {
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + par[0];
+    a.textContent = par[1];
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      var alvo = document.getElementById(par[0]);
+      /* Quem rola é a .folha, não o documento: a conta é a posição da
+         secção dentro dela, menos o respiro do topo. */
+      folha.scrollTo({ top: alvo.offsetTop - 24, behavior: 'smooth' });
+    });
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  idxEl.appendChild(ul);
+  marca();
+}
+
+/* Está-se a ler a última secção cuja cabeça já passou o terço de cima da
+   moldura. É mais estável do que perguntar qual está mais à vista: com
+   secções de alturas muito diferentes, essa saltava para trás e para a
+   frente na mesma passagem. */
+function marca() {
+  var ligs = idxEl.querySelectorAll('a');
+  var limiar = folha.scrollTop + folha.clientHeight / 3;
+  var atual = 0;
+  Array.prototype.forEach.call(ligs, function (a, i) {
+    var s = document.getElementById(a.getAttribute('href').slice(1));
+    if (s && s.offsetTop <= limiar) { atual = i; }
+  });
+  Array.prototype.forEach.call(ligs, function (a, i) {
+    a.setAttribute('aria-current', String(i === atual));
+  });
+}
+
+folha.addEventListener('scroll', marca, { passive: true });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<style>
+/* Bloqueia o modo escuro forçado dos navegadores (Brave/Safari iOS, Chrome
+   Android): sem isto o motor reescreve as cores da marca e inverte fundos. */
+:root { color-scheme: only light; }
+html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light; }
+@media (prefers-color-scheme: dark) {
+  :root, html, body { color-scheme: only light; forced-color-adjust: none; }
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voar Muito Perto do Sol — a Sineira</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="casa.css">
+<link rel="stylesheet" href="ficha.css">
+
+<style>
+/* =====================================================================
+   b · cartão
+
+   A mesma ficha, com a identificação a passar de coluna a cartão: o azul
+   do mosaico, o mesmo padding dos cartões e o mesmo par de cores. O que
+   está à esquerda deixa de ser uma margem com texto e passa a ser um
+   objecto — o cartão do projeto, de pé, com o material a passar ao lado.
+
+   Ganha-se o parentesco à primeira vista: quem vem do mosaico encontra
+   aqui a mesma coisa que carregou. Perde-se o sossego da folha branca, e
+   o azul chama para si a atenção que o texto e as fotografias queriam.
+   ===================================================================== */
+
+/* Sem filete: quem separa as duas colunas é a cor. */
+.ficha__id {
+  position: sticky;
+  top: var(--pad);
+  padding: 30px;                /* o --tile-pad do site */
+  border-right: none;
+  background: var(--blue);
+  color: var(--cream);
+}
+
+/* Dentro do azul, os filetes da ficha técnica saem do creme — é o --rule
+   a ler o currentColor de quem o recebe, sem se lhe tocar. */
+.ficha__id .lbl { display: block; margin-top: 26px; }
+
+/* O cartão come 60px em padding: a coluna cresce outro tanto para o texto
+   lá dentro continuar a ter a medida que tinha. */
+.ficha { --col: 360px; }
+
+/* O vão passa a ser todo do lado do material: o cartão encosta à margem
+   esquerda como os mosaicos encostam à sua. */
+.ficha__id { padding-right: 30px; }
+.ficha__mat { padding-left: calc(var(--vala) * 1.5); }
+
+@media (max-width: 900px) {
+  .ficha { --col: auto; }
+  .ficha__id { padding-bottom: 30px; border-bottom: none; }
+  .ficha__mat { padding-left: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="folha">
+  <article class="ficha">
+    <aside class="ficha__id" id="id"></aside>
+    <div class="ficha__mat" id="mat"></div>
+  </article>
+</div>
+
+<script src="casa.js"></script>
+<script src="voar.js"></script>
+<script src="ficha.js"></script>
+<script>
+montaCasa('../index.html');
+
+CASA.aoMudar(function () {
+  var mat = document.getElementById('mat');
+  mat.textContent = '';
+
+  montaId(document.getElementById('id'));
+  montaTexto(mat);
+  montaVideo(mat);
+  montaFotos(mat);
+  montaOutros(mat);
+
+  document.title = PROJETO.titulo + ' — a Sineira';
+});
+</script>
+
+</body>
+</html>

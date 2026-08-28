@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<style>
+/* Bloqueia o modo escuro forçado dos navegadores (Brave/Safari iOS, Chrome
+   Android): sem isto o motor reescreve as cores da marca e inverte fundos. */
+:root { color-scheme: only light; }
+html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light; }
+@media (prefers-color-scheme: dark) {
+  :root, html, body { color-scheme: only light; forced-color-adjust: none; }
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voar Muito Perto do Sol — a Sineira</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="casa.css">
+<link rel="stylesheet" href="ficha.css">
+
+<style>
+/* =====================================================================
+   a · coluna
+
+   A ficha do primeiro estudo, desenvolvida e posta dentro da casa: o
+   cabeçalho do site com o logótipo, o PT—EN e o triângulo, a faixa do
+   rodapé, e a moldura que rola entre os dois.
+
+   A identificação fica quieta à esquerda enquanto o material passa à
+   direita. É o mínimo que a ideia da ficha pede, e é por isso que serve
+   de padrão às outras duas.
+   ===================================================================== */
+
+/* Fica presa ao alto da moldura que rola, e não da janela: quem rola é a
+   .folha, e é dentro dela que o sticky se mede. */
+.ficha__id {
+  position: sticky;
+  top: var(--pad);
+}
+
+/* Sozinha na coluna, a ficha técnica precisa de ar por cima para não se
+   colar à linha de "onde e quando". */
+.ficha__id .lbl { display: block; margin-top: 26px; }
+</style>
+</head>
+
+<body>
+
+<div class="folha">
+  <article class="ficha">
+    <aside class="ficha__id" id="id"></aside>
+    <div class="ficha__mat" id="mat"></div>
+  </article>
+</div>
+
+<script src="casa.js"></script>
+<script src="voar.js"></script>
+<script src="ficha.js"></script>
+<script>
+montaCasa('../index.html');
+
+/* Mudar de língua é voltar a escrever a página inteira: não há texto
+   nenhum guardado no HTML para andar a substituir. */
+CASA.aoMudar(function () {
+  var mat = document.getElementById('mat');
+  mat.textContent = '';
+
+  montaId(document.getElementById('id'));
+  montaTexto(mat);
+  montaVideo(mat);
+  montaFotos(mat);
+  montaOutros(mat);
+
+  document.title = PROJETO.titulo + ' — a Sineira';
+});
+</script>
+
+</body>
+</html>

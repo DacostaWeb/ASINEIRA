@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<style>
+/* Bloqueia o modo escuro forçado dos navegadores (Brave/Safari iOS, Chrome
+   Android): sem isto o motor reescreve as cores da marca e inverte fundos. */
+:root { color-scheme: only light; }
+html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light; }
+@media (prefers-color-scheme: dark) {
+  :root, html, body { color-scheme: only light; forced-color-adjust: none; }
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>a sineira — a ficha de um projeto</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="casa.css">
+
+<style>
+/* =====================================================================
+   O índice da pasta: o que se desenvolveu da ficha, as três maneiras de
+   a levar mais longe, e o que fica por decidir.
+
+   Esta página são as notas, não é uma página do site — por isso não veste
+   a casa nem se prende à moldura que rola. Lê a casa.css só pelas cores e
+   pelos tipos de letra, e desfaz as duas linhas que prendem o documento.
+   ===================================================================== */
+
+html, body { height: auto; overflow: visible; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; gap: 24px;
+  height: 56px; padding: 0 var(--gutter);
+  background: var(--cream);
+  border-bottom: 1.5px solid var(--blue);
+}
+.mark { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+.nav { display: flex; gap: 18px; margin-left: auto; }
+.nav a { font-family: var(--font-display); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.intro { padding: 54px var(--gutter) 0; max-width: 900px; }
+.h1 { font-family: var(--font-display); font-size: 31px; font-weight: 400; line-height: 1; letter-spacing: -.025em; text-transform: lowercase; }
+.intro p { margin-top: 18px; max-width: 62ch; }
+.intro .lbl { margin-bottom: 14px; }
+
+.tres {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 18px;
+  padding: 54px var(--gutter) 0;
+}
+
+.via { display: flex; flex-direction: column; }
+.via:hover { text-decoration: none; }
+.via:hover .via__f { outline: 1.5px solid var(--blue); outline-offset: -1.5px; }
+.via:hover .via__t { text-decoration: underline; text-underline-offset: 4px; }
+
+.via__f { aspect-ratio: 4 / 3; overflow: clip; background: var(--blue); }
+.via__f img { width: 100%; height: 100%; object-fit: cover; }
+
+.via__t { margin-top: 12px; font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.via p { margin-top: 6px; opacity: .8; }
+
+.fim { padding: 54px var(--gutter) 0; max-width: 900px; }
+.fim:last-of-type { padding-bottom: 80px; }
+.fim dl { margin: 18px 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 10px 22px; }
+.fim dt { font-family: var(--font-display); font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding-top: 3px; }
+.fim dd { margin: 0; }
+
+/* Os nomes de ficheiro e de variável ficam no mesmo mono do texto, só com
+   um fundo a dizer que são código — o monospace do browser destoava. */
+code { font-size: 12px; background: color-mix(in srgb, currentColor 12%, transparent); padding: 1px 5px; }
+
+@media (max-width: 640px) {
+  .fim dl { grid-template-columns: 1fr; gap: 4px; }
+  .fim dd { margin-bottom: 14px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <span class="mark">a sineira</span>
+  <nav class="nav">
+    <a href="voar-a.html">a · coluna</a>
+    <a href="voar-b.html">b · cartão</a>
+    <a href="voar-c.html">c · índice</a>
+    <a href="../projetos1/index.html">o primeiro estudo</a>
+  </nav>
+</div>
+
+<section class="intro">
+  <p class="lbl">Projetos · a ficha, desenvolvida</p>
+  <h1 class="h1">a ficha, dentro de casa</h1>
+  <p>Das três do primeiro estudo escolheu-se a ficha: a identificação quieta de um lado, o material a passar do outro. O que estava feito era a ideia; faltava-lhe a casa. Estas três páginas são a ficha já com o cabeçalho do site — o logótipo que salta ao passar o rato, o PT—EN, o triângulo —, a faixa do rodapé, e a moldura que rola entre os dois em vez de ser a página a rolar.</p>
+  <p>Depois disso, três maneiras de a levar mais longe. Não são três desenhos diferentes: é a mesma ficha, com uma pergunta de cada vez. A coluna basta-se? A identificação quer ser um objecto? E quando um projeto trouxer material a mais, quem é que trata de o arrumar?</p>
+</section>
+
+<section class="fim">
+  <p class="lbl">O que se desenvolveu, e porquê</p>
+  <dl>
+    <dt>A casa</dt>
+    <dd>O cabeçalho e a faixa são os do <code>index.html</code>, não uma imitação: o mesmo desenho do logótipo com o mesmo salto das letras, o mesmo triângulo, a mesma frase a correr. E o documento não rola — rola a moldura entre as duas faixas, que é o que as mantém quietas no iOS. Vive tudo em <code>casa.css</code> e <code>casa.js</code>; num site a sério seria o ficheiro que a entrada e todas as páginas de projeto leem.</dd>
+    <dt>As margens</dt>
+    <dd>A coluna da identificação encosta ao <code>--gutter</code> e alinha com o logótipo, como o conteúdo dos cartões do mosaico. No primeiro estudo a página estava centrada, e perdia esse alinhamento — que é metade do parentesco. O que está na coluna do material pára na largura de leitura do site (900px) e deixa o resto do ecrã em branco, que é o que o cartão aberto em painel também faz.</dd>
+    <dt>As duas línguas</dt>
+    <dd>O registo do projeto passou a ter <code>pt</code> e <code>en</code> dentro de cada campo, como os eventos do <code>index.html</code>. O PT—EN funciona: muda a identificação, os rótulos, o texto, as descrições das fotografias e a frase da faixa. O título não se traduz — é o nome da peça, e é a decisão que o site já tomou na lista <code>EVENTOS</code>.</dd>
+    <dt>A natureza</dt>
+    <dd>Perdeu a moldura. No primeiro estudo tinha caixa à volta; o site não lha dá, e escreve porquê: <em>é uma palavra, e uma palavra basta-se</em>. A caixa fica para os filtros, que são botões.</dd>
+    <dt>As fotografias</dt>
+    <dd>Passavam-se às cegas, uma de cada vez, sem se saber o que vinha a seguir. Agora há a folha de contacto por baixo da grande: vê-se a série toda e escolhe-se. É a ideia do mosaico do site — muitas coisas pequenas, e uma grande quando se pede. A descrição da que está no palco lê-se no pé.</dd>
+    <dt>Onde e quando</dt>
+    <dd>Ganharam os pequenos desenhos de 13px do cartaz dos eventos, com o mesmo traço. São a única coisa desenhada que a ficha usa, e servem para as duas linhas se distinguirem sem precisarem de rótulo.</dd>
+    <dt>Outros projetos</dt>
+    <dd>O "anterior / seguinte" do primeiro estudo passou a linhas da lista "Todos os projetos" do site — miniatura, título, ano, natureza. Em vez do "+" que abre a sinopse levam a seta, porque levam mesmo a outra página.</dd>
+  </dl>
+</section>
+
+<div class="tres">
+
+  <a class="via" href="voar-a.html">
+    <div class="via__f"><img src="img/voar8.jpg" alt="Crianças de costas a olhar para a janela iluminada da cenografia"></div>
+    <p class="via__t">a · coluna</p>
+    <p>A ficha, e nada mais: a identificação quieta à esquerda com um filete a separá-la, o material à direita. É o mínimo que a ideia pede, e serve de padrão às outras duas. Quem só quiser a ficha dentro de casa, pára aqui.</p>
+  </a>
+
+  <a class="via" href="voar-b.html">
+    <div class="via__f"><img src="img/voar6.jpg" alt="Vista de cima do grupo sentado no chão com formas de cartolina"></div>
+    <p class="via__t">b · cartão</p>
+    <p>A identificação deixa de ser uma margem com texto e passa a ser um objecto: o azul do mosaico, o mesmo padding dos cartões. Quem vem do mosaico encontra aqui a mesma coisa que carregou, de pé.</p>
+  </a>
+
+  <a class="via" href="voar-c.html">
+    <div class="via__f"><img src="img/voar5.jpg" alt="A apresentação final vista de trás da plateia"></div>
+    <p class="via__t">c · índice</p>
+    <p>Abre com uma fotografia à largura toda, e a coluna — que estava quieta a não fazer nada — ganha um índice do que há na página e diz em que ponto se vai. A ficha técnica desce para o material, para a coluna caber na janela.</p>
+  </a>
+
+</div>
+
+<section class="fim">
+  <p class="lbl">Onde é que cada uma serve</p>
+  <dl>
+    <dt>a · coluna</dt>
+    <dd>Quando as páginas de projeto forem sobretudo o destino do "+" da lista, e o que se quer é que o projeto se leia sem estorvo. É a mais sossegada das três e a que menos pede às fotografias: com uma só, ainda funciona.</dd>
+    <dt>b · cartão</dt>
+    <dd>Quando importar que a página se reconheça como do site à primeira vista. O azul faz esse trabalho sozinho. O preço é que o chama para si: numa página em que as fotografias é que contam o projeto, há uma mancha de cor a competir com elas do princípio ao fim.</dd>
+    <dt>c · índice</dt>
+    <dd>Quando um projeto trouxer mais do que um texto, um vídeo e nove fotografias — textos de imprensa, um dossier, uma segunda série. Com cinco secções o índice é um luxo; com nove passa a ser o que faz a página navegável. E é a única das três que abre com uma imagem, o que a torna também a melhor de mandar a alguém de fora.</dd>
+  </dl>
+</section>
+
+<section class="fim">
+  <p class="lbl">O que fica por decidir</p>
+  <dl>
+    <dt>O menu</dt>
+    <dd>É a questão a sério. O triângulo está lá e tem o desenho certo, mas aqui só leva de volta à entrada — o menu do site é feito na página de entrada, por JS, e não existe fora dela. Ou o menu passa a ser um pedaço partilhado, que estas páginas leem como leem a <code>casa.css</code>, ou o site passa a ser um documento só e as páginas de projeto abrem lá dentro, como os cartões abrem em painel. As duas respostas são grandes; a segunda muda o site inteiro.</dd>
+    <dt>Endereço</dt>
+    <dd>Aqui as páginas chamam-se <code>voar-a.html</code> por causa da experiência. A sério seria <code>/projetos/voar-muito-perto-do-sol/</code>: o nome do projeto no endereço, que é o que se manda a alguém e o que os motores de busca guardam.</dd>
+    <dt>Por onde se entra</dt>
+    <dd>O "+" da lista "Todos os projetos" abre hoje a sinopse ali mesmo. Ou passa a abrir a página, ou fica a abrir a sinopse e o título é que leva à página. As duas cabem; não cabem as duas ao mesmo tempo no mesmo sítio.</dd>
+    <dt>A casa em JS</dt>
+    <dd>Nestas três o cabeçalho e a faixa entram por JS, para as páginas não os repetirem três vezes. No site a sério têm de estar no HTML: uma página que não mostra o logótipo enquanto o JS não corre não é uma página do site.</dd>
+    <dt>A coluna alta</dt>
+    <dd>Em janelas baixas a identificação fica mais alta do que a moldura, e então rola com o resto até ao fim — é o que o <em>sticky</em> faz, e não há maneira de o evitar sem cortar conteúdo. Na experiência do índice isso resolveu-se mandando a ficha técnica para baixo; nas outras duas fica assim.</dd>
+    <dt>Legendas</dt>
+    <dd>Cada fotografia tem a descrição do que se vê, nas duas línguas, para leitores de ecrã — e essa descrição aparece agora também no pé do palco. Não é a mesma coisa que uma legenda. Vale a pena pedir à Sara uma linha por fotografia: quem, o quê, e em que momento.</dd>
+    <dt>A natureza, outra vez</dt>
+    <dd>No cartaz do evento este projeto está como "Criação"; no sítio da Sara está arrumado em <em>teaching</em>, e o texto descreve uma oficina com apresentação final. Aqui ficou "Formação" / "Training". É uma coisa a acertar na lista dos eventos, não na página.</dd>
+  </dl>
+</section>
+
+</body>
+</html>

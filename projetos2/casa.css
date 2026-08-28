@@ -1,0 +1,265 @@
+/* =====================================================================
+   a Sineira — a casa
+   O que uma página de projeto herda do site e não volta a inventar: as
+   cores, os dois tipos de letra, o cabeçalho com o logótipo, o PT—EN e o
+   triângulo, a faixa do rodapé e a moldura em que tudo isto rola.
+
+   Está copiado do index.html, comentários incluídos onde a razão de ser
+   não é evidente. Num site a sério isto seria um ficheiro só, lido pela
+   página de entrada e por todas as de projeto; aqui está à parte para se
+   poder mexer nas fichas sem tocar no que já existe.
+   ===================================================================== */
+
+
+/* 1. Tipos de letra ======================================================= */
+
+@font-face { font-family:"Roboto Mono"; src:url("../fonts/RobotoMono.woff2") format("woff2"); font-weight:100 700; font-style:normal; font-display:swap;
+             unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:"Roboto Mono"; src:url("../fonts/RobotoMono-ext.woff2") format("woff2"); font-weight:100 700; font-style:normal; font-display:swap;
+             unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+
+
+/* 2. Variáveis ============================================================ */
+
+:root {
+  --blue:        #003C78;
+  --cream:       #F2E7A9;
+  --gold:        #D8B44A;
+
+  --font:         "Roboto Mono", "Courier New", monospace;
+  --font-display: Helvetica, Arial, sans-serif;
+
+  --header-h:       78px;
+  --gutter:         30px;
+  --wordmark-h:     40px;
+  --trigger-w:      62px;
+  --trigger-pull:   20px;
+  --marquee-h:      40px;
+  --panel-content: 900px;   /* largura de leitura do cartão aberto em painel */
+
+  --wm-dur: 2000ms;
+
+  /* Os filetes saem da cor de quem os recebe: servem o azul e o creme. */
+  --rule: color-mix(in srgb, currentColor 30%, transparent);
+}
+
+
+/* 3. Base ================================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Como no site, o documento não rola: rola a moldura que fica entre o
+   cabeçalho e a faixa do rodapé (ver .folha). É o que mantém as duas faixas
+   quietas no iOS — o Safari só encolhe a barra de endereço quando o
+   documento rola, e ao encolhê-la descolava a faixa do fundo. */
+html, body { margin: 0; height: 100%; overflow: hidden; }
+
+body {
+  background: var(--cream);
+  color: var(--blue);
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* Nenhuma barra de scroll à vista, como no resto do site. */
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; }
+
+h1, h2, h3, p, ul, figure, table, dl { margin: 0; }
+a { color: inherit; text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { display: block; width: 100%; }
+button { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* A repartição das duas fontes num sítio só, como no index.html: o corrido
+   fica na Roboto Mono e tudo o que é título, rótulo ou etiqueta passa para a
+   Helvetica. Aos 9px das legendas o traço do Light não aguenta. */
+.lang, .lbl, .evtag, .marquee__text, .ficha__h1, .prj__t, .prjf,
+.fs__conta, .fim__t, .idx a { font-family: var(--font-display); }
+
+/* O rótulo pequeno em versaletes: é o .panel-section__title do site. */
+.lbl { font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; line-height: 1.2; }
+
+/* A natureza do trabalho, sem caixa: é uma palavra, e uma palavra basta-se.
+   (No primeiro estudo levava moldura; o site não lha dá, e tinha razão.) */
+.evtag { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+
+
+/* 4. A moldura que rola =================================================== */
+
+/* Do fundo do cabeçalho ao topo da faixa: é o único sítio da página que
+   rola, tal como a grelha de mosaicos no site. */
+.folha {
+  position: fixed;
+  top: var(--header-h);
+  bottom: var(--marquee-h);
+  left: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+
+/* 5. Cabeçalho ============================================================ */
+
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  height: var(--header-h);
+  padding: 0 var(--gutter);
+  background: var(--cream);
+}
+
+/* --- Logótipo --- */
+
+/* Fixo ao ecrã e não dentro do cabeçalho, como no site: é assim que continua
+   à vista quando o triângulo cresce por baixo dele. */
+.wordmark {
+  position: fixed;
+  left: var(--gutter);
+  top: calc((var(--header-h) - var(--wordmark-h)) / 2);
+  z-index: 90;
+  display: block;
+  line-height: 0;
+}
+.wordmark:hover { text-decoration: none; }
+
+.wordmark__svg {
+  display: block;
+  height: var(--wordmark-h);
+  width: auto;
+  fill: var(--blue);
+  overflow: visible;   /* as letras saem da caixa a meio do salto */
+  shape-rendering: geometricPrecision;
+  image-rendering: optimizeQuality;
+}
+
+/* As letras saltam ao passar o rato. No site saltam também enquanto se faz
+   scroll, por uma classe que o JS põe; aqui fica só o hover, que é o que se
+   percebe numa página de projeto. */
+.wordmark:hover .wm__letter {
+  animation-duration: var(--wm-dur);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.wordmark:hover .wm__a       { animation-name: wm-a; }
+.wordmark:hover .wm__s       { animation-name: wm-s; }
+.wordmark:hover .wm__i1-dot  { animation-name: wm-i1-dot; }
+.wordmark:hover .wm__i1-stem { animation-name: wm-i1-stem; }
+.wordmark:hover .wm__n       { animation-name: wm-n; }
+.wordmark:hover .wm__e       { animation-name: wm-e; }
+.wordmark:hover .wm__i2-dot  { animation-name: wm-i2-dot; }
+.wordmark:hover .wm__i2-stem { animation-name: wm-i2-stem; }
+.wordmark:hover .wm__r       { animation-name: wm-r; }
+.wordmark:hover .wm__a2      { animation-name: wm-a2; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark:hover .wm__letter { animation: none; }
+  .marquee__track { animation: none; }
+}
+
+/* --- Selector de idioma --- */
+
+.lang {
+  position: fixed;
+  left: 50%;
+  top: calc(var(--header-h) / 2);
+  z-index: 90;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.lang__btn { padding: 4px 0; opacity: .38; }
+.lang__btn[aria-pressed="true"] { opacity: 1; }
+.lang__sep { opacity: .38; }
+
+/* --- Triângulo --- */
+
+/* Aqui não abre menu nenhum: leva de volta à página de entrada, que é onde o
+   menu mora. Ver a nota do índice sobre o que isto ainda pede. */
+.menu-trigger {
+  margin-left: auto;
+  margin-right: calc(var(--trigger-pull) * -1);
+  flex-shrink: 0;
+  width: var(--trigger-w);
+  z-index: 50;
+  overflow: visible;
+  line-height: 0;
+}
+.menu-trigger:hover { text-decoration: none; }
+.menu-trigger__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  shape-rendering: geometricPrecision;
+  image-rendering: optimizeQuality;
+}
+.menu-trigger__shape { fill: var(--blue); }
+.menu-trigger__letters path { fill: var(--cream); }
+
+
+/* 6. Faixa do rodapé ====================================================== */
+
+.marquee {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 80;
+  height: var(--marquee-h);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--blue);
+}
+.marquee__track { display: flex; width: max-content; animation: marquee 25s linear infinite; }
+.marquee__text {
+  padding-right: 60px;
+  white-space: nowrap;
+  color: var(--cream);
+  font-size: 18px;
+  text-transform: uppercase;
+}
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+
+/* 7. Ecrãs estreitos ====================================================== */
+
+@media (max-width: 640px) {
+  :root {
+    --header-h:      64px;
+    --gutter:        18px;
+    --wordmark-h:    32px;
+    --trigger-w:     52px;
+    --trigger-pull:  15px;
+  }
+  .marquee__text { font-size: 15px; }
+}
+
+
+/* 8. Salto das letras do logótipo ========================================= */
+
+/* Copiado do index.html sem uma vírgula mudada: cada letra tem o seu
+   percurso, e a pausa entre os 50% e os 100% é o repouso antes de repetir. */
+@keyframes wm-a { 0% { transform:translate(61.805172px,73.153994px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(61.805172px,73.153994px) rotate(-35deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(61.805172px,73.153994px) rotate(-35deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(61.805172px,73.153994px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(61.805172px,73.153994px) rotate(0deg); } }
+@keyframes wm-s { 0% { transform:translate(102.681297px,70.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(102.681297px,60.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(102.681297px,60.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(102.681297px,70.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(102.681297px,70.45px); } }
+@keyframes wm-i1-dot { 0% { transform:translate(122.109634px,64.644287px); } 7.5% { transform:translate(122.109634px,64.644287px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(122.109634px,56.64px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(122.109634px,56.64px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(122.109634px,64.644287px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(122.109634px,64.644287px); } }
+@keyframes wm-i1-stem { 0% { transform:translate(122.109634px,79.004761px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(122.109634px,71px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(122.109634px,71px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(122.109634px,79.004761px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(122.109634px,79.004761px); } }
+@keyframes wm-n { 0% { transform:translate(140.437744px,74.288086px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 20% { transform:translate(140.437744px,69.29px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 25% { transform:translate(140.437744px,69.29px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 45% { transform:translate(140.437744px,74.288086px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 50%,100% { transform:translate(140.437744px,74.288086px); } }
+@keyframes wm-e { 0% { transform:translate(165.976837px,74.576172px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(165.976837px,74.576172px) rotate(15deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(165.976837px,74.576172px) rotate(15deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(165.976837px,74.576172px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(165.976837px,74.576172px) rotate(0deg); } }
+@keyframes wm-i2-dot { 0% { transform:translate(183.770813px,56.491943px); } 7.5% { transform:translate(183.770813px,56.491943px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 20% { transform:translate(183.770813px,68.49px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 30% { transform:translate(183.770813px,68.49px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 45% { transform:translate(183.770813px,56.491943px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 50%,100% { transform:translate(183.770813px,56.491943px); } }
+@keyframes wm-i2-stem { 0% { transform:translate(183.77094px,86.9997px) scale(1,1); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(183.77094px,86.9997px) scale(1,.511932); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(183.77094px,86.9997px) scale(1,.511932); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(183.77094px,86.9997px) scale(1,1); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(183.77094px,86.9997px) scale(1,1); } }
+@keyframes wm-r { 0% { transform:translate(198.365051px,74.640503px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(198.365051px,74.640503px) rotate(-10deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(198.365051px,74.640503px) rotate(-10deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(198.365051px,74.640503px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(198.365051px,74.640503px) rotate(0deg); } }
+@keyframes wm-a2 { 0% { transform:translate(217.027161px,74.288059px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(217.027161px,69.29px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(217.027161px,69.29px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(217.027161px,74.288059px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(217.027161px,74.288059px); } }

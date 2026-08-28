@@ -1,0 +1,224 @@
+/* =====================================================================
+   a Sineira — a ficha de um projeto
+   O desenho comum às três experiências. O que muda de uma para a outra
+   está no <style> de cada página; aqui está o que é igual em todas.
+
+   Tudo o que se vê sai do index.html: os 31px e a entrelinha dos títulos
+   dos mosaicos, os 9px em versaletes dos rótulos, os filetes de um pixel
+   das tabelas, o "+" que abre, as linhas da lista de todos os projetos.
+   Não há nesta folha uma medida que o site não use já.
+   ===================================================================== */
+
+:root {
+  --pad:  44px;   /* respiro entre o cabeçalho e o que a página começa a dizer */
+  --col:  300px;  /* a coluna da identificação */
+  --vala: 30px;   /* o vão entre as duas colunas, de cada lado do filete */
+}
+
+
+/* --- as duas colunas ------------------------------------------------ */
+
+/* À esquerda quem é o projeto, à direita o que ficou dele. O filete entre
+   as duas é o mesmo das tabelas do site, e é ele que diz que são duas
+   coisas e não uma coluna larga com um parágrafo estreito ao lado.
+
+   Sem largura máxima e sem centrar: a coluna da identificação encosta ao
+   --gutter, e por isso alinha com o logótipo do cabeçalho, como acontece
+   com o conteúdo dos cartões do mosaico. Uma página centrada num ecrã
+   largo perdia esse alinhamento, e com ele metade do parentesco. */
+.ficha {
+  display: grid;
+  grid-template-columns: minmax(0, var(--col)) minmax(0, 1fr);
+  align-items: start;
+  padding: var(--pad) var(--gutter) 80px;
+}
+
+.ficha__id {
+  padding-right: var(--vala);
+  border-right: 1px solid var(--rule);
+}
+
+/* A coluna do material vai até à margem direita, mas o que lá está dentro
+   pára na largura de leitura do site — a mesma regra do cartão aberto em
+   painel, que também deixa o resto do ecrã em branco em vez de esticar as
+   linhas até ao fim. */
+.ficha__mat { padding-left: var(--vala); }
+.ficha__mat > * { max-width: var(--panel-content); }
+
+
+/* --- a identificação ------------------------------------------------ */
+
+/* A natureza e o ano na mesma linha, por cima do título: é a linha de cima
+   do cartaz de um evento, com o ano no lugar da data. */
+.ficha__kick { display: flex; align-items: baseline; gap: 10px; }
+.ficha__ano { font-size: 12px; opacity: .7; }
+
+/* O título do projeto tem o corpo dos títulos dos mosaicos — 31px, a mesma
+   entrelinha fechada e o mesmo aperto. É o maior tamanho que o site usa, e
+   uma página de projeto não é sítio para inventar outro.
+
+   Ao contrário dos mosaicos, não passa a caixa baixa: "eventos" e
+   "atividades" são palavras comuns, e isto é o nome de uma peça. */
+.ficha__h1 {
+  margin-top: 10px;
+  font-size: 31px;
+  font-weight: 400;
+  line-height: .95;
+  letter-spacing: -.025em;
+}
+
+.ficha__resumo { margin-top: 18px; opacity: .8; }
+
+/* Onde e quando, uma linha cada, com o ícone à esquerda: é o .evdet do
+   cartaz dos eventos, com os mesmos 13px de desenho e o mesmo traço. */
+.ficha__dets { margin-top: 18px; display: flex; flex-direction: column; gap: 7px; }
+.det { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; opacity: .8; }
+.det svg {
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  margin-top: 3px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* --- a ficha técnica ------------------------------------------------ */
+
+/* Na coluna estreita não cabem duas colunas: o rótulo fica por cima do
+   nome. É como a tabela de acessos do site se comporta ao telemóvel. */
+.fichat { width: 100%; border-collapse: collapse; text-align: left; margin-top: 12px; }
+.fichat tr { border-top: 1px solid var(--rule); }
+.fichat tr:last-child { border-bottom: 1px solid var(--rule); }
+.fichat th, .fichat td { display: block; padding: 0; }
+.fichat th { padding-top: 11px; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.fichat td { padding-bottom: 11px; }
+
+/* Na coluna larga já cabem as duas colunas: o rótulo à esquerda, medido
+   pelo maior, e os nomes no que sobra — a tabela de acessos do site. */
+.fichat--largo th, .fichat--largo td { display: table-cell; vertical-align: top; padding: 11px 0; }
+.fichat--largo th { width: max-content; padding-right: 26px; padding-top: 14px; white-space: nowrap; }
+
+
+/* --- as secções da coluna do material ------------------------------- */
+
+/* Cada uma abre com o rótulo em versaletes e um filete por cima, como as
+   secções do cartão aberto em painel. */
+.sec + .sec { margin-top: 54px; }
+.sec__h { padding-bottom: 14px; border-bottom: 1px solid var(--rule); margin-bottom: 20px; }
+
+.texto p { max-width: 62ch; }
+.texto p + p { margin-top: 16px; }
+
+
+/* --- o vídeo -------------------------------------------------------- */
+
+/* 240 por 426: vertical. À largura da coluna era uma parede, por isso fica
+   à medida de um telemóvel e encostado à esquerda, como tudo o resto. */
+.video { position: relative; width: 300px; max-width: 100%; aspect-ratio: 9 / 16; background: color-mix(in srgb, currentColor 12%, transparent); }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+
+/* --- as fotografias ------------------------------------------------- */
+
+/* No primeiro estudo passavam-se às cegas, uma de cada vez, sem se saber o
+   que vinha a seguir. Aqui há a folha de contacto por baixo: vê-se a série
+   toda de uma vez e escolhe-se, e a grande em cima é a que se está a ver.
+   É a mesma ideia do mosaico do site — muitas coisas pequenas, e uma
+   grande quando se pede. */
+.fs__palco {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  /* Em janelas baixas o palco a 3:2 enchia o ecrã sozinho e a folha de
+     contacto ficava sempre por baixo da dobra — que é o contrário do que
+     ela serve. O tecto deixa as duas caberem juntas; em ecrãs altos não
+     chega a pegar. */
+  max-height: 64vh;
+  overflow: clip;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  cursor: pointer;
+}
+/* As nove não têm todas o mesmo formato — uma está ao alto. Entram inteiras
+   dentro do palco, sem cortes: a que está ao alto fica mais pequena, com o
+   fundo à volta, em vez de ficar sem cabeças. */
+.fs__palco img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 240ms ease; }
+.fs__palco img.is-on { opacity: 1; }
+
+.fs__pe { display: flex; align-items: baseline; gap: 14px; margin-top: 10px; }
+.fs__conta { font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+/* A descrição da fotografia que está no palco, para quem a quiser ler. */
+.fs__desc { flex: 1; font-size: 12px; opacity: .65; }
+
+/* A folha de contacto segue a regra das colunas do site: um mínimo por
+   coluna e as que couberem. */
+.fs__folha {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 6px;
+}
+.fs__folha button { aspect-ratio: 1; overflow: clip; background: color-mix(in srgb, currentColor 12%, transparent); }
+.fs__folha img { width: 100%; height: 100%; object-fit: cover; opacity: .45; transition: opacity 160ms ease; }
+.fs__folha button:hover img { opacity: .8; }
+/* A que está no palco fica cheia e com o filete à volta, por dentro, para
+   não empurrar as vizinhas. */
+.fs__folha button[aria-current="true"] img { opacity: 1; }
+.fs__folha button[aria-current="true"] { outline: 1.5px solid currentColor; outline-offset: -1.5px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fs__palco img, .fs__folha img { transition: none; }
+}
+
+
+/* --- outros projetos ------------------------------------------------ */
+
+/* As linhas são as da lista "Todos os projetos" do site: a miniatura, o
+   título, o ano, a natureza. Aqui em vez do "+" que abre a sinopse levam a
+   seta, porque levam mesmo a outra página. */
+.prj { padding: 0; list-style: none; }
+.prj__l { border-top: 1px solid var(--rule); }
+.prj__l:last-child { border-bottom: 1px solid var(--rule); }
+
+.prj__a {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1.6fr) minmax(0, .9fr) max-content 20px;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+}
+.prj__a:hover { text-decoration: none; }
+.prj__a:hover .prj__t { text-decoration: underline; text-underline-offset: 4px; }
+
+.prj__mini { aspect-ratio: 1; overflow: clip; background: color-mix(in srgb, currentColor 12%, transparent); }
+.prj__mini img { width: 100%; height: 100%; object-fit: cover; }
+
+.prj__t { font-size: 13px; line-height: 1.3; }
+.prj__q { font-size: 12px; opacity: .75; }
+.prj__seta { justify-self: end; font-size: 15px; opacity: .6; }
+
+
+/* --- ecrãs estreitos ------------------------------------------------ */
+
+/* Abaixo dos 900 as duas colunas passam a uma: a identificação em cima, o
+   material por baixo, e o filete que as separava passa a estar deitado. */
+@media (max-width: 900px) {
+  .ficha { grid-template-columns: 1fr; }
+  .ficha__id {
+    position: static;
+    padding-right: 0;
+    padding-bottom: var(--vala);
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .ficha__mat { padding-left: 0; padding-top: 44px; }
+}
+
+@media (max-width: 640px) {
+  :root { --pad: 30px; --vala: 22px; }
+  .ficha__h1 { font-size: 26px; }
+  .prj__a { grid-template-columns: 54px minmax(0, 1fr) max-content 20px; }
+  .prj__q { display: none; }   /* o ano cabe na etiqueta ao lado */
+}
