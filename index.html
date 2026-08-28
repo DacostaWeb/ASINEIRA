@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="color-scheme" content="light only">
 <meta name="supported-color-schemes" content="light">
+<!-- A cor das faixas do sistema à volta da página no iOS. Segue o fundo
+     do que está no ecrã: creme na grelha, azul com o menu aberto. Quem a
+     troca é o renderMenu(). -->
+<meta name="theme-color" content="#F2E7A9">
 <style>
 /* Bloqueia o modo escuro forçado dos navegadores (Brave/Safari iOS, Chrome
    Android): sem isto o motor reescreve as cores da marca e inverte fundos. */
@@ -115,6 +119,15 @@ body {
   font-size: 13px;             /* o corpo do texto; quem quer outro tamanho pede-o */
   text-wrap: pretty;
 }
+
+/* No iPhone as faixas do sistema — a do relógio em cima, a da barra de
+   endereço em baixo — tomam o fundo do documento, e ele ficava creme mesmo
+   com uma secção azul aberta (#sobre, #eventos, #contactos...). Com o menu
+   aberto o documento passa a azul, para as faixas acompanharem. A troca
+   espera pelo mesmo --tint-delay do logótipo, senão o azul aparecia à volta
+   antes de o menu lá estar. */
+html, body { transition: background-color .4s ease var(--tint-delay, 0s); }
+html.menu-open, html.menu-open body { background-color: var(--blue); }
 
 /* Estado do menu, posto pelo JS. Já não precisa de bloquear scroll nenhum —
    o documento não rola de origem, e o menu tapa a grelha —, mas continua a
@@ -3875,6 +3888,10 @@ html.menu-open .menu::before { opacity: 1; }
     menu.setAttribute('aria-hidden', String(!open));
     menu.style.visibility = open ? 'visible' : 'hidden';
     menu.style.pointerEvents = open ? 'auto' : 'none';
+    /* A faixa do relógio e a da barra de endereço, no iOS, saem daqui. */
+    var themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.setAttribute('content', open ? '#003C78' : '#F2E7A9');
+
     menu.style.background = open ? '#003C78' : 'transparent';
     menu.style.transition = open ? 'background 0s linear .8s' : 'background 0s linear 0s';
 
