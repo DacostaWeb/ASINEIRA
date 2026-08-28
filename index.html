@@ -1581,6 +1581,18 @@ html[lang="en"] .title-art {
   .cal__cartazes { margin-top: 20px; padding-top: 20px; border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
 }
 
+/* Abaixo dos 800px já não há largura para pôr cartazes lado a lado ao pé do
+   mês: a secção inteira do calendário encolhe à medida da grelha — 360px —,
+   vai ao meio da coluna e os cartazes descem uns por baixo dos outros. */
+@media (max-width: 800px) {
+  .panel-section--cal {
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .panel-section--cal .evgrid { --ev-cols: 1; }
+}
+
 
 /* Secções dentro de um cartão aberto. O rodapé em versaletes do mosaico
    fechado nomeia-as uma a uma ("acessos - mapa - antiga igreja de retorta");
@@ -2126,7 +2138,7 @@ html.menu-open .menu::before { opacity: 1; }
           <div class="evgrid evgrid--conc" id="ev-grelha-conc"></div>
         </div>
 
-        <div class="panel-section">
+        <div class="panel-section panel-section--cal">
           <div class="cal">
             <div class="cal__side">
               <h3 class="panel-section__title" data-i18n="secCal">Calendário</h3>
