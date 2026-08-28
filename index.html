@@ -31,7 +31,7 @@ html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light;
    4. Animações
    5. Cabeçalho
    6. Grelha e mosaicos
-   7. Tabela de acessos
+   7. A ficha de um projeto
    8. Menu de ecrã inteiro
    9. Rodapé (marquee)
   10. Ecrãs estreitos
@@ -1032,6 +1032,11 @@ html[lang="en"] .title-art {
 .events tr td { border-bottom: 1.5px solid transparent; }
 .events tr.is-on td { border-bottom-color: currentColor; }
 
+/* A linha de quem tem ficha própria leva-se inteira. O sublinhado do foco já
+   lá está e serve de aviso — o que muda é só o cursor, que é o que diz que
+   ali se carrega. */
+.events tr.events__l--liga { cursor: pointer; }
+
 @media (prefers-reduced-motion: no-preference) {
   .events tr td { transition: border-color .25s ease; }
 }
@@ -1435,6 +1440,11 @@ html[lang="en"] .title-art {
    quatro de cima a baixo mesmo quando um título é muito mais curto. */
 .prj__linha > *:not(.prj__mais) { justify-self: start; }
 
+/* A linha de quem tem ficha própria leva-se inteira: o alvo é a faixa toda,
+   e o sublinhado no título diz onde é que ela vai dar. */
+.prj__linha--liga { cursor: pointer; }
+.prj__linha--liga:hover .prj__t { text-decoration: underline; text-underline-offset: 4px; }
+
 /* Os mesmos três sinais dos cartazes, aqui em ponto de lista: o triângulo
    para a natureza, o alfinete para o sítio e o relógio para o quando. */
 .prj__linha .evdet { gap: 7px; }
@@ -1702,7 +1712,258 @@ html[lang="en"] .title-art {
 
 
 
-/* 7. Menu de ecrã inteiro ================================================= */
+/* 7. A ficha de um projeto ================================================ */
+
+/* Uma página de projeto não é um mosaico nem uma secção do menu: é uma folha
+   inteira, com endereço próprio (#voar), que se abre por cima da grelha e se
+   fecha pelo logótipo como tudo o resto.
+
+   Mora dentro do index.html de propósito. O cabeçalho, o marquee, o PT—EN e
+   o encaminhamento por hash são os mesmos do site — uma página à parte
+   obrigava a ter deles uma segunda cópia, e duas cópias divergem.
+
+   As medidas vêm do estudo em projetos2/: a coluna de 300, o vão de 30 de
+   cada lado, o vídeo de 300 ao alto. */
+.ficha {
+  --pad:  44px;    /* respiro entre o cabeçalho e o que a ficha começa a dizer */
+  --col:  300px;   /* a coluna da identificação */
+  --vala: 30px;    /* o vão entre as duas colunas */
+  --rule: color-mix(in srgb, currentColor 30%, transparent);
+
+  /* A mesma moldura da grelha: do fundo do cabeçalho ao topo do marquee, e é
+     ela que rola. Acima dos mosaicos e abaixo do menu (60), que continua a
+     poder abrir-se por cima de uma ficha. */
+  position: fixed;
+  top: var(--header-h);
+  bottom: var(--marquee-h);
+  left: 0;
+  z-index: 50;
+  width: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--cream);
+  visibility: hidden;
+  pointer-events: none;
+}
+.ficha.is-on { visibility: visible; pointer-events: auto; }
+
+/* À esquerda quem é o projeto, à direita o que ficou dele. A coluna da
+   identificação encosta ao --gutter, e por isso alinha com o logótipo, como
+   acontece com o conteúdo dos mosaicos. */
+.ficha__doc {
+  display: grid;
+  grid-template-columns: minmax(0, var(--col)) minmax(0, 1fr);
+  align-items: start;
+  padding: var(--pad) var(--gutter) 90px;
+}
+
+.ficha__id { padding-right: var(--vala); }
+
+/* A coluna do material vai até à margem direita, mas o que lá está dentro
+   pára na largura de leitura do site — a mesma regra do cartão aberto em
+   painel, que também deixa o resto do ecrã em branco em vez de esticar as
+   linhas até ao fim. */
+.ficha__mat { padding-left: var(--vala); }
+.ficha__mat > * { max-width: var(--panel-content); }
+
+
+/* --- a identificação --- */
+
+/* O nome da peça, um degrau abaixo dos títulos dos mosaicos: aqueles são o
+   nome de uma secção do site e podem gritar; este está sozinho na coluna,
+   sem nada com que competir. Não passa a caixa baixa como os mosaicos —
+   "eventos" é uma palavra comum, isto é o nome de uma obra. */
+.ficha__h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+}
+
+.ficha__resumo { margin: 20px 0 0; opacity: .8; }
+
+/* A natureza, o sítio e a data, uma linha cada, com o sinal à esquerda: são
+   os mesmos .evdet dos cartazes dos eventos, com o triângulo, o alfinete e —
+   só aqui — o calendário, porque numa ficha o que interessa é o mês e não a
+   hora a que a coisa começou. */
+.ficha__dets { margin-top: 20px; display: flex; flex-direction: column; gap: 7px; }
+.ficha__dets .evdet { align-items: flex-start; }
+.ficha__dets .evdet svg { margin-top: 3px; }
+
+/* O rótulo pequeno em versaletes: é o .panel-section__title do site, dois
+   pontos mais pequeno, porque aqui abre uma tabela e não uma secção. */
+.ficha .lbl {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+/* Dois nomes de classe no selector porque o .ficha .lbl acima já zera as
+   margens todas, e uma classe só perdia para ele. */
+.ficha .ficha__lbl { margin-top: 34px; }
+
+/* A ficha técnica num cartão azul: o azul do mosaico e o mesmo par de cores,
+   trocado. O que à esquerda era uma margem com texto passa a ser um objecto,
+   e quem vem do mosaico reconhece nele a cor que carregou.
+
+   O cartão enche a coluna toda — sai para dentro do vão —, enquanto o texto
+   por cima dele guarda a sua medida de leitura. É a diferença entre uma
+   coisa pousada e um parágrafo. */
+.ficha__cred {
+  margin: 12px calc(var(--vala) * -1) 0 0;
+  padding: 28px 24px 30px;
+  background: var(--blue);
+  color: var(--cream);
+}
+.ficha__cred p + .lbl { margin-top: 26px; }
+.ficha__cred .lbl + p { margin-top: 3px; }
+
+
+/* --- #voar2: o azul até ao título --- */
+
+/* A outra opção: a identificação inteira passa a cartão, do título ao último
+   crédito. Ganha-se o parentesco à primeira vista; perde-se o sossego da
+   folha creme, e o azul chama para si a atenção que o texto e as fotografias
+   queriam. */
+.ficha--cartao .ficha__id {
+  margin-right: calc(var(--vala) * -1);
+  padding: var(--tile-pad);
+  background: var(--blue);
+  color: var(--cream);
+}
+/* Sem caixa a separá-los, "ficha técnica" e "criação" ficavam dois rótulos
+   iguais empilhados e liam-se como uma lista só. O filete diz onde é que um
+   acaba e o outro começa — é o mesmo das tabelas do site, aqui em creme
+   porque é o creme que ali é a tinta. */
+.ficha--cartao .ficha__cred {
+  margin: 16px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--rule);
+  background: none;
+  color: inherit;
+}
+
+/* O cartão vai até ao vão, e sem esta folga encostava ao vídeo. */
+.ficha--cartao .ficha__mat { padding-left: calc(var(--vala) * 1.5); }
+
+
+/* --- o vídeo --- */
+
+/* Em cima de tudo, e sem rótulo nenhum: é a primeira coisa que se vê da
+   peça, e um rótulo a dizer "vídeo" por cima de um vídeo não acrescenta
+   nada. 240 por 426 — vertical. À largura da coluna era uma parede, por isso
+   fica à medida de um telemóvel e encostado à esquerda, como tudo o resto. */
+.ficha__vid {
+  position: relative;
+  width: 300px;
+  max-width: 100%;
+  aspect-ratio: 9 / 16;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+.ficha__vid iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+
+/* --- as secções da coluna do material --- */
+
+/* Cada uma abre com o rótulo em versaletes e o filete por baixo dele, como
+   as secções do cartão aberto em painel. */
+.ficha__sec + .ficha__sec { margin-top: 54px; }
+.ficha__vid + .ficha__sec { margin-top: 32px; }
+.ficha__sech { padding-bottom: 14px; border-bottom: 1px solid var(--rule); margin-bottom: 20px; }
+
+.ficha__texto p { max-width: 62ch; }
+.ficha__texto p + p { margin-top: 16px; }
+
+
+/* --- as fotografias --- */
+
+/* A grande em cima e a folha de contacto por baixo: vê-se a série toda de uma
+   vez e escolhe-se, e a grande é a que se está a ver. É a ideia do mosaico do
+   site — muitas coisas pequenas, e uma grande quando se pede. */
+.fs__palco {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  /* Em janelas baixas o palco a 3:2 enchia o ecrã sozinho e a folha de
+     contacto ficava sempre por baixo da dobra — que é o contrário do que ela
+     serve. Em ecrãs altos o tecto não chega a pegar. */
+  max-height: 64vh;
+  overflow: clip;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  cursor: pointer;
+}
+/* As nove não têm todas o mesmo formato — uma está ao alto. Entram inteiras
+   dentro do palco, sem cortes: a que está ao alto fica mais pequena, com o
+   fundo à volta, em vez de ficar sem cabeças. */
+.fs__palco img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+.fs__palco img.is-on { opacity: 1; }
+
+.fs__pe { display: flex; align-items: baseline; gap: 14px; margin-top: 10px; }
+.fs__conta { font-family: var(--font-display); font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+/* A descrição da fotografia que está no palco, para quem a quiser ler. */
+.fs__desc { flex: 1; font-size: 12px; opacity: .65; }
+
+/* A folha de contacto segue a regra das colunas do site: um mínimo por coluna
+   e as que couberem. */
+.fs__folha {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 6px;
+}
+.fs__folha button {
+  aspect-ratio: 1;
+  overflow: clip;
+  padding: 0;
+  border: none;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  cursor: pointer;
+}
+.fs__folha img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: .45; transition: opacity 160ms ease; }
+.fs__folha button:hover img { opacity: .8; }
+/* A que está no palco fica cheia e com o filete por dentro, para não empurrar
+   as vizinhas. */
+.fs__folha button[aria-current="true"] img { opacity: 1; }
+.fs__folha button[aria-current="true"] { outline: 1.5px solid currentColor; outline-offset: -1.5px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fs__palco img, .fs__folha img { transition: none; }
+}
+
+
+/* --- ecrãs estreitos --- */
+
+/* Abaixo dos 900 as duas colunas passam a uma: a identificação em cima, o
+   material por baixo. */
+@media (max-width: 900px) {
+  .ficha__doc { grid-template-columns: 1fr; }
+  .ficha__id { padding-right: 0; }
+  .ficha__cred { margin-right: 0; }
+  .ficha--cartao .ficha__id { margin-right: 0; }
+  .ficha__mat,
+  .ficha--cartao .ficha__mat { padding-left: 0; padding-top: 44px; }
+}
+
+@media (max-width: 640px) {
+  .ficha { --pad: 30px; }
+  .ficha__h1 { font-size: 21px; }
+}
+
+
+/* 8. Menu de ecrã inteiro ================================================= */
 
 /* O menu deixou de ser uma lista de atalhos: é onde vivem, por inteiro, o
    "sobre nós" e o "como chegar" — os dois cartões cujo "+" abre aqui em vez
@@ -2043,7 +2304,7 @@ html.menu-open .menu::before { opacity: 1; }
 }
 
 
-/* 8. Rodapé (marquee) ===================================================== */
+/* 9. Rodapé (marquee) ===================================================== */
 
 .marquee {
   position: fixed;
@@ -2071,7 +2332,7 @@ html.menu-open .menu::before { opacity: 1; }
 }
 
 
-/* 9. Ecrãs estreitos ===================================================== */
+/* 10. Ecrãs estreitos ===================================================== */
 
 /* Só medidas do cabeçalho: sem isto o "PT — EN" centrado encavalita no
    logótipo abaixo dos ~390px. */
@@ -2402,6 +2663,20 @@ html.menu-open .menu::before { opacity: 1; }
     </div>
   </article>
 </main>
+
+
+<!-- ===== A ficha de um projeto ========================================== -->
+
+<!-- A folha de um projeto, com endereço próprio (#voar). Abre por cima da
+     grelha e é escrita de raiz pelo JS a partir do registo do projeto (ver
+     PROJETOS): não há aqui texto nenhum, porque trocar de idioma é voltar a
+     escrevê-la e não andar a substituir palavras dentro dela. -->
+<div class="ficha" id="ficha" aria-hidden="true">
+  <article class="ficha__doc">
+    <aside class="ficha__id" id="ficha-id"></aside>
+    <div class="ficha__mat" id="ficha-mat"></div>
+  </article>
+</div>
 
 
 <!-- ===== Menu de ecrã inteiro =========================================== -->
@@ -2926,6 +3201,10 @@ html.menu-open .menu::before { opacity: 1; }
     { dia: 7, mes: 9, ano: 2026, hora: '21h30',
       img: 'dossier/assets/scene-estudio.jpg',
       imgs: ['dossier/assets/scene-estudio.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/hero.jpg'],
+      /* Quem tem ficha própria diz aqui qual é: é o que põe o "quero saber
+         mais" do cartaz e a linha da lista a levar à página do projeto em
+         vez de abrirem um correio. */
+      projeto: 'voar',
       bilhetes: 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Bilhetes — Voar Muito Perto do Sol'),
       pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditório', natureza: 'Criação',
             sinopse: 'Uma criação sobre o desejo de subir e o preço da queda, feita em residência na antiga igreja.' },
@@ -2988,6 +3267,109 @@ html.menu-open .menu::before { opacity: 1; }
             sinopse: 'What remains is the text of those who were on stage.' },
       alt: { pt: 'Intérprete em cena, com as mãos junto ao rosto', en: 'Performer on stage, hands raised to their face' } }
   ];
+
+  /* ---------- os projetos com ficha própria ---------- */
+
+  /* Um evento na lista de cima é uma data e uma sinopse; um projeto é o que
+     ficou dele — o texto, o vídeo, as fotografias e os créditos. São coisas
+     diferentes e vivem em listas diferentes, ligadas pelo 'projeto' que o
+     evento traz.
+
+     Como os eventos, cada campo traz as duas línguas: o resto do site tem o
+     português no HTML e o inglês no dicionário, mas a ficha não tem onde os
+     guardar, que é o JS quem a escreve.
+
+     O título não se traduz. É a decisão que a lista EVENTOS já tomou, onde o
+     "Voar Muito Perto do Sol" se chama assim nas duas línguas: é o nome da
+     peça, não uma descrição dela. O texto português é o do sítio da Sara
+     Garcia, palavra por palavra; o inglês é tradução dele. */
+  var PROJETOS = {
+    voar: {
+      ano: 2024,
+      titulo: 'Voar Muito Perto do Sol',
+
+      pt: {
+        natureza: 'Formação',
+        onde:     'Fórum da Maia · Mês da Arquitectura da Maia',
+        quando:   'Novembro de 2024',
+        resumo:   'Uma oficina e uma apresentação pública sobre a liberdade dentro de casa, a partir de um texto de Adolf Loos.',
+        texto: [
+          '“Voar Muito Perto do Sol” é um trabalho de cruzamento disciplinar entre as artes visuais, o teatro, a dança e a música.',
+          'Surge no âmbito do Mês da Arquitectura da Maia (MAM) 2024, a convite dos seus curadores, Nuno Sousa e Ana Resende, como desafio de idealizar e realizar uma oficina que inclui uma apresentação final pública em torno dos conceitos de arquitectura e liberdade, respondendo ao tema da exposição “O que é um espaço de liberdade?”.',
+          'Focado no sub-tema da liberdade no espaço doméstico (a casa), e partindo de um texto de 1900 do reconhecido arquitecto Adolf Loos “The Poor Little Rich Man”, desenhou-se e construiu-se uma cenografia, que se utiliza como estrutura base para todas as ações a desenvolver pelos participantes.',
+          'É uma parceria entre a coreógrafa e bailarina Sara Garcia e o arquitecto Hugo Barros (atelierdacosta), com participação do músico jazzista Xavier Nunes.'
+        ],
+        creditos: [
+          ['Criação',      'Hugo Barros e Sara Garcia'],
+          ['Participação', 'Xavier Nunes'],
+          ['Apoios',       'Mês da Arquitectura da Maia 2024, Fercayo / CCR, Ventos e Tempestades — Associação Cultural'],
+          ['Vídeo',        'Mário M. Fonseca']
+        ],
+        rotulos: { ficha: 'Ficha técnica', sobre: 'Sobre o projeto', fotos: 'Fotografias', outros: 'Outros projetos', de: 'de' }
+      },
+
+      en: {
+        natureza: 'Training',
+        onde:     'Fórum da Maia · Maia Architecture Month',
+        quando:   'November 2024',
+        resumo:   'A workshop and a public showing about freedom inside the house, departing from a text by Adolf Loos.',
+        texto: [
+          '“Voar Muito Perto do Sol” is a cross-disciplinary work between the visual arts, theatre, dance and music.',
+          'It came out of Mês da Arquitectura da Maia (MAM) 2024, at the invitation of its curators, Nuno Sousa and Ana Resende, as a challenge to conceive and run a workshop with a final public showing around the ideas of architecture and freedom, answering the theme of the exhibition “What is a space of freedom?”.',
+          'Focused on freedom within the domestic space — the house — and departing from a 1900 text by the architect Adolf Loos, “The Poor Little Rich Man”, a stage set was designed and built, and used as the base structure for everything the participants do.',
+          'It is a partnership between the choreographer and dancer Sara Garcia and the architect Hugo Barros (atelierdacosta), with the participation of jazz musician Xavier Nunes.'
+        ],
+        creditos: [
+          ['Creation',      'Hugo Barros and Sara Garcia'],
+          ['Participation', 'Xavier Nunes'],
+          ['Support',       'Mês da Arquitectura da Maia 2024, Fercayo / CCR, Ventos e Tempestades — Associação Cultural'],
+          ['Video',         'Mário M. Fonseca']
+        ],
+        rotulos: { ficha: 'Credits', sobre: 'About the project', fotos: 'Photographs', outros: 'Other projects', de: 'of' }
+      },
+
+      /* O vídeo é vertical: 240 por 426, confirmado no Vimeo. É por isso que
+         nunca aparece à largura da coluna. */
+      video: {
+        src: 'https://player.vimeo.com/video/1031886171?badge=0&autopause=0&player_id=0&app_id=58479',
+        titulo: { pt: 'Voar Muito Perto do Sol — vídeo de Mário M. Fonseca',
+                  en: 'Voar Muito Perto do Sol — video by Mário M. Fonseca' }
+      },
+
+      /* A descrição de cada fotografia serve quem lê a página com um leitor
+         de ecrã e quem fica com a ligação estragada — e por isso traduz. */
+      fotos: [
+        { src: 'projetos2/img/voar1.jpg',
+          pt: 'Um adulto e nove crianças sentados em roda no chão do palco, à frente de uma casa de madeira com uma janela redonda.',
+          en: 'An adult and nine children sitting in a circle on the stage floor, in front of a wooden house with a round window.' },
+        { src: 'projetos2/img/voar2.jpg',
+          pt: 'Três crianças entre colunas de cartão e fios esticados, com formas recortadas de cartolina na mão.',
+          en: 'Three children among cardboard columns and taut strings, holding cut-out card shapes.' },
+        { src: 'projetos2/img/voar3.jpg',
+          pt: 'A coreógrafa, de vermelho, sentada no chão entre crianças, a recortar uma forma em cartolina.',
+          en: 'The choreographer, in red, sitting on the floor among children, cutting out a card shape.' },
+        { src: 'projetos2/img/voar4.jpg',
+          pt: 'Crianças a atravessar o palco por baixo de fios onde estão pendurados desenhos presos com molas.',
+          en: 'Children crossing the stage beneath strings hung with drawings pegged in place.' },
+        { src: 'projetos2/img/voar5.jpg',
+          pt: 'A apresentação final vista de trás da plateia: uma criança aparece na janela redonda da casa.',
+          en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' },
+        { src: 'projetos2/img/voar6.jpg',
+          pt: 'Vista de cima: crianças e a coreógrafa sentadas no chão, cada uma com uma forma de cartolina na mão.',
+          en: 'Seen from above: children and the choreographer sitting on the floor, each holding a card shape.' },
+        { src: 'projetos2/img/voar7.jpg',
+          pt: 'O músico toca guitarra sentado à frente das crianças, ao lado de um espelho oval que as reflete.',
+          en: 'The musician plays guitar sitting in front of the children, beside an oval mirror that reflects them.' },
+        { src: 'projetos2/img/voar8.jpg',
+          pt: 'As crianças sentadas de costas, a olhar para a janela redonda iluminada da casa.',
+          en: 'The children sitting with their backs to us, looking at the lit round window of the house.' },
+        { src: 'projetos2/img/voar9.jpg',
+          pt: 'Crianças sentadas em cadeiras brancas a olhar para uma figura recortada que a coreógrafa levanta.',
+          en: 'Children sitting on white chairs, watching a cut-out figure the choreographer holds up.' }
+      ]
+    }
+  };
+
 
   /* Os meses por extenso ficam aqui e não no browser: o toLocaleDateString
      devolve-os em caixa baixa em português e em caixa alta em inglês, e a
@@ -3064,7 +3446,10 @@ html.menu-open .menu::before { opacity: 1; }
   var SINAIS = {
     tipo:    '<svg class="sinal--tipo" viewBox="0 0 382 387" aria-hidden="true"><path d="M95.7804 387L382 110.293L0 0L95.7804 387Z"/></svg>',
     pin:     '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5.2" r="3.1"/><path d="M8 8.3V14.6"/></svg>',
-    relogio: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.9"/><path d="M8 4.4V8l2.5 1.7"/></svg>'
+    relogio: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.9"/><path d="M8 4.4V8l2.5 1.7"/></svg>',
+    /* Só a ficha de um projeto o usa: ali a data é um mês inteiro, e um
+       relógio a marcar horas em cima de "Novembro de 2024" mentia. */
+    mes:     '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.4" y="3.6" width="11.2" height="10" rx="1.4"/><path d="M2.4 6.6h11.2M5.6 2.2v2.8M10.4 2.2v2.8"/></svg>'
   };
 
   /* Linhas, câmara (sem flash) e play tipo YouTube: o que ficou de cada
@@ -3110,6 +3495,14 @@ html.menu-open .menu::before { opacity: 1; }
 
   function evAssunto(e) {
     return 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Eventos · ' + evData(e) + ' · ' + evTexto(e).titulo);
+  }
+
+  /* Para onde leva o "quero saber mais" de um cartaz: à ficha do projeto,
+     quando ele a tem, e ao correio quando não tem — que era o que havia
+     antes de haver fichas, e continua a ser o que resta a quem só tem uma
+     data e uma sinopse. */
+  function evParaOnde(e) {
+    return e.projeto ? '#' + projSlug(e.projeto) : evAssunto(e);
   }
 
   var evFotoEl   = document.getElementById('ev-foto');
@@ -3179,6 +3572,27 @@ html.menu-open .menu::before { opacity: 1; }
     });
     tr.addEventListener('mouseenter', function () { evParado = true; evFoco(i); });
     tr.addEventListener('mouseleave', function () { evParado = false; });
+
+    /* Quem tem ficha própria abre-a a partir da linha inteira, e não só a
+       partir do título: numa lista de quatro linhas o alvo é a faixa toda.
+       O título fica um <a> a sério — é o que dá o endereço à direita do
+       rato e o caminho pelo teclado; a linha à volta é o alvo maior do
+       mesmo sítio. */
+    if (e.projeto) {
+      var celula = tr.children[1];
+      var a = document.createElement('a');
+      a.href = '#' + projSlug(e.projeto);
+      a.textContent = t.titulo;
+      celula.textContent = '';
+      celula.appendChild(a);
+
+      tr.className = 'events__l--liga';
+      tr.addEventListener('click', function (ev) {
+        if (ev.target.closest('a')) return;
+        a.click();
+      });
+    }
+
     return tr;
   }
 
@@ -3356,7 +3770,7 @@ html.menu-open .menu::before { opacity: 1; }
     var t = evTexto(e);
     var rotulo = evData(e);
     var art = evCaixa(t, evAlt(e), evFotosDe(e), rotulo);
-    evMais(art, evAssunto(e), t.titulo);
+    evMais(art, evParaOnde(e), t.titulo);
 
     var det = art.querySelector('.evcard__detalhes');
     det.appendChild(evDetalhe('tipo', t.natureza));
@@ -3401,7 +3815,7 @@ html.menu-open .menu::before { opacity: 1; }
     rect.setAttribute('height', '100');
     filete.appendChild(rect);
     art.appendChild(filete);
-    evMais(art, evAssunto(c), t.titulo);
+    evMais(art, evParaOnde(c), t.titulo);
 
     var det = art.querySelector('.evcard__detalhes');
     if (t.natureza) det.appendChild(evDetalhe('tipo', t.natureza));
@@ -3653,6 +4067,29 @@ html.menu-open .menu::before { opacity: 1; }
       bt.setAttribute('aria-expanded', String(aberto));
     });
 
+    /* Quem tem ficha própria leva-se a linha inteira: o alvo passa a ser uma
+       faixa da largura da lista e não um "+" de 17px. O "+" continua a ser
+       só a sinopse — quem quer espreitar antes de entrar espreita —, e por
+       isso o clique que cai nele não segue para a ficha.
+
+       O título fica um <a> a sério, e não um handler solto: é o que dá o
+       endereço à direita do rato, o "abrir num separador novo" e o caminho
+       pelo teclado. A linha à volta é só o alvo maior do mesmo sítio. */
+    if (e.projeto) {
+      var titulo = li.querySelector('.prj__t');
+      var a = document.createElement('a');
+      a.href = '#' + projSlug(e.projeto);
+      a.textContent = t.titulo;
+      titulo.textContent = '';
+      titulo.appendChild(a);
+
+      li.querySelector('.prj__linha').classList.add('prj__linha--liga');
+      li.querySelector('.prj__linha').addEventListener('click', function (ev) {
+        if (ev.target.closest('a, button')) return;
+        a.click();
+      });
+    }
+
     return li;
   }
 
@@ -3735,6 +4172,220 @@ html.menu-open .menu::before { opacity: 1; }
 
   function setLang(lang) { state.lang = lang; applyLang(); renderEventos(); }
 
+
+  /* ---------- a ficha de um projeto ---------- */
+
+  /* A folha de um projeto, escrita de raiz a cada abertura e a cada troca de
+     idioma. Não guarda texto nenhum no HTML: mudar de PT para EN é voltar a
+     escrevê-la, e não andar a substituir palavras dentro dela.
+
+     A ordem é a do estudo, com uma troca: o vídeo vem primeiro, antes do
+     texto. É o que a peça tem de mais parecido consigo mesma, e quem abre a
+     página de uma coisa que se viu quer vê-la outra vez, não ler sobre ela. */
+
+  var fichaEl    = document.getElementById('ficha');
+  var fichaIdEl  = document.getElementById('ficha-id');
+  var fichaMatEl = document.getElementById('ficha-mat');
+
+  /* O endereço de um projeto é o nome dele. Fica aqui, e não espalhado pelos
+     sítios que lhe chamam, para que mudar um slug seja mudar uma linha. */
+  function projSlug(nome) { return nome; }
+
+  function nel(tag, cls, txt) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt != null) n.textContent = txt;
+    return n;
+  }
+
+  /* Uma secção da coluna do material: o rótulo em versaletes, o filete por
+     baixo dele, e o conteúdo. */
+  function fichaSec(rotulo) {
+    var s = nel('section', 'ficha__sec');
+    var h = nel('div', 'ficha__sech');
+    h.appendChild(nel('h2', 'lbl', rotulo));
+    s.appendChild(h);
+    var corpo = nel('div');
+    s.appendChild(corpo);
+    s.corpo = corpo;
+    return s;
+  }
+
+
+  /* --- a identificação --- */
+
+  function fichaId(p, t) {
+    fichaIdEl.textContent = '';
+
+    fichaIdEl.appendChild(nel('h1', 'ficha__h1', p.titulo));
+    fichaIdEl.appendChild(nel('p', 'ficha__resumo', t.resumo));
+
+    /* Os três sinais dos cartazes, em coluna: o que é, onde foi, quando. */
+    var dets = nel('div', 'ficha__dets');
+    [['tipo', t.natureza], ['pin', t.onde], ['mes', t.quando]].forEach(function (par) {
+      var d = nel('p', 'evdet');
+      d.innerHTML = SINAIS[par[0]];
+      d.appendChild(nel('span', null, par[1]));
+      dets.appendChild(d);
+    });
+    fichaIdEl.appendChild(dets);
+
+    /* A ficha técnica vive aqui e não no fim da página: é identificação, e
+       numa ficha a identificação fica toda no mesmo sítio. */
+    fichaIdEl.appendChild(nel('p', 'lbl ficha__lbl', t.rotulos.ficha));
+
+    var cred = nel('div', 'ficha__cred');
+    t.creditos.forEach(function (par) {
+      cred.appendChild(nel('p', 'lbl', par[0]));
+      cred.appendChild(nel('p', null, par[1]));
+    });
+    fichaIdEl.appendChild(cred);
+  }
+
+
+  /* --- o vídeo --- */
+
+  function fichaVideo(p, t) {
+    if (!p.video) return;
+    var d = nel('div', 'ficha__vid');
+    var f = document.createElement('iframe');
+    f.src = p.video.src;
+    f.title = p.video.titulo[lg()];
+    f.allow = 'autoplay; fullscreen; picture-in-picture';
+    f.allowFullscreen = true;
+    d.appendChild(f);
+    fichaMatEl.appendChild(d);
+  }
+
+
+  /* --- o texto --- */
+
+  function fichaTexto(p, t) {
+    var s = fichaSec(t.rotulos.sobre);
+    s.corpo.className = 'ficha__texto';
+    t.texto.forEach(function (par) { s.corpo.appendChild(nel('p', null, par)); });
+    fichaMatEl.appendChild(s);
+  }
+
+
+  /* --- as fotografias --- */
+
+  /* A grande em cima e a folha de contacto por baixo. Carregar numa pequena
+     troca a grande; carregar na grande avança para a seguinte. */
+  function fichaFotos(p, t) {
+    var fotos = p.fotos || [];
+    if (!fotos.length) return;
+
+    var s = fichaSec(t.rotulos.fotos);
+    var caixa = nel('div');
+    var n = 0;
+
+    var palco = nel('div', 'fs__palco');
+    var imgs = fotos.map(function (f, i) {
+      var img = nel('img');
+      img.src = f.src;
+      img.alt = f[lg()];
+      if (i > 0) img.loading = 'lazy';
+      palco.appendChild(img);
+      return img;
+    });
+    caixa.appendChild(palco);
+
+    var pe = nel('div', 'fs__pe');
+    var conta = nel('p', 'fs__conta');
+    var desc = nel('p', 'fs__desc');
+    pe.appendChild(conta);
+    pe.appendChild(desc);
+    caixa.appendChild(pe);
+
+    var folha = nel('div', 'fs__folha');
+    var botoes = fotos.map(function (f, i) {
+      var b = nel('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', (i + 1) + ' ' + t.rotulos.de + ' ' + fotos.length);
+      var img = nel('img');
+      img.src = f.src;
+      img.alt = '';
+      img.loading = 'lazy';
+      b.appendChild(img);
+      b.addEventListener('click', function () { vai(i); });
+      folha.appendChild(b);
+      return b;
+    });
+    caixa.appendChild(folha);
+
+    palco.addEventListener('click', function () { vai(n + 1); });
+
+    function vai(i) {
+      n = (i + fotos.length) % fotos.length;   /* dá a volta nas duas pontas */
+      imgs.forEach(function (img, k) { img.classList.toggle('is-on', k === n); });
+      botoes.forEach(function (b, k) { b.setAttribute('aria-current', String(k === n)); });
+      conta.textContent = (n + 1) + ' / ' + fotos.length;
+      /* A descrição no pé é a mesma que a fotografia já tem em alt: quem a
+         ouve não a ouve duas vezes, porque o palco não é lido como imagem. */
+      desc.textContent = fotos[n][lg()];
+    }
+
+    vai(0);
+    s.corpo.appendChild(caixa);
+    fichaMatEl.appendChild(s);
+  }
+
+
+  /* --- outros projetos --- */
+
+  /* Saem da lista de todos os projetos do site, e não de uma lista escrita à
+     mão: são as mesmas linhas, com a mesma miniatura e os mesmos sinais, e
+     acrescentar um projeto ao site acrescenta-o também aqui. */
+  function fichaOutros(nome, t) {
+    var outros = prjTodos().filter(function (e) { return e.projeto !== nome; });
+    if (!outros.length) return;
+
+    var s = fichaSec(t.rotulos.outros);
+    var ul = nel('ul', 'prj');
+    outros.forEach(function (e) { ul.appendChild(prjLinha(e)); });
+    s.corpo.appendChild(ul);
+    fichaMatEl.appendChild(s);
+  }
+
+
+  /* --- abrir e fechar --- */
+
+  function montaFicha(nome) {
+    var p = PROJETOS[nome];
+    if (!p) return false;
+    var t = p[lg()];
+
+    fichaId(p, t);
+    fichaMatEl.textContent = '';
+    fichaVideo(p, t);
+    fichaTexto(p, t);
+    fichaFotos(p, t);
+    fichaOutros(nome, t);
+
+    document.title = p.titulo + ' — a Sineira';
+    return true;
+  }
+
+  function abreFicha(route) {
+    if (!fichaEl || !montaFicha(route.projeto)) return;
+    fichaEl.classList.toggle('ficha--cartao', !!route.cartao);
+    fichaEl.classList.add('is-on');
+    fichaEl.setAttribute('aria-hidden', 'false');
+    fichaEl.scrollTop = 0;
+  }
+
+  function fechaFicha() {
+    if (!fichaEl || !fichaEl.classList.contains('is-on')) return;
+    fichaEl.classList.remove('is-on');
+    fichaEl.setAttribute('aria-hidden', 'true');
+    /* O iframe do Vimeo continuava a tocar por trás da grelha: sai daqui, e
+       volta a ser posto de raiz na abertura seguinte. */
+    fichaMatEl.textContent = '';
+    fichaIdEl.textContent = '';
+    document.title = I18N[state.lang] ? I18N[state.lang].title : ptTitle;
+  }
+
   /* ---------- endereços ---------- */
 
   /* Cada secção tem um endereço em cada idioma, e é o endereço que manda:
@@ -3745,28 +4396,52 @@ html.menu-open .menu::before { opacity: 1; }
 
      'tile' abre o cartão em painel, no sítio; 'menu' abre o menu de ecrã
      inteiro naquela secção — é o que faz o "+" das "informações", cujo
-     conteúdo (sobre nós, acessos e contactos) vive todo lá. */
+     conteúdo (sobre nós, acessos e contactos) vive todo lá; 'projeto' abre a
+     ficha de um projeto por cima da grelha.
+
+     A ficha é a única que tem o mesmo slug nas duas línguas, e por uma razão
+     que a lista EVENTOS já tinha tomado: o endereço de um projeto é o nome
+     dele, e um nome não se traduz. Por isso um endereço de projeto não diz
+     idioma nenhum — quem lá chega fica na língua em que estava. */
   var HOME = { pt: '', en: 'eng' };
   var ROUTES = [
     { pt: 'eventos',    en: 'events',     tile: 'Eventos' },
     { pt: 'atividades', en: 'activities', tile: 'Atividades' },
     { pt: 'onde',       en: 'where',      menu: 'menu-onde' },
     { pt: 'sobre',      en: 'about',      menu: 'menu-sobre' },
-    { pt: 'amigo',      en: 'friend',     tile: 'Amigos' }
+    { pt: 'amigo',      en: 'friend',     tile: 'Amigos' },
+
+    { pt: 'voar',       en: 'voar',       projeto: 'voar' },
+    /* A segunda opção da mesma ficha: o azul sobe do cartão dos créditos até
+       ao título e a identificação inteira passa a cartão. Fica de pé
+       enquanto se escolhe entre as duas. */
+    { pt: 'voar2',      en: 'voar2',      projeto: 'voar', cartao: true }
   ];
 
   var routing = false;   /* trava a reentrada enquanto somos nós a escrever */
 
-  /* Um slug identifica ao mesmo tempo a secção e o idioma. */
+  /* Um slug identifica a secção e, quase sempre, o idioma: o das fichas não
+     diz idioma, e devolve lang nulo — "fica como estás". */
   function parseHash() {
     var slug = (location.hash || '').replace(/^#/, '').toLowerCase();
     if (slug === HOME.pt) return { route: null, lang: 'pt' };
     if (slug === HOME.en) return { route: null, lang: 'en' };
     for (var i = 0; i < ROUTES.length; i++) {
-      if (ROUTES[i].pt === slug) return { route: ROUTES[i], lang: 'pt' };
-      if (ROUTES[i].en === slug) return { route: ROUTES[i], lang: 'en' };
+      var r = ROUTES[i];
+      if (r.pt === slug) return { route: r, lang: r.en === r.pt ? null : 'pt' };
+      if (r.en === slug) return { route: r, lang: 'en' };
     }
     return null;   /* endereço desconhecido: fica como está */
+  }
+
+  /* O idioma da última visita, que é o que vale quando o endereço não diz
+     nenhum — a página inicial sem hash e as fichas de projeto. */
+  function langGuardado() {
+    try {
+      var s = localStorage.getItem('sineira-lang');
+      if (s === 'pt' || s === 'en') return s;
+    } catch (e) {}
+    return 'pt';
   }
 
   function slugOf(route, lang) { return route ? route[lang] : HOME[lang]; }
@@ -3803,6 +4478,13 @@ html.menu-open .menu::before { opacity: 1; }
 
   function applyRoute(route) {
     closeTiles();
+    fechaFicha();
+
+    if (route && route.projeto) {
+      closeMenu();
+      abreFicha(route);
+      return;
+    }
 
     if (route && route.tile) {
       closeMenu();
@@ -3825,7 +4507,8 @@ html.menu-open .menu::before { opacity: 1; }
     if (routing) return;
     var at = parseHash();
     if (!at) return;
-    if (at.lang !== state.lang) setLang(at.lang);
+    /* Endereço sem idioma (a ficha de um projeto): fica-se no que se estava. */
+    if (at.lang && at.lang !== state.lang) setLang(at.lang);
     state.route = at.route;
     applyRoute(at.route);
   }
@@ -3850,8 +4533,7 @@ html.menu-open .menu::before { opacity: 1; }
        logo normalizado para o par certo, para que a barra do browser diga
        sempre em que idioma se está. */
     if (!at || !location.hash) {
-      var lang = 'pt';
-      try { var s = localStorage.getItem('sineira-lang'); if (s === 'pt' || s === 'en') lang = s; } catch (e) {}
+      var lang = langGuardado();
       setLang(lang);
       routing = true;
       history.replaceState(null, '', location.pathname + location.search + (HOME[lang] ? '#' + HOME[lang] : '#'));
@@ -3860,7 +4542,8 @@ html.menu-open .menu::before { opacity: 1; }
       return;
     }
 
-    setLang(at.lang);
+    /* A ficha de um projeto não diz idioma: vale o da última visita. */
+    setLang(at.lang || langGuardado());
     state.route = at.route;
     /* A abertura fica para depois do primeiro layout: o applyRoute mede
        cartões, e antes disso a grelha ainda não tem alturas. */
@@ -4353,6 +5036,7 @@ html.menu-open .menu::before { opacity: 1; }
      cima dela. */
   function algoAberto() {
     if (state.menuOpen) return true;
+    if (fichaEl && fichaEl.classList.contains('is-on')) return true;
     return tileBtns.some(function (btn) {
       return btn.getAttribute('aria-expanded') === 'true';
     });
