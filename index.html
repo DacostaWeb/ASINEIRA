@@ -1093,13 +1093,40 @@ html[lang="en"] .title-art {
 .evcard { display: flex; flex-direction: column; }
 
 /* Os concluídos invertem a caixa: fundo azul, letra amarela. O filete
-   é pontilhado e só na placa — o desfile não leva bordo. */
-.evcard--conc { overflow: visible; }
+   pontilhado envolve o cartaz inteiro, fotografia incluída. Os pontos
+   ficam um pouco mais afastados do que o dotted nativo do Chrome. */
+.evcard--conc {
+  --conc-ponto: 1.35px;
+  --conc-passo: 9px;
+  position: relative;
+  overflow: clip;
+}
 .evcard--conc .evcard__info {
   background: var(--tile-bg);
   color: var(--tile-fg);
-  border: 3px dotted var(--tile-fg);
-  border-top: none;
+}
+.evcard--conc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-image:
+    radial-gradient(circle, var(--tile-fg) var(--conc-ponto), transparent calc(var(--conc-ponto) + .35px)),
+    radial-gradient(circle, var(--tile-fg) var(--conc-ponto), transparent calc(var(--conc-ponto) + .35px)),
+    radial-gradient(circle, var(--tile-fg) var(--conc-ponto), transparent calc(var(--conc-ponto) + .35px)),
+    radial-gradient(circle, var(--tile-fg) var(--conc-ponto), transparent calc(var(--conc-ponto) + .35px));
+  background-size:
+    var(--conc-passo) 3px,
+    var(--conc-passo) 3px,
+    3px var(--conc-passo),
+    3px var(--conc-passo);
+  background-position:
+    0 0,
+    0 100%,
+    0 0,
+    100% 0;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
 }
 .evcard--conc .evcard__title.is-longo::after { background: var(--tile-bg); }
 
