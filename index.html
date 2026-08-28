@@ -1507,17 +1507,50 @@ html[lang="en"] .title-art {
 
 /* --- Calendário do painel --- */
 
-/* O mês à esquerda, à mesma medida de sempre. Os cartazes do dia escolhido
-   não vão ao lado: vão por baixo, na mesma grelha dos próximos, para serem
-   o mesmo cartaz e não uma versão deitada. */
+/* O mês e os cartazes do dia escolhido são uma grelha só, com as colunas e
+   o compasso da grelha dos próximos: o mês ocupa a primeira coluna e os
+   cartazes entram a partir da segunda; só quando as colunas se acabam é que
+   descem para a linha seguinte. Iam sempre para baixo, e ao lado do mês
+   ficava meia secção em branco à espera deles.
+
+   Os cartazes vêm dentro de dois invólucros — o #cal-detalhe, que é a região
+   que se anuncia sozinha, e a .evgrid que o JS lá põe. Ambos passam a
+   display:contents: perdem a caixa e deixam os cartazes serem filhos desta
+   grelha, sem que o JS tenha de saber onde é que eles vão parar.
+
+   As colunas são as da .evgrid com uma diferença: aqui a primeira leva o
+   mês, que precisa dos seus 360px, e por isso a segunda só aparece aos
+   800px e não aos 600. */
+.panel-section--cal {
+  display: grid;
+  grid-template-columns: repeat(var(--ev-cols, 1), minmax(0, 1fr));
+  gap: 40px var(--gutter);
+  --ev-cols: 1;
+}
+@media (min-width: 801px)  { .panel-section--cal { --ev-cols: 2; } }
+@media (min-width: 1080px) { .panel-section--cal { --ev-cols: 3; } }
+@media (min-width: 1440px) { .panel-section--cal { --ev-cols: 4; } }
+
+.cal__cartazes,
+.cal__cartazes .evgrid { display: contents; }
+
+/* O mês fica a meio da altura dos cartazes que tem ao lado — é mais baixo
+   do que eles, e encostado ao cimo ficava a olhar para um vazio por baixo.
+   O título não: esse é o título da secção e fica onde os outros ficam, no
+   cimo. São as duas margens automáticas que fazem isso — a folga que sobra
+   reparte-se em partes iguais por cima e por baixo do mês. Quando não sobra
+   nada, como na coluna estreita, não fazem nada. */
 .cal {
+  display: flex;
   max-width: 360px;
   margin-top: 0;
 }
+.panel-section--cal .cal { align-self: stretch; }
+.cal__side { flex: 1; display: flex; flex-direction: column; }
 
 .cal__side .panel-section__title { margin-bottom: 10px; }
 
-.cal__nav { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.cal__nav { display: flex; align-items: center; gap: 12px; margin-top: auto; margin-bottom: 8px; }
 
 .cal__arrow {
   padding: 0 4px;
@@ -1560,7 +1593,7 @@ html[lang="en"] .title-art {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 3px;
-  margin: 0;
+  margin: 0 0 auto;
   padding: 0;
   list-style: none;
 }
@@ -1608,28 +1641,30 @@ html[lang="en"] .title-art {
   outline-offset: -2px;
 }
 
-/* Os cartazes do dia (ou do mês, enquanto nenhum dia está escolhido) ficam
-   por baixo da grelha, na mesma medida dos de cima. */
-.cal__cartazes { margin-top: 28px; }
-.cal__cartazes .evgrid { margin-top: 0; }
-
 .cal__m { margin-top: 8px; font-size: 12px; line-height: 1.6; opacity: .8; }
 
-@media (max-width: 720px) {
-  .cal { max-width: none; }
-  .cal__cartazes { margin-top: 20px; padding-top: 20px; border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
-}
-
-/* Abaixo dos 800px já não há largura para pôr cartazes lado a lado ao pé do
-   mês: a secção inteira do calendário encolhe à medida da grelha — 360px —,
-   vai ao meio da coluna e os cartazes descem uns por baixo dos outros. */
+/* Abaixo dos 800px já não há largura para pôr um cartaz ao lado do mês: a
+   secção inteira encolhe à medida da grelha — 360px —, vai ao meio da coluna
+   e os cartazes voltam a ser o que eram antes, uma caixa por baixo do mês,
+   separada dele por um filete e com os cartazes uns por baixo dos outros. */
 @media (max-width: 800px) {
   .panel-section--cal {
     max-width: 360px;
     margin-left: auto;
     margin-right: auto;
   }
-  .panel-section--cal .evgrid { --ev-cols: 1; }
+  /* Sem margem por cima: a folga entre as duas linhas da grelha já é a
+     folga entre o mês e o filete. */
+  .cal__cartazes {
+    display: block;
+    padding-top: 20px;
+    border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  }
+  .cal__cartazes .evgrid { display: grid; margin-top: 0; --ev-cols: 1; }
+}
+
+@media (max-width: 720px) {
+  .cal { max-width: none; }
 }
 
 
