@@ -1402,8 +1402,10 @@ html[lang="en"] .title-art {
    As quatro colunas de texto repartem entre si toda a largura da lista, e
    não só a metade esquerda: antes andavam encostadas umas às outras — com
    a data a partir-se em duas linhas — enquanto um terço do painel ficava
-   em branco à espera do "+". A sexta coluna é hoje só uma folga curta, o
-   ar de que o "+" precisa para não encostar ao quando.
+   em branco à espera do "+". A sexta coluna é a das marcas do que ficou de
+   cada concluído — texto, fotografias, vídeo —, e nos próximos, que não têm
+   marcas nenhumas, fica vazia e serve de folga ao "+". Mede-se em pixéis e
+   não em frações porque o que lá vai são três ícones de tamanho fixo.
 
    As quatro frações são quase iguais de propósito: é isso que dá à lista o
    compasso de uma tabela, com as colunas a começar de 260 em 260 e não aos
@@ -1418,7 +1420,7 @@ html[lang="en"] .title-art {
    própria e a lista ficava aos degraus. */
 .prj__linha {
   display: grid;
-  grid-template-columns: 46px minmax(0, 2.5fr) minmax(0, 2fr) minmax(0, 2.4fr) minmax(0, 2.7fr) minmax(0, .4fr) 22px;
+  grid-template-columns: 46px minmax(0, 2.5fr) minmax(0, 2fr) minmax(0, 2.4fr) minmax(0, 2.7fr) 66px 22px;
   align-items: center;
   gap: 18px;
   padding: 10px 0;
@@ -1439,6 +1441,12 @@ html[lang="en"] .title-art {
 
 .prj__t { font-size: 13px; line-height: 1.3; }
 .prj__q, .prj__s { font-size: 12px; opacity: .75; }
+
+/* As mesmas marcas do cartaz, aqui em ponto de linha: mais pequenas e mais
+   juntas, para caberem as três na coluna antes do "+". */
+.prj__marcas { display: flex; align-items: center; gap: 7px; }
+.prj__marcas .evcard__marca { width: 16px; height: 16px; }
+.prj__marcas .evcard__marca svg { width: 15px; height: 15px; }
 
 .prj__mais {
   grid-column: 7;          /* a última, depois da folga */
@@ -1475,7 +1483,8 @@ html[lang="en"] .title-art {
       "mini titulo mais"
       "mini tag    mais"
       "mini sitio  mais"
-      "mini quando mais";
+      "mini quando mais"
+      "mini marcas mais";
     align-items: start;
     gap: 4px 14px;
   }
@@ -1485,6 +1494,7 @@ html[lang="en"] .title-art {
   .prj__q { grid-area: quando; }
   .prj__s { grid-area: sitio; }
   .prj__linha .evtag { grid-area: tag; justify-self: start; margin-top: 4px; }
+  .prj__marcas { grid-area: marcas; margin-top: 6px; }
   .prj__mais { grid-area: mais; }
   .prj__sin { margin-left: 0; }
 }
@@ -3016,6 +3026,28 @@ html.menu-open .menu::before { opacity: 1; }
              pt: 'vídeo', en: 'video' }
   };
 
+  /* As marcas do que ficou de um concluído — texto, fotografias, vídeo —,
+     as mesmas no cartaz e na linha da lista, e por isso feitas aqui e não
+     duas vezes. Devolve nulo quando não ficou nada: os próximos não têm
+     marcas nenhumas, e assim quem chama não tem de contar os filhos. */
+  function evMarcas(c, cls) {
+    var caixa = document.createElement('div');
+    caixa.className = cls;
+    ['texto', 'foto', 'video'].forEach(function (m) {
+      if ((c.media || []).indexOf(m) === -1) return;
+      var spec = MARCAS[m];
+      if (!spec) return;
+      var span = document.createElement('span');
+      span.className = 'evcard__marca';
+      span.setAttribute('role', 'img');
+      span.setAttribute('aria-label', spec[lg()]);
+      span.title = spec[lg()];
+      span.innerHTML = spec.svg;
+      caixa.appendChild(span);
+    });
+    return caixa.childNodes.length ? caixa : null;
+  }
+
   function evDetalhe(sinal, texto) {
     var n = document.createElement('span');
     n.className = 'evdet';
@@ -3323,22 +3355,9 @@ html.menu-open .menu::before { opacity: 1; }
     if (t.natureza) det.appendChild(evDetalhe('tipo', t.natureza));
     det.appendChild(evDetalhe('pin', t.sitio));
 
-    var marcas = document.createElement('div');
-    marcas.className = 'evcard__marcas';
-    ['texto', 'foto', 'video'].forEach(function (m) {
-      if ((c.media || []).indexOf(m) === -1) return;
-      var spec = MARCAS[m];
-      if (!spec) return;
-      var span = document.createElement('span');
-      span.className = 'evcard__marca';
-      span.setAttribute('role', 'img');
-      span.setAttribute('aria-label', spec[lg()]);
-      span.title = spec[lg()];
-      span.innerHTML = spec.svg;
-      marcas.appendChild(span);
-    });
+    var marcas = evMarcas(c, 'evcard__marcas');
     var toggle = art.querySelector('.evcard__toggle');
-    if (marcas.childNodes.length) toggle.parentNode.insertBefore(marcas, toggle);
+    if (marcas) toggle.parentNode.insertBefore(marcas, toggle);
 
     return art;
   }
@@ -3528,13 +3547,14 @@ html.menu-open .menu::before { opacity: 1; }
 
   function prjConcluido(e) { return CONCLUIDOS.indexOf(e) !== -1; }
 
-  /* O quando de cada linha: nos que aí vêm, a hora e a data por extenso; nos
-     que já passaram, a data com o ano e sem hora — a que horas começou já
-     não interessa a ninguém, o ano interessa, e qual é qual diz-se agora
-     pelo tracejado da linha e não por uma palavra entre parênteses. */
+  /* O quando de cada linha: nos que aí vêm, a hora, o dia da semana e a data
+     por extenso; nos que já passaram, a palavra e a data com o ano — a que
+     horas começou já não interessa a ninguém, e o dia da semana de uma coisa
+     que passou também não: quem lê quer saber que passou, e quando. */
   function prjQuando(e) {
     if (!prjConcluido(e)) return evQuandoLongo(e);
-    return evSemana(e) + ' · ' + evDiaMesLongo(e) + (lg() === 'en' ? ' ' : ' de ') + e.ano;
+    return (lg() === 'en' ? 'completed' : 'concluído') + ' · ' +
+           evDiaMesLongo(e) + (lg() === 'en' ? ' ' : ' de ') + e.ano;
   }
 
   function prjLinha(e) {
@@ -3561,7 +3581,10 @@ html.menu-open .menu::before { opacity: 1; }
     li.querySelector('.evtag span').textContent = t.natureza || '';
     li.querySelector('.prj__sin').textContent = t.sinopse || '';
 
+    var marcas = evMarcas(e, 'prj__marcas');
+
     var bt = li.querySelector('.prj__mais');
+    if (marcas) bt.parentNode.insertBefore(marcas, bt);
     bt.setAttribute('aria-label', t.titulo);
     bt.addEventListener('click', function () {
       var aberto = li.classList.toggle('is-open');
