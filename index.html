@@ -1785,10 +1785,33 @@ html.menu-open .menu::before { opacity: 1; }
    creme sobre creme e ficavam ilegíveis na lista aberta. */
 .cform select.cform__input option { color: var(--blue); background: var(--cream); }
 
+/* O iOS desenha o <select> à sua maneira — cantos redondos, moldura própria e
+   as duas setas do sistema — e a caixa do tópico saía diferente das outras
+   duas. Tirado o desenho nativo, fica igual ao <input> e ao <textarea>; a seta
+   volta desenhada por nós, em creme, à direita. */
+.cform select.cform__input {
+  -webkit-appearance: none;
+          appearance: none;
+  border-radius: 0;
+  border-color: var(--cream);
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none' stroke='%23F2E7A9' stroke-width='1.5'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 10px 6px;
+}
+
 /* Enquanto o tópico for o que lá está por omissão, o <select> é um campo por
    preencher e não uma escolha feita: fica esbatido como um placeholder. É a
-   opção vazia que o torna :invalid — ver o required no <select>. */
-.cform select.cform__input:invalid { opacity: .65; }
+   opção vazia que o torna :invalid — ver o required no <select>. Esbatido é só
+   o texto: com opacity a moldura ia atrás e a caixa perdia o contorno. */
+.cform select.cform__input:invalid { color: rgba(242, 231, 169, .65); }
+
+/* A moldura do <select> é posta por regras mais específicas do que as gerais
+   do .cform__input, por isso o hover e o campo por preencher são repetidos
+   aqui — senão nunca chegavam a ganhar. */
+.cform select.cform__input:hover { border-color: var(--gold-light); }
+.cform select.cform__input[aria-invalid="true"] { border-color: var(--gold); }
 
 .cform__send {
   margin-top: 6px;
