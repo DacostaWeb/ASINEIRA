@@ -1381,8 +1381,12 @@ html[lang="en"] .title-art {
 .prjf:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
 .prj { margin-top: 18px; padding: 0; list-style: none; }
-.prj__l { border-top: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
-.prj__l:last-child { border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
+
+/* Os filetes da lista têm a grossura dos filetes dos cartazes de cima — os
+   2.6px do pontilhado que os envolve — para que a secção inteira se leia
+   com o mesmo traço, e não com um traço fino em baixo e um grosso em cima. */
+.prj__l { border-top: 2.6px solid color-mix(in srgb, currentColor 30%, transparent); }
+.prj__l:last-child { border-bottom: 2.6px solid color-mix(in srgb, currentColor 30%, transparent); }
 .prj__l[hidden] { display: none; }
 
 /* Os concluídos dizem-se pela linha: em cima, no cartaz, é um filete
