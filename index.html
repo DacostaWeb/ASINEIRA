@@ -1722,12 +1722,14 @@ html[lang="en"] .title-art {
    o encaminhamento por hash são os mesmos do site — uma página à parte
    obrigava a ter deles uma segunda cópia, e duas cópias divergem.
 
-   As medidas vêm do estudo em projetos2/: a coluna de 300, o vão de 30 de
-   cada lado, o vídeo de 300 ao alto. */
+   As medidas não são suas: são as do painel dos eventos, que é a página de
+   onde se entra aqui. O respiro do topo é o --tile-pad, e por isso o título
+   da peça começa na mesma linha em que começa o "eventos"; as colunas são as
+   dos cartazes, e por isso a identificação mede um cartaz e o material
+   começa onde começaria o segundo. Passar de uma página para a outra não
+   move nada de sítio. */
 .ficha {
-  --pad:  44px;    /* respiro entre o cabeçalho e o que a ficha começa a dizer */
-  --col:  300px;   /* a coluna da identificação */
-  --vala: 30px;    /* o vão entre as duas colunas */
+  --pad:  var(--tile-pad);   /* o mesmo respiro do painel: o topo alinha */
   --rule: color-mix(in srgb, currentColor 30%, transparent);
 
   /* A mesma moldura da grelha: do fundo do cabeçalho ao topo do marquee, e é
@@ -1747,15 +1749,26 @@ html[lang="en"] .title-art {
 }
 .ficha.is-on { visibility: visible; pointer-events: auto; }
 
-/* À esquerda quem é o projeto, à direita o que ficou dele. A coluna da
-   identificação encosta ao --gutter, e por isso alinha com o logótipo, como
-   acontece com o conteúdo dos mosaicos. */
+/* À esquerda quem é o projeto, à direita o que ficou dele — e a divisão é a
+   da grelha dos cartazes, cortes e folga iguais (ver .evgrid): a
+   identificação ocupa uma coluna, o material as que sobram. Os números aqui
+   são os de lá, e mexer neles obriga a mexer nos dois sítios.
+
+   Abaixo dos 900 passa a uma coluna só. É antes dos 600 a que a grelha dos
+   cartazes cede, mas o que aqui está numa coluna é texto corrido: a duas
+   colunas de 400 já não há medida de leitura nenhuma. */
 .ficha__doc {
+  --fcols: 1;
   display: grid;
-  grid-template-columns: minmax(0, var(--col)) minmax(0, 1fr);
+  grid-template-columns: repeat(var(--fcols), minmax(0, 1fr));
+  gap: 44px var(--gutter);
   align-items: start;
   padding: var(--pad) var(--gutter) 0;
 }
+
+@media (min-width: 901px)  { .ficha__doc { --fcols: 2; } }
+@media (min-width: 1080px) { .ficha__doc { --fcols: 3; } }
+@media (min-width: 1440px) { .ficha__doc { --fcols: 4; } }
 
 /* O respiro do fim é da coluna do material e não da folha: uma coluna que
    está de pé só se pode segurar até onde a grelha acaba, e com o respiro na
@@ -1764,23 +1777,30 @@ html[lang="en"] .title-art {
    cabeçalho. Posto aqui, a grelha acaba no fim de tudo, e ela fica quieta. */
 .ficha__mat { padding-bottom: 90px; }
 
-.ficha__id { padding-right: var(--vala); }
-
 /* A identificação fica de pé enquanto o material passa ao lado: quem chega a
    meio das fotografias continua a ver de que peça são, e a ficha técnica não
    obriga a voltar ao princípio.
 
-   Com o tecto e o scroll próprios porque uma coluna mais alta do que o ecrã
-   não se pode colar ao topo: ficava com os últimos créditos cortados e sem
-   maneira de lá chegar. Em janelas altas — que são a regra — a conta nunca
-   pega, e a coluna comporta-se como sempre. */
+   Quem tem tecto e rola é só o cartão azul. O nome da peça, o resumo e as
+   três linhas de onde e quando não se mexem nunca — são a identificação, e
+   uma identificação que foge do sítio deixa de servir para o que serve. Se
+   os créditos não couberem, é dentro deles que se anda.
+
+   A coluna é uma caixa flexível para poder ser assim: tudo o que está acima
+   do cartão fica ao tamanho que pede (flex: none) e só o cartão encolhe. O
+   min-height a zero é o que lhe permite ficar mais baixo do que o conteúdo
+   que leva dentro — sem ele, uma caixa flexível recusa-se a encolher e o
+   scroll nunca chegava a acontecer. */
 @media (min-width: 901px) {
   .ficha__id {
     position: sticky;
     top: var(--pad);
-    max-height: calc(100dvh - var(--header-h) - var(--marquee-h) - var(--pad) - var(--vala));
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100dvh - var(--header-h) - var(--marquee-h) - var(--pad) - var(--tile-pad));
   }
+  .ficha__id > * { flex: none; }
+  .ficha__cred { flex: 0 1 auto; min-height: 0; overflow-y: auto; }
 }
 
 /* O "×" que fecha: o mesmo sinal, no mesmo sítio e do mesmo tamanho do que
@@ -1819,11 +1839,11 @@ html[lang="en"] .title-art {
   transform: rotate(-45deg);
 }
 
-/* A coluna do material vai até à margem direita, mas o que lá está dentro
-   pára na largura de leitura do site — a mesma regra do cartão aberto em
-   painel, que também deixa o resto do ecrã em branco em vez de esticar as
-   linhas até ao fim. */
-.ficha__mat { padding-left: var(--vala); }
+/* O material toma as colunas que sobram, e por isso começa exactamente onde
+   começaria o segundo cartaz. O que lá está dentro pára na largura de
+   leitura do site — a mesma regra do cartão aberto em painel, que também
+   deixa o resto do ecrã em branco em vez de esticar as linhas até ao fim. */
+@media (min-width: 901px) { .ficha__mat { grid-column: 2 / -1; } }
 .ficha__mat > * { max-width: var(--panel-content); }
 
 
@@ -1872,11 +1892,10 @@ html[lang="en"] .title-art {
    trocado. O que à esquerda era uma margem com texto passa a ser um objecto,
    e quem vem do mosaico reconhece nele a cor que carregou.
 
-   O cartão enche a coluna toda — sai para dentro do vão —, enquanto o texto
-   por cima dele guarda a sua medida de leitura. É a diferença entre uma
-   coisa pousada e um parágrafo. */
+   Enche a coluna de lado a lado, que é a largura de um cartaz: é um objecto
+   pousado na coluna, e não um parágrafo com fundo. */
 .ficha__cred {
-  margin: 12px calc(var(--vala) * -1) 0 0;
+  margin-top: 12px;
   padding: 28px 24px 30px;
   background: var(--blue);
   color: var(--cream);
@@ -1933,15 +1952,11 @@ html[lang="en"] .title-art {
 /* Abaixo dos 900 as duas colunas passam a uma: a identificação em cima, o
    material por baixo. E deixa de ficar de pé — numa coluna só, uma coluna
    fixa era o ecrã inteiro sem nunca deixar chegar ao que vem a seguir. */
-@media (max-width: 900px) {
-  .ficha__doc { grid-template-columns: 1fr; }
-  .ficha__id { padding-right: 0; }
-  .ficha__cred { margin-right: 0; }
-  .ficha__mat { padding-left: 0; padding-top: 44px; }
-}
+/* Numa coluna só o cartão dos créditos volta a ser da altura que precisa: não
+   há tecto nenhum, e não há nada para rolar lá dentro. Quem os separa é o
+   espaço entre linhas da grelha, que já vale 44. */
 
 @media (max-width: 640px) {
-  .ficha { --pad: 30px; }
   .ficha__h1 { font-size: 21px; }
 }
 
@@ -3287,7 +3302,14 @@ html.menu-open .menu::before { opacity: 1; }
           ['Criação',      'Hugo Barros e Sara Garcia'],
           ['Participação', 'Xavier Nunes'],
           ['Apoios',       'Mês da Arquitectura da Maia 2024, Fercayo / CCR, Ventos e Tempestades — Associação Cultural'],
-          ['Vídeo',        'Mário M. Fonseca']
+          ['Vídeo',        'Mário M. Fonseca'],
+          /* PROVISÓRIO — enchimento para se ver o cartão a rolar no PC.
+             Não são créditos: são texto a fingir. Apagar estas linhas (e as
+             iguais em en) mal a decisão esteja tomada. */
+          ['Enchimento 1', 'Texto a fingir, para o cartão ficar mais alto do que o ecrã.'],
+          ['Enchimento 2', 'Texto a fingir, para o cartão ficar mais alto do que o ecrã.'],
+          ['Enchimento 3', 'Texto a fingir, para o cartão ficar mais alto do que o ecrã.'],
+          ['Enchimento 4', 'Texto a fingir, para o cartão ficar mais alto do que o ecrã.']
         ],
         rotulos: { ficha: 'Ficha técnica', sobre: 'Sobre o projeto', fotos: 'Fotografias' }
       },
@@ -3307,7 +3329,12 @@ html.menu-open .menu::before { opacity: 1; }
           ['Creation',      'Hugo Barros and Sara Garcia'],
           ['Participation', 'Xavier Nunes'],
           ['Support',       'Mês da Arquitectura da Maia 2024, Fercayo / CCR, Ventos e Tempestades — Associação Cultural'],
-          ['Video',         'Mário M. Fonseca']
+          ['Video',         'Mário M. Fonseca'],
+          /* PROVISÓRIO — ver a nota do lado português. */
+          ['Filler 1',      'Placeholder text, to push the card past the bottom of the screen.'],
+          ['Filler 2',      'Placeholder text, to push the card past the bottom of the screen.'],
+          ['Filler 3',      'Placeholder text, to push the card past the bottom of the screen.'],
+          ['Filler 4',      'Placeholder text, to push the card past the bottom of the screen.']
         ],
         rotulos: { ficha: 'Credits', sobre: 'About the project', fotos: 'Photographs' }
       },
