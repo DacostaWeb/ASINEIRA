@@ -1531,6 +1531,18 @@ html[lang="en"] .title-art {
 @media (min-width: 1080px) { .panel-section--cal { --ev-cols: 3; } }
 @media (min-width: 1440px) { .panel-section--cal { --ev-cols: 4; } }
 
+/* A coluna do mês guarda desde o início a altura de um cartaz — 540px, que
+   é o que um mede nesta grelha —, mesmo nos meses em que não há nenhum ao
+   lado. Sem isto a linha media-se pelo mês, as margens automáticas ficavam
+   sem folga que repartir e o mês saltava para o cimo: mudar de mês subia-o
+   e descia-o conforme houvesse ou não o que mostrar. */
+@media (min-width: 801px) {
+  .panel-section--cal .cal { min-height: 540px; }
+  /* O aviso de que não há nada marcado é o que fica no lugar dos cartazes:
+     vai à altura do mês, e não ao cimo de uma coluna vazia. */
+  .panel-section--cal .cal__m { align-self: center; }
+}
+
 .cal__cartazes,
 .cal__cartazes .evgrid { display: contents; }
 
@@ -3523,6 +3535,15 @@ html.menu-open .menu::before { opacity: 1; }
         cel.appendChild(bt);
         calGrelha.appendChild(cel);
       })(d);
+    }
+
+    /* Seis semanas sempre, mesmo quando o mês só ocupa cinco: as que sobram
+       ficam vazias. É a altura da grelha que se quer sempre igual — o mês
+       está a meio da coluna, e uma grelha que muda de altura de mês para mês
+       punha-o a subir e a descer a cada seta. */
+    var sobram = 7 + 6 * 7 - calGrelha.childNodes.length;
+    for (var v = 0; v < sobram; v++) {
+      calGrelha.appendChild(document.createElement('li')).className = 'cal__day';
     }
   }
 
