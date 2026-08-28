@@ -1073,9 +1073,11 @@ html[lang="en"] .title-art {
    quatro aos 1440. Mexer em --col-min ou em --col-max-n obriga a mexer
    nestes três números.
 
-   A diferença para o mosaico é a folga entre cartazes, que lá não existe. */
+   A diferença para o mosaico é a folga entre cartazes, que lá não existe.
+   Essa folga é a margem lateral: a coluna entre dois cartazes mede o mesmo
+   que o ar que eles deixam à borda do ecrã, e encolhe com ela aos 640px. */
 .evgrid {
-  --evgap: 30px;
+  --evgap: var(--gutter);
   display: grid;
   grid-template-columns: repeat(var(--ev-cols, 1), minmax(0, 1fr));
   gap: 40px var(--evgap);   /* mais ar entre linhas do que entre colunas */
