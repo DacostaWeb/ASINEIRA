@@ -1112,11 +1112,11 @@ html[lang="en"] .title-art {
   border: 1.5px solid var(--tile-fg);
 }
 
-/* Experiência B: a mesma placa, mas o filete é tracejado. */
+/* Experiência B: a mesma placa, filete a pontos e sem bordo de cima. */
 .evcard--conc-b .evcard__info {
-  border: 1.5px dashed var(--tile-fg);
+  border: 1.5px dotted var(--tile-fg);
+  border-top: none;
 }
-.evcard--conc-b .evcard__marca svg { stroke-width: 1.15; }
 
 .evcard__cartaz { position: relative; }
 
@@ -2131,7 +2131,7 @@ html.menu-open .menu::before { opacity: 1; }
         </div>
 
         <div class="panel-section">
-          <h3 class="panel-section__title" data-i18n="secConcB">concluídos — tracejado</h3>
+          <h3 class="panel-section__title" data-i18n="secConcB">concluídos — pontilhado</h3>
           <div class="evgrid evgrid--conc" id="ev-grelha-conc-b"></div>
         </div>
 
@@ -2585,7 +2585,7 @@ html.menu-open .menu::before { opacity: 1; }
       evH2: 'events',
       secProx: 'Upcoming', secConc: 'completed',
       secConcA: 'completed — border on the plate only',
-      secConcB: 'completed — dashed',
+      secConcB: 'completed — dotted',
       secCal: 'Calendar', secProj: 'Every project',
       capEv: 'Upcoming · completed · calendar · projects',
 
@@ -3006,15 +3006,12 @@ html.menu-open .menu::before { opacity: 1; }
              pt: 'vídeo', en: 'video' }
   };
 
-  /* Experiência B: os três sinais mais nus — linhas, câmara de pictograma,
-     triângulo de play. */
+  /* Experiência B: os ícones da A, câmara sem o raio do flash. */
   var MARCAS_B = {
-    texto: { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.6 4.8h10.8M2.6 8h10.8M2.6 11.2h5.6"/></svg>',
-             pt: 'texto', en: 'text' },
-    foto:  { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.3" y="5.7" width="11.4" height="7.5" rx=".35"/><circle cx="8" cy="9.5" r="2.25"/><rect x="10.35" y="4" width="2.35" height="1.7" rx=".2"/></svg>',
+    texto: MARCAS_A.texto,
+    foto:  { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.35 5.35h2.05l1.1-1.4h5.1l1.1 1.4H13.65v6.7H2.35z"/><circle cx="8" cy="8.5" r="2.1"/></svg>',
              pt: 'fotografias', en: 'photographs' },
-    video: { svg: '<svg viewBox="0 0 16 16" aria-hidden="true"><path class="evcard__marca--cheio" d="M5.15 3.35v9.3L13.35 8z"/></svg>',
-             pt: 'vídeo', en: 'video' }
+    video: MARCAS_A.video
   };
 
   function evDetalhe(sinal, texto) {
