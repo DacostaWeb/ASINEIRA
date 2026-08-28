@@ -1407,12 +1407,17 @@ html[lang="en"] .title-art {
    marcas nenhumas, fica vazia e serve de folga ao "+". Mede-se em pixéis e
    não em frações porque o que lá vai são três ícones de tamanho fixo.
 
-   As quatro frações são quase iguais de propósito: é isso que dá à lista o
-   compasso de uma tabela, com as colunas a começar de 260 em 260 e não aos
-   saltos. As pequenas diferenças entre elas são o que cada uma tem para
-   dizer — o quando é a mais larga porque tem de caber "21h30 · domingo ·
-   28 de fevereiro", a data mais comprida que o formato dá, numa linha só;
-   a natureza é a mais estreita porque nunca passa de uma etiqueta.
+   As frações não são iguais entre si, e é isso que faz a lista parecer bem
+   repartida: com colunas iguais, uma palavra curta como "Igreja" deixava
+   atrás de si um vazio do tamanho de meia coluna, enquanto "21h30 · segunda
+   · 7 de setembro" ficava quase a encostar à seguinte, e o olho lia o
+   compasso aos solavancos. Cada coluna mede o que o seu texto mais comprido
+   ocupa mais uma folga igual à das outras — é a folga que se quer igual, e
+   não a coluna. Medidos no ecrã, esses máximos são 179px para o título,
+   97px para a natureza, 84px para o sítio e 249px para o quando, que é o
+   mais comprido de todos: "21h30 · segunda · 21 de setembro". Daí a ordem
+   das frações — o quando primeiro, o título a seguir, e a natureza e o
+   sítio, que nunca passam de uma palavra, por fim.
 
    As larguras têm de ser frações e não max-content: cada linha é uma grelha
    sua, e é só por serem as mesmas frações da mesma largura que as colunas
@@ -1420,7 +1425,7 @@ html[lang="en"] .title-art {
    própria e a lista ficava aos degraus. */
 .prj__linha {
   display: grid;
-  grid-template-columns: 46px minmax(0, 2.5fr) minmax(0, 2fr) minmax(0, 2.4fr) minmax(0, 2.7fr) 66px 22px;
+  grid-template-columns: 46px minmax(0, 2.9fr) minmax(0, 2fr) minmax(0, 1.9fr) minmax(0, 3.3fr) 66px 22px;
   align-items: center;
   gap: 18px;
   padding: 10px 0;
