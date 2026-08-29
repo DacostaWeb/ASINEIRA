@@ -880,7 +880,14 @@ html[lang="en"] .title-art {
    100% — desliga o esticar, e a percentagem nem resolvia, que a altura do
    pai vem de fora, da linha da grelha. O min-height tira o piso que uma
    imagem traz por ter proporção própria, senão não encolhia. */
-.media img {
+/* O cartaz do vídeo é a sua primeira imagem: a célula tem 8MB para esperar,
+   e sem ele ficava azul até eles chegarem. Enche a casa como o vídeo, ou o
+   salto dava-se na mesma quando um desse lugar ao outro. */
+.media video { object-fit: cover; }
+.media video[poster] { background: transparent; }
+
+.media img,
+.media video {
   display: block;
   width: 100%;
   height: auto;
@@ -2736,8 +2743,14 @@ html.menu-open .menu::before { opacity: 1; }
     <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
 
+  <!-- Uma fotografia que se mexe, e nada mais: sem som, sem comandos e a
+       repetir-se. Quem pediu ao sistema para não ver coisas a mexer fica com
+       ela parada na primeira imagem (ver o troço do prefers-reduced-motion
+       lá em baixo), que é o que uma fotografia é. -->
   <figure class="media">
-    <img src="./sc1-mt1lcwzm-0usn.png" data-i18n-alt="alt3" alt="Bailarina em ensaio com estrutura de madeira" loading="lazy">
+    <video src="./pop.mp4" poster="./pop-poster.jpg" data-i18n-alabel="vidObras"
+           aria-label="Obras na antiga Igreja de Retorta: a parede a ser pintada ao rolo, ao lado do púlpito dourado e da sua escada."
+           autoplay muted loop playsinline preload="metadata"></video>
   </figure>
 
   <!-- Linha 2: atividades | fotografia | informações | fotografia -->
@@ -2802,7 +2815,7 @@ html.menu-open .menu::before { opacity: 1; }
   </article>
 
   <figure class="media">
-    <img src="./voar7-mt1lby5g-cd2e.jpg" data-i18n-alt="alt2" alt="Músico com guitarra rodeado de crianças em palco" loading="lazy">
+    <img src="dossier/assets/altares.jpg" data-i18n-alt="alt6" alt="Altar dourado da antiga Igreja de Retorta, junto à coluna de granito" loading="lazy">
   </figure>
 
   <!-- O "como chegar?" e o "sobre nós" eram dois cartões com o mesmo destino:
@@ -2865,7 +2878,7 @@ html.menu-open .menu::before { opacity: 1; }
   </article>
 
   <figure class="media" id="media-fim">
-    <img src="./teiaimg1.jpg" data-i18n-alt="alt5" alt="Intérprete a saltar num corredor de estantes" loading="lazy">
+    <img src="./totebag.jpg" data-i18n-alt="altSaco" alt="Saco de pano cru com o triângulo da Sineira estampado a azul" loading="lazy">
   </figure>
 
   <!-- Linha 4: a última fotografia (duas colunas em três) | loja -->
@@ -3248,10 +3261,9 @@ html.menu-open .menu::before { opacity: 1; }
       capFase: 'Phasing of the works',
       altFase: 'Phasing plan for the works at the former Retorta Church',
       altAerea: 'Aerial view of Retorta: a Sineira, the bridge over the river Ave, the schools and surroundings',
-      alt2: 'Musician with guitar surrounded by children on stage',
-      alt3: 'Dancer in rehearsal with a wooden structure',
-      alt5: 'Performer leaping down an aisle of shelving',
+      altSaco: 'Natural canvas tote bag printed with the Sineira triangle in blue',
       alt6: 'Gilded altarpiece at the former Retorta Church, beside the granite column',
+      vidObras: 'Work under way at the former Retorta Church: the wall being rolled with paint, beside the gilded pulpit and its stair.',
 
       marquee: 'Join now and become a "Friend of a Sineira" for discounts and monthly surprises!'
     }
@@ -3286,10 +3298,13 @@ html.menu-open .menu::before { opacity: 1; }
 
   function nodes(attr) { return Array.prototype.slice.call(document.querySelectorAll('[' + attr + ']')); }
 
-  var pt = { text: new Map(), html: new Map(), alt: new Map(), ph: new Map() };
+  var pt = { text: new Map(), html: new Map(), alt: new Map(), alabel: new Map(), ph: new Map() };
   nodes('data-i18n').forEach(function (el) { pt.text.set(el, el.textContent); });
   nodes('data-i18n-html').forEach(function (el) { pt.html.set(el, el.innerHTML); });
   nodes('data-i18n-alt').forEach(function (el) { pt.alt.set(el, el.getAttribute('alt')); });
+  /* O que o alt é para uma fotografia, o aria-label é para um vídeo: um
+     vídeo não tem alt onde o pôr. */
+  nodes('data-i18n-alabel').forEach(function (el) { pt.alabel.set(el, el.getAttribute('aria-label')); });
   nodes('data-i18n-ph').forEach(function (el) { pt.ph.set(el, el.getAttribute('placeholder')); });
   var ptTitle = document.title;
   var descMeta = document.querySelector('meta[name="description"]');
@@ -3386,6 +3401,10 @@ html.menu-open .menu::before { opacity: 1; }
     nodes('data-i18n-alt').forEach(function (el) {
       var v = t ? t[el.getAttribute('data-i18n-alt')] : pt.alt.get(el);
       if (v != null) el.setAttribute('alt', v);
+    });
+    nodes('data-i18n-alabel').forEach(function (el) {
+      var v = t ? t[el.getAttribute('data-i18n-alabel')] : pt.alabel.get(el);
+      if (v != null) el.setAttribute('aria-label', v);
     });
     nodes('data-i18n-ph').forEach(function (el) {
       var v = t ? t[el.getAttribute('data-i18n-ph')] : pt.ph.get(el);
@@ -5505,6 +5524,19 @@ html.menu-open .menu::before { opacity: 1; }
   state.scale = 60;
   renderMenu();
   evRelogioLiga();
+
+  /* O vídeo do mosaico anda sozinho porque é uma fotografia que se mexe, e
+     não um filme: sem som e sem comandos, quem passa não tem nada para lhe
+     fazer. A quem pediu ao sistema para não ver coisas a mexer fica parado
+     na primeira imagem — que é, essa sim, uma fotografia. O autoplay vem do
+     HTML para andar mesmo sem JS; é aqui que se lhe tira. */
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    Array.prototype.forEach.call(document.querySelectorAll('.media video'), function (v) {
+      v.removeAttribute('autoplay');
+      v.removeAttribute('loop');
+      v.pause();
+    });
+  }
 
   /* ---------- wordmark salta enquanto se faz scroll ---------- */
 
