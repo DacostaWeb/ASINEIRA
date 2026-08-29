@@ -744,9 +744,12 @@ html[lang="en"] .title-art {
 }
 
 /* Cartão aberto: sai da grelha e ocupa toda a secção de cartões, do fundo do
-   cabeçalho ao topo do marquee. Fica por baixo do cabeçalho (20) e do menu
-   (60), que continuam acessíveis. O buraco que deixa na grelha não se vê,
-   porque está tapado por ele. */
+   cabeçalho ao topo do marquee. A grelha sobe com ele (25): o × do painel
+   vive lá dentro, e sem esta subida ficava preso abaixo do cabeçalho (20) —
+   o triângulo, que transborda, passava-lhe por cima. Continua abaixo do
+   menu (60) e da ficha (50). O buraco que deixa na grelha não se vê, porque
+   está tapado por ele. */
+.tiles:has(.tile.is-expanded) { z-index: 25; }
 .tile.is-expanded {
   position: fixed;
   left: 0;
@@ -785,10 +788,11 @@ html[lang="en"] .title-art {
    isso a cor do painel atrás de si, numa caixa que o folga dos quatro lados;
    o recuo do topo e da direita é o mesmo da folga, para que o sinal fique
    exactamente onde estava. O z-index é o que o põe à frente: fixo mas sem
-   ele, os cartazes — que vêm depois no documento — passavam-lhe por cima. */
+   ele, os cartazes — que vêm depois no documento — passavam-lhe por cima.
+   Tem de ganhar ao filete dos concluídos (3) e a tudo o que o painel pinta. */
 .tile.is-expanded .tile__toggle {
   position: fixed;
-  z-index: 2;
+  z-index: 10;
   top: calc(var(--header-h) + var(--tile-pad) - 4px);
   right: calc(var(--gutter) - 7px);
   padding: 4px 7px;
@@ -1833,10 +1837,11 @@ html[lang="en"] .title-art {
    página inicial, volta-se aos eventos, que é de onde se veio.
 
    Fixo à janela e não à folha: em janelas baixas o conteúdo rola por baixo
-   dele e, se o fecho rolasse também, deixava de haver como fechar. */
+   dele e, se o fecho rolasse também, deixava de haver como fechar. O mesmo
+   z-index do × do painel: por cima de fotografias, créditos e o que passar. */
 .ficha__x {
   position: fixed;
-  z-index: 2;
+  z-index: 10;
   top: calc(var(--header-h) + var(--tile-pad) - 4px);
   right: calc(var(--gutter) - 7px);
   padding: 4px 7px;
