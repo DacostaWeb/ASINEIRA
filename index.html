@@ -3689,9 +3689,14 @@ html.menu-open .menu::before { opacity: 1; }
 
   /* O desfile: clique ou toque avança; deslizar para trás recua. O limiar
      de 50px e a conta dx/dy vêm do sítio do Atelier da Costa (o mesmo
-     pointer/trackpad que as Casas Gorgolito usam): o pointer cobre dedo,
-     rato e trackpad ao arrastar, e a roda horizontal cobre o deslize de
-     dois dedos no trackpad. */
+     pointer que as Casas Gorgolito usam): cobre o dedo no telemóvel e o
+     arrastar com o rato ou com o trackpad, e só dá uma fotografia por cada
+     vez que se toca, porque a bandeira do gesto só se levanta uma vez.
+
+     O deslize de dois dedos no trackpad — que não é pointer nenhum, é roda
+     horizontal — está desligado de propósito: ver a nota junto ao wheel, lá
+     em baixo. No portátil folheia-se pelas setas, pelo clique ou pelo
+     teclado. */
   /* Quem quiser pôr botões ou uma conta por fora do palco passa um aoMudar e
      fica com o mostra devolvido: a ficha usa os dois para as setas e o "1/9"
      do rodapé. Os cartazes não passam nada e não mudam de comportamento. */
@@ -3702,7 +3707,6 @@ html.menu-open .menu::before { opacity: 1; }
     var startX = 0, startY = 0;
     var tracking = false, swiped = false, pid = null;
     var LIMIAR = 50;
-    var wheelAcc = 0, wheelLock = false;
 
     function mostra(i) {
       n = ((i % total) + total) % total;
@@ -3756,16 +3760,21 @@ html.menu-open .menu::before { opacity: 1; }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); mostra(n - 1); }
     });
 
+    /* O deslize de dois dedos no trackpad não folheia. Folheou durante uns
+       dias e nunca ficou bem: o trackpad não pára quando os dedos param —
+       larga-os e continua a mandar deslize sozinho por mais de um segundo —
+       e não há no wheel maneira de dizer onde acaba um gesto e começa o
+       seguinte. Ou um deslize valia três fotografias, ou o deslize a seguir
+       desaparecia dentro da cauda do anterior. No telemóvel nada disto
+       existe: lá quem folheia é o pointer, que tem princípio e fim.
+
+       O que fica é só travar o gesto, e por isso o listener continua cá: sem
+       o preventDefault, um deslize horizontal sobre a fotografia é apanhado
+       pelo browser como andar para trás no histórico. Deixar de folhear é
+       uma coisa; sair da página sem querer é outra bem pior. */
     palco.addEventListener('wheel', function (e) {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) + 1) return;
       e.preventDefault();
-      if (wheelLock) return;
-      wheelAcc += e.deltaX;
-      if (Math.abs(wheelAcc) < 40) return;
-      mostra(n + (wheelAcc > 0 ? 1 : -1));
-      wheelAcc = 0;
-      wheelLock = true;
-      setTimeout(function () { wheelLock = false; }, 280);
     }, { passive: false });
 
     return mostra;
