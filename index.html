@@ -673,7 +673,8 @@ html[lang="en"] .title-art {
   white-space: nowrap;
 }
 
-/* O "+" roda para "×" quando abre — a rotação é aplicada pelo JS. */
+/* O "+" roda para "×" quando abre. Roda o sinal, não o botão: se rodasse
+   a caixa toda, o fundo azul (que tapa o filete) ia de esquina para baixo. */
 .tile__toggle {
   flex-shrink: 0;
   padding: 0;
@@ -686,6 +687,9 @@ html[lang="en"] .title-art {
   font-weight: 300;
   line-height: .75;
   cursor: pointer;
+}
+.tile__toggle-mark {
+  display: block;
   transition: transform .25s ease;
 }
 
@@ -777,6 +781,8 @@ html[lang="en"] .title-art {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  position: relative;
+  z-index: 0;
 }
 
 /* Menos o dos eventos: lá quem manda são os cartazes, e esses seguem as
@@ -784,27 +790,18 @@ html[lang="en"] .title-art {
    de leitura. O calendário é que continua a tê-la (ver .cal). */
 #eventos.tile.is-expanded .tile__inner { max-width: none; }
 
-/* Só o × fica: o título rola. Fora do inner, z-index acima do filete. */
+/* Só o × fica: o título rola. Fora do inner, por cima do filete. O fundo
+   é do próprio botão — uma sombra ::before com z-index negativo saía do
+   contexto e o filete pintava-lhe por cima, deixando o × a descoberto. */
 .tile.is-expanded > .tile__toggle {
-  z-index: 10;
+  z-index: 20;
   isolation: isolate;
   top: calc(var(--tile-pad) - 4px);
   right: calc(var(--gutter) - 7px);
   padding: 4px 7px;
-}
-
-/* A caixa não é do botão: é desta sombra atrás dele. Quem roda um oitavo de
-   volta é o botão inteiro — é assim que o "+" vira "×" —, e uma caixa a
-   rodar com ele ficava de esquina para baixo. Rodada ao contrário do mesmo
-   tanto, fica direita, seja qual for a volta que o botão levar. */
-.tile.is-expanded .tile__toggle::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
   background: var(--tile-bg);
-  transform: rotate(-45deg);
 }
+.tile.is-expanded .tile__toggle-mark { transform: rotate(45deg); }
 
 /* Aberto em painel, a lista de cima sai: tudo o que ela diz está logo a
    seguir, nos cartazes e na lista de todos os projetos, e escrito duas vezes
@@ -2586,7 +2583,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       <p class="tile__caption" data-i18n="capEv">Próximos · concluídos · calendário · projetos</p>
     </div>
-    <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
 
   <figure class="media">
@@ -2651,7 +2648,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       <p class="tile__caption" data-i18n="capAt">Apresentação - criação - formação - residências</p>
     </div>
-    <button class="tile__toggle" type="button" data-tile="Atividades" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <button class="tile__toggle" type="button" data-tile="Atividades" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
 
   <figure class="media">
@@ -2674,7 +2671,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       <p class="tile__caption" data-i18n="capInfo">Sobre nós - acessos - contactos</p>
     </div>
-    <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais">+</button>
+    <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
 
   <!-- A fotografia que ficou no lugar do cartão que saiu: são as dez células
@@ -2714,7 +2711,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       <p class="tile__caption" data-i18n="capAm">Espetáculos gratuitos - descontos - conteúdo exclusivo</p>
     </div>
-    <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais">+</button>
+    <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
 
   <figure class="media" id="media-fim">
@@ -4636,7 +4633,6 @@ html.menu-open .menu::before { opacity: 1; }
 
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'Fechar' : 'Mostrar mais');
-    btn.style.transform = open ? 'rotate(45deg)' : 'none';
     if (body) body.style.display = open ? 'block' : 'none';
     if (tile) tile.classList.toggle('is-expanded', open);
 
