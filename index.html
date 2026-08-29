@@ -1008,6 +1008,14 @@ html[lang="en"] .title-art {
   border-collapse: collapse;
   font-size: 13px;
   line-height: 1.45;
+
+  /* As larguras de baixo têm de valer à letra, ou as duas listas deixam de
+     se alinhar uma com a outra. Em repartição automática cada tabela mede as
+     suas colunas pelo que tem lá dentro: a data por extenso não cabia nos
+     22% e empurrava a coluna, os três sinais do concluído cabiam de sobra e
+     encolhiam-na, e a partir dos 1000px o título de baixo andava dois dedos
+     à esquerda do de cima. Fixa, a percentagem é a percentagem nas duas. */
+  table-layout: fixed;
 }
 
 .events td { padding: 4px 12px 4px 0; vertical-align: top; }
@@ -1017,6 +1025,17 @@ html[lang="en"] .title-art {
 .events td:last-child { width: 22%; padding-right: 0; text-align: right; }
 
 .events__date { white-space: nowrap; }
+
+/* A data tem duas escritas na mesma célula e é aqui que se escolhe qual se
+   vê. Por extenso enquanto há largura; abaixo dos 1080 — onde o mosaico
+   perde a segunda coluna da grelha — "26 de Setembro" passava dos 22% que
+   lhe cabem e comia a coluna do título. "26 set" diz o mesmo em metade. */
+.events__d--curta { display: none; }
+
+@media (max-width: 1079px) {
+  .events__d--longa { display: none; }
+  .events__d--curta { display: inline; }
+}
 
 /* Em coluna estreita a tabela deixa de caber a quatro: o sítio e a natureza
    passam para baixo do título, na mesma célula visual. */
@@ -1061,7 +1080,14 @@ html[lang="en"] .title-art {
 .events__head--prox { margin-top: 34px; }
 .events--prox,
 .events--conc { margin-top: 6px; }
-.events--conc td:nth-child(1) { width: 62px; }
+
+/* Enquanto a data vai por extenso, a coluna dos sinais não precisa dos 22%
+   que ela precisa, e uma coluna quase vazia entre o rótulo e o título só
+   fazia buraco. Abaixo dos 1080 a data encurta, as duas listas voltam à
+   mesma repartição e os títulos ficam um debaixo do outro. */
+@media (min-width: 1080px) {
+  .events--conc td:nth-child(1) { width: 62px; }
+}
 
 /* O que ficou de cada concluído, na primeira coluna: os mesmos três sinais
    dos cartazes do painel — linhas, câmara e play. Estiveram aqui por
@@ -3725,13 +3751,31 @@ html.menu-open .menu::before { opacity: 1; }
     evRelogio = setInterval(evAnda, 3000);
   }
 
+  /* A célula da data traz as duas escritas — "26 de Setembro" e "26 set" —
+     e é o CSS que decide qual se vê (ver .events__d--curta). Vão as duas ao
+     HTML de propósito: assim a lista não se volta a montar de cada vez que a
+     janela muda de tamanho, e a data acerta com a largura ainda antes de o
+     JS dar por ela. */
+  function evCelData(e) {
+    var td = document.createElement('td');
+    td.className = 'events__date';
+    [['events__d events__d--longa', evData(e)],
+     ['events__d events__d--curta', e.mes ? evDiaMes(e) : evData(e)]].forEach(function (par) {
+      var n = document.createElement('span');
+      n.className = par[0];
+      n.textContent = par[1];
+      td.appendChild(n);
+    });
+    return td;
+  }
+
   function evLinha(e, i) {
     var tr = document.createElement('tr');
     var t = evTexto(e);
-    [[evData(e), 'events__date'], [t.titulo, ''], [t.sitio, ''], [t.natureza, '']].forEach(function (par) {
+    tr.appendChild(evCelData(e));
+    [t.titulo, t.sitio, t.natureza].forEach(function (txt) {
       var td = document.createElement('td');
-      td.className = par[1];
-      td.textContent = par[0];
+      td.textContent = txt;
       tr.appendChild(td);
     });
     tr.addEventListener('mouseenter', function () { evParado = true; evFoco(i); });
