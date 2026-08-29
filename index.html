@@ -1801,6 +1801,27 @@ html[lang="en"] .title-art {
   }
   .ficha__id > * { flex: none; }
   .ficha__cred { flex: 0 1 auto; min-height: 0; overflow-y: auto; }
+
+  /* A excepção à regra de não haver barras nenhumas (ver o selector universal
+     lá em cima). Aqui a barra faz falta: o cartão azul é a única caixa do
+     site que corta conteúdo sem que nada o anuncie — acaba a meio de uma
+     linha de créditos e quem olha não sabe que há mais por baixo. Uma risca
+     fina do creme do próprio cartão chega para o dizer, e só aparece quando
+     de facto não cabe, porque o overflow é auto.
+
+     Fica dentro deste media query de propósito: abaixo dos 901px a coluna
+     não tem tecto, o cartão vai ao tamanho que pede e não há nada que role. */
+  .ficha__cred {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, currentColor 45%, transparent) transparent;
+  }
+  .ficha__cred::-webkit-scrollbar { display: block; width: 4px; }
+  .ficha__cred::-webkit-scrollbar-track { background: transparent; }
+  .ficha__cred::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, currentColor 45%, transparent);
+    border-radius: 2px;
+  }
+  .ficha__cred:hover::-webkit-scrollbar-thumb { background: color-mix(in srgb, currentColor 70%, transparent); }
 }
 
 /* O "×" que fecha: o mesmo sinal, no mesmo sítio e do mesmo tamanho do que
