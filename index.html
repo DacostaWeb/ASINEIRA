@@ -1262,6 +1262,7 @@ html[lang="en"] .title-art {
 .evcard__marca svg .evcard__marca--cheio { fill: currentColor; stroke: none; }
 
 .evcard__toggle {
+  display: block;
   flex-shrink: 0;
   align-self: flex-start;
   padding: 0;
@@ -1272,13 +1273,12 @@ html[lang="en"] .title-art {
   font-size: 38px;
   font-weight: 300;
   line-height: .75;
+  text-decoration: none;
   cursor: pointer;
 }
+.evcard__toggle:hover { text-decoration: none; }
 .evcard__toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
-.evcard__body { display: none; margin-top: 6px; font-size: 12px; line-height: 1.55; }
-.evcard.is-open .evcard__body { display: block; }
-.evcard__body a { text-decoration: underline; text-underline-offset: 2px; }
 
 /* Os detalhes, fora da fotografia: um por linha, cada um com o seu sinal —
    o triângulo da marca para o tipo de trabalho, o alfinete para o sítio, o
@@ -1362,7 +1362,8 @@ html[lang="en"] .title-art {
   opacity: .6;
   cursor: default;
 }
-.evbt--soon:hover { background: none; color: inherit; }
+.evbt--soon:hover,
+.evcard__info .evbt--soon:hover { background: none; color: inherit; }
 
 
 /* --- Todos os projetos: a lista em linhas, com filtros --- */
@@ -1422,20 +1423,17 @@ html[lang="en"] .title-art {
    97px para a natureza, 84px para o sítio e 249px para o quando, que é o
    mais comprido de todos: "21h30 · segunda · 21 de setembro". Daí a ordem
    das frações — o quando primeiro, o título a seguir, e a natureza e o
-   sítio, que nunca passam de uma palavra, por fim. A fração do quando é de
-   3.7 e não de 3.3 porque a última coluna passou de 22px a 76px para caber
-   o "brevemente": os 54px que ela tirou à lista saem de onde há folga, e
-   não do único campo que não a tem.
+   sítio, que nunca passam de uma palavra, por fim.
 
    As larguras têm de ser frações e não max-content: cada linha é uma grelha
    sua, e é só por serem as mesmas frações da mesma largura que as colunas
    se alinham de cima a baixo. Com max-content cada linha media-se a si
    própria e a lista ficava aos degraus — e pela mesma razão nenhuma linha
-   pode ter uma grelha sua: a última coluna mede 76px em todas, seja para o
-   "+" ou para o "brevemente". */
+   pode ter uma grelha sua: a última coluna mede 86px em todas, seja para as
+   marcas e o "+" ou para o "brevemente". */
 .prj__linha {
   display: grid;
-  grid-template-columns: 46px minmax(0, 2.9fr) minmax(0, 2fr) minmax(0, 1.9fr) minmax(0, 3.7fr) 66px 76px;
+  grid-template-columns: 46px minmax(0, 2.9fr) minmax(0, 2fr) minmax(0, 1.9fr) minmax(0, 3.3fr) 86px;
   align-items: center;
   gap: 18px;
   padding: 10px 0;
@@ -1443,7 +1441,11 @@ html[lang="en"] .title-art {
 
 /* Tudo encostado à esquerda dentro da sua coluna, que é o que alinha as
    quatro de cima a baixo mesmo quando um título é muito mais curto. */
-.prj__linha > *:not(.prj__mais):not(.prj__breve) { justify-self: start; }
+.prj__linha > *:not(.prj__fim) { justify-self: start; }
+
+/* O fim da linha: as marcas do que ficou e o "+", encostados um ao outro e
+   ambos à direita. Sem marcas fica só o sinal, no mesmo sítio. */
+.prj__fim { display: flex; align-items: center; justify-content: flex-end; gap: 11px; }
 
 /* A linha de quem tem ficha própria leva-se inteira: o alvo é a faixa toda,
    e o sublinhado no título diz onde é que ela vai dar. */
@@ -1469,45 +1471,30 @@ html[lang="en"] .title-art {
 .prj__marcas .evcard__marca svg { width: 15px; height: 15px; }
 
 .prj__mais {
-  grid-column: 7;          /* a última, depois da folga */
-  justify-self: end;
-  padding: 0;
-  border: none;
-  background: none;
+  flex-shrink: 0;
   color: inherit;
-  font: inherit;
   font-size: 17px;
   font-weight: 300;
   line-height: 1;
+  text-decoration: none;
   cursor: pointer;
 }
+.prj__mais:hover { text-decoration: none; }
 .prj__mais:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
 /* No lugar do "+", em quem ainda não tem ficha: a palavra em vez do sinal.
-   Não é botão — não abre nada, diz que ainda não há o que abrir. É por
-   caber aqui uma palavra e não um sinal que a última coluna da linha mede
-   76px: a mesma em todas, tenham "+" ou "brevemente", que é o que mantém as
+   Não é ligação — não vai a lado nenhum, diz que ainda não há para onde
+   ir. É por caber aqui uma palavra, e as marcas com o "+" ao lado, que a
+   última coluna da linha mede 86px: a mesma em todas, que é o que mantém as
    colunas alinhadas de cima a baixo. */
 .prj__breve {
-  justify-self: end;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: .06em;
   opacity: .55;
   white-space: nowrap;
 }
-@media (min-width: 721px) { .prj__breve { grid-column: 7; } }
 
-.prj__sin {
-  display: none;
-  max-width: 62ch;
-  margin-left: 56px;   /* alinhada com o título, à direita da miniatura */
-  padding-bottom: 12px;
-  font-size: 12px;
-  line-height: 1.55;
-  opacity: .8;
-}
-.prj__l.is-open .prj__sin { display: block; }
 
 /* Em ecrã estreito a linha desdobra-se: a miniatura fica à esquerda de tudo
    o resto, que passa a empilhar-se. */
@@ -1515,24 +1502,19 @@ html[lang="en"] .title-art {
   .prj__linha {
     grid-template-columns: 54px 1fr max-content;
     grid-template-areas:
-      "mini titulo mais"
-      "mini tag    mais"
-      "mini sitio  mais"
-      "mini quando mais"
-      "mini marcas mais";
+      "mini titulo fim"
+      "mini tag    fim"
+      "mini sitio  fim"
+      "mini quando fim";
     align-items: start;
     gap: 4px 14px;
   }
-  .prj__mais { grid-column: auto; }
   .prj__mini { grid-area: mini; align-self: start; }
   .prj__t { grid-area: titulo; }
   .prj__q { grid-area: quando; }
   .prj__s { grid-area: sitio; }
   .prj__linha .evtag { grid-area: tag; justify-self: start; margin-top: 4px; }
-  .prj__marcas { grid-area: marcas; margin-top: 6px; }
-  .prj__mais { grid-area: mais; }
-  .prj__breve { grid-area: mais; }
-  .prj__sin { margin-left: 0; }
+  .prj__fim { grid-area: fim; align-self: center; }
 }
 
 
@@ -3484,6 +3466,12 @@ html.menu-open .menu::before { opacity: 1; }
     var m = MESES[lg()][e.mes - 1];
     return lg() === 'en' ? e.dia + ' ' + m : e.dia + ' de ' + m.toLowerCase();
   }
+  /* "25 de abril de 2026": a data por extenso com o ano atrás. É a que o
+     cartaz de um concluído põe ao lado do calendário e a que a lista de
+     todos os projetos escreve a seguir a "concluído". */
+  function evDataLonga(e) {
+    return evDiaMesLongo(e) + (lg() === 'en' ? ' ' : ' de ') + e.ano;
+  }
   function evQuandoLongo(e) {
     var partes = [];
     if (e.hora) partes.push(e.hora);
@@ -3776,7 +3764,6 @@ html.menu-open .menu::before { opacity: 1; }
             '<p class="evcard__kick"></p>' +
             '<p class="evcard__title"><span></span></p>' +
           '</div>' +
-          '<button class="evcard__toggle" type="button" aria-expanded="false">+</button>' +
         '</div>' +
         '<div class="evcard__detalhes"></div>' +
         '<p class="evcard__sinopse"></p>' +
@@ -3798,38 +3785,30 @@ html.menu-open .menu::before { opacity: 1; }
     });
     evSlideshow(palco, fotos.length);
 
-    art.querySelector('.evcard__kick').textContent = rotulo;
+    /* Os próximos têm a data em cima do título; os concluídos têm-na lá
+       em baixo, na linha do calendário, e aqui não têm nada — nem a linha
+       vazia, que abria uma folga por cima do título. */
+    var kick = art.querySelector('.evcard__kick');
+    if (rotulo) kick.textContent = rotulo;
+    else kick.parentNode.removeChild(kick);
     art.querySelector('.evcard__title span').textContent = t.titulo;
     art.querySelector('.evcard__sinopse').textContent = t.sinopse || '';
     return art;
   }
 
-  /* O "+" da legenda abre, por baixo da sinopse, o caminho para a ficha do
-     projeto. Só o põe quem tem ficha: onde não há para onde ir, não há "+"
-     — ver evSemMais. */
+  /* O "+" da legenda é a porta da ficha do projeto: uma ligação a sério,
+     que se abre num separador novo e se copia com o botão da direita. Abria
+     antes uma gaveta com um "quero saber mais" lá dentro — dois cliques
+     para o mesmo sítio, e o segundo escondido.
+
+     Só o põe quem tem ficha: onde não há para onde ir, não há "+". */
   function evMais(art, href, rotulo) {
-    var corpo = document.createElement('div');
-    corpo.className = 'evcard__body';
-    corpo.innerHTML = '<p><a></a></p>';
-    var link = corpo.querySelector('a');
-    link.href = href;
-    link.textContent = lg() === 'en' ? 'I want to know more' : 'quero saber mais';
-    art.querySelector('.evcard__sinopse').after(corpo);
-
-    var bt = art.querySelector('.evcard__toggle');
-    bt.setAttribute('aria-label', rotulo);
-    bt.addEventListener('click', function () {
-      var aberto = art.classList.toggle('is-open');
-      bt.textContent = aberto ? '−' : '+';
-      bt.setAttribute('aria-expanded', String(aberto));
-    });
-  }
-
-  /* Um cartaz sem ficha fica sem "+": um sinal que abre para dizer "quero
-     saber mais" e depois não leva a lado nenhum é pior do que sinal nenhum. */
-  function evSemMais(art) {
-    var bt = art.querySelector('.evcard__toggle');
-    if (bt) bt.parentNode.removeChild(bt);
+    var a = document.createElement('a');
+    a.className = 'evcard__toggle';
+    a.href = href;
+    a.textContent = '+';
+    a.setAttribute('aria-label', rotulo);
+    art.querySelector('.evcard__legenda').appendChild(a);
   }
 
   /* Um cartaz dos próximos: natureza, sítio e data por extenso na linha de
@@ -3838,7 +3817,7 @@ html.menu-open .menu::before { opacity: 1; }
     var t = evTexto(e);
     var rotulo = evData(e);
     var art = evCaixa(t, evAlt(e), evFotosDe(e), rotulo);
-    if (e.projeto) evMais(art, evParaOnde(e), t.titulo); else evSemMais(art);
+    if (e.projeto) evMais(art, evParaOnde(e), t.titulo);
 
     var det = art.querySelector('.evcard__detalhes');
     det.appendChild(evDetalhe('tipo', t.natureza));
@@ -3869,7 +3848,7 @@ html.menu-open .menu::before { opacity: 1; }
      sai. */
   function evCartazConc(c) {
     var t = evTexto(c);
-    var art = evCaixa(t, evAlt(c), evFotosDe(c), String(c.ano));
+    var art = evCaixa(t, evAlt(c), evFotosDe(c), '');
     art.classList.add('evcard--conc');
     var filete = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     filete.setAttribute('class', 'evcard__filete');
@@ -3883,18 +3862,25 @@ html.menu-open .menu::before { opacity: 1; }
     rect.setAttribute('height', '100');
     filete.appendChild(rect);
     art.appendChild(filete);
-    if (c.projeto) evMais(art, evParaOnde(c), t.titulo); else evSemMais(art);
+    if (c.projeto) evMais(art, evParaOnde(c), t.titulo);
 
+    /* A mesma linha de detalhes da ficha do projeto, e pela mesma ordem: a
+       natureza, o sítio e o quando. O calendário e não o relógio — a que
+       horas começou uma coisa que já passou não interessa a ninguém. */
     var det = art.querySelector('.evcard__detalhes');
     if (t.natureza) det.appendChild(evDetalhe('tipo', t.natureza));
     det.appendChild(evDetalhe('pin', t.sitio));
+    det.appendChild(evDetalhe('mes', evDataLonga(c)));
 
+    /* O que ficou (texto, fotografias, vídeo) fecha o cartaz, no lugar onde
+       um próximo põe os bilhetes: é a mesma pergunta — o que é que daqui
+       me levo — feita antes e depois. */
     var marcas = evMarcas(c, 'evcard__marcas');
     if (marcas) {
-      var toggle = art.querySelector('.evcard__toggle');
-      var legenda = art.querySelector('.evcard__legenda');
-      if (toggle) legenda.insertBefore(marcas, toggle);
-      else legenda.appendChild(marcas);
+      var caixa = document.createElement('div');
+      caixa.className = 'evcard__bilhetes';
+      caixa.appendChild(marcas);
+      art.querySelector('.evcard__info').appendChild(caixa);
     }
 
     return art;
@@ -4100,8 +4086,7 @@ html.menu-open .menu::before { opacity: 1; }
      que passou também não: quem lê quer saber que passou, e quando. */
   function prjQuando(e) {
     if (!prjConcluido(e)) return evQuandoLongo(e);
-    return (lg() === 'en' ? 'completed' : 'concluído') + ' · ' +
-           evDiaMesLongo(e) + (lg() === 'en' ? ' ' : ' de ') + e.ano;
+    return (lg() === 'en' ? 'completed' : 'concluído') + ' · ' + evDataLonga(e);
   }
 
   function prjLinha(e) {
@@ -4115,11 +4100,8 @@ html.menu-open .menu::before { opacity: 1; }
         '<span class="evtag evdet">' + SINAIS.tipo + '<span></span></span>' +
         '<p class="prj__s evdet">' + SINAIS.pin + '<span></span></p>' +
         '<p class="prj__q evdet">' + SINAIS.relogio + '<span></span></p>' +
-        (e.projeto
-           ? '<button class="prj__mais" type="button" aria-expanded="false">+</button>'
-           : '<span class="prj__breve"></span>') +
-      '</div>' +
-      '<p class="prj__sin"></p>';
+        '<div class="prj__fim"></div>' +
+      '</div>';
 
     var img = li.querySelector('img');
     img.src = e.img; img.alt = evAlt(e);
@@ -4128,38 +4110,36 @@ html.menu-open .menu::before { opacity: 1; }
     li.querySelector('.prj__q span').textContent = prjQuando(e);
     li.querySelector('.prj__s span').textContent = t.sitio;
     li.querySelector('.evtag span').textContent = t.natureza || '';
-    li.querySelector('.prj__sin').textContent = t.sinopse || '';
 
+    /* O fim da linha é uma célula só: as marcas do que ficou encostadas ao
+       "+", e não cada uma na sua coluna. O "+" é o mesmo do cartaz — uma
+       ligação para a ficha, e não um botão que abria a sinopse aqui na
+       linha. Quem não tem ficha diz "brevemente" no mesmo lugar. */
+    var fim = li.querySelector('.prj__fim');
     var marcas = evMarcas(e, 'prj__marcas');
+    if (marcas) fim.appendChild(marcas);
 
-    /* O "+" é de quem tem ficha: abre a sinopse a quem quer espreitar antes
-       de entrar. Quem não tem ficha diz "brevemente" no mesmo lugar — a
-       sinopse fica na linha, mas não há sinal que prometa uma página que
-       ainda não existe. */
-    var bt = li.querySelector('.prj__mais');
-    var breve = li.querySelector('.prj__breve');
-    if (breve) breve.textContent = lg() === 'en' ? 'soon' : 'brevemente';
-    if (marcas) {
-      var antes = bt || breve;
-      antes.parentNode.insertBefore(marcas, antes);
-    }
-    if (bt) {
-      bt.setAttribute('aria-label', t.titulo);
-      bt.addEventListener('click', function () {
-        var aberto = li.classList.toggle('is-open');
-        bt.textContent = aberto ? '−' : '+';
-        bt.setAttribute('aria-expanded', String(aberto));
-      });
+    if (e.projeto) {
+      var mais = document.createElement('a');
+      mais.className = 'prj__mais';
+      mais.href = '#' + projSlug(e.projeto);
+      mais.textContent = '+';
+      mais.setAttribute('aria-label', t.titulo);
+      fim.appendChild(mais);
+    } else {
+      var breve = document.createElement('span');
+      breve.className = 'prj__breve';
+      breve.textContent = lg() === 'en' ? 'soon' : 'brevemente';
+      fim.appendChild(breve);
     }
 
     /* Quem tem ficha própria leva-se a linha inteira: o alvo passa a ser uma
-       faixa da largura da lista e não um "+" de 17px. O "+" continua a ser
-       só a sinopse — quem quer espreitar antes de entrar espreita —, e por
-       isso o clique que cai nele não segue para a ficha.
+       faixa da largura da lista e não um "+" de 17px.
 
        O título fica um <a> a sério, e não um handler solto: é o que dá o
        endereço à direita do rato, o "abrir num separador novo" e o caminho
-       pelo teclado. A linha à volta é só o alvo maior do mesmo sítio. */
+       pelo teclado. A linha à volta é só o alvo maior do mesmo sítio — e o
+       clique que cai no "+", que é outra ligação para lá, segue sozinho. */
     if (e.projeto) {
       var titulo = li.querySelector('.prj__t');
       var a = document.createElement('a');
