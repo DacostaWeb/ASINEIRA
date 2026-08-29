@@ -1967,6 +1967,56 @@ html[lang="en"] .title-art {
    material medem o mesmo na página, e continuam a ser o que nela é maior. */
 .ficha__fotos { position: relative; max-width: 710px; }
 
+/* O rodapé do desfile: as setas encostadas aos cantos da fotografia e a
+   conta a meio — o mesmo arranjo do desfile das Casas Gorgolito. Três
+   colunas com a do meio ao tamanho que pede e as de fora a dividir o resto:
+   assim a etiqueta fica no eixo da fotografia, e não a meio do que sobra
+   entre as duas setas, que é onde um simples space-between a punha. */
+.ficha__fotosnav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-top: 18px;
+}
+
+/* As setas são as do calendário noutro sinal: um caracter, sem caixa nem
+   contorno, e a esmorecer em vez de mudar de cor. A área de toque é maior
+   do que o desenho — o padding vai para os lados de fora, para o sinal ficar
+   à face da fotografia. */
+.ficha__seta {
+  padding: 4px 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ficha__seta:hover { opacity: .6; }
+.ficha__seta--ant { justify-self: start; }
+.ficha__seta--seg { justify-self: end; }
+
+/* A conta é uma etiqueta, da família das que estão sobre a vista aérea:
+   contorno fino, cantos redondos e o corpo pequeno dos rótulos. Não é texto
+   a acompanhar a fotografia — é um mostrador, e por isso tem caixa. */
+.ficha__conta {
+  padding: 4px 10px;
+  border: 1.5px solid currentColor;
+  border-radius: 99px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 
 /* --- ecrãs estreitos --- */
 
@@ -3323,14 +3373,7 @@ html.menu-open .menu::before { opacity: 1; }
           ['Criação',      'Hugo Barros e Sara Garcia'],
           ['Participação', 'Xavier Nunes'],
           ['Apoios',       'Mês da Arquitectura da Maia 2024, Fercayo / CCR, Ventos e Tempestades — Associação Cultural'],
-          ['Vídeo',        'Mário M. Fonseca'],
-          /* PROVISÓRIO — enchimento para se ver o cartão a rolar no PC.
-             Não são créditos: são texto a fingir. Apagar estas linhas (e as
-             iguais em en) mal a decisão esteja tomada. */
-          ['Enchimento 1', 'Texto a fingir, para o cartão ficar mais alto do que o ecrã.'],
-          ['Enchimento 2', 'Texto a fingir, para o cartão ficar mais alto do que o ecrã.'],
-          ['Enchimento 3', 'Texto a fingir, para o cartão ficar mais alto do que o ecrã.'],
-          ['Enchimento 4', 'Texto a fingir, para o cartão ficar mais alto do que o ecrã.']
+          ['Vídeo',        'Mário M. Fonseca']
         ],
         rotulos: { ficha: 'Ficha técnica', sobre: 'Sobre o projeto', fotos: 'Fotografias' }
       },
@@ -3350,12 +3393,7 @@ html.menu-open .menu::before { opacity: 1; }
           ['Creation',      'Hugo Barros and Sara Garcia'],
           ['Participation', 'Xavier Nunes'],
           ['Support',       'Mês da Arquitectura da Maia 2024, Fercayo / CCR, Ventos e Tempestades — Associação Cultural'],
-          ['Video',         'Mário M. Fonseca'],
-          /* PROVISÓRIO — ver a nota do lado português. */
-          ['Filler 1',      'Placeholder text, to push the card past the bottom of the screen.'],
-          ['Filler 2',      'Placeholder text, to push the card past the bottom of the screen.'],
-          ['Filler 3',      'Placeholder text, to push the card past the bottom of the screen.'],
-          ['Filler 4',      'Placeholder text, to push the card past the bottom of the screen.']
+          ['Video',         'Mário M. Fonseca']
         ],
         rotulos: { ficha: 'Credits', sobre: 'About the project', fotos: 'Photographs' }
       },
@@ -3654,7 +3692,10 @@ html.menu-open .menu::before { opacity: 1; }
      pointer/trackpad que as Casas Gorgolito usam): o pointer cobre dedo,
      rato e trackpad ao arrastar, e a roda horizontal cobre o deslize de
      dois dedos no trackpad. */
-  function evSlideshow(palco, total) {
+  /* Quem quiser pôr botões ou uma conta por fora do palco passa um aoMudar e
+     fica com o mostra devolvido: a ficha usa os dois para as setas e o "1/9"
+     do rodapé. Os cartazes não passam nada e não mudam de comportamento. */
+  function evSlideshow(palco, total, aoMudar) {
     if (!palco || total < 1) return;
     var imgs = palco.querySelectorAll('img');
     var n = 0;
@@ -3666,6 +3707,7 @@ html.menu-open .menu::before { opacity: 1; }
     function mostra(i) {
       n = ((i % total) + total) % total;
       for (var k = 0; k < imgs.length; k++) imgs[k].classList.toggle('is-on', k === n);
+      if (aoMudar) aoMudar(n);
     }
 
     palco.addEventListener('pointerdown', function (e) {
@@ -3725,6 +3767,8 @@ html.menu-open .menu::before { opacity: 1; }
       wheelLock = true;
       setTimeout(function () { wheelLock = false; }, 280);
     }, { passive: false });
+
+    return mostra;
   }
 
   function evCaixa(t, alt, fotos, rotulo) {
@@ -4326,8 +4370,43 @@ html.menu-open .menu::before { opacity: 1; }
       palco.appendChild(img);
     });
 
-    evSlideshow(palco, fotos.length);
+    /* O rodapé do desfile, como nas Casas Gorgolito: as duas setas nos
+       extremos da largura da fotografia e, a meio delas, a conta de onde se
+       vai. As nove fotografias da oficina não são variantes da mesma imagem
+       — são nove momentos —, e sem esta linha nada dizia que havia mais nem
+       quantas faltavam: clicava-se à sorte até a primeira voltar.
+
+       Os botões ficam por fora do palco de propósito: dentro dele, o clique
+       que avança apanhava também a seta de recuar. */
+    var conta = nel('span', 'ficha__conta');
+    var atual = 0;
+
+    var ir = evSlideshow(palco, fotos.length, function (i) {
+      atual = i;
+      conta.textContent = (i + 1) + '/' + fotos.length;
+    });
+    conta.textContent = '1/' + fotos.length;
+
+    function seta(cls, sinal, rot) {
+      var b = nel('button', 'ficha__seta ' + cls, sinal);
+      b.type = 'button';
+      b.setAttribute('aria-label', rot);
+      return b;
+    }
+
+    var en = lg() === 'en';
+    var ant = seta('ficha__seta--ant', '←', en ? 'Previous photograph' : 'Fotografia anterior');
+    var seg = seta('ficha__seta--seg', '→', en ? 'Next photograph' : 'Fotografia seguinte');
+    ant.addEventListener('click', function () { ir(atual - 1); });
+    seg.addEventListener('click', function () { ir(atual + 1); });
+
+    var nav = nel('div', 'ficha__fotosnav');
+    nav.appendChild(ant);
+    nav.appendChild(conta);
+    nav.appendChild(seg);
+
     caixa.appendChild(palco);
+    caixa.appendChild(nav);
 
     s.corpo.appendChild(caixa);
     fichaMatEl.appendChild(s);
