@@ -97,6 +97,30 @@ html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light;
 
 html { scroll-behavior: smooth; }
 
+/* No iOS, dois toques seguidos aproximavam a página — e depois deixavam-na
+   aproximada, com o cabeçalho e o rodapé fora do sítio. Acontecia em tudo o
+   que se toca duas vezes depressa: um "+", uma linha da lista, um título.
+
+   O "manipulation" tira só isso: o deslizar fica, e o pinçar com dois dedos
+   também — que é ele que dá a quem precisa a possibilidade de aproximar.
+   Travar o zoom no <meta viewport> tirava-lhes as duas coisas, e por isso
+   não se faz aqui: é a mesma razão por que os campos do formulário sobem a
+   16px em vez de o meta os travar (ver .cform__input).
+
+   Vai a tudo e não só ao html porque o touch-action não se herda. A regra do
+   toque diz que vale o cruzamento do que o elemento e os antepassados
+   deixam, e só com o html isto havia de bastar — mas é o tipo de subtileza
+   que um browser cumpre à sua maneira, e o pedido aqui é que não aconteça em
+   sítio nenhum. Onde há um valor mais apertado — o pan-y do desfile de
+   fotografias de um cartaz —, é esse que fica: a classe ganha ao asterisco.
+
+   E nada acende ao toque: o retângulo cinzento que o iOS punha por cima do
+   que se toca não faz parte do desenho de nenhum destes cartões. Essa
+   herda-se, e por isso basta no html. */
+*, *::before, *::after { touch-action: manipulation; }
+
+html { -webkit-tap-highlight-color: transparent; }
+
 /* O documento não rola: é a grelha que rola, dentro da moldura que o
    cabeçalho e o marquee formam (ver .tiles).
 
@@ -2174,10 +2198,8 @@ html[lang="en"] .title-art {
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
-  touch-action: manipulation;
   -webkit-user-select: none;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
 }
 .ficha__seta:hover { opacity: .6; }
 .ficha__seta--ant { justify-self: start; }
