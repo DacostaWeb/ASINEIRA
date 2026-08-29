@@ -640,6 +640,12 @@ html[lang="en"] .title-art {
   .tile__head:hover .title-art__l,
   .menu__h2:hover   .title-art__l,
   .menu__h3:hover   .title-art__l { animation-name: var(--art-anim); }
+
+  /* O "+" faz o mesmo que a cabeça do cartão — abre o painel — e por isso
+     há-de dizer o mesmo ao rato que lhe passa por cima. Não o alcança por
+     descendência: mora no mosaico e não na cabeça (ver .tile > .tile__toggle),
+     e é preciso subir ao mosaico para tornar a descer. */
+  .tile:has(> .tile__toggle:hover) .tile__head .title-art__l { animation-name: var(--art-anim); }
 }
 
 @media (max-width: 640px) {
@@ -1027,22 +1033,51 @@ html[lang="en"] .title-art {
 .events__date { white-space: nowrap; }
 
 /* A data tem duas escritas na mesma célula e é aqui que se escolhe qual se
-   vê. Por extenso enquanto há largura; abaixo dos 1080 — onde o mosaico
-   perde a segunda coluna da grelha — "26 de Setembro" passava dos 22% que
-   lhe cabem e comia a coluna do título. "26 set" diz o mesmo em metade. */
+   vê. Não parte em duas linhas, e por isso ou lhe cabe a coluna inteira ou
+   não lhe cabe nada: por extenso pede 110px, "26 set" pede 59px.
+
+   Onde é que a coluna os dá? Dos 599 aos 1080 o mosaico divide o ecrã com
+   outro e a tabela fica com uns 300px — os 22% da primeira coluna são 66px,
+   e a data por extenso comia a do título. Abaixo dos 599 o mosaico volta a
+   ter o ecrã todo e a tabela salta dos 265px para os 545px: por extenso cabe
+   outra vez, e é o que lá está. Abaixo dos 420 deixa de caber e volta a
+   encurtar.
+
+   A fronteira dos 599 não é escolhida, é medida: a grelha parte em duas
+   colunas de --col-min (300px abaixo dos 760) numa moldura que tem mais um
+   pixel do que o ecrã, e por isso a segunda coluna aguenta-se até aos 599 e
+   cai aos 598. */
 .events__d--curta { display: none; }
 
-@media (max-width: 1079px) {
+@media (max-width: 1079px) and (min-width: 599px), (max-width: 419px) {
   .events__d--longa { display: none; }
   .events__d--curta { display: inline; }
 }
 
-/* Em coluna estreita a tabela deixa de caber a quatro: o sítio e a natureza
-   passam para baixo do título, na mesma célula visual. */
-@media (max-width: 860px) {
+/* Quantas colunas cabem — medido, e não adivinhado. Com a repartição fixa
+   cada coluna tem a sua fatia da tabela, e manda a mais esganada: a terceira,
+   que aos 24% tem de levar o "Various locations" do inglês, obriga a tabela
+   a ter 343px; a data por extenso, que não parte, obriga-a a 551px.
+
+   Daí as faixas. Dos 820 para cima a tabela tem os 343px e as quatro colunas
+   ficam com a data curta. Dos 599 aos 819 não os tem — o mosaico está a
+   dividir o ecrã — e o sítio e a natureza passam para baixo do título. Dos
+   420 aos 598 o mosaico ocupa o ecrã todo, a tabela dobra de tamanho e as
+   quatro voltam, agora com a data por extenso: para lhe dar os 110px que ela
+   pede, a primeira coluna passa dos 22% aos 33%, e as outras encolhem na
+   medida do que lhes basta. Abaixo dos 420 não cabem nem quatro colunas nem
+   a data por extenso, e voltam as duas e a data curta. */
+@media (max-width: 819px) and (min-width: 599px), (max-width: 419px) {
   .events td:nth-child(3), .events td:last-child { display: none; }
   .events td:nth-child(1) { width: 40%; }
   .events td:nth-child(2) { width: 60%; }
+}
+
+@media (max-width: 598px) and (min-width: 420px) {
+  .events td:nth-child(1) { width: 33%; }
+  .events td:nth-child(2) { width: 27%; }
+  .events td:nth-child(3) { width: 23%; }
+  .events td:last-child   { width: 17%; }
 }
 
 
@@ -2666,7 +2701,7 @@ html.menu-open .menu::before { opacity: 1; }
           <div class="evgrid" id="ev-grelha"></div>
         </div>
 
-        <div class="panel-section">
+        <div class="panel-section" id="ev-sec-conc">
           <h3 class="panel-section__title" data-i18n="secConc">concluídos</h3>
           <div class="evgrid evgrid--conc" id="ev-grelha-conc"></div>
         </div>
@@ -3817,12 +3852,31 @@ html.menu-open .menu::before { opacity: 1; }
     tr.addEventListener('mouseenter', function () { evParado = true; evFoco(EVENTOS.length + i); });
     tr.addEventListener('mouseleave', function () { evParado = false; });
 
-    /* E, também como as de cima: no mosaico fechado, carregar em qualquer
-       sítio abre a lista inteira. */
+    /* E, como as de cima, carregar abre a lista inteira — mas esta vai ter
+       com ela: o painel abre pelos próximos, e quem carregou num concluído
+       queria os concluídos. */
     tr.className = 'events__l--liga';
-    tr.addEventListener('click', function () { go(routeByTile('Eventos')); });
+    tr.addEventListener('click', function () { evAbrePainel('ev-sec-conc'); });
 
     return tr;
+  }
+
+  /* Abre o painel dos eventos e leva-o até uma das suas secções. Quem rola,
+     com o mosaico aberto, é o inner (ver .tile.is-expanded .tile__inner), e
+     por isso é a ele que se dá o deslocamento. A conta faz-se pela diferença
+     entre os dois rectângulos e não pelo offsetTop: assim não depende de
+     qual dos antepassados é o offsetParent, que não é o mesmo com o mosaico
+     aberto e fechado.
+
+     Só há o que medir depois de o painel abrir — o corpo está em display:none
+     até lá — e o applyRoute põe o inner no princípio ao abri-lo. Daí a conta
+     vir a seguir ao go(), e não antes. */
+  function evAbrePainel(id) {
+    go(routeByTile('Eventos'));
+    var sec = document.getElementById(id);
+    var inner = evTile && evTile.querySelector('.tile__inner');
+    if (!sec || !inner) return;
+    inner.scrollTop += sec.getBoundingClientRect().top - inner.getBoundingClientRect().top;
   }
 
   /* A caixa de um cartaz, a mesma nos próximos e nos concluídos: a
