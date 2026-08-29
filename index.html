@@ -3702,8 +3702,7 @@ html.menu-open .menu::before { opacity: 1; }
     var startX = 0, startY = 0;
     var tracking = false, swiped = false, pid = null;
     var LIMIAR = 50;
-    var wheelAcc = 0, wheelLock = false, wheelFim = null;
-    var wheelUlt = 0, wheelPico = 0, wheelSinal = 0;
+    var wheelAcc = 0, wheelLock = false;
 
     function mostra(i) {
       n = ((i % total) + total) % total;
@@ -3757,65 +3756,16 @@ html.menu-open .menu::before { opacity: 1; }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); mostra(n - 1); }
     });
 
-    /* Um deslize de dois dedos é uma fotografia, e só uma, por maior que ele
-       seja: mal o gesto chegue aos 40, avança-se uma e fecha-se a porta até
-       ele acabar. No telemóvel nada disto se aplica — lá quem folheia é o
-       pointer, e esse já só dava uma.
-
-       O trabalho todo está em saber quando o gesto acaba. O trackpad não pára
-       quando os dedos param: larga-os e continua a mandar deslize sozinho,
-       cada vez mais devagar, por mais de um segundo. Por isso a porta abre de
-       duas maneiras, e faz falta as duas:
-
-       — por silêncio: 150ms sem um único evento, com o relógio a recomeçar a
-         cada um, inclusive com a porta fechada. É assim que a inércia acaba
-         sem valer fotografia nenhuma — antes, a porta abria ao fim de 280ms
-         fixos e um deslize grande valia três ou quatro.
-
-       — porque os dedos voltaram ao vidro antes de a cauda ter acabado. Sem
-         isto, quem folheia a um ritmo certo perdia um deslize sim, um não: o
-         segundo desaparecia inteiro dentro da cauda do primeiro. Dedos
-         reconhecem-se por duas coisas que a inércia nunca faz — mudar de
-         sentido, e ganhar força depois de já a estar a perder. Daí as contas
-         abaixo: só se aceita uma subida quando já se desceu abaixo de seis
-         décimos do pico, e só se for uma subida a sério — a cauda estremece,
-         mas não dá saltos destes. */
-    function wheelSolta() {
-      wheelLock = false;
-      wheelAcc = 0;
-      wheelUlt = 0;
-      wheelPico = 0;
-      wheelSinal = 0;
-    }
-
     palco.addEventListener('wheel', function (e) {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) + 1) return;
       e.preventDefault();
-
-      var forca = Math.abs(e.deltaX);
-      var sinal = e.deltaX > 0 ? 1 : -1;
-      var virou = wheelSinal !== 0 && sinal !== wheelSinal;
-      var renasce = wheelPico > 0 && wheelUlt < wheelPico * 0.6 && forca > wheelUlt * 1.5 + 2;
-
-      if (wheelLock && (virou || renasce)) {
-        wheelLock = false;
-        wheelAcc = 0;
-        wheelPico = 0;
-      }
-
-      wheelUlt = forca;
-      wheelSinal = sinal;
-      if (forca > wheelPico) wheelPico = forca;
-
-      clearTimeout(wheelFim);
-      wheelFim = setTimeout(wheelSolta, 150);
-
       if (wheelLock) return;
       wheelAcc += e.deltaX;
       if (Math.abs(wheelAcc) < 40) return;
       mostra(n + (wheelAcc > 0 ? 1 : -1));
       wheelAcc = 0;
       wheelLock = true;
+      setTimeout(function () { wheelLock = false; }, 280);
     }, { passive: false });
 
     return mostra;
