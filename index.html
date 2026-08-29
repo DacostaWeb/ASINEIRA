@@ -783,13 +783,23 @@ html[lang="en"] .title-art {
 
 /* A cabeça não rola: o título e o × ficam, o resto desce. Sem isto o
    flex-shrink: 0 de cada filho obrigava o corpo a crescer e o scroll
-   nunca começava. */
+   nunca começava.
+
+   Os dois são itens flex: o z-index vale. O filete dos concluídos tem
+   overflow:visible e, no iOS, pinta fora da caixa de scroll — por cima
+   da caixa azul do ×. A cabeça (2) ganha ao corpo (0), furo tapado. */
+.tile.is-expanded .tile__head {
+  z-index: 2;
+  background: var(--tile-bg);
+}
 .tile.is-expanded .tile__body {
+  z-index: 0;
   flex: 1 1 auto;
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  contain: paint;
 }
 .tile.is-expanded .tile__caption { display: none; }
 
@@ -800,7 +810,8 @@ html[lang="en"] .title-art {
    que o faz ler-se se o título chegar ali. */
 .tile.is-expanded .tile__toggle {
   position: relative;
-  z-index: 10;
+  z-index: 3;
+  isolation: isolate;
   padding: 4px 7px;
 }
 @media (min-width: 641px) {
