@@ -2883,7 +2883,10 @@ html.menu-open .menu::before { opacity: 1; }
                      --art-en: url(&quot;fonts/asineirafriend.svg&quot;); --art-w-en: 310.5738803; --art-h-en: 36.3850665; --art-base-en: 0.864;"></span></h2>
       </div>
       <p class="tile__lead" data-i18n-html="amP">Faz parte do futuro e apoia a Arte em Comunidade!<br>Torna-te um “Amigo da Sineira”</p>
-      <a class="tile__cta" id="amigo-cta" data-i18n="amCta" href="mailto:ola@asineira.pt">Quero aderir</a>
+      <!-- O href já vem escrito para quem chegue sem JS; com JS, o applyLang
+           volta a escrevê-lo na língua da página (ver AM_MAIL). -->
+      <a class="tile__cta" id="amigo-cta" data-i18n="amCta"
+         href="mailto:ola@asineira.pt?subject=Quero%20receber%20novidades&amp;body=Ol%C3%A1!%20Quero%20ficar%20a%20par%20das%20novidades%20da%20Sineira%20%3A)">Quero receber novidades</a>
 
       <div class="tile__body" data-tile-body="Amigos">
         <ul class="tile__list">
@@ -3270,7 +3273,7 @@ html.menu-open .menu::before { opacity: 1; }
       /* --- amigo da sineira --- */
       amH2: 'a Sineira friend',
       amP: 'Be part of the future and support Art in Community!<br>Become a “Friend of a Sineira”',
-      amCta: 'I want to join', amSubject: 'I want to be a Friend of a Sineira',
+      amCta: 'I want to hear the news',
       amCard: 'Friend of a Sineira card',
       amLi1: 'Free performances: access to every event',
       amLi2: 'Discounts on regular classes, workshops and intensive courses',
@@ -3414,6 +3417,30 @@ html.menu-open .menu::before { opacity: 1; }
     });
   }
 
+  /* O correio do "quero receber novidades" vai já escrito — assunto e corpo —,
+     que quem carrega no botão tem só de o enviar. As duas línguas ficam aqui
+     dentro, como nos eventos: é o JS quem escreve o endereço, e não há
+     dicionário que lhe sirva de casa.
+
+     É daqui que sai também o href que está no HTML, e por isso o do HTML é o
+     mesmo à letra: quem chegue à página sem JS carrega no botão e escreve o
+     mesmo correio que os outros. */
+  var AM_MAIL = {
+    pt: { para: 'ola@asineira.pt',
+          assunto: 'Quero receber novidades',
+          corpo: 'Olá! Quero ficar a par das novidades da Sineira :)' },
+    en: { para: 'ola@asineira.pt',
+          assunto: 'I want to receive news',
+          corpo: 'Hello! I would like to keep up with a Sineira’s news :)' }
+  };
+
+  function amigoMailto(lang) {
+    var m = AM_MAIL[lang === 'en' ? 'en' : 'pt'];
+    return 'mailto:' + m.para +
+           '?subject=' + encodeURIComponent(m.assunto) +
+           '&body='    + encodeURIComponent(m.corpo);
+  }
+
   function applyLang() {
     var lang = state.lang;
     var t = I18N[lang];
@@ -3446,8 +3473,7 @@ html.menu-open .menu::before { opacity: 1; }
     btnEn.setAttribute('aria-pressed', String(lang === 'en'));
     btnPt.style.opacity = lang === 'pt' ? '1' : '.38';
     btnEn.style.opacity = lang === 'en' ? '1' : '.38';
-    amigoCta.href = 'mailto:ola@asineira.pt?subject=' +
-      encodeURIComponent(lang === 'en' ? I18N.en.amSubject : 'Quero ser Amigo da Sineira');
+    amigoCta.href = amigoMailto(lang);
 
     /* Depois do texto, porque é o lang do <html> que escolhe o desenho. */
     partirTitulos();
