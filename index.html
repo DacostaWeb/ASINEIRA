@@ -1438,7 +1438,7 @@ html[lang="en"] .title-art {
 
 /* Tudo encostado à esquerda dentro da sua coluna, que é o que alinha as
    quatro de cima a baixo mesmo quando um título é muito mais curto. */
-.prj__linha > *:not(.prj__mais) { justify-self: start; }
+.prj__linha > *:not(.prj__mais):not(.prj__breve) { justify-self: start; }
 
 /* A linha de quem tem ficha própria leva-se inteira: o alvo é a faixa toda,
    e o sublinhado no título diz onde é que ela vai dar. */
@@ -1478,6 +1478,24 @@ html[lang="en"] .title-art {
 }
 .prj__mais:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
+/* No lugar do "+", em quem ainda não tem ficha: a palavra em vez do sinal.
+   Não é botão — não abre nada, diz que ainda não há o que abrir. A última
+   coluna, que era um sinal de 22px, passa a caber uma palavra. */
+.prj__breve {
+  justify-self: end;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  opacity: .55;
+  white-space: nowrap;
+}
+@media (min-width: 721px) {
+  .prj__breve { grid-column: 7; }
+  .prj__linha--breve {
+    grid-template-columns: 46px minmax(0, 2.9fr) minmax(0, 2fr) minmax(0, 1.9fr) minmax(0, 3.3fr) 66px 78px;
+  }
+}
+
 .prj__sin {
   display: none;
   max-width: 62ch;
@@ -1511,6 +1529,7 @@ html[lang="en"] .title-art {
   .prj__linha .evtag { grid-area: tag; justify-self: start; margin-top: 4px; }
   .prj__marcas { grid-area: marcas; margin-top: 6px; }
   .prj__mais { grid-area: mais; }
+  .prj__breve { grid-area: mais; }
   .prj__sin { margin-left: 0; }
 }
 
@@ -3273,7 +3292,7 @@ html.menu-open .menu::before { opacity: 1; }
       pt: { titulo: "Inauguração d'a Sineira!", sitio: 'Exterior', natureza: 'Criação',
             sinopse: 'A casa abre as portas: o adro, a nave e o auditório mostram-se pela primeira vez a quem cá vive.' },
       en: { titulo: "Inauguração d'a Sineira!", sitio: 'Outdoors', natureza: 'Creation',
-            sinopse: 'The house opens its doors: the churchyard, the nave and the auditorium shown for the first time to those who live here.' },
+            sinopse: 'The house opens its doors: the churchyard, the nave and the auditorium, shown for the first time.' },
       alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } }
   ];
 
@@ -3783,7 +3802,9 @@ html.menu-open .menu::before { opacity: 1; }
     return art;
   }
 
-  /* O "+" da legenda abre, por baixo da sinopse, o que mais se sabe. */
+  /* O "+" da legenda abre, por baixo da sinopse, o caminho para a ficha do
+     projeto. Só o põe quem tem ficha: onde não há para onde ir, não há "+"
+     — ver evSemMais. */
   function evMais(art, href, rotulo) {
     var corpo = document.createElement('div');
     corpo.className = 'evcard__body';
@@ -3802,13 +3823,20 @@ html.menu-open .menu::before { opacity: 1; }
     });
   }
 
+  /* Um cartaz sem ficha fica sem "+": um sinal que abre para dizer "quero
+     saber mais" e depois não leva a lado nenhum é pior do que sinal nenhum. */
+  function evSemMais(art) {
+    var bt = art.querySelector('.evcard__toggle');
+    if (bt) bt.parentNode.removeChild(bt);
+  }
+
   /* Um cartaz dos próximos: natureza, sítio e data por extenso na linha de
      baixo, a sinopse a seguir e os bilhetes a fechar. */
   function evCartaz(e, i) {
     var t = evTexto(e);
     var rotulo = evData(e);
     var art = evCaixa(t, evAlt(e), evFotosDe(e), rotulo);
-    evMais(art, evParaOnde(e), t.titulo);
+    if (e.projeto) evMais(art, evParaOnde(e), t.titulo); else evSemMais(art);
 
     var det = art.querySelector('.evcard__detalhes');
     det.appendChild(evDetalhe('tipo', t.natureza));
@@ -3853,15 +3881,19 @@ html.menu-open .menu::before { opacity: 1; }
     rect.setAttribute('height', '100');
     filete.appendChild(rect);
     art.appendChild(filete);
-    evMais(art, evParaOnde(c), t.titulo);
+    if (c.projeto) evMais(art, evParaOnde(c), t.titulo); else evSemMais(art);
 
     var det = art.querySelector('.evcard__detalhes');
     if (t.natureza) det.appendChild(evDetalhe('tipo', t.natureza));
     det.appendChild(evDetalhe('pin', t.sitio));
 
     var marcas = evMarcas(c, 'evcard__marcas');
-    var toggle = art.querySelector('.evcard__toggle');
-    if (marcas) toggle.parentNode.insertBefore(marcas, toggle);
+    if (marcas) {
+      var toggle = art.querySelector('.evcard__toggle');
+      var legenda = art.querySelector('.evcard__legenda');
+      if (toggle) legenda.insertBefore(marcas, toggle);
+      else legenda.appendChild(marcas);
+    }
 
     return art;
   }
@@ -4081,7 +4113,9 @@ html.menu-open .menu::before { opacity: 1; }
         '<span class="evtag evdet">' + SINAIS.tipo + '<span></span></span>' +
         '<p class="prj__s evdet">' + SINAIS.pin + '<span></span></p>' +
         '<p class="prj__q evdet">' + SINAIS.relogio + '<span></span></p>' +
-        '<button class="prj__mais" type="button" aria-expanded="false">+</button>' +
+        (e.projeto
+           ? '<button class="prj__mais" type="button" aria-expanded="false">+</button>'
+           : '<span class="prj__breve"></span>') +
       '</div>' +
       '<p class="prj__sin"></p>';
 
@@ -4096,14 +4130,28 @@ html.menu-open .menu::before { opacity: 1; }
 
     var marcas = evMarcas(e, 'prj__marcas');
 
+    /* O "+" é de quem tem ficha: abre a sinopse a quem quer espreitar antes
+       de entrar. Quem não tem ficha diz "brevemente" no mesmo lugar — a
+       sinopse fica na linha, mas não há sinal que prometa uma página que
+       ainda não existe. */
     var bt = li.querySelector('.prj__mais');
-    if (marcas) bt.parentNode.insertBefore(marcas, bt);
-    bt.setAttribute('aria-label', t.titulo);
-    bt.addEventListener('click', function () {
-      var aberto = li.classList.toggle('is-open');
-      bt.textContent = aberto ? '−' : '+';
-      bt.setAttribute('aria-expanded', String(aberto));
-    });
+    var breve = li.querySelector('.prj__breve');
+    if (breve) {
+      breve.textContent = lg() === 'en' ? 'soon' : 'brevemente';
+      li.querySelector('.prj__linha').classList.add('prj__linha--breve');
+    }
+    if (marcas) {
+      var antes = bt || breve;
+      antes.parentNode.insertBefore(marcas, antes);
+    }
+    if (bt) {
+      bt.setAttribute('aria-label', t.titulo);
+      bt.addEventListener('click', function () {
+        var aberto = li.classList.toggle('is-open');
+        bt.textContent = aberto ? '−' : '+';
+        bt.setAttribute('aria-expanded', String(aberto));
+      });
+    }
 
     /* Quem tem ficha própria leva-se a linha inteira: o alvo passa a ser uma
        faixa da largura da lista e não um "+" de 17px. O "+" continua a ser
