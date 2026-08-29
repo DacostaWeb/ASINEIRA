@@ -1098,13 +1098,13 @@ html[lang="en"] .title-art {
    pede, a primeira coluna passa dos 22% aos 33%, e as outras encolhem na
    medida do que lhes basta. Abaixo dos 420 não cabem nem quatro colunas nem
    a data por extenso, e voltam as duas e a data curta. */
-@media (max-width: 819px) and (min-width: 599px), (max-width: 419px) {
+@media (max-width: 819px) and (min-width: 599px), (max-width: 449px) {
   .events td:nth-child(3), .events td:last-child { display: none; }
   .events td:nth-child(1) { width: 40%; }
   .events td:nth-child(2) { width: 60%; }
 }
 
-@media (max-width: 598px) and (min-width: 420px) {
+@media (max-width: 598px) and (min-width: 450px) {
   .events td:nth-child(1) { width: 33%; }
   .events td:nth-child(2) { width: 27%; }
   .events td:nth-child(3) { width: 23%; }
@@ -2603,6 +2603,15 @@ html.menu-open .menu::before { opacity: 1; }
     --wordmark-h:    32px;
     --trigger-w:     52px;
     --trigger-pull:  15px;
+  }
+
+  /* Até aos 598 o triângulo deixa de sair para fora da margem e assenta nela,
+     como o logótipo do outro lado. Zera-se o puxão e não a margem do botão
+     porque não é só ele que o lê: o X que fecha o menu posiciona-se pela
+     mesma variável, para se fechar onde se abriu (ver .menu-close). Mexer só
+     na margem tirava o triângulo do sítio e deixava o X onde estava. */
+  @media (max-width: 598px) {
+    :root { --trigger-pull: 0px; }
   }
 
   /* Em ecrã estreito os títulos dos cartões descem ao corpo do logótipo: o
