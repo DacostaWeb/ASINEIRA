@@ -2886,7 +2886,7 @@ html.menu-open .menu::before { opacity: 1; }
       <!-- O href já vem escrito para quem chegue sem JS; com JS, o applyLang
            volta a escrevê-lo na língua da página (ver AM_MAIL). -->
       <a class="tile__cta" id="amigo-cta" data-i18n="amCta"
-         href="mailto:ola@asineira.pt?subject=Quero%20receber%20novidades&amp;body=Ol%C3%A1!%20Quero%20ficar%20a%20par%20das%20novidades%20da%20Sineira%20%3A)">Quero receber novidades</a>
+         href="mailto:info@asineira.pt?subject=Quero%20receber%20novidades&amp;body=Ol%C3%A1!%20Quero%20ficar%20a%20par%20das%20novidades%20da%20Sineira%20%3A)">Quero receber novidades</a>
 
       <div class="tile__body" data-tile-body="Amigos">
         <ul class="tile__list">
@@ -3014,15 +3014,15 @@ html.menu-open .menu::before { opacity: 1; }
             </span>
             <span class="aerial__tag aerial__tag--bridge">
               <span data-i18n="row1">Ponte de Retorta / Estação Aquícola</span>
-              <span class="aerial__time">5 min 🚶 · 1 min 🚗</span>
+              <span class="aerial__time">1 min 🚗 · 5 min 🚶</span>
             </span>
             <span class="aerial__tag aerial__tag--school">
               <span data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</span>
-              <span class="aerial__time">14 min 🚶 · 3 min 🚗</span>
+              <span class="aerial__time">3 min 🚗 · 14 min 🚶</span>
             </span>
             <span class="aerial__tag aerial__tag--metro">
               <span data-i18n="row3">Metro Vila do Conde</span>
-              <span class="aerial__time">24 min 🚶 · 4 min 🚗</span>
+              <span class="aerial__time">4 min 🚗 · 24 min 🚶</span>
             </span>
           </div>
 
@@ -3129,7 +3129,7 @@ html.menu-open .menu::before { opacity: 1; }
           <ul class="menu__links">
             <li><a href="dossier/" data-i18n="coImprensa">Dossier de apresentação</a></li>
             <li><a href="SVG%20a%20Sineira.svg" download data-i18n="prLogo">Logótipo (SVG)</a></li>
-            <li><a href="mailto:ola@asineira.pt?subject=Imprensa" data-i18n="prPedido">Pedidos de imprensa</a></li>
+            <li><a href="mailto:info@asineira.pt?subject=Imprensa" data-i18n="prPedido">Pedidos de imprensa</a></li>
           </ul>
         </div>
       </div>
@@ -3142,10 +3142,10 @@ html.menu-open .menu::before { opacity: 1; }
                        --art-en: url(&quot;fonts/contacts.svg&quot;); --art-w-en: 178.6914062; --art-h-en: 32.1513672; --art-base-en: 0.576;"></span></h3>
         </div>
         <div class="menu-row__body">
-          <p class="menu__text" data-i18n-html="coAddr">Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>
-          Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
+          <p class="menu__text" data-i18n-html="coAddr">
+          Rua da Igreja 4480-353 Retorta, Vila do Conde</p>
           <ul class="menu__links">
-            <li><a href="mailto:ola@asineira.pt">ola@asineira.pt</a></li>
+            <li><a href="mailto:info@asineira.pt">info@asineira.pt</a></li>
           </ul>
           <p class="menu__note" data-i18n="coLegal">a Sineira — Associação Cultural · NIF 518858359</p>
         </div>
@@ -3156,7 +3156,7 @@ html.menu-open .menu::before { opacity: 1; }
     <div class="menu-item menu-row menu__social" data-delay="5">
       <div class="menu-row__title" aria-hidden="true"></div>
       <div class="menu-row__body">
-        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">
+        <a href="https://www.instagram.com/asineira.pt/" target="_blank" rel="noopener" aria-label="Instagram">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <rect x="3" y="3" width="18" height="18" rx="5"></rect>
             <circle cx="12" cy="12" r="4"></circle>
@@ -3171,11 +3171,11 @@ html.menu-open .menu::before { opacity: 1; }
         </a>
         <!-- Balão de fala, como está no rascunho. O número ainda falta: wa.me
              só funciona com wa.me/351XXXXXXXXX. -->
-        <a href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp">
+       <!--  <a href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M21 11.4c0 4-3.9 7.4-8.6 7.4-1 0-2-.15-2.9-.43L4.2 20.6l1.7-3.6C4.2 15.6 3.4 13.6 3.4 11.4 3.4 7.3 7.3 4 12 4s9 3.3 9 7.4z"></path>
           </svg>
-        </a>
+        </a> -->
       </div>
     </div>
 
@@ -3426,10 +3426,10 @@ html.menu-open .menu::before { opacity: 1; }
      mesmo à letra: quem chegue à página sem JS carrega no botão e escreve o
      mesmo correio que os outros. */
   var AM_MAIL = {
-    pt: { para: 'ola@asineira.pt',
+    pt: { para: 'info@asineira.pt',
           assunto: 'Quero receber novidades',
           corpo: 'Olá! Quero ficar a par das novidades da Sineira :)' },
-    en: { para: 'ola@asineira.pt',
+    en: { para: 'info@asineira.pt',
           assunto: 'I want to receive news',
           corpo: 'Hello! I would like to keep up with a Sineira’s news :)' }
   };
@@ -3781,7 +3781,7 @@ html.menu-open .menu::before { opacity: 1; }
   }
 
   function evAssunto(e) {
-    return 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Eventos · ' + evData(e) + ' · ' + evTexto(e).titulo);
+    return 'mailto:info@asineira.pt?subject=' + encodeURIComponent('Eventos · ' + evData(e) + ' · ' + evTexto(e).titulo);
   }
 
   /* Para onde leva o "quero saber mais" de um cartaz: à ficha do projeto,
@@ -5499,7 +5499,7 @@ html.menu-open .menu::before { opacity: 1; }
       msg:     'A mensagem está vazia.',
       aEnviar: 'A enviar…',
       enviada: 'Mensagem enviada. Respondemos assim que pudermos!',
-      falhou:  'A mensagem não chegou a sair. Tenta outra vez, ou escreve para ola@asineira.pt.'
+      falhou:  'A mensagem não chegou a sair. Tenta outra vez, ou escreve para info@asineira.pt.'
     },
     en: {
       email:   'The email is missing, or what is there is not one.',
@@ -5507,7 +5507,7 @@ html.menu-open .menu::before { opacity: 1; }
       msg:     'The message is empty.',
       aEnviar: 'Sending…',
       enviada: 'Message sent. We will reply as soon as we can!',
-      falhou:  'The message never left. Try again, or write to ola@asineira.pt.'
+      falhou:  'The message never left. Try again, or write to info@asineira.pt.'
     }
   };
 
