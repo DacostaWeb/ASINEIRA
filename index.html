@@ -1470,6 +1470,10 @@ html[lang="en"] .title-art {
 .prj__t { font-size: 13px; line-height: 1.3; }
 .prj__q, .prj__s { font-size: 12px; opacity: .75; }
 
+/* Em ecrã largo o quando escreve-se por extenso; a escrita curta está na
+   linha à espera dos 500px. */
+.prj__q--curto { display: none; }
+
 /* As mesmas marcas do cartaz, aqui em ponto de linha: mais pequenas e mais
    juntas, para caberem as três na coluna antes do "+". */
 .prj__marcas { display: flex; align-items: center; gap: 7px; }
@@ -1556,6 +1560,24 @@ html[lang="en"] .title-art {
     gap: 6px;
   }
   .prj__mais, .prj__breve { margin-bottom: auto; }
+}
+
+
+/* Abaixo dos 500px a coluna do meio dá para meia dúzia de palavras, e as
+   linhas de detalhe passam a partir-se em duas. Duas coisas mudam por isso:
+   o sinal sobe ao princípio da primeira linha — ao centro de duas linhas de
+   texto ficava a meio caminho de nada — e o quando passa à escrita curta,
+   que é a mesma do pé dos cartazes. */
+@media (max-width: 500px) {
+  .prj__linha .evdet { align-items: flex-start; }
+  .prj__linha .evdet svg { margin-top: 3px; }
+  /* A natureza é a única que nunca parte: tem uma palavra só, e o
+     triângulo é maior do que a caixa das maiúsculas de 9px que vai ao lado
+     dele — descido, ficava a boiar abaixo da linha. */
+  .prj__linha .evtag.evdet svg { margin-top: 0; }
+
+  .prj__q--longo { display: none; }
+  .prj__q--curto { display: inline; }
 }
 
 
@@ -3337,9 +3359,9 @@ html.menu-open .menu::before { opacity: 1; }
       /* Tem ficha própria: o "quero saber mais" do cartaz e o título na lista
          levam a #voar, e não a um correio. */
       projeto: 'voar',
-      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Fórum da Maia', natureza: 'Formação',
+      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Vários locais', natureza: 'Formação',
             sinopse: 'Uma oficina e uma apresentação pública sobre a liberdade dentro de casa, a partir de um texto de Adolf Loos.' },
-      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Fórum da Maia', natureza: 'Training',
+      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Various locations', natureza: 'Training',
             sinopse: 'A workshop and a public showing about freedom inside the house, departing from a text by Adolf Loos.' },
       alt: { pt: 'A apresentação final vista de trás da plateia: uma criança aparece na janela redonda da casa.',
              en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' } }
@@ -3367,7 +3389,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       pt: {
         natureza: 'Formação',
-        onde:     'Fórum da Maia · Mês da Arquitectura da Maia',
+        onde:     'Vários locais · Mês da Arquitectura da Maia',
         quando:   'Novembro de 2024',
         resumo:   'Uma oficina e uma apresentação pública sobre a liberdade dentro de casa, a partir de um texto de Adolf Loos.',
         texto: [
@@ -3387,7 +3409,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       en: {
         natureza: 'Training',
-        onde:     'Fórum da Maia · Maia Architecture Month',
+        onde:     'Various locations · Maia Architecture Month',
         quando:   'November 2024',
         resumo:   'A workshop and a public showing about freedom inside the house, departing from a text by Adolf Loos.',
         texto: [
@@ -3475,6 +3497,15 @@ html.menu-open .menu::before { opacity: 1; }
     en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   };
 
+  /* E os mesmos dias em três letras, para os telefones estreitos: abaixo dos
+     500px "21h30 · sábado · 26 de setembro" partia-se em duas linhas e a
+     linha da lista crescia por causa de uma data. "21h30 · sáb · 26 set"
+     cabe de uma vez e diz o mesmo. */
+  var SEMANA_C = {
+    pt: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],
+    en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  };
+
   var EV_ANO = HOJE.getFullYear();
   function evAnoDe(e) { return e.ano || EV_ANO; }
 
@@ -3522,6 +3553,21 @@ html.menu-open .menu::before { opacity: 1; }
     if (e.hora) partes.push(e.hora);
     partes.push(evSemana(e), evDiaMesLongo(e));
     return partes.join(' · ');
+  }
+
+  /* As mesmas duas datas em ponto pequeno, para a lista em telefone
+     estreito: o dia da semana em três letras e o mês sem o "de". */
+  function evSemanaCurta(e) {
+    return SEMANA_C[lg()][new Date(evAnoDe(e), e.mes - 1, e.dia).getDay()];
+  }
+  function evQuandoCurto(e) {
+    var partes = [];
+    if (e.hora) partes.push(e.hora);
+    partes.push(evSemanaCurta(e), evDiaMes(e));
+    return partes.join(' · ');
+  }
+  function evDataCurta(e) {
+    return evDiaMes(e) + ' ' + e.ano;
   }
 
   /* Os três sinais dos detalhes: o que é, onde e quando. O do tipo é o
@@ -4137,6 +4183,24 @@ html.menu-open .menu::before { opacity: 1; }
     return (lg() === 'en' ? 'completed' : 'concluído') + ' · ' + evDataLonga(e);
   }
 
+  /* O mesmo em telefone estreito, onde a coluna dá para meia dúzia de
+     palavras: o dia da semana em três letras, o mês sem o "de", e nos
+     concluídos a palavra numa linha e a data na outra — o ponto do meio
+     só servia para as separar, e a mudança de linha separa-as melhor.
+     Devolve um nó, e não texto, por causa dessa quebra. */
+  function prjQuandoCurto(e) {
+    var n = document.createElement('span');
+    n.className = 'prj__q--curto';
+    if (!prjConcluido(e)) {
+      n.textContent = evQuandoCurto(e);
+      return n;
+    }
+    n.appendChild(document.createTextNode(lg() === 'en' ? 'completed' : 'concluído'));
+    n.appendChild(document.createElement('br'));
+    n.appendChild(document.createTextNode(evDataCurta(e)));
+    return n;
+  }
+
   function prjLinha(e) {
     var t = evTexto(e);
     var li = document.createElement('li');
@@ -4147,7 +4211,8 @@ html.menu-open .menu::before { opacity: 1; }
         '<p class="prj__t"></p>' +
         '<span class="evtag evdet">' + SINAIS.tipo + '<span></span></span>' +
         '<p class="prj__s evdet">' + SINAIS.pin + '<span></span></p>' +
-        '<p class="prj__q evdet">' + (prjConcluido(e) ? SINAIS.mes : SINAIS.relogio) + '<span></span></p>' +
+        '<p class="prj__q evdet">' + (prjConcluido(e) ? SINAIS.mes : SINAIS.relogio) +
+          '<span class="prj__q--longo"></span></p>' +
         '<div class="prj__fim"></div>' +
       '</div>';
 
@@ -4155,7 +4220,11 @@ html.menu-open .menu::before { opacity: 1; }
     img.src = e.img; img.alt = evAlt(e);
 
     li.querySelector('.prj__t').textContent = t.titulo;
-    li.querySelector('.prj__q span').textContent = prjQuando(e);
+    /* As duas escritas do quando vão ambas para a linha e é a folha de
+       estilo que escolhe qual se vê: escolher aqui obrigava a repintar a
+       lista a cada arrastar da janela, e a linha já sabe dizer-se sozinha. */
+    li.querySelector('.prj__q--longo').textContent = prjQuando(e);
+    li.querySelector('.prj__q').appendChild(prjQuandoCurto(e));
     li.querySelector('.prj__s span').textContent = t.sitio;
     li.querySelector('.evtag span').textContent = t.natureza || '';
 
