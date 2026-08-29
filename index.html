@@ -748,7 +748,11 @@ html[lang="en"] .title-art {
    vive lá dentro, e sem esta subida ficava preso abaixo do cabeçalho (20) —
    o triângulo, que transborda, passava-lhe por cima. Continua abaixo do
    menu (60) e da ficha (50). O buraco que deixa na grelha não se vê, porque
-   está tapado por ele. */
+   está tapado por ele.
+
+   Quem rola é o .tile__body, não o painel: o × mora na cabeça, e um
+   position:fixed dentro de overflow:auto no iOS deixava o filete dos
+   cartazes — z-index 3 — pintar por cima da caixa do fecho. */
 .tiles:has(.tile.is-expanded) { z-index: 25; }
 .tile.is-expanded {
   position: fixed;
@@ -757,12 +761,7 @@ html[lang="en"] .title-art {
   top: var(--header-h);
   bottom: var(--marquee-h);
   z-index: 15;
-  /* O painel é a excepção: aqui o conteúdo rola mesmo, e por isso volta a ser
-     uma caixa de scroll. Os dois eixos declarados, que um "clip" ao lado de
-     um "auto" não é combinação que exista. */
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;   /* não arrastar a página ao chegar ao fim */
+  overflow: hidden;
   animation: tile-open .18s ease;
 }
 
@@ -771,31 +770,45 @@ html[lang="en"] .title-art {
 /* Aberto em painel há muito mais espaço, por isso a coluna de conteúdo pode
    crescer. Os blocos de texto mantêm a sua própria medida de leitura; quem
    aproveita a largura é o calendário, as fotografias e a vista aérea. */
-.tile.is-expanded .tile__inner { max-width: var(--panel-content); }
+.tile.is-expanded .tile__inner {
+  max-width: var(--panel-content);
+  overflow: hidden;
+  height: 100%;
+}
 
 /* Menos o dos eventos: lá quem manda são os cartazes, e esses seguem as
    colunas do mosaico — para isso precisam da largura toda, e não da medida
    de leitura. O calendário é que continua a tê-la (ver .cal). */
 #eventos.tile.is-expanded .tile__inner { max-width: none; }
 
-/* Com o cartão em painel o fecho vai para o canto superior direito, onde se
-   espera encontrá-lo; o conteúdo continua encostado à esquerda. Preso ao ecrã
-   e não ao painel: em janelas baixas o conteúdo rola lá dentro e, se o fecho
-   rolasse com ele, deixava de haver como fechar num telemóvel.
+/* A cabeça não rola: o título e o × ficam, o resto desce. Sem isto o
+   flex-shrink: 0 de cada filho obrigava o corpo a crescer e o scroll
+   nunca começava. */
+.tile.is-expanded .tile__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.tile.is-expanded .tile__caption { display: none; }
 
-   Está por cima de tudo o que rola por baixo dele — cartazes, fotografias,
-   texto —, e um "×" solto por cima de uma fotografia não se lê. Leva por
-   isso a cor do painel atrás de si, numa caixa que o folga dos quatro lados;
-   o recuo do topo e da direita é o mesmo da folga, para que o sinal fique
-   exactamente onde estava. O z-index é o que o põe à frente: fixo mas sem
-   ele, os cartazes — que vêm depois no documento — passavam-lhe por cima.
-   Tem de ganhar ao filete dos concluídos (3) e a tudo o que o painel pinta. */
+/* Com o cartão em painel o fecho fica na cabeça, no canto superior direito.
+   Já não é position:fixed — no iOS, fixo dentro de uma caixa a rolar
+   perdia o z-index para o filete pontilhado dos concluídos. A cabeça não
+   rola, os cartazes passam-lhe por baixo, e a caixa atrás do sinal é o
+   que o faz ler-se se o título chegar ali. */
 .tile.is-expanded .tile__toggle {
-  position: fixed;
+  position: relative;
   z-index: 10;
-  top: calc(var(--header-h) + var(--tile-pad) - 4px);
-  right: calc(var(--gutter) - 7px);
   padding: 4px 7px;
+}
+@media (min-width: 641px) {
+  .tile.is-expanded .tile__toggle {
+    position: absolute;
+    top: var(--tile-pad);
+    right: var(--gutter);
+  }
 }
 
 /* A caixa não é do botão: é desta sombra atrás dele. Quem roda um oitavo de
@@ -1106,7 +1119,9 @@ html[lang="en"] .title-art {
 /* Os concluídos invertem a caixa: fundo azul, letra amarela. O filete
    pontilhado envolve o cartaz inteiro, fotografia incluída. O SVG pinta
    pontos redondos com um pouco mais de ar do que o dotted nativo. */
-.evcard--conc { position: relative; }
+/* isolation: o z-index do filete fica preso ao cartaz. Sem isto os pontos
+   saíam a competir com o × do painel e pintavam-lhe por cima. */
+.evcard--conc { position: relative; z-index: 0; isolation: isolate; }
 .evcard--conc .evcard__info {
   background: var(--tile-bg);
   color: var(--tile-fg);
@@ -1741,15 +1756,15 @@ html[lang="en"] .title-art {
 
   /* A mesma moldura da grelha: do fundo do cabeçalho ao topo do marquee, e é
      ela que rola. Acima dos mosaicos e abaixo do menu (60), que continua a
-     poder abrir-se por cima de uma ficha. */
+     poder abrir-se por cima de uma ficha. Quem rola é o .ficha__doc: o ×
+     fica fora, para o conteúdo não lhe passar por cima. */
   position: fixed;
   top: var(--header-h);
   bottom: var(--marquee-h);
   left: 0;
   z-index: 50;
   width: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
   background: var(--cream);
   visibility: hidden;
   pointer-events: none;
@@ -1770,6 +1785,9 @@ html[lang="en"] .title-art {
   grid-template-columns: repeat(var(--fcols), minmax(0, 1fr));
   gap: 44px var(--gutter);
   align-items: start;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--pad) var(--gutter) 0;
 }
 
@@ -1836,13 +1854,13 @@ html[lang="en"] .title-art {
    um "+" a um oitavo de volta. Só o destino é outro: daqui não se sai para a
    página inicial, volta-se aos eventos, que é de onde se veio.
 
-   Fixo à janela e não à folha: em janelas baixas o conteúdo rola por baixo
-   dele e, se o fecho rolasse também, deixava de haver como fechar. O mesmo
-   z-index do × do painel: por cima de fotografias, créditos e o que passar. */
+   Fixo à folha e não à janela: a folha não rola, rola o .ficha__doc, e o
+   × fica fora dessa caixa — senão o iOS pintava o conteúdo por cima. O
+   mesmo sítio e o mesmo tamanho do × do painel. */
 .ficha__x {
-  position: fixed;
+  position: absolute;
   z-index: 10;
-  top: calc(var(--header-h) + var(--tile-pad) - 4px);
+  top: calc(var(--pad) - 4px);
   right: calc(var(--gutter) - 7px);
   padding: 4px 7px;
   border: none;
@@ -4435,6 +4453,8 @@ html.menu-open .menu::before { opacity: 1; }
     fichaEl.classList.add('is-on');
     fichaEl.setAttribute('aria-hidden', 'false');
     fichaEl.scrollTop = 0;
+    var doc = fichaEl.querySelector('.ficha__doc');
+    if (doc) doc.scrollTop = 0;
   }
 
   function fechaFicha() {
@@ -4553,7 +4573,15 @@ html.menu-open .menu::before { opacity: 1; }
     if (route && route.tile) {
       closeMenu();
       var btn = document.querySelector('[data-tile="' + route.tile + '"]');
-      if (btn) { setTile(btn, true); btn.closest('.tile').scrollTop = 0; }
+      if (btn) {
+        setTile(btn, true);
+        var tile = btn.closest('.tile');
+        if (tile) {
+          tile.scrollTop = 0;
+          var body = tile.querySelector('.tile__body');
+          if (body) body.scrollTop = 0;
+        }
+      }
       return;
     }
 
