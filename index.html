@@ -1435,11 +1435,16 @@ html[lang="en"] .title-art {
    e o quando para a direita e deixava a data a partir-se em duas linhas com
    meia coluna vazia ao lado.
 
-   Ao título dá-se menos folga que às outras três — 12px contra 40px — e não
-   por descuido: é o único texto da linha que se parte em duas linhas sem
-   perder nada, ao contrário de uma data ou de um nome de lugar, e por isso
-   é dele que se tira o que falta às outras. Daí as quatro frações: 2.8 para
-   187+12, 1.6 para 71+40, 2.6 para 141+40 e 4 para 242+40.
+   A folga não é a mesma nas quatro, e é de propósito. As três primeiras
+   levam o que o seu texto pede e pouco mais; o quando fica com o resto. É
+   ele a coluna mais comprida da linha e a única cuja quebra se lê mal —
+   uma data partida ao meio de "26 de setembro" obriga a reler —, enquanto
+   um título ou um nome de lugar se partem em duas linhas sem perder nada.
+   Daí as quatro frações — 2.8, 1.4, 2.1 e 4.7 —, que numa lista de 1200px
+   dão 249px ao título (mede 187), 124px à natureza (71), 187px ao sítio
+   (141) e 418px ao quando (242). Ao ler-se a linha da esquerda para a
+   direita, cada coluna comprime-se um pouco mais do que a anterior, e é
+   isso que traz a data para trás em vez de a deixar encostada ao "+".
 
    As larguras têm de ser frações e não max-content: cada linha é uma grelha
    sua, e é só por serem as mesmas frações da mesma largura que as colunas
@@ -1449,7 +1454,7 @@ html[lang="en"] .title-art {
    marcas e o "+" ou para o "brevemente". */
 .prj__linha {
   display: grid;
-  grid-template-columns: 46px minmax(0, 2.8fr) minmax(0, 1.6fr) minmax(0, 2.6fr) minmax(0, 4fr) 86px;
+  grid-template-columns: 46px minmax(0, 2.8fr) minmax(0, 1.4fr) minmax(0, 2.1fr) minmax(0, 4.7fr) 86px;
   align-items: center;
   gap: 18px;
   padding: 10px 0;
