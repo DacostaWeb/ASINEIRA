@@ -521,9 +521,10 @@ html.menu-open .lang { color: var(--cream); }
 /* Toda a cabeça abre o cartão, e não só o "+" — quem carrega no título está
    a pedir o mesmo. O botão continua a ser o botão; o JS só lhe passa o
    clique que caiu ao lado. */
-.tile__head { display: flex; align-items: flex-start; gap: 18px; cursor: pointer; }
-/* Sem "+" não há nada para abrir — e o cursor não deve prometê-lo. */
-.tile__head:not(:has(.tile__toggle)) { cursor: default; }
+.tile__head { display: flex; align-items: flex-start; gap: 18px; cursor: default; }
+/* O "+" saiu da cabeça (vive no mosaico, por cima do inner) para o ×
+   poder ficar fixo sem o título. Sem "+" não há nada para abrir. */
+.tile:has(> .tile__toggle) .tile__head { cursor: pointer; padding-right: 48px; }
 
 /* Três desenhos de título: compacto (base), itálico e espacejado. */
 .tile__title {
@@ -672,7 +673,8 @@ html[lang="en"] .title-art {
   white-space: nowrap;
 }
 
-/* O "+" roda para "×" quando abre — a rotação é aplicada pelo JS. */
+/* O "+" roda para "×" quando abre. Roda o sinal, não o botão: se rodasse
+   a caixa toda, o fundo azul (que tapa o filete) ia de esquina para baixo. */
 .tile__toggle {
   flex-shrink: 0;
   padding: 0;
@@ -685,19 +687,22 @@ html[lang="en"] .title-art {
   font-weight: 300;
   line-height: .75;
   cursor: pointer;
+}
+.tile__toggle-mark {
+  display: block;
   transition: transform .25s ease;
 }
 
-/* Cartão a duas colunas: o "+" sai da coluna de leitura e alinha com o
-   canto do mosaico de cima, à direita da segunda coluna. Só acima de
-   640px — em ecrã estreito o "+" fica no sítio do título. */
-@media (min-width: 641px) {
-  .tile--span .tile__toggle {
-    position: absolute;
-    top: var(--tile-pad);
-    right: var(--gutter);
-  }
+/* O "+" mora no mosaico, não na cabeça: assim, aberto o painel, o inner
+   pode rolar (e o título "eventos" vai-se) sem levar o ×. */
+.tile > .tile__toggle {
+  position: absolute;
+  top: var(--tile-pad);
+  right: var(--gutter);
+  z-index: 1;
+}
 
+@media (min-width: 641px) {
   /* O cartão de amigo ocupa a segunda coluna do mosaico, encostado ao fundo
      e à direita — à mesma margem do "+" lá em cima, que é a margem de tudo
      o resto. Fora da coluna de leitura de propósito: se entrasse nela,
@@ -744,9 +749,21 @@ html[lang="en"] .title-art {
 }
 
 /* Cartão aberto: sai da grelha e ocupa toda a secção de cartões, do fundo do
-   cabeçalho ao topo do marquee. Fica por baixo do cabeçalho (20) e do menu
-   (60), que continuam acessíveis. O buraco que deixa na grelha não se vê,
-   porque está tapado por ele. */
+   cabeçalho ao topo do marquee. A grelha sobe com ele (25): o × do painel
+   vive lá dentro, e sem esta subida ficava preso abaixo do cabeçalho (20) —
+   o triângulo, que transborda, passava-lhe por cima. Continua abaixo do
+   menu (60) e da ficha (50). O buraco que deixa na grelha não se vê, porque
+   está tapado por ele.
+
+   Quem rola é o .tile__inner: o título vai-se com o scroll, o × não —
+   é irmão do inner, fora da caixa a rolar, para o filete dos cartazes
+   não lhe passar por cima.
+
+   Sem padding em cima: o respiro do mosaico fechado era uma faixa de fundo
+   que o conteúdo nunca atravessava. Aberto, o cartaz sobe até ao cabeçalho;
+   só a caixa do × fica por cima. O ar das laterais e do fundo passa para o
+   inner, e o do topo para a cabeça — que se vai com o título. */
+.tiles:has(.tile.is-expanded) { z-index: 25; }
 .tile.is-expanded {
   position: fixed;
   left: 0;
@@ -754,12 +771,8 @@ html[lang="en"] .title-art {
   top: var(--header-h);
   bottom: var(--marquee-h);
   z-index: 15;
-  /* O painel é a excepção: aqui o conteúdo rola mesmo, e por isso volta a ser
-     uma caixa de scroll. Os dois eixos declarados, que um "clip" ao lado de
-     um "auto" não é combinação que exista. */
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;   /* não arrastar a página ao chegar ao fim */
+  overflow: hidden;
+  padding: 0;
   animation: tile-open .18s ease;
 }
 
@@ -768,44 +781,35 @@ html[lang="en"] .title-art {
 /* Aberto em painel há muito mais espaço, por isso a coluna de conteúdo pode
    crescer. Os blocos de texto mantêm a sua própria medida de leitura; quem
    aproveita a largura é o calendário, as fotografias e a vista aérea. */
-.tile.is-expanded .tile__inner { max-width: var(--panel-content); }
+.tile.is-expanded .tile__inner {
+  max-width: var(--panel-content);
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  position: relative;
+  z-index: 0;
+  padding: 0 var(--gutter) var(--tile-pad);
+}
+.tile.is-expanded .tile__head { padding-top: var(--tile-pad); }
 
 /* Menos o dos eventos: lá quem manda são os cartazes, e esses seguem as
    colunas do mosaico — para isso precisam da largura toda, e não da medida
    de leitura. O calendário é que continua a tê-la (ver .cal). */
 #eventos.tile.is-expanded .tile__inner { max-width: none; }
 
-/* Com o cartão em painel o fecho vai para o canto superior direito, onde se
-   espera encontrá-lo; o conteúdo continua encostado à esquerda. Preso ao ecrã
-   e não ao painel: em janelas baixas o conteúdo rola lá dentro e, se o fecho
-   rolasse com ele, deixava de haver como fechar num telemóvel.
-
-   Está por cima de tudo o que rola por baixo dele — cartazes, fotografias,
-   texto —, e um "×" solto por cima de uma fotografia não se lê. Leva por
-   isso a cor do painel atrás de si, numa caixa que o folga dos quatro lados;
-   o recuo do topo e da direita é o mesmo da folga, para que o sinal fique
-   exactamente onde estava. O z-index é o que o põe à frente: fixo mas sem
-   ele, os cartazes — que vêm depois no documento — passavam-lhe por cima. */
-.tile.is-expanded .tile__toggle {
-  position: fixed;
-  z-index: 2;
-  top: calc(var(--header-h) + var(--tile-pad) - 4px);
+/* Só o × fica: o título rola. Fora do inner, por cima do filete. O fundo
+   é do próprio botão — uma sombra ::before com z-index negativo saía do
+   contexto e o filete pintava-lhe por cima, deixando o × a descoberto. */
+.tile.is-expanded > .tile__toggle {
+  z-index: 20;
+  isolation: isolate;
+  top: calc(var(--tile-pad) - 4px);
   right: calc(var(--gutter) - 7px);
   padding: 4px 7px;
-}
-
-/* A caixa não é do botão: é desta sombra atrás dele. Quem roda um oitavo de
-   volta é o botão inteiro — é assim que o "+" vira "×" —, e uma caixa a
-   rodar com ele ficava de esquina para baixo. Rodada ao contrário do mesmo
-   tanto, fica direita, seja qual for a volta que o botão levar. */
-.tile.is-expanded .tile__toggle::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
   background: var(--tile-bg);
-  transform: rotate(-45deg);
 }
+.tile.is-expanded .tile__toggle-mark { transform: rotate(45deg); }
 
 /* Aberto em painel, a lista de cima sai: tudo o que ela diz está logo a
    seguir, nos cartazes e na lista de todos os projetos, e escrito duas vezes
@@ -1102,7 +1106,9 @@ html[lang="en"] .title-art {
 /* Os concluídos invertem a caixa: fundo azul, letra amarela. O filete
    pontilhado envolve o cartaz inteiro, fotografia incluída. O SVG pinta
    pontos redondos com um pouco mais de ar do que o dotted nativo. */
-.evcard--conc { position: relative; }
+/* isolation: o z-index do filete fica preso ao cartaz. Sem isto os pontos
+   saíam a competir com o × do painel e pintavam-lhe por cima. */
+.evcard--conc { position: relative; z-index: 0; isolation: isolate; }
 .evcard--conc .evcard__info {
   background: var(--tile-bg);
   color: var(--tile-fg);
@@ -1737,15 +1743,15 @@ html[lang="en"] .title-art {
 
   /* A mesma moldura da grelha: do fundo do cabeçalho ao topo do marquee, e é
      ela que rola. Acima dos mosaicos e abaixo do menu (60), que continua a
-     poder abrir-se por cima de uma ficha. */
+     poder abrir-se por cima de uma ficha. Quem rola é o .ficha__doc: o ×
+     fica fora, para o conteúdo não lhe passar por cima. */
   position: fixed;
   top: var(--header-h);
   bottom: var(--marquee-h);
   left: 0;
   z-index: 50;
   width: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
   background: var(--cream);
   visibility: hidden;
   pointer-events: none;
@@ -1766,6 +1772,9 @@ html[lang="en"] .title-art {
   grid-template-columns: repeat(var(--fcols), minmax(0, 1fr));
   gap: 44px var(--gutter);
   align-items: start;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--pad) var(--gutter) 0;
 }
 
@@ -1832,12 +1841,13 @@ html[lang="en"] .title-art {
    um "+" a um oitavo de volta. Só o destino é outro: daqui não se sai para a
    página inicial, volta-se aos eventos, que é de onde se veio.
 
-   Fixo à janela e não à folha: em janelas baixas o conteúdo rola por baixo
-   dele e, se o fecho rolasse também, deixava de haver como fechar. */
+   Fixo à folha e não à janela: a folha não rola, rola o .ficha__doc, e o
+   × fica fora dessa caixa — senão o iOS pintava o conteúdo por cima. O
+   mesmo sítio e o mesmo tamanho do × do painel. */
 .ficha__x {
-  position: fixed;
-  z-index: 2;
-  top: calc(var(--header-h) + var(--tile-pad) - 4px);
+  position: absolute;
+  z-index: 10;
+  top: calc(var(--pad) - 4px);
   right: calc(var(--gutter) - 7px);
   padding: 4px 7px;
   border: none;
@@ -2535,7 +2545,6 @@ html.menu-open .menu::before { opacity: 1; }
               style="--art-pt: url(&quot;fonts/eventos.svg&quot;); --art-w-pt: 160.7685547; --art-h-pt: 32.1513672; --art-base-pt: 0.576;
                      --art-en: url(&quot;fonts/events.svg&quot;); --art-w-en: 135.171875; --art-h-en: 32.1513672; --art-base-en: 0.576;
                      --art-abre: .2em;"></span></h2>
-        <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
 
       <!-- Data, projeto, sítio e natureza: as quatro colunas do rascunho. -->
@@ -2582,6 +2591,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       <p class="tile__caption" data-i18n="capEv">Próximos · concluídos · calendário · projetos</p>
     </div>
+    <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
 
   <figure class="media">
@@ -2597,7 +2607,6 @@ html.menu-open .menu::before { opacity: 1; }
               class="title-art title-art--saltinhos" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/atividades.svg&quot;); --art-w-pt: 211.9082031; --art-h-pt: 35.6171875; --art-base-pt: 0.576;
                      --art-en: url(&quot;fonts/activities.svg&quot;); --art-w-en: 184.3037109; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
-        <button class="tile__toggle" type="button" data-tile="Atividades" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
       <p class="tile__lead" data-i18n="atP">Aulas regulares, residências artísticas, apoio à criação... Palco e igreja preparadas para todo o tipo de espetáculos, eventos culturais ou workshops. Artes para a comunidade e uma comunidade para as Artes!</p>
 
@@ -2647,6 +2656,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       <p class="tile__caption" data-i18n="capAt">Apresentação - criação - formação - residências</p>
     </div>
+    <button class="tile__toggle" type="button" data-tile="Atividades" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
 
   <figure class="media">
@@ -2663,13 +2673,13 @@ html.menu-open .menu::before { opacity: 1; }
               class="title-art title-art--pino" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/informacoes.svg&quot;); --art-w-pt: 254.4951172; --art-h-pt: 47.2954102; --art-base-pt: 11.774;
                      --art-en: url(&quot;fonts/information.svg&quot;); --art-w-en: 234.0917969; --art-h-en: 36.0976562; --art-base-en: 0.576;"></span></h2>
-        <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais">+</button>
       </div>
       <p class="tile__lead" data-i18n="infoP">Quem somos, onde estamos e como falar connosco: tudo o que há para saber sobre a Sineira.</p>
 
 
       <p class="tile__caption" data-i18n="capInfo">Sobre nós - acessos - contactos</p>
     </div>
+    <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
 
   <!-- A fotografia que ficou no lugar do cartão que saiu: são as dez células
@@ -2687,7 +2697,6 @@ html.menu-open .menu::before { opacity: 1; }
               class="title-art title-art--leque" aria-hidden="true"
               style="--art-pt: url(&quot;fonts/amigodasineira.svg&quot;); --art-w-pt: 341.7735316; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
                      --art-en: url(&quot;fonts/asineirafriend.svg&quot;); --art-w-en: 310.5738803; --art-h-en: 36.3850665; --art-base-en: 0.864;"></span></h2>
-        <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais">+</button>
       </div>
       <p class="tile__lead" data-i18n-html="amP">Faz parte do futuro e apoia a Arte em Comunidade!<br>Torna-te um “Amigo da Sineira”</p>
       <a class="tile__cta" id="amigo-cta" data-i18n="amCta" href="mailto:ola@asineira.pt">Quero aderir</a>
@@ -2710,6 +2719,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       <p class="tile__caption" data-i18n="capAm">Espetáculos gratuitos - descontos - conteúdo exclusivo</p>
     </div>
+    <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
 
   <figure class="media" id="media-fim">
@@ -4430,6 +4440,8 @@ html.menu-open .menu::before { opacity: 1; }
     fichaEl.classList.add('is-on');
     fichaEl.setAttribute('aria-hidden', 'false');
     fichaEl.scrollTop = 0;
+    var doc = fichaEl.querySelector('.ficha__doc');
+    if (doc) doc.scrollTop = 0;
   }
 
   function fechaFicha() {
@@ -4548,7 +4560,15 @@ html.menu-open .menu::before { opacity: 1; }
     if (route && route.tile) {
       closeMenu();
       var btn = document.querySelector('[data-tile="' + route.tile + '"]');
-      if (btn) { setTile(btn, true); btn.closest('.tile').scrollTop = 0; }
+      if (btn) {
+        setTile(btn, true);
+        var tile = btn.closest('.tile');
+        if (tile) {
+          tile.scrollTop = 0;
+          var inner = tile.querySelector('.tile__inner');
+          if (inner) inner.scrollTop = 0;
+        }
+      }
       return;
     }
 
@@ -4621,7 +4641,6 @@ html.menu-open .menu::before { opacity: 1; }
 
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'Fechar' : 'Mostrar mais');
-    btn.style.transform = open ? 'rotate(45deg)' : 'none';
     if (body) body.style.display = open ? 'block' : 'none';
     if (tile) tile.classList.toggle('is-expanded', open);
 
@@ -4665,7 +4684,8 @@ html.menu-open .menu::before { opacity: 1; }
   document.querySelectorAll('.tile__head').forEach(function (head) {
     head.addEventListener('click', function (ev) {
       if (ev.target.closest('.tile__toggle')) return;
-      var btn = head.querySelector('.tile__toggle');
+      var tile = head.closest('.tile');
+      var btn = tile && tile.querySelector('.tile__toggle');
       if (btn) btn.click();
     });
   });
