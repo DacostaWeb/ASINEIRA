@@ -3702,7 +3702,7 @@ html.menu-open .menu::before { opacity: 1; }
     var startX = 0, startY = 0;
     var tracking = false, swiped = false, pid = null;
     var LIMIAR = 50;
-    var wheelAcc = 0, wheelLock = false;
+    var wheelAcc = 0, wheelLock = false, wheelFim = null;
 
     function mostra(i) {
       n = ((i % total) + total) % total;
@@ -3756,16 +3756,30 @@ html.menu-open .menu::before { opacity: 1; }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); mostra(n - 1); }
     });
 
+    /* Um deslize de dois dedos é uma fotografia, e só uma, por maior que ele
+       seja. O que conta não é o quanto se andou — é o gesto: assim que ele
+       chega aos 40, avança-se uma e fecha-se a porta até o gesto acabar.
+
+       Acabar é estar 150ms sem um único evento. O relógio recomeça a cada
+       evento, inclusive com a porta fechada, porque o trackpad não pára
+       quando os dedos param: larga-os e continua a mandar deslize sozinho,
+       cada vez mais devagar, durante um segundo largo. Antes, a porta abria
+       ao fim de 280ms fixos e essa inércia entrava por ela: um deslize
+       grande valia três ou quatro fotografias. No telemóvel nada disto se
+       aplica — lá quem folheia é o pointer, e esse já só dava uma. */
     palco.addEventListener('wheel', function (e) {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) + 1) return;
       e.preventDefault();
+
+      clearTimeout(wheelFim);
+      wheelFim = setTimeout(function () { wheelLock = false; wheelAcc = 0; }, 150);
+
       if (wheelLock) return;
       wheelAcc += e.deltaX;
       if (Math.abs(wheelAcc) < 40) return;
       mostra(n + (wheelAcc > 0 ? 1 : -1));
       wheelAcc = 0;
       wheelLock = true;
-      setTimeout(function () { wheelLock = false; }, 280);
     }, { passive: false });
 
     return mostra;
