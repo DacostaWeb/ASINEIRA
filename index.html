@@ -172,7 +172,7 @@ a:hover { text-decoration: underline; }
 #eventos.tile.is-expanded .evtag,
 #eventos.tile.is-expanded .evbt,
 #eventos.tile.is-expanded .prjf {
-  font-family: var(--font);
+  font-family: var(--font); padding-top: 14px;
 }
 
 
@@ -704,6 +704,29 @@ html[lang="en"] .title-art {
   top: var(--tile-pad);
   right: var(--gutter);
   z-index: 1;
+}
+
+/* "Brevemente" ocupa o canto de quem ainda não tem painel para abrir. Mora
+   onde morava o "+" e mede-se por ele: o sinal tem 38px com entrelinha de
+   .75, e é sobre essa altura que a palavra se centra, ou ficava a pairar
+   acima do título. Não é botão nem link — não há lá nada para abrir, e um
+   canto que convida a carregar e não responde é pior do que um canto
+   calado. */
+.tile__soon {
+  position: absolute;
+  top: var(--tile-pad);
+  right: var(--gutter);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 28.5px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  opacity: .75;
 }
 
 @media (min-width: 641px) {
@@ -1850,7 +1873,7 @@ html[lang="en"] .title-art {
    cartão reconheça onde caiu. */
 /* Uma boa folga entre secções: no painel aberto elas correm todas seguidas,
    e a 26px o calendário parecia o rodapé dos concluídos. */
-.panel-section + .panel-section { margin-top: 64px; }
+.panel-section + .panel-section { margin-top: 50px; }
 
 .panel-section__title {
   margin-bottom: 14px;
@@ -2732,13 +2755,13 @@ html.menu-open .menu::before { opacity: 1; }
              e por ordem. As etiquetas de cima filtram a lista; o "+" de cada
              linha abre a sinopse, e há-de abrir a página do projeto. -->
         <div class="panel-section">
-          <h3 class="panel-section__title" data-i18n="secProj">Todos os projetos</h3>
+          <h3 class="panel-section__title" data-i18n="secProj">Todos os eventos</h3>
           <div class="prjfiltros" id="prj-filtros" role="group" aria-label="Filtrar projetos"></div>
           <ul class="prj" id="prj-lista"></ul>
         </div>
       </div>
 
-      <p class="tile__caption" data-i18n="capEv">Próximos · concluídos · calendário · projetos</p>
+      <p class="tile__caption" data-i18n="capEv">Próximos · concluídos · calendário</p>
     </div>
     <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
@@ -2813,7 +2836,11 @@ html.menu-open .menu::before { opacity: 1; }
 
       <p class="tile__caption" data-i18n="capAt">Apresentação - criação - formação - residências</p>
     </div>
-    <button class="tile__toggle" type="button" data-tile="Atividades" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
+    <!-- O painel deste cartão fica escrito aqui em cima, no tile__body, mas
+         por agora não abre: sem "+" não há quem lhe chame, e sem rota não há
+         endereço que o traga (ver ROUTES). Quando for para abrir, volta o
+         botão e volta a linha na tabela das rotas. -->
+    <p class="tile__soon" data-i18n="brevemente">Brevemente</p>
   </article>
 
   <figure class="media">
@@ -2876,7 +2903,8 @@ html.menu-open .menu::before { opacity: 1; }
 
       <p class="tile__caption" data-i18n="capAm">Espetáculos gratuitos - descontos - conteúdo exclusivo</p>
     </div>
-    <button class="tile__toggle" type="button" data-tile="Amigos" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
+    <!-- Como no das atividades: o painel fica escrito e por abrir. -->
+    <p class="tile__soon" data-i18n="brevemente">Brevemente</p>
   </article>
 
   <figure class="media" id="media-fim">
@@ -2894,10 +2922,10 @@ html.menu-open .menu::before { opacity: 1; }
                      --art-en: url(&quot;fonts/shop.svg&quot;); --art-w-en: 101.2294922; --art-h-en: 44.5571289; --art-base-en: 9.516;"></span></h2>
       </div>
       <p class="tile__lead" data-i18n="lojaP">Merchandising à venda.</p>
-      <p class="tile__note" data-i18n="lojaNote">Brevemente.</p>
 
       <p class="tile__caption" data-i18n="capLoja">Tote bags - t-shirts - bonés - muito mais</p>
     </div>
+    <p class="tile__soon" data-i18n="brevemente">Brevemente</p>
   </article>
 </main>
 
@@ -3185,8 +3213,8 @@ html.menu-open .menu::before { opacity: 1; }
       /* Os eventos em si vivem na lista EVENTOS, lá em baixo, com as duas
          línguas dentro: aqui ficam só os títulos das secções. */
       evH2: 'events',
-      secProx: 'Upcoming', secConc: 'completed', secCal: 'Calendar', secProj: 'Every project',
-      capEv: 'Upcoming · completed · calendar · projects',
+      secProx: 'Upcoming', secConc: 'completed', secCal: 'Calendar', secProj: 'Every event',
+      capEv: 'Upcoming · completed · calendar',
 
       /* --- atividades --- */
       atH2: 'activities',
@@ -3252,7 +3280,7 @@ html.menu-open .menu::before { opacity: 1; }
       /* --- loja --- */
       lojaH2: 'shop',
       lojaP: 'Merchandising for sale.',
-      lojaNote: 'Coming soon.',
+      brevemente: 'Coming soon',
       capLoja: 'Tote bags - t-shirts - caps - and more',
 
       /* --- legendas e textos alternativos --- */
@@ -4748,10 +4776,15 @@ html.menu-open .menu::before { opacity: 1; }
   var HOME = { pt: '', en: 'eng' };
   var ROUTES = [
     { pt: 'eventos',    en: 'events',     tile: 'Eventos' },
-    { pt: 'atividades', en: 'activities', tile: 'Atividades' },
     { pt: 'onde',       en: 'where',      menu: 'menu-onde' },
     { pt: 'sobre',      en: 'about',      menu: 'menu-sobre' },
-    { pt: 'amigo',      en: 'friend',     tile: 'Amigos' },
+
+    /* As atividades e o amigo da Sineira dizem "brevemente" e não abrem: sem
+       rota, um #atividades colado à mão não encontra nada e o parseHash
+       devolve nulo — "fica como está" —, em vez de abrir um painel a que o
+       cartão já não dá entrada. As linhas voltam quando os painéis voltarem:
+       { pt: 'atividades', en: 'activities', tile: 'Atividades' },
+       { pt: 'amigo',      en: 'friend',     tile: 'Amigos' },      */
 
     { pt: 'voar',       en: 'voar',       projeto: 'voar' }
   ];
