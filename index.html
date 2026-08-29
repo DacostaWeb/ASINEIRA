@@ -678,17 +678,16 @@ html[lang="en"] .title-art {
   html.menu-open .menu__h3 .title-art__l { animation-name: var(--art-anim); }
 }
 
-/* Quem pediu ao sistema para não ver coisas a mexer perde o que se mexe
-   sozinho — em ecrã estreito as palavras andam sem ninguém as mandar andar, e
-   é isso que incomoda quem tem a definição ligada. O que responde ao rato
-   fica: dura dois segundos, é uma vez, e só acontece a quem foi lá com o
-   cursor. Os mesmos selectores da regra de cima, para ganhar por vir depois
-   e não à força de !important. */
-@media (prefers-reduced-motion: reduce) and (max-width: 640px) {
-  .tile__head .title-art__l { animation-name: none; }
-  html.menu-open .menu__h2 .title-art__l,
-  html.menu-open .menu__h3 .title-art__l { animation-name: none; }
-}
+/* Em ecrã estreito as palavras andam sempre, e andam a quem pediu ao sistema
+   para não ver coisas a mexer também. Esteve aqui a regra que lhes tirava o
+   movimento a essas pessoas, e o que ela fazia na prática era outra coisa:
+   como sem rato não há hover, o que sobrava era o realce pegajoso do toque —
+   as palavras ficavam quietas até alguém lhes tocar, e só então andavam uma
+   vez. Ou seja, quem tinha a definição ligada não deixava de ver movimento;
+   via-o ao toque, e sem o pedir.
+
+   É uma decisão tomada e não um esquecimento: este movimento é o que o
+   título é — a palavra desenhada só se lê inteira a mexer. */
 
 /* O texto sai da vista mas fica no documento: é ele que dá o título a quem
    lê por leitor de ecrã, onde uma máscara não diz nada. */
@@ -5625,6 +5624,41 @@ html.menu-open .menu::before { opacity: 1; }
   renderMenu();
   evRelogioLiga();
 
+  /* O duplo toque a aproximar, no iOS. O touch-action: manipulation trata
+     disto em quase tudo (ver o topo da folha de estilos), mas não onde o
+     valor tem de ser mais apertado: o palco das fotografias pede pan-y para
+     o deslize horizontal lhe chegar inteiro, e o Safari só desliga o duplo
+     toque no manipulation e no none — nos valores de pan deixa-o ligado. É
+     por isso que a página ainda aproximava nos cartazes dos eventos e na
+     ficha de um projeto: são os dois sítios onde esse palco vive.
+
+     Travar o palco não chegava, que o mesmo se dava em tudo o que estivesse
+     dentro dele. Trava-se o gesto: dois toques no mesmo sítio a menos de
+     350ms um do outro é o que o iOS lê como "aproxima", e é só a esse
+     segundo toque que se tira o comportamento por omissão.
+
+     Pinçar com dois dedos continua a aproximar — não passa por aqui, que
+     este só olha para o toque que fica sozinho no ecrã. Os campos de texto
+     ficam de fora: aí o preventDefault tirava-lhes o teclado. */
+  var toqueAntes = 0, toqueX = 0, toqueY = 0;
+  document.addEventListener('touchend', function (e) {
+    if (e.touches.length) return;              /* ainda há dedos no ecrã */
+    var t = e.changedTouches && e.changedTouches[0];
+    if (!t) return;
+    if (e.target && e.target.closest &&
+        e.target.closest('input, textarea, select, [contenteditable]')) return;
+
+    var agora = e.timeStamp || Date.now();
+    if (agora - toqueAntes < 350 &&
+        Math.abs(t.clientX - toqueX) < 30 &&
+        Math.abs(t.clientY - toqueY) < 30) {
+      e.preventDefault();
+    }
+    toqueAntes = agora;
+    toqueX = t.clientX;
+    toqueY = t.clientY;
+  }, { passive: false });
+
   /* ---------- wordmark salta enquanto se faz scroll ---------- */
 
   /* Enquanto há scroll a classe fica posta; quando pára, só a tiramos no fim de
@@ -5676,7 +5710,10 @@ html.menu-open .menu::before { opacity: 1; }
     if (t && t !== document && t !== window && typeof t.scrollTop === 'number' && t.scrollTop > y) y = t.scrollTop;
     if (document.scrollingElement && document.scrollingElement.scrollTop > y) y = document.scrollingElement.scrollTop;
     if (document.body && document.body.scrollTop > y) y = document.body.scrollTop;
-    target = -y * 0.06;
+    /* Para baixo roda no sentido dos ponteiros, para cima ao contrário — e é
+       o sinal do y que o diz, que o ângulo acompanha a posição do scroll e
+       não a sua direção. O 0.09 é o passo: quanto roda por cada pixel. */
+    target = y * 0.09;
     if (!spinning) { spinning = true; requestAnimationFrame(spin); }
   }
 
