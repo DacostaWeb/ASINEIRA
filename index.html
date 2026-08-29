@@ -1422,15 +1422,20 @@ html[lang="en"] .title-art {
    97px para a natureza, 84px para o sítio e 249px para o quando, que é o
    mais comprido de todos: "21h30 · segunda · 21 de setembro". Daí a ordem
    das frações — o quando primeiro, o título a seguir, e a natureza e o
-   sítio, que nunca passam de uma palavra, por fim.
+   sítio, que nunca passam de uma palavra, por fim. A fração do quando é de
+   3.7 e não de 3.3 porque a última coluna passou de 22px a 76px para caber
+   o "brevemente": os 54px que ela tirou à lista saem de onde há folga, e
+   não do único campo que não a tem.
 
    As larguras têm de ser frações e não max-content: cada linha é uma grelha
    sua, e é só por serem as mesmas frações da mesma largura que as colunas
    se alinham de cima a baixo. Com max-content cada linha media-se a si
-   própria e a lista ficava aos degraus. */
+   própria e a lista ficava aos degraus — e pela mesma razão nenhuma linha
+   pode ter uma grelha sua: a última coluna mede 76px em todas, seja para o
+   "+" ou para o "brevemente". */
 .prj__linha {
   display: grid;
-  grid-template-columns: 46px minmax(0, 2.9fr) minmax(0, 2fr) minmax(0, 1.9fr) minmax(0, 3.3fr) 66px 22px;
+  grid-template-columns: 46px minmax(0, 2.9fr) minmax(0, 2fr) minmax(0, 1.9fr) minmax(0, 3.7fr) 66px 76px;
   align-items: center;
   gap: 18px;
   padding: 10px 0;
@@ -1479,8 +1484,10 @@ html[lang="en"] .title-art {
 .prj__mais:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
 /* No lugar do "+", em quem ainda não tem ficha: a palavra em vez do sinal.
-   Não é botão — não abre nada, diz que ainda não há o que abrir. A última
-   coluna, que era um sinal de 22px, passa a caber uma palavra. */
+   Não é botão — não abre nada, diz que ainda não há o que abrir. É por
+   caber aqui uma palavra e não um sinal que a última coluna da linha mede
+   76px: a mesma em todas, tenham "+" ou "brevemente", que é o que mantém as
+   colunas alinhadas de cima a baixo. */
 .prj__breve {
   justify-self: end;
   font-size: 10px;
@@ -1489,12 +1496,7 @@ html[lang="en"] .title-art {
   opacity: .55;
   white-space: nowrap;
 }
-@media (min-width: 721px) {
-  .prj__breve { grid-column: 7; }
-  .prj__linha--breve {
-    grid-template-columns: 46px minmax(0, 2.9fr) minmax(0, 2fr) minmax(0, 1.9fr) minmax(0, 3.3fr) 66px 78px;
-  }
-}
+@media (min-width: 721px) { .prj__breve { grid-column: 7; } }
 
 .prj__sin {
   display: none;
@@ -4136,10 +4138,7 @@ html.menu-open .menu::before { opacity: 1; }
        ainda não existe. */
     var bt = li.querySelector('.prj__mais');
     var breve = li.querySelector('.prj__breve');
-    if (breve) {
-      breve.textContent = lg() === 'en' ? 'soon' : 'brevemente';
-      li.querySelector('.prj__linha').classList.add('prj__linha--breve');
-    }
+    if (breve) breve.textContent = lg() === 'en' ? 'soon' : 'brevemente';
     if (marcas) {
       var antes = bt || breve;
       antes.parentNode.insertBefore(marcas, antes);
