@@ -1503,10 +1503,23 @@ html[lang="en"] .title-art {
 
 
 /* Em ecrã estreito a linha desdobra-se: a miniatura fica à esquerda de tudo
-   o resto, que passa a empilhar-se. */
+   o resto, que passa a empilhar-se — e cresce até ter a altura da pilha,
+   como na versão larga a tem a do texto. */
 @media (max-width: 720px) {
+  /* Sem filetes: em ecrã largo eram eles a separar as linhas porque a
+     miniatura era um sinal pequeno ao lado do texto; aqui a imagem é a
+     altura da linha inteira e o compasso da lista já se lê nela. Um filete
+     por cima de cada uma só acrescentava um traço ao que a imagem já diz. */
+  .prj__l, .prj__l:last-child { border: 0; }
+
+  /* A miniatura cresce até encher a linha de alto a baixo, como na versão
+     larga, onde ela e o texto têm a mesma altura. Continua quadrada — é a
+     largura da coluna que lhe dá o lado, e o aspect-ratio o outro — e por
+     ser o elemento mais alto é ela que passa a dar a altura à linha. Mede-se
+     em vw com um chão e um tecto: num telefone estreito não pode roubar a
+     largura toda ao título, e num tablet não deve continuar a crescer. */
   .prj__linha {
-    grid-template-columns: 54px 1fr max-content;
+    grid-template-columns: clamp(80px, 24vw, 104px) minmax(0, 1fr) max-content;
     grid-template-areas:
       "mini titulo fim"
       "mini tag    fim"
@@ -1515,12 +1528,34 @@ html[lang="en"] .title-art {
     align-items: start;
     gap: 4px 14px;
   }
-  .prj__mini { grid-area: mini; align-self: start; }
+  /* O min-height é o que mantém o quadrado: a fotografia lá dentro não é
+     quadrada, e sem ele a altura mínima automática da célula da grelha
+     empurrava a caixa uns pixels abaixo da largura — pouco, mas o
+     suficiente para o recorte deixar de ser quadrado. */
+  .prj__mini { grid-area: mini; align-self: start; min-height: 0; }
   .prj__t { grid-area: titulo; }
   .prj__q { grid-area: quando; }
   .prj__s { grid-area: sitio; }
   .prj__linha .evtag { grid-area: tag; justify-self: start; margin-top: 4px; }
-  .prj__fim { grid-area: fim; align-self: center; }
+
+  /* O fim da linha desencosta-se: onde na versão larga o "+" e as marcas
+     andavam juntos ao centro da direita, aqui repartem-se pelos cantos da
+     altura da imagem — o "+" (ou o "brevemente", em quem ainda não tem
+     ficha) em cima, as marcas do que ficou em baixo.
+
+     O column-reverse é o que põe o "+" acima das marcas sem trocar a ordem
+     do HTML, onde elas vêm primeiro por ser essa a leitura da versão larga;
+     e a margem automática é que os afasta, e não um space-between: numa
+     linha sem marcas o único filho tem de subir na mesma, e o
+     space-between deixava-o em baixo. */
+  .prj__fim {
+    grid-area: fim;
+    align-self: stretch;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .prj__mais, .prj__breve { margin-bottom: auto; }
 }
 
 
@@ -3495,8 +3530,11 @@ html.menu-open .menu::before { opacity: 1; }
     tipo:    '<svg class="sinal--tipo" viewBox="0 0 382 387" aria-hidden="true"><path d="M95.7804 387L382 110.293L0 0L95.7804 387Z"/></svg>',
     pin:     '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5.2" r="3.1"/><path d="M8 8.3V14.6"/></svg>',
     relogio: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.9"/><path d="M8 4.4V8l2.5 1.7"/></svg>',
-    /* Só a ficha de um projeto o usa: ali a data é um mês inteiro, e um
-       relógio a marcar horas em cima de "Novembro de 2024" mentia. */
+    /* O calendário é de quem já não tem hora: a ficha de um projeto, onde a
+       data é um mês inteiro e um relógio a marcar horas em cima de
+       "Novembro de 2024" mentia, e a linha de um concluído na lista de
+       todos os projetos, que diz o dia em que foi e não a que horas começou.
+       O relógio fica para os que aí vêm, que ainda têm hora de começar. */
     mes:     '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.4" y="3.6" width="11.2" height="10" rx="1.4"/><path d="M2.4 6.6h11.2M5.6 2.2v2.8M10.4 2.2v2.8"/></svg>'
   };
 
@@ -4109,7 +4147,7 @@ html.menu-open .menu::before { opacity: 1; }
         '<p class="prj__t"></p>' +
         '<span class="evtag evdet">' + SINAIS.tipo + '<span></span></span>' +
         '<p class="prj__s evdet">' + SINAIS.pin + '<span></span></p>' +
-        '<p class="prj__q evdet">' + SINAIS.relogio + '<span></span></p>' +
+        '<p class="prj__q evdet">' + (prjConcluido(e) ? SINAIS.mes : SINAIS.relogio) + '<span></span></p>' +
         '<div class="prj__fim"></div>' +
       '</div>';
 
