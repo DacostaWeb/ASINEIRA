@@ -949,6 +949,7 @@ html[lang="en"] .title-art {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 14px;
+  margin-top: 20px;
 }
 
 .shot { margin-top: 20px; }
@@ -3126,10 +3127,14 @@ html.menu-open .menu::before { opacity: 1; }
                 style="--art-pt: url(&quot;fonts/press.svg&quot;); --art-w-pt: 112.4765625; --art-h-pt: 34.9394531; --art-base-pt: 9.516;"></span></h3>
         </div>
         <div class="menu-row__body">
+          <!-- Só as duas marcas, para descarregar. O ícone tem ficheiro próprio
+               porque o que a página usa é um <symbol> pintado a var(--blue) e
+               var(--cream): as variáveis morrem fora dela, e o que se
+               descarregasse vinha preto. Os caminhos do ficheiro são os
+               mesmos do símbolo. -->
           <ul class="menu__links">
-            <li><a href="dossier/" data-i18n="coImprensa">Dossier de apresentação</a></li>
             <li><a href="SVG%20a%20Sineira.svg" download data-i18n="prLogo">Logótipo (SVG)</a></li>
-            <li><a href="mailto:info@asineira.pt?subject=Imprensa" data-i18n="prPedido">Pedidos de imprensa</a></li>
+            <li><a href="SVG%20icone%20a%20Sineira.svg" download data-i18n="prIcone">Ícone (SVG)</a></li>
           </ul>
         </div>
       </div>
@@ -3258,7 +3263,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       /* --- press --- */
       secPress: 'press',
-      prLogo: 'Logotype (SVG)', prPedido: 'Press enquiries',
+      prLogo: 'Logotype (SVG)', prIcone: 'Icon (SVG)',
 
       /* --- sobre nós --- */
       sobreH2: 'about us',
@@ -3267,7 +3272,6 @@ html.menu-open .menu::before { opacity: 1; }
       missaoP: 'Arts for the community and a community for the Arts. Training, creation and presentation under one roof, open to those who live here and to those who arrive.',
       equipaNote: 'Introducing the team, coming soon.',
       coAddr: 'HQ: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde',
-      coImprensa: 'Presentation dossier (press)',
       coLegal: 'a Sineira — Cultural Association · Tax ID 518858359',
 
       /* --- amigo da sineira --- */
