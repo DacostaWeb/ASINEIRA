@@ -161,7 +161,6 @@ a:hover { text-decoration: underline; }
 .pill,
 .marquee__text,
 .evtag,
-.evmedia,
 .events__head,
 .panel-section__title,
 .aerial__tag { font-family: var(--font-display); }
@@ -171,7 +170,6 @@ a:hover { text-decoration: underline; }
 #eventos.tile.is-expanded .panel-section__title,
 #eventos.tile.is-expanded .evcard__kick,
 #eventos.tile.is-expanded .evtag,
-#eventos.tile.is-expanded .evmedia,
 #eventos.tile.is-expanded .evbt,
 #eventos.tile.is-expanded .prjf {
   font-family: var(--font);
@@ -1045,8 +1043,9 @@ html[lang="en"] .title-art {
   .events tr td { transition: border-color .25s ease; }
 }
 
-/* "concluídos": o mesmo desenho da lista de cima, dizendo o que ficou de
-   cada um — fotografias, vídeo, texto. */
+/* O rótulo de cada uma das duas listas — "próximos" e "concluídos". É o
+   mesmo desenho nas duas: a lista de cima estava sem nome, e uma lista sem
+   nome antes de outra com nome lê-se como a primeira parte dela. */
 .events__head {
   margin-top: 26px;
   font-family: var(--font-display);
@@ -1057,19 +1056,25 @@ html[lang="en"] .title-art {
   opacity: .75;
 }
 
+/* O afastamento das duas listas passou para o rótulo que cada uma tem em
+   cima: é ele o primeiro a entrar, e a tabela vem logo por baixo. */
+.events__head--prox { margin-top: 34px; }
+.events--prox,
 .events--conc { margin-top: 6px; }
 .events--conc td:nth-child(1) { width: 62px; }
 
-/* O que ficou de cada evento dito por palavras. Estiveram aqui três ícones,
-   e o das fotografias não se percebia: uma máquina de 13 pixéis lê-se como
-   um rectângulo com um ponto. Três palavras curtas dizem-no sem enigma. */
-.evmedia {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
+/* O que ficou de cada concluído, na primeira coluna: os mesmos três sinais
+   dos cartazes do painel — linhas, câmara e play. Estiveram aqui por
+   palavras enquanto os ícones eram de 13 pixéis; a 15, e com o mesmo
+   desenho do painel, quem já os viu lá reconhece-os aqui. */
+.events__marcas {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   opacity: .75;
 }
+.events__marcas .evcard__marca { width: 15px; height: 15px; }
+.events__marcas .evcard__marca svg { width: 15px; height: 15px; }
 
 
 /* --- Painel dos eventos: a grelha de cartazes --- */
@@ -2619,8 +2624,12 @@ html.menu-open .menu::before { opacity: 1; }
                      --art-abre: .2em;"></span></h2>
       </div>
 
-      <!-- Data, projeto, sítio e natureza: as quatro colunas do rascunho. -->
-      <table class="events"><tbody id="ev-lista"></tbody></table>
+      <!-- Data, projeto, sítio e natureza: as quatro colunas do rascunho.
+           As duas listas dizem-se agora pelo mesmo rótulo — "próximos" em
+           cima, "concluídos" a seguir —, que uma lista sem nome ao lado de
+           outra com nome parecia a continuação dela. -->
+      <p class="events__head events__head--prox" data-i18n="secProx">Próximos</p>
+      <table class="events events--prox"><tbody id="ev-lista"></tbody></table>
 
       <p class="events__head" data-i18n="secConc">concluídos</p>
       <table class="events events--conc"><tbody id="ev-concluidos"></tbody></table>
@@ -3493,12 +3502,6 @@ html.menu-open .menu::before { opacity: 1; }
     en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
   };
 
-  /* O que ficou de cada evento concluído, por palavras e não por ícones. */
-  var MEDIA = {
-    pt: { foto: 'fotos', video: 'vídeo', texto: 'texto' },
-    en: { foto: 'photos', video: 'video', texto: 'text' }
-  };
-
   /* As mesmas datas em ponto pequeno, para o pé dos cartazes: "18 mar". */
   var MESES_C = {
     pt: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
@@ -3663,13 +3666,21 @@ html.menu-open .menu::before { opacity: 1; }
   var evParado = false;   /* com o rato em cima, a vez não anda */
   var evRelogio = null;
 
-  /* A fotografia em foco. As quatro estão montadas por baixo umas das outras
-     desde o início — são quatro — e a troca é só de opacidade: assim não há
-     um salto em branco à espera de carregar. */
+  /* As fotografias do cartão são as dos próximos e as dos concluídos, por
+     esta ordem — a mesma em que as duas listas aparecem. O que já passou tem
+     fotografia como o que aí vem, e não havia razão para a de baixo ser a
+     única lista a apontar para uma célula vazia. A ordem é o que liga cada
+     linha à sua: os concluídos ficam a seguir aos próximos, e por isso a
+     linha n dos concluídos é a fotografia EVENTOS.length + n. */
+  function evFotos() { return EVENTOS.concat(CONCLUIDOS); }
+
+  /* A fotografia em foco. Estão todas montadas por baixo umas das outras
+     desde o início e a troca é só de opacidade: assim não há um salto em
+     branco à espera de carregar. */
   function evPintaFotos() {
     if (!evFotoEl) return;
     evFotoEl.textContent = '';
-    EVENTOS.forEach(function (e, i) {
+    evFotos().forEach(function (e, i) {
       var img = document.createElement('img');
       img.src = e.img;
       img.alt = evAlt(e);
@@ -3680,7 +3691,8 @@ html.menu-open .menu::before { opacity: 1; }
   }
 
   function evFoco(i) {
-    evEmFoco = (i + EVENTOS.length) % EVENTOS.length;
+    var n_fotos = evFotos().length;
+    evEmFoco = (i + n_fotos) % n_fotos;
     if (evFotoEl) {
       Array.prototype.forEach.call(evFotoEl.children, function (img, n) {
         img.classList.toggle('is-on', n === evEmFoco);
@@ -3689,6 +3701,11 @@ html.menu-open .menu::before { opacity: 1; }
     if (evListaEl) {
       Array.prototype.forEach.call(evListaEl.children, function (tr, n) {
         tr.classList.toggle('is-on', n === evEmFoco);
+      });
+    }
+    if (evConcEl) {
+      Array.prototype.forEach.call(evConcEl.children, function (tr, n) {
+        tr.classList.toggle('is-on', EVENTOS.length + n === evEmFoco);
       });
     }
   }
@@ -3731,25 +3748,33 @@ html.menu-open .menu::before { opacity: 1; }
     return tr;
   }
 
-  function evMedia(c) {
-    return c.media.map(function (m) { return MEDIA[lg()][m]; }).join(' · ');
-  }
+  /* A linha de um concluído tem as mesmas quatro colunas da de cima, e a
+     última diz o mesmo que lá: a natureza do trabalho. O ano estava a ocupar
+     o lugar de "formação" e não dizia nada que a lista já não dissesse — a
+     data inteira está no painel, na lista de todos os projetos.
 
-  function evLinhaConc(c) {
+     Na primeira coluna, o que ficou de cada um vai pelos sinais do painel e
+     não por palavras: quem abre o cartão volta a encontrá-los nos cartazes. */
+  function evLinhaConc(c, i) {
     var tr = document.createElement('tr');
     var t = evTexto(c);
     var media = document.createElement('td');
-    media.innerHTML = '<span class="evmedia"></span>';
-    media.firstChild.textContent = evMedia(c);
+    var marcas = evMarcas(c, 'events__marcas');
+    if (marcas) media.appendChild(marcas);
     tr.appendChild(media);
-    [t.titulo, t.sitio, String(c.ano)].forEach(function (txt, n) {
+    [t.titulo, t.sitio, t.natureza].forEach(function (txt) {
       var td = document.createElement('td');
       td.textContent = txt;
       tr.appendChild(td);
     });
 
-    /* Como as linhas de cima: no mosaico fechado, carregar em qualquer sítio
-       abre a lista inteira. */
+    /* Como as linhas de cima: o rato numa linha pára a vez e chama a
+       fotografia dela para o lado. */
+    tr.addEventListener('mouseenter', function () { evParado = true; evFoco(EVENTOS.length + i); });
+    tr.addEventListener('mouseleave', function () { evParado = false; });
+
+    /* E, também como as de cima: no mosaico fechado, carregar em qualquer
+       sítio abre a lista inteira. */
     tr.className = 'events__l--liga';
     tr.addEventListener('click', function () { go(routeByTile('Eventos')); });
 
@@ -4337,7 +4362,7 @@ html.menu-open .menu::before { opacity: 1; }
     }
     if (evConcEl) {
       evConcEl.textContent = '';
-      CONCLUIDOS.forEach(function (c) { evConcEl.appendChild(evLinhaConc(c)); });
+      CONCLUIDOS.forEach(function (c, i) { evConcEl.appendChild(evLinhaConc(c, i)); });
     }
     if (evGrelhaEl) {
       evGrelhaEl.textContent = '';
