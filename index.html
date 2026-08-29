@@ -3266,48 +3266,14 @@ html.menu-open .menu::before { opacity: 1; }
   var HOJE = new Date();
 
   var EVENTOS = [
-    { dia: 7, mes: 9, ano: 2026, hora: '21h30',
-      img: 'dossier/assets/scene-estudio.jpg',
-      imgs: ['dossier/assets/scene-estudio.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/hero.jpg'],
-      /* Quem tem ficha própria diz aqui qual é: é o que põe o "quero saber
-         mais" do cartaz e a linha da lista a levar à página do projeto em
-         vez de abrirem um correio. */
-      projeto: 'voar',
-      bilhetes: 'mailto:ola@asineira.pt?subject=' + encodeURIComponent('Bilhetes — Voar Muito Perto do Sol'),
-      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditório', natureza: 'Criação',
-            sinopse: 'Uma criação sobre o desejo de subir e o preço da queda, feita em residência na antiga igreja.' },
-      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Auditorium', natureza: 'Creation',
-            sinopse: 'A creation about the wish to rise and the price of the fall, made in residence at the former church.' },
-      alt: { pt: 'Proposta: estúdio de dança com plateia', en: 'Proposal: dance studio with seating' } },
-
-    { dia: 14, mes: 9, ano: 2026, hora: '18h',
-      img: 'dossier/assets/nave-2026.jpg',
-      imgs: ['dossier/assets/nave-2026.jpg', 'dossier/assets/nave-2025.jpg', 'dossier/assets/altares.jpg'],
-      bilhetes: null,
-      pt: { titulo: 'Projeto A', sitio: 'Igreja', natureza: 'Formação',
-            sinopse: 'Duas semanas de formação aberta à comunidade, com apresentação no último dia.' },
-      en: { titulo: 'Projeto A', sitio: 'Church', natureza: 'Training',
-            sinopse: 'Two weeks of training open to the community, with a showing on the last day.' },
-      alt: { pt: 'Nave da antiga Igreja de Retorta com o novo soalho', en: 'Nave of the former Retorta Church with its new floor' } },
-
-    { dia: 21, mes: 9, ano: 2026, hora: '21h30',
-      img: 'dossier/assets/nave-2025.jpg',
-      imgs: ['dossier/assets/nave-2025.jpg', 'dossier/assets/arco.jpg', 'dossier/assets/scene-aerea.jpg'],
-      bilhetes: null,
-      pt: { titulo: 'Projeto B', sitio: 'Igreja', natureza: 'Apresentação',
-            sinopse: 'Apresentação pública do trabalho feito na nave ao longo do ano.' },
-      en: { titulo: 'Projeto B', sitio: 'Church', natureza: 'Presentation',
-            sinopse: 'Public showing of the work made in the nave over the year.' },
-      alt: { pt: 'Nave da antiga Igreja de Retorta antes da intervenção', en: 'Nave of the former Retorta Church before the works' } },
-
-    { dia: 28, mes: 9, ano: 2026, hora: '19h',
+    { dia: 26, mes: 9, ano: 2026, hora: '21h30',
       img: 'dossier/assets/hero.jpg',
-      imgs: ['dossier/assets/hero.jpg', 'dossier/assets/vista-aerea.jpg', 'dossier/assets/vila-do-conde.jpg'],
+      imgs: ['dossier/assets/hero.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/vista-aerea.jpg'],
       bilhetes: null,
-      pt: { titulo: 'Projeto C', sitio: 'Exterior', natureza: 'Criação',
-            sinopse: 'Criação para o adro, à hora a que o sol se põe.' },
-      en: { titulo: 'Projeto C', sitio: 'Outdoors', natureza: 'Creation',
-            sinopse: 'A creation for the churchyard, at the hour the sun goes down.' },
+      pt: { titulo: "Inauguração d'a Sineira!", sitio: 'Exterior', natureza: 'Criação',
+            sinopse: 'A casa abre as portas: o adro, a nave e o auditório mostram-se pela primeira vez a quem cá vive.' },
+      en: { titulo: "Inauguração d'a Sineira!", sitio: 'Outdoors', natureza: 'Creation',
+            sinopse: 'The house opens its doors: the churchyard, the nave and the auditorium shown for the first time to those who live here.' },
       alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } }
   ];
 
@@ -3317,23 +3283,18 @@ html.menu-open .menu::before { opacity: 1; }
      de setembro" não é uma data, é o que resta de uma. Os cartazes de cima
      continuam a mostrar só o ano, que lá é a legenda de um só. */
   var CONCLUIDOS = [
-    { dia: 18, mes: 8, ano: 2026, img: 'dossier/assets/arco.jpg',
-      imgs: ['dossier/assets/arco.jpg', 'dossier/assets/nave-2025.jpg', 'dossier/assets/altares.jpg'],
+    { dia: 25, mes: 4, ano: 2026, img: 'projetos2/img/voar5.jpg',
+      imgs: ['projetos2/img/voar5.jpg', 'projetos2/img/voar1.jpg', 'projetos2/img/voar7.jpg'],
       media: ['foto', 'video', 'texto'],
-      pt: { titulo: 'Projeto X', sitio: 'Igreja', natureza: 'Apresentação',
-            sinopse: 'Ficaram as fotografias, o vídeo e um texto sobre o que se fez na nave.' },
-      en: { titulo: 'Projeto X', sitio: 'Church', natureza: 'Presentation',
-            sinopse: 'What remains: the photographs, the video and a text about the work in the nave.' },
-      alt: { pt: 'Interior em obra, visto através do arco', en: 'Interior under construction, seen through the arch' } },
-
-    { dia: 3, mes: 5, ano: 2026, img: './chorof4.jpg',
-      imgs: ['./chorof4.jpg', 'dossier/assets/scene-estudio.jpg'],
-      media: ['texto'],
-      pt: { titulo: 'Projeto Y', sitio: 'Auditório', natureza: 'Criação',
-            sinopse: 'Ficou o texto de quem esteve em cena.' },
-      en: { titulo: 'Projeto Y', sitio: 'Auditorium', natureza: 'Creation',
-            sinopse: 'What remains is the text of those who were on stage.' },
-      alt: { pt: 'Intérprete em cena, com as mãos junto ao rosto', en: 'Performer on stage, hands raised to their face' } }
+      /* Tem ficha própria: o "quero saber mais" do cartaz e o título na lista
+         levam a #voar, e não a um correio. */
+      projeto: 'voar',
+      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Fórum da Maia', natureza: 'Formação',
+            sinopse: 'Uma oficina e uma apresentação pública sobre a liberdade dentro de casa, a partir de um texto de Adolf Loos.' },
+      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Fórum da Maia', natureza: 'Training',
+            sinopse: 'A workshop and a public showing about freedom inside the house, departing from a text by Adolf Loos.' },
+      alt: { pt: 'A apresentação final vista de trás da plateia: uma criança aparece na janela redonda da casa.',
+             en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' } }
   ];
 
   /* ---------- os projetos com ficha própria ---------- */
