@@ -2744,13 +2744,15 @@ html.menu-open .menu::before { opacity: 1; }
   </article>
 
   <!-- Uma fotografia que se mexe, e nada mais: sem som, sem comandos e a
-       repetir-se. Quem pediu ao sistema para não ver coisas a mexer fica com
-       ela parada na primeira imagem (ver o troço do prefers-reduced-motion
-       lá em baixo), que é o que uma fotografia é. -->
+       repetir-se. Anda sempre, e também para quem pediu ao sistema para não
+       ver coisas a mexer: é uma decisão tomada, e não um descuido — é o
+       único movimento da grelha, e sem ele a casa era só o cartaz parado.
+       O muted não é só desejo: sem ele nenhum browser deixa o autoplay
+       pegar. -->
   <figure class="media">
     <video src="./pop.mp4" poster="./pop-poster.jpg" data-i18n-alabel="vidObras"
            aria-label="Obras na antiga Igreja de Retorta: a parede a ser pintada ao rolo, ao lado do púlpito dourado e da sua escada."
-           autoplay muted loop playsinline preload="metadata"></video>
+           autoplay muted loop playsinline></video>
   </figure>
 
   <!-- Linha 2: atividades | fotografia | informações | fotografia -->
@@ -2840,7 +2842,7 @@ html.menu-open .menu::before { opacity: 1; }
   <!-- A fotografia que ficou no lugar do cartão que saiu: são as dez células
        de conteúdo que fecham a última linha em 4 e em 3 colunas. -->
   <figure class="media">
-    <img src="dossier/assets/altares.jpg" data-i18n-alt="alt6" alt="Altar dourado da antiga Igreja de Retorta, junto à coluna de granito" loading="lazy">
+    <img src="./teiaimg1.jpg" data-i18n-alt="alt5" alt="Intérprete a saltar num corredor de estantes" loading="lazy">
   </figure>
 
   <!-- Linha 3: amigo da sineira (duas colunas) | fotografia | fotografia -->
@@ -3261,6 +3263,7 @@ html.menu-open .menu::before { opacity: 1; }
       capFase: 'Phasing of the works',
       altFase: 'Phasing plan for the works at the former Retorta Church',
       altAerea: 'Aerial view of Retorta: a Sineira, the bridge over the river Ave, the schools and surroundings',
+      alt5: 'Performer leaping down an aisle of shelving',
       altSaco: 'Natural canvas tote bag printed with the Sineira triangle in blue',
       alt6: 'Gilded altarpiece at the former Retorta Church, beside the granite column',
       vidObras: 'Work under way at the former Retorta Church: the wall being rolled with paint, beside the gilded pulpit and its stair.',
@@ -5524,19 +5527,6 @@ html.menu-open .menu::before { opacity: 1; }
   state.scale = 60;
   renderMenu();
   evRelogioLiga();
-
-  /* O vídeo do mosaico anda sozinho porque é uma fotografia que se mexe, e
-     não um filme: sem som e sem comandos, quem passa não tem nada para lhe
-     fazer. A quem pediu ao sistema para não ver coisas a mexer fica parado
-     na primeira imagem — que é, essa sim, uma fotografia. O autoplay vem do
-     HTML para andar mesmo sem JS; é aqui que se lhe tira. */
-  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    Array.prototype.forEach.call(document.querySelectorAll('.media video'), function (v) {
-      v.removeAttribute('autoplay');
-      v.removeAttribute('loop');
-      v.pause();
-    });
-  }
 
   /* ---------- wordmark salta enquanto se faz scroll ---------- */
 
