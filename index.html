@@ -1159,6 +1159,23 @@ html[lang="en"] .title-art {
   font-variant-numeric: tabular-nums;
 }
 
+/* Daqui para baixo a linha parte-se em duas de propósito, e não ao sabor do
+   que couber: entre os 893 e os 720 a coluna do menu é metade do ecrã e o
+   par de tempos já não cabia ao lado do nome, mas abaixo dos 720 a coluna
+   passa a ser o ecrã inteiro e voltava a caber — a mesma lista mudava de
+   desenho duas vezes a descer. Com o li em bloco, é sempre o nome em cima e
+   os tempos por baixo.
+
+   Em baixo, encostá-los à direita punha-os longe do nome a que pertencem e
+   alinhados com nada: ficam à esquerda, debaixo dele. E o nome fica a
+   negrito, que agora é o cabeçalho da sua própria linha e não mais uma coisa
+   a par dos tempos. */
+@media (max-width: 893px) {
+  .rota li { display: block; padding: 12px 0; }
+  .rota__nome { font-weight: 700; }
+  .rota__ts { margin: 7px 0 0; gap: 22px; }
+}
+
 
 /* --- versão 2: a estrela do dossier ------------------------------------- */
 
