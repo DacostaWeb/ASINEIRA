@@ -491,8 +491,14 @@ html.menu-open .lang { color: var(--cream); }
 
 /* A duas colunas ou mais, o cartão de amigo também não conta: é ele que cede
    o espaço para o mosaico acompanhar a altura do vizinho do lado. Numa
-   coluna só não há vizinho nenhum, e então conta como tudo o resto. */
-.tiles.is-measuring--tight .tile__aside { display: none; }
+   coluna só não há vizinho nenhum, e então conta como tudo o resto.
+
+   Fica a zero e não em display: none, para que o desenho não peça altura
+   nenhuma mas a margem que ele leva por baixo — o ar por cima do botão —
+   continue a ser pedida. Escondido de todo, esse ar ficava de fora da conta
+   e depois saía do fundo do mosaico: o botão descia para cima da margem e
+   quase encostava à aresta. */
+.tiles.is-measuring--tight .tile__aside { height: 0; }
 
 /* Cada mosaico recebe o seu par fundo/texto por uma classe modificadora,
    para que nenhuma cor apareça solta dentro dos blocos. */
@@ -5420,6 +5426,7 @@ html.menu-open .menu::before { opacity: 1; }
   /* ---------- grelha: quantas colunas e quantas linhas cabem ---------- */
 
   var MIN_ROW    = 160;    /* nenhuma linha fica mais baixa do que isto */
+  var MIN_ROW_2  = 280;    /* ... e a duas colunas, nem mais baixa do que isto */
   var PHOTO_PART = 0.66;   /* linha só de fotografias: altura, em fração da largura da coluna */
   var MAX_ROWS   = 4;      /* nunca mostrar mais de 4 linhas de uma vez */
   var SNAP_MAX   = 1.35;   /* quanto uma linha pode crescer para fechar o ecrã */
@@ -5562,12 +5569,20 @@ html.menu-open .menu::before { opacity: 1; }
     if (!rows.length) return;
 
     var oneCol = state.cols <= 1, tallest = 0, sum = 0, i;
+
+    /* A duas colunas os mosaicos ficam largos e baixos, e os que têm pouco
+       texto — "informações", "loja", "amigo d'a Sineira" — davam tiras de
+       nada: duas linhas debaixo do título e o cartão de amigo a desaparecer
+       por inteiro. Aí o piso sobe, e é a duas colunas apenas: a uma coluna
+       cada mosaico já fica com o seu conteúdo todo, e a três ou mais as
+       colunas estreitam, o texto ganha linhas e a altura vem dele. */
+    var minRow = state.cols === 2 ? MIN_ROW_2 : MIN_ROW;
     for (i = 0; i < rows.length; i++) {
       /* Nenhuma linha fica mais baixa do que o conteúdo que a pediu, seja
          qual for o tamanho da janela: numa janela baixa é a grelha que rola
          — é para isso que ela rola —, e não o cartão que se corta a meio de
          uma frase. */
-      rows[i] = Math.max(MIN_ROW, rows[i]);
+      rows[i] = Math.max(minRow, rows[i]);
       tallest = Math.max(tallest, rows[i]);
       sum += rows[i];
     }
