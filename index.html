@@ -3195,11 +3195,11 @@ html.menu-open .menu::before { opacity: 1; }
     <p class="tile__soon" data-i18n="brevemente">Brevemente</p>
   </article>
 
-  <figure class="media" id="media-fim">
+  <figure class="media">
     <img src="./totebag.jpg" data-i18n-alt="altSaco" alt="Saco de pano cru com o triângulo da Sineira estampado a azul" loading="lazy">
   </figure>
 
-  <!-- Linha 4: a última fotografia (duas colunas em três) | loja -->
+  <!-- Linha 4: a última fotografia | loja (duas colunas em três) -->
 
   <article class="tile tile--blue" id="loja" data-screen-label="loja">
     <div class="tile__inner">
@@ -5459,14 +5459,43 @@ html.menu-open .menu::before { opacity: 1; }
 
        4 colunas — eventos(2) + amigos(2) = 12 células = 3 linhas
                    (é a distribuição do rascunho)
-       3 colunas — eventos(2) + última fotografia(2) = 12 células = 4 linhas
+       3 colunas — eventos(2) + loja(2) = 12 células = 4 linhas
        2 colunas — nenhum alarga: 10 células = 5 linhas
        1 coluna  — nenhum alarga: 10 linhas
 
      A ordem no HTML é a mesma em todos os casos; só muda quem se estica. */
   var tileEventos = document.getElementById('eventos');
+  var tileAtividades = document.getElementById('atividades');
   var tileAmigos = document.getElementById('amigos');
-  var mediaFim = document.getElementById('media-fim');
+  var tileLoja = document.getElementById('loja');
+
+  /* A duas colunas cada linha é uma fotografia e um mosaico, e as cinco
+     saíam todas com a fotografia à esquerda e o mosaico à direita — cinco
+     linhas iguais em fila. Duas trocam de mãos, a das atividades e a do
+     amigo, e as linhas passam a cair de um lado e do outro alternadamente.
+
+     A troca é feita na própria grelha e não com o order do CSS: o order é
+     uma ordem só para a grelha inteira, e trocar duas células obrigava a
+     numerar as dez. Trocadas aqui, tudo o resto — a medição das linhas,
+     quem se estica — continua a ler a grelha pela ordem em que ela se vê.
+
+     O trocado guarda em que estado é que ela está: sem ele, repor a ordem
+     agarrava a fotografia da linha seguinte, que é a que fica a seguir ao
+     mosaico enquanto ele não estiver trocado. */
+  var TROCAM_DE_LADO = [tileAtividades, tileAmigos];
+  var trocado = false;
+
+  function trocarLados(trocar) {
+    if (trocar === trocado) return;
+    for (var i = 0; i < TROCAM_DE_LADO.length; i++) {
+      var card = TROCAM_DE_LADO[i];
+      if (!card) continue;
+      var foto = trocar ? card.previousElementSibling : card.nextElementSibling;
+      if (!foto || !foto.classList.contains('media')) continue;
+      grid.insertBefore(trocar ? card : foto, trocar ? foto : card);
+    }
+    trocado = trocar;
+  }
 
   function span(el, wide) {
     if (!el) return;
@@ -5480,9 +5509,10 @@ html.menu-open .menu::before { opacity: 1; }
        largura, e repetir na folha de estilos a conta que é feita aqui era
        arriscar que as duas discordassem. */
     grid.dataset.cols = cols;
+    trocarLados(cols === 2);
     span(tileEventos, cols >= 3);
     span(tileAmigos, cols >= 4);
-    span(mediaFim, cols === 3);
+    span(tileLoja, cols === 3);
   }
 
   /* Agrupa os mosaicos por linha e devolve a altura que cada uma pede.
