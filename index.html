@@ -752,6 +752,17 @@ html[lang="en"] .title-art {
   opacity: .75;
 }
 
+/* "amigo d'a Sineira" é o título mais comprido do mosaico, e há larguras em
+   que ele e o "Brevemente" se encontram a meio do caminho: abaixo dos 350,
+   onde a coluna única já é estreita de mais, e dos 599 aos 799, onde a
+   grelha acabou de partir em duas colunas e o mosaico ficou mais estreito
+   do que o título. Aí o canto cala-se: entre as duas a atropelarem-se e
+   só o título, fica só o título. */
+@media (max-width: 349.98px),
+       (min-width: 599px) and (max-width: 799.98px) {
+  #amigos .tile__soon { display: none; }
+}
+
 @media (min-width: 641px) {
   /* O cartão de amigo ocupa a segunda coluna do mosaico, encostado ao fundo
      e à direita — à mesma margem do "+" lá em cima, que é a margem de tudo
@@ -908,6 +919,13 @@ html[lang="en"] .title-art {
   letter-spacing: .12em;
   text-transform: uppercase;
 }
+
+/* O ar por cima do botão não pode ser margem dele: com o margin-top: auto a
+   encostá-lo ao fundo, uma margem fixa não sobrevivia. Fica na caixa do
+   cartão de amigo, que é quem está por cima — e como é essa a caixa que
+   encolhe, é dela que sai o espaço quando o cartão não cabe todo. */
+.tile__aside { margin-bottom: 26px; }
+
 .tile__cta:hover {
   background: var(--cream);
   color: var(--blue);
@@ -1003,7 +1021,7 @@ html[lang="en"] .title-art {
   display: block;
   width: min(100%, 330px);
   height: auto;
-  margin-top: 22px;
+  margin-top: 14px;
 }
 
 /* Vista aérea com etiquetas, como na experiência 6. Sem moldura: a
@@ -2803,8 +2821,9 @@ html.menu-open .menu::before { opacity: 1; }
   .tile__title { font-size: calc(var(--wordmark-h) * 48 / 58); }
 
   /* Em telemóvel não há segunda coluna onde pousar o cartão de amigo: fica
-     debaixo do "quero aderir", mais pequeno, com mais ar por cima e a puxar
-     um pouco para a margem, para não ficar alinhado com o texto.
+     entre o texto e o botão, mais pequeno e a puxar um pouco para a margem,
+     para não ficar alinhado com o texto. Sobe o mais que pode: o que lhe
+     sobra em cima é o que se vê dele em baixo, onde a caixa o corta.
 
      O puxão é dado à caixa, e não ao desenho: a caixa corta o que lhe sai de
      dentro, e o que lhe saía era a sombra. */
@@ -2812,7 +2831,7 @@ html.menu-open .menu::before { opacity: 1; }
 
   .friend-card {
     width: min(100%, 220px);
-    margin-top: 50px;
+    margin-top: 16px;
   }
 }
 </style>
