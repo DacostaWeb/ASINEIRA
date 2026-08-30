@@ -896,8 +896,10 @@ html[lang="en"] .title-art {
   text-transform: uppercase;
 }
 
+/* Sem rodapé em versaletes, é o botão que assenta no fundo do cartão: o
+   margin-top: auto empurra-o para lá, como fazia a legenda. */
 .tile__cta {
-  margin-top: 24px;
+  margin-top: auto;
   align-self: flex-start;
   padding: 11px 20px;
   border: 1.5px solid currentColor;
@@ -3123,15 +3125,10 @@ html.menu-open .menu::before { opacity: 1; }
       <div class="tile__head">
         <h2 class="tile__title"><span class="title-txt" data-i18n="amH2">amigo da sineira</span><span
               class="title-art title-art--leque" aria-hidden="true"
-              style="--art-pt: url(&quot;fonts/amigodasineira.svg&quot;); --art-w-pt: 341.7735316; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
+              style="--art-pt: url(&quot;fonts/amigodasineira.svg&quot;); --art-w-pt: 355.2390945; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
                      --art-en: url(&quot;fonts/asineirafriend.svg&quot;); --art-w-en: 310.5738803; --art-h-en: 36.3850665; --art-base-en: 0.864;"></span></h2>
       </div>
       <p class="tile__lead" data-i18n-html="amP">Faz parte do futuro e apoia a Arte em Comunidade!<br>Torna-te um “Amigo da Sineira”</p>
-      <!-- O href já vem escrito para quem chegue sem JS; com JS, o applyLang
-           volta a escrevê-lo na língua da página (ver AM_MAIL). -->
-      <a class="tile__cta" id="amigo-cta" data-i18n="amCta"
-         href="mailto:info@asineira.pt?subject=Quero%20receber%20novidades&amp;body=Ol%C3%A1!%20Quero%20ficar%20a%20par%20das%20novidades%20da%20Sineira%20%3A)">Quero receber novidades</a>
-
       <div class="tile__body" data-tile-body="Amigos">
         <ul class="tile__list">
           <li data-i18n="amLi1">Espetáculos gratuitos: acesso a todos os eventos</li>
@@ -3143,12 +3140,17 @@ html.menu-open .menu::before { opacity: 1; }
       <!-- Com o mosaico a ocupar duas colunas, o cartão sai da coluna de
            leitura e vai para a segunda metade (ver .tile--span .tile__aside).
            Numa coluna só, e com o cartão aberto em painel, fica aqui mesmo:
-           a seguir ao conteúdo e antes do rodapé em versaletes. -->
+           a seguir ao conteúdo e antes do botão. -->
       <div class="tile__aside">
         <img class="friend-card" src="amigocard.svg" data-i18n-alt="amCard" alt="Cartão de Amigo da Sineira">
       </div>
 
-      <p class="tile__caption" data-i18n="capAm">Espetáculos gratuitos - descontos - conteúdo exclusivo</p>
+      <!-- Onde os outros cartões têm o rodapé em versaletes, este tem o botão:
+           é ele que fica colado ao fundo (ver .tile__cta). O href já vem
+           escrito para quem chegue sem JS; com JS, o applyLang volta a
+           escrevê-lo na língua da página (ver AM_MAIL). -->
+      <a class="tile__cta" id="amigo-cta" data-i18n="amCta"
+         href="mailto:info@asineira.pt?subject=Quero%20receber%20novidades&amp;body=Ol%C3%A1!%20Quero%20ficar%20a%20par%20das%20novidades%20da%20Sineira%20%3A)">Quero receber novidades</a>
     </div>
     <!-- Como no das atividades: o painel fica escrito e por abrir. -->
     <p class="tile__soon" data-i18n="brevemente">Brevemente</p>
@@ -3623,7 +3625,6 @@ html.menu-open .menu::before { opacity: 1; }
       amLi1: 'Free performances: access to every event',
       amLi2: 'Discounts on regular classes, workshops and intensive courses',
       amLi3: 'Exclusive content and monthly surprises',
-      capAm: 'Free performances - discounts - exclusive content',
 
       /* --- loja --- */
       lojaH2: 'shop',
@@ -3707,7 +3708,7 @@ html.menu-open .menu::before { opacity: 1; }
     'aboutus':          [0,24.322,51.19,77.905,102.205,125.345,155.359,178.5459],
     'informacoes':      [0,8.942,34.109,49.832,75.968,93.252,131.272,156.308,181.063,207.058,231.928,254.4951],
     'information':      [0,8.942,34.109,49.832,75.968,93.252,131.272,155.768,173.3,182.859,210.293,234.0918],
-    'amigodasineira':   [0,24.322,64.018,74.445,101.316,133.512,165.396,195.964,230.945,240.936,266.48,292.542,302.597,319.35,341.7735],
+    'amigodasineira':   [0,24.322,64.018,74.445,101.316,133.512,165.836,208.893,244.41,254.401,279.946,306.008,316.063,332.815,355.2391],
     'asineirafriend':   [0,32.857,68.374,78.365,103.91,129.972,140.027,156.779,185.404,207.31,224.044,233.367,259.673,284.889,310.5739],
     'falaconnosco':     [0,14.988,39.474,49.665,80.348,110.723,137.352,163.189,188.972,215.507,238.716,262.937,290.164,299.5225],
     'talktous':         [0,16.028,40.822,51.691,82.6,103.159,134.92,165.164,190.394,199.7676],
