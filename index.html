@@ -2304,6 +2304,10 @@ html[lang="en"] .title-art {
 .ficha__dets .evdet { align-items: flex-start; }
 .ficha__dets .evdet svg { margin-top: 3px; }
 
+/* O rótulo dos próximos, dentro da mesma coluna: um respiro a mais por cima
+   do que o intervalo das linhas, para se ver que abre um grupo. */
+.ficha__dets .ficha__prox { margin-top: 16px; }
+
 /* O rótulo pequeno em versaletes: é o .panel-section__title do site, dois
    pontos mais pequeno, porque aqui abre uma tabela e não uma secção. */
 .ficha .lbl {
@@ -2838,9 +2842,11 @@ html.menu-open .menu::before { opacity: 1; }
   background: var(--blue);
 }
 
-/* A frase está repetida seis vezes: o translate de -50% cai sempre numa
-   cópia idêntica, por isso o ciclo não tem emenda visível. */
-.marquee__track { display: flex; width: max-content; animation: marquee 25s linear infinite; }
+/* A frase está repetida dez vezes: o translate de -50% cai sempre numa
+   cópia idêntica, por isso o ciclo não tem emenda visível. A frase é curta,
+   e por isso são precisas mais cópias do que as seis de antes — metade do
+   carril tem de dar a largura da janela mais larga, ou abria-se um vazio. */
+.marquee__track { display: flex; width: max-content; animation: marquee 45s linear infinite; }
 
 .marquee__text {
   padding-right: 60px;
@@ -3176,7 +3182,7 @@ html.menu-open .menu::before { opacity: 1; }
         </div>
       </div>
 
-      <p class="tile__caption" data-i18n="capAt">Apresentação - criação - formação - residências</p>
+      <p class="tile__caption" data-i18n="capAt">Apresentação - criação - formação</p>
     </div>
     <!-- O painel deste cartão fica escrito aqui em cima, no tile__body, mas
          por agora não abre: sem "+" não há quem lhe chame, e sem rota não há
@@ -3270,9 +3276,7 @@ html.menu-open .menu::before { opacity: 1; }
               style="--art-pt: url(&quot;fonts/loja.svg&quot;); --art-w-pt: 69.1923828; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
                      --art-en: url(&quot;fonts/shop.svg&quot;); --art-w-en: 101.2294922; --art-h-en: 44.5571289; --art-base-en: 9.516;"></span></h2>
       </div>
-      <p class="tile__lead" data-i18n="lojaP">Merchandising à venda.</p>
-
-      <p class="tile__caption" data-i18n="capLoja">Tote bags - t-shirts - bonés - muito mais</p>
+      <p class="tile__lead" data-i18n="lojaP">Merchandising d'a Sineira!</p>
     </div>
     <p class="tile__soon" data-i18n="brevemente">Brevemente</p>
   </article>
@@ -3618,12 +3622,16 @@ html.menu-open .menu::before { opacity: 1; }
 
 <div class="marquee">
   <div class="marquee__track">
-    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para espetáculos gratuitos, descontos e conteúdo exclusivo!</span>
-    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para espetáculos gratuitos, descontos e conteúdo exclusivo!</span>
-    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para espetáculos gratuitos, descontos e conteúdo exclusivo!</span>
-    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para espetáculos gratuitos, descontos e conteúdo exclusivo!</span>
-    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para espetáculos gratuitos, descontos e conteúdo exclusivo!</span>
-    <span class="marquee__text" data-i18n="marquee">Adere já e torna-te um "Amigo da Sineira" para espetáculos gratuitos, descontos e conteúdo exclusivo!</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
   </div>
 </div>
 
@@ -3658,7 +3666,7 @@ html.menu-open .menu::before { opacity: 1; }
       formLi1: 'Regular classes', formLi2: 'Workshops', formLi3: 'Intensive courses', formLi4: 'Holiday camp',
       formP2: 'Dance, music, theatre, architecture, visual arts and fine arts. Programmes for babies, children, young people, adults and seniors.',
       residP: 'Artistic residencies with lodging on site, for those who need time and space to create.',
-      capAt: 'Presentation - creation - training - residencies',
+      capAt: 'Presentation - creation - training',
 
       /* --- como chegar? --- */
       chegarH2: 'how to get here?',
@@ -3730,9 +3738,8 @@ html.menu-open .menu::before { opacity: 1; }
 
       /* --- loja --- */
       lojaH2: 'shop',
-      lojaP: 'Merchandising for sale.',
+      lojaP: "Merchandising from a Sineira!",
       brevemente: 'Coming soon',
-      capLoja: 'Tote bags - t-shirts - caps - and more',
 
       /* --- legendas e textos alternativos --- */
       capEstudio: 'Proposal · dance studio with seating',
@@ -3743,7 +3750,7 @@ html.menu-open .menu::before { opacity: 1; }
       alt6: 'Gilded altarpiece at the former Retorta Church, beside the granite column',
       vidObras: 'Work under way at the former Retorta Church: the wall being rolled with paint, beside the gilded pulpit and its stair.',
 
-      marquee: 'Join now and become a "Friend of a Sineira" for discounts and monthly surprises!'
+      marquee: 'a Sineira - a space for creation, presentation and training'
     }
   };
 
@@ -5197,8 +5204,15 @@ html.menu-open .menu::before { opacity: 1; }
 
        O relógio e não o calendário: é o sinal de quem ainda está para vir,
        como nos cartazes dos próximos. */
+    var haProx = false;
     EVENTOS.forEach(function (e) {
       if (e.projeto !== nome) return;
+      /* O rótulo entra uma vez só, na primeira data que aí vem: é ele que
+         diz que as linhas abaixo já não são as do que passou. */
+      if (!haProx) {
+        haProx = true;
+        dets.appendChild(nel('p', 'lbl ficha__prox', lg() === 'en' ? 'Upcoming' : 'Próximos'));
+      }
       sinal('pin', evTexto(e).sitio);
       sinal('relogio', evDataLonga(e));
     });
