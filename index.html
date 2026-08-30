@@ -1004,14 +1004,26 @@ html[lang="en"] .title-art {
   margin-top: 22px;
 }
 
-/* Vista aérea com etiquetas, como na experiência 6. */
+/* Vista aérea com etiquetas, como na experiência 6. Sem moldura: a
+   fotografia acaba onde acaba.
+
+   E acaba mais cedo em cima: a vista vem 1258×744, que é mais alta do que
+   16/9, e o object-position em baixo corta-lhe a fatia de cima — os 4.9%
+   de campo que sobravam e não diziam nada. É por causa desse corte que as
+   fracções dos pinos, ali em baixo, não são as da fotografia inteira. */
 .aerial {
   position: relative;
   margin-top: 20px;
-  border: 1.5px solid currentColor;
   line-height: 0;
 }
-.aerial img { display: block; width: 100%; height: auto; }
+.aerial img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: 50% 100%;
+}
 
 .aerial__tag {
   position: absolute;
@@ -1043,7 +1055,7 @@ html[lang="en"] .title-art {
 /* A etiqueta escrita é uma só, a da Sineira, e assenta pelo centro no ponto
    (ver o translate lá em cima). Sai para fora da moldura de propósito: sobre
    os telhados e a água não se lia nada, e ali por baixo há fotografia livre. */
-.aerial__tag--home { left: 92%; top: 96%; }
+.aerial__tag--home { left: 92%; top: 95.8%; }
 
 /* Os outros três sítios ficam a ícone e mais nada — sem nome e sem tempo,
    que isso é o que a lista diz por baixo. Os nomes continuam lá no HTML para
@@ -1067,48 +1079,31 @@ html[lang="en"] .title-art {
 }
 .aerial__pin .ic { width: 19px; height: 19px; vertical-align: baseline; }
 
-.aerial__pin--escola { left: 40%; top: 38%; }
-.aerial__pin--metro  { left: 26%; top: 56%; }
-.aerial__pin--centro { left:  7%; top: 60%; }
+.aerial__pin--escola { left: 40%; top: 34.8%; }
+.aerial__pin--metro  { left: 26%; top: 53.7%; }
+.aerial__pin--centro { left:  7%; top: 57.9%; }
 
+/* No ecrã estreito encolhe a etiqueta escrita, que é texto e tem de caber na
+   fotografia. Os pinos não: um ícone sozinho já é pequeno, e mais pequeno
+   deixava de se ler o que desenha. */
 @media (max-width: 640px) {
   .aerial__tag { font-size: 9px; padding: 4px 7px; border-radius: 10px; }
   .aerial__tag--home { font-size: 9.5px; }
   .aerial__tag--home svg { width: 12px; }
-  .aerial__pin { width: 24px; height: 24px; }
-  .aerial__pin .ic { width: 14px; height: 14px; }
 }
 
 
-/* ==== "como chegar?": quatro versões para escolher =======================
-
-   Provisório. Estão as quatro empilhadas para se verem umas a seguir às
-   outras; escolhida uma, cai tudo o resto — as outras três, as etiquetas
-   .vtag que as numeram e o que aqui houver de sobra.
+/* ==== "como chegar?": o mapa e a lista ==================================
 
    Os tempos são os do dossier original, e cada um traz o seu meio: 5 min de
-   bicicleta não é o mesmo que 15 a pé, e a gama "5–15 min" que aqui estava
+   bicicleta não é o mesmo que 15 a pé, e a gama "5–15 min" que aqui esteve
    dizia as duas coisas ao mesmo tempo sem dizer nenhuma.
    ------------------------------------------------------------------------ */
-
-.chegar-v + .chegar-v { margin-top: 52px; }
-
-.vtag {
-  margin: 0 0 16px;
-  padding-top: 12px;
-  border-top: 2.6px solid color-mix(in srgb, currentColor 30%, transparent);
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  opacity: .55;
-}
 
 /* O ícone vale uma linha do texto onde assenta e veste-lhe a cor: creme no
    corrido do menu, azul dentro de uma etiqueta clara. O desenho vem todo de
    traço e sem enchimento — a espessura é decidida aqui, uma vez, para que os
-   nove ícones tenham o mesmo peso do texto ao lado. */
+   oito ícones tenham o mesmo peso do texto ao lado. */
 .ic {
   width: 1.3em;
   height: 1.3em;
@@ -1131,25 +1126,18 @@ html[lang="en"] .title-art {
   white-space: nowrap;
 }
 
-.chegar-nota { margin-top: 10px; font-size: 11px; opacity: .6; }
-
-
-/* --- versão 1: o mapa que já temos, agora com ícones, e a lista toda ----- */
-
+/* A lista das distâncias, por baixo do mapa. Sem filetes a separá-las: o que
+   afasta uma linha da outra é o ar, e o par de tempos encosta à direita para
+   se poder comparar de linha para linha. */
 .rota { list-style: none; margin: 18px 0 0; padding: 0; font-size: 13px; }
 .rota li {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 4px 18px;
-  padding: 10px 0;
-  border-top: 1.5px solid color-mix(in srgb, currentColor 30%, transparent);
+  padding: 7px 0;
 }
-.rota li:last-child { border-bottom: 1.5px solid color-mix(in srgb, currentColor 30%, transparent); }
 .rota__nome { flex: 1 1 210px; display: flex; align-items: center; gap: 9px; line-height: 1.35; }
-
-/* Os tempos encostam à direita e mantêm-se juntos: são o par que se compara
-   de linha para linha, e em coluna estreita descem os dois de uma vez. */
 .rota__ts { margin-left: auto; display: flex; gap: 18px; }
 .rota__t {
   display: inline-flex;
@@ -1163,7 +1151,7 @@ html[lang="en"] .title-art {
    tempos descem para debaixo do nome e encostam à esquerda. Encostados à
    direita ficavam longe do nome a que pertencem e alinhados com nada. */
 @media (max-width: 893px) {
-  .rota li { display: block; padding: 12px 0; }
+  .rota li { display: block; padding: 10px 0; }
   .rota__nome { font-weight: 700; }
   .rota__ts { margin: 7px 0 0; gap: 22px; }
 }
@@ -1177,210 +1165,11 @@ html[lang="en"] .title-art {
    Aos 500 acaba: daí para baixo já não há largura para as duas colunas e
    volta o empilhado da regra de cima. */
 @media (max-width: 720px) and (min-width: 501px) {
-  .rota li { display: flex; padding: 10px 0; }
+  .rota li { display: flex; padding: 7px 0; }
   .rota__ts { margin: 0 0 0 auto; gap: 18px; }
 }
 
-
-/* --- versão 2: a estrela do dossier ------------------------------------- */
-
-/* O desenho do dossier: a vista aérea ao centro e os destinos à volta, cada
-   um no fim do seu raio picotado. Vive de proporções — a caixa tem a sua e
-   tudo lá dentro está em fracção dela, para que os raios (que são um SVG com
-   o mesmo enquadramento) cheguem sempre à etiqueta que apontam.
-
-   Abaixo dos 1000px a coluna do menu já não tem largura para uma estrela:
-   os raios saem e os destinos empilham-se por baixo do mapa. */
-.dossier { position: relative; margin-top: 18px; aspect-ratio: 1000 / 760; }
-
-.dossier__mapa {
-  position: absolute;
-  left: 27%; top: 27%;
-  width: 46%; height: 32%;
-  border: 1.5px solid currentColor;
-  overflow: clip;
-  line-height: 0;
-}
-/* A fotografia entra maior do que a caixa e desencontrada dela: a Sineira
-   nao esta no meio da vista aerea, esta a 84% da largura e a 85% da altura,
-   e a vista inteira deixava-a encostada ao canto — com os raios todos a
-   sairem de um so lado. O translate conta em fraccao da propria fotografia:
-   poe esse ponto a 72% da caixa, quase ao centro, sem o mudar de sitio.
-
-   O 190% e o que chega para a fotografia continuar a tapar a caixa toda
-   depois de a arrastar; abaixo disso abria-se fundo no canto de baixo. */
-.dossier__mapa img {
-  position: absolute;
-  left: 72%; top: 72%;
-  width: 190%;
-  max-width: none;
-  height: auto;
-  transform: translate(-83.9%, -85.2%);
-}
-
-/* A marca assenta no ponto verdadeiro da Sineira, que a fotografia ja
-   trouxe para os 72% da caixa (ver ali em baixo): estas duas fraccoes sao
-   as mesmas, contadas a partir do canto do .dossier. E daqui que os raios
-   partem, como no dossier partem do rectangulo cor-de-rosa. */
-.dossier__marca {
-  position: absolute;
-  left: 60.1%; top: 50%;
-  width: 5%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-}
-/* Sobre a fotografia, o azul da marca perdia-se nos telhados: o prato creme
-   por baixo e o que a levanta, e as letras dela, que sao creme, continuam a
-   ler-se porque o triangulo entre elas e azul. */
-.dossier__marca::before {
-  content: "";
-  position: absolute;
-  inset: -34%;
-  border-radius: 50%;
-  background: var(--cream);
-}
-.dossier__marca svg { position: relative; display: block; width: 100%; height: auto; }
-
-/* Os raios passam por cima da fotografia, como no dossier. Sobre os telhados
-   e a água o creme sozinho não se via: a sombra azul é o que lhes dá o
-   contorno, e some-se assim que saem da fotografia para o fundo. */
-.dossier__raios {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  filter: drop-shadow(0 0 1.5px var(--blue));
-}
-.dossier__raios line {
-  stroke: currentColor;
-  stroke-width: 5;
-  stroke-linecap: round;
-  stroke-dasharray: 0 14;
-}
-
-.dossier__no { position: absolute; width: 34%; }
-.dossier__no h4 {
-  margin: 0 0 5px;
-  font-family: var(--font-display);
-  font-size: 11.5px;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-}
-.dossier__ts { display: flex; flex-direction: column; gap: 3px; font-size: 12px; }
-.dossier__t {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-variant-numeric: tabular-nums;
-}
-
-/* As cinco posições. Cada uma é o canto por onde a etiqueta se agarra ao seu
-   raio — ver os pontos do SVG, que estão nas mesmas fracções. */
-.dossier__no--n  { left: 50%; top: 0;    width: 40%; transform: translateX(-50%); text-align: center; }
-.dossier__no--n  .dossier__ts { align-items: center; }
-.dossier__no--no { left: 0;   top: 20%; }
-.dossier__no--so { left: 0;   top: 70%; }
-.dossier__no--se { right: 0;  top: 74%; text-align: right; }
-.dossier__no--se .dossier__ts { align-items: flex-end; }
-.dossier__no--s  { left: 50%; bottom: 0; width: 40%; transform: translateX(-50%); text-align: center; }
-.dossier__no--s  .dossier__ts { align-items: center; }
-
-@media (max-width: 1180px) {
-  .dossier { aspect-ratio: auto; display: flex; flex-direction: column; gap: 16px; }
-  .dossier__raios, .dossier__marca { display: none; }
-  .dossier__mapa {
-    position: relative;
-    left: auto; top: auto;
-    width: 100%; height: auto;
-    aspect-ratio: 16 / 10;
-  }
-  .dossier__no {
-    position: static;
-    width: auto;
-    transform: none;
-    text-align: left;
-  }
-  .dossier__no .dossier__ts { flex-direction: row; gap: 18px; align-items: baseline; }
-}
-
-
-/* --- versão 3: a tabela ------------------------------------------------- */
-
-/* Quatro meios em cabeçalho e um destino por linha: o que não se faz de um
-   modo fica traço. Lida em coluna, vê-se de repente que os três primeiros
-   destinos se fazem a pé ou de bicicleta e os dois últimos não. */
-.tabl { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tabl th, .tabl td { padding: 10px 0; text-align: right; font-weight: 400; }
-.tabl thead th { padding-bottom: 8px; }
-.tabl thead .ic { vertical-align: middle; }
-.tabl tbody th {
-  text-align: left;
-  padding-right: 14px;
-  line-height: 1.35;
-  border-top: 1.5px solid color-mix(in srgb, currentColor 30%, transparent);
-}
-.tabl tbody td {
-  width: 3.6em;
-  border-top: 1.5px solid color-mix(in srgb, currentColor 30%, transparent);
-  font-variant-numeric: tabular-nums;
-}
-.tabl tbody tr:last-child th, .tabl tbody tr:last-child td {
-  border-bottom: 1.5px solid color-mix(in srgb, currentColor 30%, transparent);
-}
-.tabl__vazio { opacity: .3; }
-
-@media (max-width: 460px) {
-  .tabl { font-size: 12px; }
-  .tabl tbody td { width: 3em; }
-}
-
-
-/* --- versão 4: as barras ------------------------------------------------ */
-
-/* A mesma régua para todos — uma hora, de ponta a ponta — e cada tempo é o
-   pedaço dela que ocupa. Não é para se ler o número na barra (esse está ao
-   lado, escrito): é para se ver, sem contas, que o metro de Vila do Conde
-   fica à distância a que o aeroporto fica de carro. */
-.barras { margin-top: 18px; font-size: 13px; --barras-esc: 60; }
-.barras__g + .barras__g { margin-top: 18px; }
-.barras__nome {
-  margin: 0 0 8px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-family: var(--font-display);
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-}
-.barras__l {
-  display: grid;
-  grid-template-columns: 1.3em minmax(0, 1fr) 4.6em;
-  align-items: center;
-  gap: 12px;
-  padding: 3px 0;
-}
-.barras__b {
-  position: relative;
-  height: 4px;
-  border-radius: 2px;
-  background: color-mix(in srgb, currentColor 18%, transparent);
-}
-.barras__b::after {
-  content: "";
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: calc(var(--m) / var(--barras-esc) * 100%);
-  border-radius: 2px;
-  background: currentColor;
-}
-.barras__v { font-variant-numeric: tabular-nums; white-space: nowrap; }
-
-/* ==== fim das quatro versões ============================================ */
+/* ==== fim do "como chegar?" ============================================= */
 
 
 /* Tabela de eventos do mosaico fechado: data, projeto, sítio e natureza.
@@ -3456,305 +3245,86 @@ html.menu-open .menu::before { opacity: 1; }
         </div>
         <div class="menu-row__body">
 
-          <!-- ============================================================
-               QUATRO VERSÕES do "como chegar", empilhadas para se escolher
-               uma. Provisório: escolhida a versão, ficam só as linhas dela
-               e cai todo o resto — as outras três, o .chegar-v que as
-               separa e as etiquetas .vtag que as numeram.
+          <!-- O mapa e, por baixo dele, a lista com as distâncias todas. Os
+               tempos são os do dossier original e cada um traz o meio a que
+               pertence — os mesmos que estão no mapa, nos ícones. -->
 
-               O texto de introdução saiu, como pedido. Os tempos são os do
-               dossier original e cada um traz o meio a que pertence: os
-               cinco destinos e os oito tempos são os mesmos nas quatro
-               versões (mesmas chaves data-i18n), para que a escolha seja
-               só de desenho e não de conteúdo.
-               ============================================================ -->
+          <div class="aerial">
+            <img src="mapsbirdseye.png" data-i18n-alt="altAerea" alt="Vista aérea de Retorta: a Sineira, a ponte sobre o rio Ave, as escolas e a envolvente" loading="lazy">
+            <span class="aerial__tag aerial__tag--home">
+              <svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
+              a Sineira
+            </span>
+            <span class="aerial__pin aerial__pin--escola">
+              <svg class="ic" aria-hidden="true"><use href="#ic-escola"></use></svg>
+              <span class="vsr" data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</span>
+            </span>
+            <span class="aerial__pin aerial__pin--metro">
+              <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
+              <span class="vsr" data-i18n="dest1">Estação de Metro Santa Clara</span>
+            </span>
+            <span class="aerial__pin aerial__pin--centro">
+              <svg class="ic" aria-hidden="true"><use href="#ic-centro"></use></svg>
+              <span class="vsr" data-i18n="dest2">Centro histórico de Vila do Conde</span>
+            </span>
+          </div>
 
-          <!-- ---------- versão 1: o mapa que já temos, com ícones, e a
-               lista com todas as distâncias ---------- -->
-          <div class="chegar-v">
-            <p class="vtag">versão 1 · mapa + lista</p>
+          <a class="menu__maps" href="https://www.google.com/maps/search/?api=1&amp;query=Igreja+de+Retorta%2C+Vila+do+Conde" target="_blank" rel="noopener">
+            <span data-i18n="mapsLink">Abre no maps</span> <span aria-hidden="true">↗</span>
+          </a>
 
-            <div class="aerial">
-              <img src="mapsbirdseye.png" data-i18n-alt="altAerea" alt="Vista aérea de Retorta: a Sineira, a ponte sobre o rio Ave, as escolas e a envolvente" loading="lazy">
-              <span class="aerial__tag aerial__tag--home">
-                <svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
-                a Sineira
-              </span>
-              <span class="aerial__pin aerial__pin--escola">
-                <svg class="ic" aria-hidden="true"><use href="#ic-escola"></use></svg>
-                <span class="vsr" data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</span>
-              </span>
-              <span class="aerial__pin aerial__pin--metro">
+          <ul class="rota">
+            <li>
+              <span class="rota__nome">
                 <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
-                <span class="vsr" data-i18n="dest1">Estação de Metro Santa Clara</span>
+                <span data-i18n="dest1">Estação de Metro Santa Clara</span>
               </span>
-              <span class="aerial__pin aerial__pin--centro">
+              <span class="rota__ts">
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>5 min</span>
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>15 min</span>
+              </span>
+            </li>
+            <li>
+              <span class="rota__nome">
                 <svg class="ic" aria-hidden="true"><use href="#ic-centro"></use></svg>
-                <span class="vsr" data-i18n="dest2">Centro histórico de Vila do Conde</span>
+                <span data-i18n="dest2">Centro histórico de Vila do Conde</span>
               </span>
-            </div>
-
-            <a class="menu__maps" href="https://www.google.com/maps/search/?api=1&amp;query=Igreja+de+Retorta%2C+Vila+do+Conde" target="_blank" rel="noopener">
-              <span data-i18n="mapsLink">Abre no maps</span> <span aria-hidden="true">↗</span>
-            </a>
-
-            <ul class="rota">
-              <li>
-                <span class="rota__nome">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
-                  <span data-i18n="dest1">Estação de Metro Santa Clara</span>
-                </span>
-                <span class="rota__ts">
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>5 min</span>
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>15 min</span>
-                </span>
-              </li>
-              <li>
-                <span class="rota__nome">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-centro"></use></svg>
-                  <span data-i18n="dest2">Centro histórico de Vila do Conde</span>
-                </span>
-                <span class="rota__ts">
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>10 min</span>
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>30 min</span>
-                </span>
-              </li>
-              <li>
-                <span class="rota__nome">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-praia"></use></svg>
-                  <span data-i18n="dest3">Praias de Vila do Conde</span>
-                </span>
-                <span class="rota__ts">
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>20 min</span>
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>60 min</span>
-                </span>
-              </li>
-              <li>
-                <span class="rota__nome">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
-                  <span data-i18n="dest4">Estação de Metro Trindade / Porto</span>
-                </span>
-                <span class="rota__ts">
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg><span class="vsr" data-i18n="modoCarro">de carro</span>40 min</span>
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span class="vsr" data-i18n="modoMetro">de metro</span>60 min</span>
-                </span>
-              </li>
-              <li>
-                <span class="rota__nome">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-aviao"></use></svg>
-                  <span data-i18n="dest5">Aeroporto Francisco Sá Carneiro</span>
-                </span>
-                <span class="rota__ts">
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg><span class="vsr" data-i18n="modoCarro">de carro</span>20 min</span>
-                  <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span class="vsr" data-i18n="modoMetro">de metro</span>50 min</span>
-                </span>
-              </li>
-            </ul>
-          </div>
-
-
-          <!-- ---------- versão 2: a estrela do dossier ---------- -->
-          <div class="chegar-v">
-            <p class="vtag">versão 2 · a estrela do dossier</p>
-
-            <div class="dossier">
-              <div class="dossier__mapa">
-                <img src="mapsbirdseye.png" data-i18n-alt="altAerea" alt="Vista aérea de Retorta: a Sineira, a ponte sobre o rio Ave, as escolas e a envolvente" loading="lazy">
-              </div>
-              <span class="dossier__marca" aria-hidden="true">
-                <svg viewBox="0 0 382 387"><use href="#mark-sineira"></use></svg>
+              <span class="rota__ts">
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>10 min</span>
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>30 min</span>
               </span>
-
-              <!-- Os raios partem todos do ponto da Sineira (500, 327) e cada
-                   um acaba onde começa a etiqueta que aponta. As posições das
-                   etiquetas estão nas mesmas fracções, no CSS. -->
-              <svg class="dossier__raios" viewBox="0 0 1000 760" aria-hidden="true">
-                <line x1="601" y1="380" x2="540" y2="124"></line>
-                <line x1="601" y1="380" x2="355" y2="240"></line>
-                <line x1="601" y1="380" x2="355" y2="565"></line>
-                <line x1="601" y1="380" x2="700" y2="555"></line>
-                <line x1="601" y1="380" x2="545" y2="618"></line>
-              </svg>
-
-              <div class="dossier__no dossier__no--n">
-                <h4 data-i18n="dest1">Estação de Metro Santa Clara</h4>
-                <div class="dossier__ts">
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>5 min</span>
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>15 min</span>
-                </div>
-              </div>
-
-              <div class="dossier__no dossier__no--no">
-                <h4 data-i18n="dest2">Centro histórico de Vila do Conde</h4>
-                <div class="dossier__ts">
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>10 min</span>
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>30 min</span>
-                </div>
-              </div>
-
-              <div class="dossier__no dossier__no--so">
-                <h4 data-i18n="dest3">Praias de Vila do Conde</h4>
-                <div class="dossier__ts">
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>20 min</span>
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>60 min</span>
-                </div>
-              </div>
-
-              <div class="dossier__no dossier__no--se">
-                <h4 data-i18n="dest4">Estação de Metro Trindade / Porto</h4>
-                <div class="dossier__ts">
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg><span class="vsr" data-i18n="modoCarro">de carro</span>40 min</span>
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span class="vsr" data-i18n="modoMetro">de metro</span>60 min</span>
-                </div>
-              </div>
-
-              <div class="dossier__no dossier__no--s">
-                <h4 data-i18n="dest5">Aeroporto Francisco Sá Carneiro</h4>
-                <div class="dossier__ts">
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg><span class="vsr" data-i18n="modoCarro">de carro</span>20 min</span>
-                  <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span class="vsr" data-i18n="modoMetro">de metro</span>50 min</span>
-                </div>
-              </div>
-            </div>
-
-            <a class="menu__maps" href="https://www.google.com/maps/search/?api=1&amp;query=Igreja+de+Retorta%2C+Vila+do+Conde" target="_blank" rel="noopener">
-              <span data-i18n="mapsLink">Abre no maps</span> <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-
-
-          <!-- ---------- versão 3: a tabela ---------- -->
-          <div class="chegar-v">
-            <p class="vtag">versão 3 · a tabela</p>
-
-            <table class="tabl">
-              <thead>
-                <tr>
-                  <th scope="col"><span class="vsr" data-i18n="chegarDestino">destino</span></th>
-                  <th scope="col"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span></th>
-                  <th scope="col"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span></th>
-                  <th scope="col"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg><span class="vsr" data-i18n="modoCarro">de carro</span></th>
-                  <th scope="col"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span class="vsr" data-i18n="modoMetro">de metro</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row" data-i18n="dest1">Estação de Metro Santa Clara</th>
-                  <td>15</td><td>5</td>
-                  <td class="tabl__vazio" aria-hidden="true">—</td><td class="tabl__vazio" aria-hidden="true">—</td>
-                </tr>
-                <tr>
-                  <th scope="row" data-i18n="dest2">Centro histórico de Vila do Conde</th>
-                  <td>30</td><td>10</td>
-                  <td class="tabl__vazio" aria-hidden="true">—</td><td class="tabl__vazio" aria-hidden="true">—</td>
-                </tr>
-                <tr>
-                  <th scope="row" data-i18n="dest3">Praias de Vila do Conde</th>
-                  <td>60</td><td>20</td>
-                  <td class="tabl__vazio" aria-hidden="true">—</td><td class="tabl__vazio" aria-hidden="true">—</td>
-                </tr>
-                <tr>
-                  <th scope="row" data-i18n="dest4">Estação de Metro Trindade / Porto</th>
-                  <td class="tabl__vazio" aria-hidden="true">—</td><td class="tabl__vazio" aria-hidden="true">—</td>
-                  <td>40</td><td>60</td>
-                </tr>
-                <tr>
-                  <th scope="row" data-i18n="dest5">Aeroporto Francisco Sá Carneiro</th>
-                  <td class="tabl__vazio" aria-hidden="true">—</td><td class="tabl__vazio" aria-hidden="true">—</td>
-                  <td>20</td><td>50</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="chegar-nota" data-i18n="chegarMin">tempos em minutos</p>
-
-            <a class="menu__maps" href="https://www.google.com/maps/search/?api=1&amp;query=Igreja+de+Retorta%2C+Vila+do+Conde" target="_blank" rel="noopener">
-              <span data-i18n="mapsLink">Abre no maps</span> <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-
-
-          <!-- ---------- versão 4: as barras ---------- -->
-          <div class="chegar-v">
-            <p class="vtag">versão 4 · as barras</p>
-
-            <div class="barras">
-              <div class="barras__g">
-                <p class="barras__nome"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span data-i18n="dest1">Estação de Metro Santa Clara</span></p>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg>
-                  <span class="barras__b" style="--m: 5" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoBici">de bicicleta</span>5 min</span>
-                </div>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg>
-                  <span class="barras__b" style="--m: 15" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoPe">a pé</span>15 min</span>
-                </div>
-              </div>
-
-              <div class="barras__g">
-                <p class="barras__nome"><svg class="ic" aria-hidden="true"><use href="#ic-centro"></use></svg><span data-i18n="dest2">Centro histórico de Vila do Conde</span></p>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg>
-                  <span class="barras__b" style="--m: 10" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoBici">de bicicleta</span>10 min</span>
-                </div>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg>
-                  <span class="barras__b" style="--m: 30" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoPe">a pé</span>30 min</span>
-                </div>
-              </div>
-
-              <div class="barras__g">
-                <p class="barras__nome"><svg class="ic" aria-hidden="true"><use href="#ic-praia"></use></svg><span data-i18n="dest3">Praias de Vila do Conde</span></p>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg>
-                  <span class="barras__b" style="--m: 20" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoBici">de bicicleta</span>20 min</span>
-                </div>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg>
-                  <span class="barras__b" style="--m: 60" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoPe">a pé</span>60 min</span>
-                </div>
-              </div>
-
-              <div class="barras__g">
-                <p class="barras__nome"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span data-i18n="dest4">Estação de Metro Trindade / Porto</span></p>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg>
-                  <span class="barras__b" style="--m: 40" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoCarro">de carro</span>40 min</span>
-                </div>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
-                  <span class="barras__b" style="--m: 60" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoMetro">de metro</span>60 min</span>
-                </div>
-              </div>
-
-              <div class="barras__g">
-                <p class="barras__nome"><svg class="ic" aria-hidden="true"><use href="#ic-aviao"></use></svg><span data-i18n="dest5">Aeroporto Francisco Sá Carneiro</span></p>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg>
-                  <span class="barras__b" style="--m: 20" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoCarro">de carro</span>20 min</span>
-                </div>
-                <div class="barras__l">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
-                  <span class="barras__b" style="--m: 50" aria-hidden="true"></span>
-                  <span class="barras__v"><span class="vsr" data-i18n="modoMetro">de metro</span>50 min</span>
-                </div>
-              </div>
-            </div>
-            <p class="chegar-nota" data-i18n="chegarEsc">cada barra vale uma hora</p>
-
-            <a class="menu__maps" href="https://www.google.com/maps/search/?api=1&amp;query=Igreja+de+Retorta%2C+Vila+do+Conde" target="_blank" rel="noopener">
-              <span data-i18n="mapsLink">Abre no maps</span> <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-
+            </li>
+            <li>
+              <span class="rota__nome">
+                <svg class="ic" aria-hidden="true"><use href="#ic-praia"></use></svg>
+                <span data-i18n="dest3">Praias de Vila do Conde</span>
+              </span>
+              <span class="rota__ts">
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>20 min</span>
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>60 min</span>
+              </span>
+            </li>
+            <li>
+              <span class="rota__nome">
+                <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
+                <span data-i18n="dest4">Estação de Metro Trindade / Porto</span>
+              </span>
+              <span class="rota__ts">
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg><span class="vsr" data-i18n="modoCarro">de carro</span>40 min</span>
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span class="vsr" data-i18n="modoMetro">de metro</span>60 min</span>
+              </span>
+            </li>
+            <li>
+              <span class="rota__nome">
+                <svg class="ic" aria-hidden="true"><use href="#ic-aviao"></use></svg>
+                <span data-i18n="dest5">Aeroporto Francisco Sá Carneiro</span>
+              </span>
+              <span class="rota__ts">
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg><span class="vsr" data-i18n="modoCarro">de carro</span>20 min</span>
+                <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span class="vsr" data-i18n="modoMetro">de metro</span>50 min</span>
+              </span>
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -3986,16 +3556,15 @@ html.menu-open .menu::before { opacity: 1; }
       chegarH2: 'how to get here?',
       secEspacos: 'Spaces',
       row2: 'Secondary and primary schools / Vocational school',
-      /* Os cinco destinos e os quatro meios servem as quatro versões do
-         "como chegar" ao mesmo tempo: cada chave aparece em vários sítios
-         do HTML e o applyLang traduz-lhe todas as cópias. */
+      /* Os cinco destinos e os quatro meios aparecem em mais do que um
+         sítio — o do metro, do centro e das escolas também no mapa —, e o
+         applyLang traduz todas as cópias de cada chave. */
       dest1: 'Santa Clara metro station',
       dest2: 'Historic centre of Vila do Conde',
       dest3: 'Vila do Conde beaches',
       dest4: 'Trindade / Porto metro station',
       dest5: 'Francisco Sá Carneiro Airport',
       modoPe: 'on foot', modoBici: 'by bike', modoCarro: 'by car', modoMetro: 'by metro',
-      chegarDestino: 'destination', chegarMin: 'times in minutes', chegarEsc: 'each bar is one hour',
       espP: 'It is a collective, and also a physical space, in Vila do Conde. By rehabilitating the architectural complex of the former Church of Retorta, the aim is to create there an intergenerational meeting point, connected to the arts and to nature.',
       espDesfile: 'Photographs of the space', espAnt: 'Previous image', espSeg: 'Next image',
       altEsp1: 'The former Church of Retorta and the priest’s house, late in the day',
