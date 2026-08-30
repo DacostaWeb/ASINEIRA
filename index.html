@@ -2211,12 +2211,10 @@ html[lang="en"] .title-art {
    não têm todas a mesma forma — há fotografias ao alto da nave e plantas
    muito ao baixo — e um cover em 4:3 cortava as pontas às duas: à nave a
    cabeça, à planta de faseamento a legenda das fases, que é metade do que
-   ela tem para dizer. Com contain nenhuma é cortada, e o que sobra é a
-   moldura, que fica igual para todas. */
-.espacos__palco {
-  background: none;
-  border: 1.5px solid currentColor;
-}
+   ela tem para dizer. Com contain nenhuma é cortada, e o que sobra de cada
+   lado fica vazio — sem fundo e sem moldura, para o que se vê ser a imagem
+   e não a caixa onde ela está. */
+.espacos__palco { background: none; }
 .espacos__palco img { object-fit: contain; }
 
 /* A segunda: no meio do rodapé está a legenda, e não a conta. As nove
@@ -3190,8 +3188,8 @@ html.menu-open .menu::before { opacity: 1; }
                língua da página — é o nosso próprio código. -->
           <form class="cform" id="cform" novalidate>
             <label class="cform__row">
-              <span class="cform__label" data-i18n="fEmail">o seu email</span>
-              <input class="cform__input" type="email" name="email" autocomplete="email" required data-i18n-ph="fEmail" placeholder="o seu email">
+              <span class="cform__label" data-i18n="fEmail">o teu e-mail</span>
+              <input class="cform__input" type="email" name="email" autocomplete="email" required data-i18n-ph="fEmail" placeholder="o teu e-mail">
             </label>
 
             <label class="cform__row">
@@ -3209,8 +3207,8 @@ html.menu-open .menu::before { opacity: 1; }
             </label>
 
             <label class="cform__row">
-              <span class="cform__label" data-i18n="fMsg">escreva a sua mensagem</span>
-              <textarea class="cform__input cform__input--area" name="mensagem" rows="5" required data-i18n-ph="fMsg" placeholder="escreva a sua mensagem"></textarea>
+              <span class="cform__label" data-i18n="fMsg">escreve a tua mensagem</span>
+              <textarea class="cform__input cform__input--area" name="mensagem" rows="5" required data-i18n-ph="fMsg" placeholder="escreve a tua mensagem"></textarea>
             </label>
 
             <button class="cform__send" type="submit" data-i18n="fSend">Enviar</button>
