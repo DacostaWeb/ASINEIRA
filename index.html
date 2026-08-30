@@ -2304,11 +2304,6 @@ html[lang="en"] .title-art {
 .ficha__dets .evdet { align-items: flex-start; }
 .ficha__dets .evdet svg { margin-top: 3px; }
 
-/* O rótulo dos próximos, dentro da mesma coluna: um respiro a mais por cima
-   do que o intervalo das linhas, para se ver que abre um grupo. */
-.ficha__dets .ficha__prox { margin-top: 20px; }
-.ficha__dets .ficha__proxmais { margin-top: 10px; }
-
 /* O rótulo pequeno em versaletes: é o .panel-section__title do site, dois
    pontos mais pequeno, porque aqui abre uma tabela e não uma secção. */
 .ficha .lbl {
@@ -2324,6 +2319,12 @@ html[lang="en"] .title-art {
 /* Dois nomes de classe no selector porque o .ficha .lbl acima já zera as
    margens todas, e uma classe só perdia para ele. */
 .ficha .ficha__lbl { margin-top: 34px; }
+
+/* Aqui em baixo e não junto ao .ficha__dets: o .ficha .lbl acima zera as
+   margens todas e tem a mesma força que este selector, e por isso o que
+   viesse antes dele perdia. */
+.ficha__dets .ficha__prox { margin-top: 20px; }
+.ficha__dets .ficha__proxmais { margin-top: 10px; }
 
 /* A ficha técnica num cartão azul: o azul do mosaico e o mesmo par de cores,
    trocado. O que à esquerda era uma margem com texto passa a ser um objecto,
