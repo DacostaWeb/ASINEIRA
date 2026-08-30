@@ -769,6 +769,15 @@ html[lang="en"] .title-art {
   #amigos .tile__soon { display: none; }
 }
 
+/* A três colunas o mosaico volta a estreitar e os dois voltam a encontrar-se.
+   Aqui o canto sai mais cedo do que o encontro: entre os 1140 e os 1220 já
+   não se tocam, mas passam tão perto que a palavra parece encostada ao fim
+   do título. Só volta quando houver folga a sério. O quando são as colunas e
+   não uma largura escrita à mão, que essa muda com o --col-min. */
+@media (max-width: 1219.98px) {
+  .tiles[data-cols="3"] #amigos .tile__soon { display: none; }
+}
+
 @media (min-width: 641px) {
   /* O cartão de amigo ocupa a segunda coluna do mosaico, encostado ao fundo
      e à direita — à mesma margem do "+" lá em cima, que é a margem de tudo
@@ -925,6 +934,11 @@ html[lang="en"] .title-art {
   letter-spacing: .12em;
   text-transform: uppercase;
 }
+
+/* A duas colunas o mosaico fica largo e baixo, e do cartão de amigo só
+   assomava uma tira de dois dedos — nem se percebe o que é. Mais vale não
+   estar: fica o texto e o botão, com o ar todo entre eles. */
+.tiles[data-cols="2"] #amigos .tile__aside { display: none; }
 
 /* O ar por cima do botão não pode ser margem dele: com o margin-top: auto a
    encostá-lo ao fundo, uma margem fixa não sobrevivia. Fica na caixa do
@@ -5461,6 +5475,11 @@ html.menu-open .menu::before { opacity: 1; }
   }
 
   function layout(cols) {
+    /* Quantas colunas se estão mesmo a desenhar, escrito na grelha para o
+       CSS o poder ler: há coisas que dependem do número de colunas e não da
+       largura, e repetir na folha de estilos a conta que é feita aqui era
+       arriscar que as duas discordassem. */
+    grid.dataset.cols = cols;
     span(tileEventos, cols >= 3);
     span(tileAmigos, cols >= 4);
     span(mediaFim, cols === 3);
@@ -5523,10 +5542,19 @@ html.menu-open .menu::before { opacity: 1; }
     return rows.map(function (row) { return Math.ceil(row.tile ? row.h : photo); });
   }
 
-  /* Pôr a esticar quem tem de esticar para o número de colunas do momento. */
+  /* Pôr a esticar quem tem de esticar para o número de colunas do momento.
+
+     Repete-se até assentar, e não uma vez só: quem ocupa duas colunas
+     obriga a grelha a ter pelo menos duas, por isso enquanto o span lá
+     estiver a conta dá duas mesmo numa janela que só tem espaço para uma.
+     Tirado o span, a grelha refaz-se e a conta muda — e é essa que vale.
+     Numa passagem só, um salto grande de largura (rodar o ecrã, atirar a
+     janela de uma ponta à outra) ficava a meio caminho, com o número de
+     colunas por corrigir até ao resize seguinte. */
   function applyCols() {
-    var cols = currentCols();
-    if (cols !== state.cols) {
+    for (var i = 0; i < 4; i++) {
+      var cols = currentCols();
+      if (cols === state.cols) return;
       state.cols = cols;
       layout(cols);
     }
