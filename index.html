@@ -4024,9 +4024,11 @@ html.menu-open .menu::before { opacity: 1; }
     { dia: 2, mes: 11, ano: 2026,
       img: 'dossier/assets/nave-2026.jpg',
       bilhetes: null,
-      pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim', natureza: 'Formação',
+      pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim',
+            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR',
             sinopse: 'A casa passa a ter semana: as aulas e os ensaios entram na nave e ficam.' },
-      en: { titulo: 'Regular activities begin', sitio: 'Church and Garden', natureza: 'Training',
+      en: { titulo: 'Regular activities begin', sitio: 'Church and Garden',
+            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE',
             sinopse: 'The house takes on a weekly rhythm: classes and rehearsals move into the nave to stay.' },
       alt: { pt: 'A nave da antiga igreja preparada para receber aulas e ensaios.',
              en: 'The nave of the former church set up for classes and rehearsals.' } },
@@ -4034,11 +4036,9 @@ html.menu-open .menu::before { opacity: 1; }
     { dia: 19, mes: 12, ano: 2026,
       img: 'dossier/assets/altares.jpg',
       bilhetes: null,
-      pt: { titulo: 'Workshop', sitio: 'Igreja e Jardim',
-            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR',
+      pt: { titulo: 'Workshop', sitio: 'Igreja e Jardim', natureza: 'Formação',
             sinopse: 'Um dia inteiro a trabalhar em conjunto, do exercício da manhã à mostra do que se fez ao fim da tarde.' },
-      en: { titulo: 'Workshop', sitio: 'Church and Garden',
-            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE',
+      en: { titulo: 'Workshop', sitio: 'Church and Garden', natureza: 'Training',
             sinopse: 'A whole day of working together, from the morning exercise to a showing of the work at dusk.' },
       alt: { pt: 'Os altares da antiga igreja, ao fundo da nave.',
              en: 'The altars of the former church, at the far end of the nave.' } },
@@ -4256,11 +4256,13 @@ html.menu-open .menu::before { opacity: 1; }
     return dias.join(', ') + (lg() === 'en' ? ' and ' : ' e ') + ultimo;
   }
 
-  /* A natureza tem duas escritas por causa do workshop, que é as três coisas
-     ao mesmo tempo. Por extenso nos cartazes, onde há linha para ela; em
-     sigla nas duas listas, onde a coluna da natureza tem 22% da tabela e
-     "Formação · Criação · Apresentação" se partia em quatro linhas. Quem só
-     é uma coisa escreve-se igual nos dois sítios e não precisa da sigla. */
+  /* A natureza tem duas escritas por causa de quem é as três coisas ao mesmo
+     tempo — o início das atividades regulares, que é o dia em que a casa
+     passa a formar, a criar e a apresentar. Por extenso nos cartazes, onde há
+     linha para ela; em sigla nas duas listas, onde a coluna da natureza tem
+     22% da tabela e "Formação · Criação · Apresentação" se partia em quatro
+     linhas. Quem só é uma coisa — o workshop é formação e nada mais —
+     escreve-se igual nos dois sítios e não precisa da sigla. */
   function evNatureza(t) { return t.natureza || ''; }
   function evNaturezaCurta(t) { return t.natCurta || t.natureza || ''; }
   function evData(e) {
