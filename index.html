@@ -1159,21 +1159,26 @@ html[lang="en"] .title-art {
   font-variant-numeric: tabular-nums;
 }
 
-/* Daqui para baixo a linha parte-se em duas de propósito, e não ao sabor do
-   que couber: entre os 893 e os 720 a coluna do menu é metade do ecrã e o
-   par de tempos já não cabia ao lado do nome, mas abaixo dos 720 a coluna
-   passa a ser o ecrã inteiro e voltava a caber — a mesma lista mudava de
-   desenho duas vezes a descer. Com o li em bloco, é sempre o nome em cima e
-   os tempos por baixo.
-
-   Em baixo, encostá-los à direita punha-os longe do nome a que pertencem e
-   alinhados com nada: ficam à esquerda, debaixo dele. E o nome fica a
-   negrito, que agora é o cabeçalho da sua própria linha e não mais uma coisa
-   a par dos tempos. */
+/* Daqui para baixo o nome fica a negrito, e a linha parte-se em duas: os
+   tempos descem para debaixo do nome e encostam à esquerda. Encostados à
+   direita ficavam longe do nome a que pertencem e alinhados com nada. */
 @media (max-width: 893px) {
   .rota li { display: block; padding: 12px 0; }
   .rota__nome { font-weight: 700; }
   .rota__ts { margin: 7px 0 0; gap: 22px; }
+}
+
+/* Menos numa faixa: abaixo dos 720 o menu passa a coluna única e o corpo
+   volta a ter o ecrã inteiro. Aí a linha de duas colunas cabe outra vez, e
+   lê-se melhor assim — o nome à esquerda e os tempos encostados à direita,
+   como no ecrã largo. O negrito fica, que isso é de ecrã estreito e não
+   desta faixa.
+
+   Aos 500 acaba: daí para baixo já não há largura para as duas colunas e
+   volta o empilhado da regra de cima. */
+@media (max-width: 720px) and (min-width: 501px) {
+  .rota li { display: flex; padding: 10px 0; }
+  .rota__ts { margin: 0 0 0 auto; gap: 18px; }
 }
 
 
