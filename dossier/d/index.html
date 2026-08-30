@@ -78,11 +78,16 @@ html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light;
   /* Corpos de letra medidos nas duas dimensões do ecrã. O min(vw, vh) é o
      que faz uma linha caber num portátil baixo e largo: sem a parcela em
      vh, o título crescia com a largura e empurrava a lista para fora. */
-  --t-titulo:  clamp(23px, min(3.6vw, 5.4vh), 52px);
-  --t-titulao: clamp(30px, min(6.2vw, 8.4vh), 92px);
-  --t-corpo:   clamp(13px, min(1.05vw, 1.85vh), 16px);
-  --t-lista:   clamp(12.5px, min(1vw, 1.75vh), 15px);
-  --t-kicker:  clamp(9px, min(.75vw, 1.25vh), 11px);
+  /* A escala é a do site, não uma escala de cartaz. Lá, o nome de uma peça
+     (.ficha__h1) são 23px de Helvetica em peso normal, o texto corrido são
+     13px de mono e o rótulo são 9px em versaletes — e não há mais degraus.
+     Aqui os três valores respiram um pouco com o ecrã, mas partem daqueles
+     e não sobem muito acima deles: um dossier lê-se, não se grita. */
+  --t-titulo:  clamp(20px, min(2vw, 3vh), 30px);
+  --t-titulao: clamp(26px, min(3.2vw, 4.6vh), 46px);
+  --t-corpo:   clamp(12.5px, min(.95vw, 1.6vh), 14.5px);
+  --t-lista:   clamp(12.5px, min(.95vw, 1.6vh), 14px);
+  --t-kicker:  clamp(9px, min(.7vw, 1.15vh), 10px);
 
   /* Movimento */
   --wm-dur: 2000ms;
@@ -132,7 +137,7 @@ body {
   color: var(--blue);
   font-family: var(--font);
   font-size: var(--t-corpo);
-  line-height: 1.55;
+  line-height: 1.65;
   text-wrap: pretty;
   touch-action: manipulation;
 }
@@ -329,11 +334,10 @@ html.menu-open .menu::before { opacity: 1; }
   padding: clamp(3px, .55vh, 9px) 0;
   /* A parcela em vh é o que faz as treze linhas caberem num ecrã, em vez
      de o índice ter de rolar. */
-  font-size: clamp(17px, min(3vw, 3.5vh), 40px);
-  font-weight: 700;
+  font-size: clamp(17px, min(2.6vw, 3.2vh), 32px);
+  font-weight: 400;
   line-height: 1.05;
-  letter-spacing: -.03em;
-  text-transform: uppercase;
+  letter-spacing: -.02em;
   border-bottom: 1.5px solid color-mix(in srgb, var(--cream) 25%, transparent);
 }
 .menu__link:hover { text-decoration: none; color: var(--gold-light); }
@@ -382,42 +386,52 @@ html.menu-open .menu::before { opacity: 1; }
 .linha--azul { background: var(--blue); color: var(--cream); }
 
 /* O bloco de texto de uma linha, centrado na metade que lhe toca. */
+/* O texto encosta ao topo da linha, como no site: o rótulo e o título são a
+   primeira coisa de cada bloco e caem sempre à mesma altura, linha após
+   linha. Centrados, mudavam de sítio consoante o que tinham por baixo. */
 .texto {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: clamp(8px, 1.4vh, 18px);
-  padding: clamp(22px, 4vh, 60px) var(--gutter);
+  padding: clamp(22px, 4vh, 54px) var(--gutter);
   min-width: 0;
 }
+/* E o botão assenta no fundo do bloco, como o .tile__cta do site. */
+.texto > .botao:last-child { margin-top: auto; }
 .texto--azul { background: var(--blue); color: var(--cream); }
 
 .kicker {
   font-size: var(--t-kicker);
   font-weight: 700;
-  letter-spacing: .18em;
+  letter-spacing: .14em;
+  line-height: 1.2;
   text-transform: uppercase;
   opacity: .65;
 }
+/* O título de uma linha é o .ficha__h1 do site: Helvetica em peso normal,
+   um corpo acima do texto e nada mais, na caixa em que a palavra se escreve.
+   Sem versaletes e sem o peso 700: as versaletes são do rótulo que está por
+   cima dele, e dois graus de ênfase seguidos anulam-se. */
 .titulo {
+  font-family: var(--font-display);
   font-size: var(--t-titulo);
-  font-weight: 700;
-  line-height: .95;
-  letter-spacing: -.03em;
-  text-transform: uppercase;
-  max-width: 20ch;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  max-width: 26ch;
 }
 .sub {
-  font-size: clamp(13px, min(1.2vw, 2vh), 18px);
+  font-family: var(--font);
+  font-size: var(--t-corpo);
   font-weight: 700;
-  letter-spacing: .02em;
 }
 .texto p { max-width: 56ch; }
 /* A mesma medida de leitura das listas e da tabela: sem ela as linhas
    atravessam a metade inteira do ecrã. */
 .texto .lista, .texto .acessos, .texto .mapa__legenda { max-width: 64ch; }
 
-.lista li { position: relative; padding-left: 1.1em; font-size: var(--t-lista); line-height: 1.45; }
+.lista li { position: relative; padding-left: 1.1em; font-size: var(--t-lista); line-height: 1.6; }
 .lista li + li { margin-top: .38em; }
 .lista li::before { content: "›"; position: absolute; left: 0; font-weight: 700; }
 
@@ -464,11 +478,11 @@ html.menu-open .menu::before { opacity: 1; }
 .duas .kicker, .tres .kicker { margin-bottom: 8px; }
 
 .disciplinas {
-  font-size: clamp(12px, min(1.15vw, 1.9vh), 18px);
+  font-size: clamp(10px, min(.85vw, 1.4vh), 12px);
   font-weight: 700;
-  letter-spacing: .02em;
+  letter-spacing: .1em;
   text-transform: uppercase;
-  line-height: 1.35;
+  line-height: 1.6;
 }
 
 
@@ -574,25 +588,64 @@ html.menu-open .menu::before { opacity: 1; }
    resto (1fr). Não há nada a rolar por baixo dela. */
 /* Altura fixa, e não mínima: numa grelha de altura indefinida o 1fr resolve
    para o tamanho natural da fotografia e a capa passava do ecrã. Aqui a
-   capa é exactamente um ecrã, e é a fotografia que se ajusta. */
-.linha--capa { height: var(--linha-h); grid-template-rows: auto minmax(0, 1fr); }
+   capa é exactamente um ecrã.
+
+   O título fica em cima, à esquerda; a fotografia encosta à direita e mede
+   a altura da linha. A coluna dela é "auto" — vale o que a fotografia pedir
+   àquela altura —, e por isso não há recorte nenhum: nem em altura, nem em
+   largura. */
+.linha--capa { height: var(--linha-h); grid-template-columns: minmax(0, 1fr) auto; }
 .capa__titulo {
   display: flex;
   flex-direction: column;
   gap: clamp(8px, 1.4vh, 16px);
-  padding: clamp(18px, 4vh, 52px) var(--gutter) clamp(16px, 3vh, 38px);
+  padding: clamp(22px, 4vh, 54px) var(--gutter);
+}
+.capa__pe {
+  margin-top: auto;
+  padding-top: 52px;
+  font-family: var(--font-display);
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
 .capa__titulo h1 {
+  font-family: var(--font-display);
   font-size: var(--t-titulao);
-  font-weight: 700;
-  line-height: .9;
-  letter-spacing: -.035em;
-  text-transform: uppercase;
-  max-width: 16ch;
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  max-width: 18ch;
 }
-/* A igreja está na parte de cima da fotografia: um recorte largo e baixo,
-   centrado, mostrava só a calçada. */
-.capa__figura img { object-position: 50% 30%; }
+/* A coluna da fotografia vale o que ela pediria à altura da linha — e nunca
+   mais do que 62% do ecrã, senão num portátil largo e baixo a fotografia
+   comia a coluna do título e o título transbordava. Quando o tecto trava a
+   largura, é a altura que cede: a fotografia continua inteira, encostada ao
+   limite inferior do ecrã.
+
+   O 1800/1312 é a proporção do ficheiro. Trocar a fotografia obriga a
+   trocá-la aqui. */
+.capa__figura {
+  background: var(--cream);
+  width: min(62vw, calc(var(--linha-h) * 1800 / 1312));
+  justify-self: end;
+}
+.capa__figura img {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  object-fit: contain;
+  object-position: 50% 100%;
+}
+
+/* Empilhada, a fotografia passa para baixo do título e continua inteira. */
+@media (max-width: 860px) {
+  .linha--capa { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+  .capa__figura { width: auto; }
+  .capa__pe { padding-top: clamp(20px, 4vh, 44px); }
+}
 
 
 /* 10. Peças de conteúdo =================================================== */
@@ -671,9 +724,10 @@ html.menu-open .menu::before { opacity: 1; }
 .niveis .nivel:first-child { grid-column: 1 / -1; }
 .nivel { display: flex; flex-direction: column; gap: 6px; }
 .nivel h3 {
-  font-size: clamp(15px, min(1.5vw, 2.5vh), 24px);
-  font-weight: 700;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: clamp(15px, min(1.5vw, 2.4vh), 21px);
+  font-weight: 400;
+  line-height: 1.05;
   letter-spacing: -.02em;
 }
 .nivel p { font-size: var(--t-lista); }
@@ -712,7 +766,7 @@ html.menu-open .menu::before { opacity: 1; }
   background: var(--blue);
   color: var(--cream);
 }
-.fecho__texto .titulo { font-size: clamp(24px, min(4.4vw, 6vh), 60px); max-width: 15ch; }
+.fecho__texto .titulo { font-size: var(--t-titulao); max-width: 20ch; }
 
 /* Os pontos numerados marcam sítios da fotografia, e por isso a fotografia
    não pode ser cortada: uma caixa com a proporção do ficheiro, centrada na
@@ -820,6 +874,7 @@ html.menu-open .menu::before { opacity: 1; }
     <p class="kicker" data-en="a Sineira &middot; Retorta, Vila do Conde">a Sineira &middot; Retorta, Vila do Conde</p>
     <h1 data-en="Presentation and patronage dossier">Dossier de apresentação e mecenato</h1>
     <p class="sub" data-en="Requalification of the former Church of Retorta">Requalificação da antiga Igreja de Retorta</p>
+    <p class="capa__pe">Rua da Igreja, Retorta &middot; 4480-353 Vila do Conde</p>
   </div>
   <figure class="figura capa__figura">
     <img src="../assets/hero.jpg" alt="Antiga Igreja de Retorta e casa do padre, Vila do Conde" fetchpriority="high">
@@ -942,7 +997,6 @@ html.menu-open .menu::before { opacity: 1; }
   <div class="texto">
     <p class="kicker" data-en="F5 &middot; Getting here">F5 &middot; Acessos</p>
     <h2 class="titulo" data-en="Getting here">Acessos</h2>
-    <p data-en="Retorta sits between the river, the woodland and the city. Metro, historic centre, beaches and airport are all minutes away.">Retorta fica entre o rio, a floresta e a cidade. Metro, centro histórico, praias e aeroporto estão a minutos.</p>
     <table class="acessos">
       <thead>
         <tr>
@@ -959,6 +1013,7 @@ html.menu-open .menu::before { opacity: 1; }
         <tr><td data-en="Francisco Sá Carneiro airport">Aeroporto Francisco Sá Carneiro</td><td data-en="car 20 min">carro 20 min</td><td>50 min</td></tr>
       </tbody>
     </table>
+    <p data-en="Retorta sits between the river, the woodland and the city. Metro, historic centre, beaches and airport are all minutes away.">Retorta fica entre o rio, a floresta e a cidade. Metro, centro histórico, praias e aeroporto estão a minutos.</p>
   </div>
   <figure class="figura">
     <img src="../assets/vila-do-conde.jpg" alt="Vila do Conde, o rio Ave e o Atlântico" loading="lazy">
@@ -972,7 +1027,6 @@ html.menu-open .menu::before { opacity: 1; }
     <p class="kicker" data-en="F6 &middot; Works">F6 &middot; Intervenção</p>
     <h2 class="titulo" data-en="Works under way">Intervenção</h2>
     <p data-en="The work has already begun. The nave has a new floor; the altars and the gilded arch are waiting to be restored.">O trabalho já começou. A nave ganhou pavimento novo; os altares e o arco dourado aguardam recuperação.</p>
-    <p data-en="What is shown here was done with the association&rsquo;s own means. What follows — and is set out in the pages ahead — is what patronage is for.">O que aqui se vê foi feito com meios da própria associação. O que se segue — e que as páginas seguintes descrevem — é o que o mecenato vem permitir.</p>
   </div>
   <div class="tira">
     <figure class="figura">
@@ -1095,7 +1149,7 @@ html.menu-open .menu::before { opacity: 1; }
 <section class="linha linha--banda linha--azul" id="territorio">
   <div class="texto">
     <p class="kicker" data-en="Territory">Território</p>
-    <h2 class="titulo" data-en="Partnerships, support and places nearby">Parcerias, apoios e locais de interesse</h2>
+    <h2 class="titulo" data-en="Partnerships and support">Parcerias e apoios</h2>
     <div class="tres">
       <div>
         <p class="kicker" data-en="Partnerships (to date)">Parcerias (à data)</p>
@@ -1112,7 +1166,7 @@ html.menu-open .menu::before { opacity: 1; }
         </ul>
       </div>
       <div>
-        <p class="kicker" data-en="Places of interest nearby">Locais de interesse na proximidade</p>
+        <p class="kicker" data-en="Points of interest nearby">Pontos de interesse na proximidade</p>
         <ul class="lista">
           <li data-en="Centro Ciência Viva science centre">Centro Ciência Viva</li>
           <li data-en="Research hub">Pólo de investigação</li>
@@ -1122,7 +1176,7 @@ html.menu-open .menu::before { opacity: 1; }
           <li data-en="Sanches school">Escola Sanches</li>
           <li data-en="Saul Dias school">Escola Saul Dias</li>
           <li data-en="Clube Fluvial Vilacondense">Clube Fluvial Vilacondense</li>
-          <li data-en="Cycle path network (planned)">Rede de ciclovia (futuramente)</li>
+          <li data-en="Cycle path network (planned)">Rede ciclovia (futuramente)</li>
           <li data-en="River beach (planned)">Praia fluvial (futuramente)</li>
         </ul>
       </div>
@@ -1371,21 +1425,30 @@ html.menu-open .menu::before { opacity: 1; }
 
 
   /* ======================================================================
-     4. O triângulo em repouso
+     4. O triângulo roda com o scroll
      ====================================================================== */
 
-  /* Fora da abertura o triângulo oscila devagar, como no site: é o que diz
-     que ali se carrega. */
-  var t0 = null;
-  function oscila(t) {
-    if (t0 === null) t0 = t;
-    if (!aberto) {
-      var a = Math.sin((t - t0) / 1400) * 4;
-      triRot.setAttribute('transform', 'rotate(' + a.toFixed(2) + ' 159 193)');
-    }
-    requestAnimationFrame(oscila);
+  /* Como no site: o ângulo acompanha a posição do scroll — para baixo roda
+     num sentido, para cima no outro — e persegue-o com uma folga. O ciclo
+     só corre enquanto houver diferença por percorrer e pára a seguir; um
+     requestAnimationFrame sem fim ocuparia o compositor a página inteira,
+     por um movimento que ninguém está a ver. */
+  var angulo = 0, alvo = 0, a_rodar = false;
+
+  function roda() {
+    angulo += (alvo - angulo) * 0.09;
+    if (Math.abs(alvo - angulo) < 0.05) { angulo = alvo; a_rodar = false; }
+    triRot.setAttribute('transform', 'rotate(' + angulo.toFixed(2) + ' 159.26 165.764)');
+    if (a_rodar) requestAnimationFrame(roda);
   }
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) requestAnimationFrame(oscila);
+
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    addEventListener('scroll', function () {
+      if (aberto) return;
+      alvo = (scrollY || 0) * 0.09;
+      if (!a_rodar) { a_rodar = true; requestAnimationFrame(roda); }
+    }, { passive: true });
+  }
 
 })();
 </script>
