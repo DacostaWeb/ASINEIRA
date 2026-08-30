@@ -3876,20 +3876,90 @@ html.menu-open .menu::before { opacity: 1; }
      'bilhetes' é o endereço onde se compram. Enquanto for nulo, o cartaz diz
      que é para breve em vez de fingir um botão que não leva a lado nenhum.
 
-     As datas dos próximos são em setembro. O calendário abre no mês
-     corrente e só anda para a frente, até ao fim de 2027. */
+     A lista vem por ordem, do mais próximo ao mais distante, que é a ordem
+     por que se lê nos três sítios. O calendário abre no mês corrente e só
+     anda para a frente, até ao fim de 2027. */
   var HOJE = new Date();
 
   var EVENTOS = [
     { dia: 26, mes: 9, ano: 2026, hora: '21h30',
+      img: 'projetos2/img/voar4.jpg',
+      imgs: ['projetos2/img/voar4.jpg', 'projetos2/img/voar2.jpg', 'projetos2/img/voar3.jpg'],
+      bilhetes: null,
+      projeto: 'voar',
+      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Theatro Circo, Braga', natureza: 'Formação',
+            sinopse: 'A oficina e a apresentação sobre a liberdade dentro de casa voltam a fazer-se, agora em Braga.' },
+      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Theatro Circo, Braga', natureza: 'Training',
+            sinopse: 'The workshop and showing about freedom inside the house are staged again, now in Braga.' },
+      alt: { pt: 'A cenografia da casa montada em palco, vista da plateia.',
+             en: 'The house set built on stage, seen from the audience.' } },
+
+    /* Três noites seguidas, um cartaz só: ver o 'diaFim' lá em cima. */
+    { dia: 13, diaFim: 15, mes: 10, ano: 2026, hora: '21h30',
+      img: 'projetos2/img/voar6.jpg',
+      imgs: ['projetos2/img/voar6.jpg', 'projetos2/img/voar8.jpg', 'projetos2/img/voar9.jpg'],
+      bilhetes: null,
+      projeto: 'voar',
+      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Theatro Circo, Braga', natureza: 'Formação',
+            sinopse: 'Três dias de oficina com apresentação pública no fim, a partir do texto de Adolf Loos.' },
+      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Theatro Circo, Braga', natureza: 'Training',
+            sinopse: 'Three days of workshop closing with a public showing, departing from the text by Adolf Loos.' },
+      alt: { pt: 'Uma criança à janela redonda da casa durante a apresentação.',
+             en: 'A child at the round window of the house during the showing.' } },
+
+    { dia: 24, mes: 10, ano: 2026, hora: '21h30',
       img: 'dossier/assets/hero.jpg',
       imgs: ['dossier/assets/hero.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/vista-aerea.jpg'],
       bilhetes: null,
-      pt: { titulo: "Inauguração d'a Sineira!", sitio: 'Exterior', natureza: 'Criação',
+      pt: { titulo: "Inauguração d'a Sineira!", sitio: 'Igreja e Jardim', natureza: 'Apresentação',
             sinopse: 'A casa abre as portas: o adro, a nave e o auditório mostram-se pela primeira vez a quem cá vive.' },
-      en: { titulo: "Inauguração d'a Sineira!", sitio: 'Outdoors', natureza: 'Creation',
+      en: { titulo: "Inauguração d'a Sineira!", sitio: 'Church and Garden', natureza: 'Presentation',
             sinopse: 'The house opens its doors: the churchyard, the nave and the auditorium, shown for the first time.' },
-      alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } }
+      alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } },
+
+    { dia: 2, mes: 11, ano: 2026,
+      img: 'dossier/assets/nave-2026.jpg',
+      imgs: ['dossier/assets/nave-2026.jpg', 'dossier/assets/altares.jpg', 'dossier/assets/arco.jpg'],
+      bilhetes: null,
+      pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim', natureza: 'Formação',
+            sinopse: 'A casa passa a ter semana: as aulas e os ensaios entram na nave e ficam.' },
+      en: { titulo: 'Regular activities begin', sitio: 'Church and Garden', natureza: 'Training',
+            sinopse: 'The house takes on a weekly rhythm: classes and rehearsals move into the nave to stay.' },
+      alt: { pt: 'A nave da antiga igreja preparada para receber aulas e ensaios.',
+             en: 'The nave of the former church set up for classes and rehearsals.' } },
+
+    { dia: 19, mes: 12, ano: 2026, hora: '10h00',
+      img: 'dossier/assets/scene-estudio.jpg',
+      imgs: ['dossier/assets/scene-estudio.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/faseamento.jpg'],
+      bilhetes: null,
+      pt: { titulo: 'Workshop', sitio: 'Igreja e Jardim', natureza: 'Formação',
+            sinopse: 'Um dia inteiro a trabalhar em conjunto, do exercício da manhã à mostra do que se fez ao fim da tarde.' },
+      en: { titulo: 'Workshop', sitio: 'Church and Garden', natureza: 'Training',
+            sinopse: 'A whole day of working together, from the morning exercise to a showing of the work at dusk.' },
+      alt: { pt: 'O estúdio da Sineira preparado para uma oficina.',
+             en: 'The Sineira studio set up for a workshop.' } },
+
+    { dia: 4, diaFim: 9, mes: 1, ano: 2027,
+      img: 'dossier/assets/altares.jpg',
+      imgs: ['dossier/assets/altares.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/scene-estudio.jpg'],
+      bilhetes: null,
+      pt: { titulo: 'Residência de Criação', sitio: 'Igreja e Jardim', natureza: 'Criação',
+            sinopse: 'Uma semana de casa entregue a quem cria: o trabalho faz-se aqui, do princípio ao fim.' },
+      en: { titulo: 'Residência de Criação', sitio: 'Church and Garden', natureza: 'Creation',
+            sinopse: 'A week with the house given over to those who make: the work happens here, start to finish.' },
+      alt: { pt: 'Os altares da antiga igreja, ao fundo da nave.',
+             en: 'The altars of the former church, at the far end of the nave.' } },
+
+    { dia: 8, diaFim: 13, mes: 2, ano: 2027,
+      img: 'dossier/assets/arco.jpg',
+      imgs: ['dossier/assets/arco.jpg', 'dossier/assets/vista-aerea.jpg', 'dossier/assets/nave-2026.jpg'],
+      bilhetes: null,
+      pt: { titulo: 'Residência de Criação', sitio: 'Igreja e Jardim', natureza: 'Criação',
+            sinopse: 'A segunda semana de residência do ano, outra vez com a casa toda ao serviço de uma peça a nascer.' },
+      en: { titulo: 'Residência de Criação', sitio: 'Church and Garden', natureza: 'Creation',
+            sinopse: 'The second residency week of the year, the whole house again at the service of a piece being born.' },
+      alt: { pt: 'O arco da antiga igreja visto de dentro da nave.',
+             en: 'The arch of the former church seen from inside the nave.' } }
   ];
 
   /* O que já aconteceu, e o que ficou de cada um: fotografias, vídeo, texto.
@@ -3904,9 +3974,9 @@ html.menu-open .menu::before { opacity: 1; }
       /* Tem ficha própria: o "quero saber mais" do cartaz e o título na lista
          levam a #voar, e não a um correio. */
       projeto: 'voar',
-      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Vários locais', natureza: 'Formação',
+      pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Casa da Música', natureza: 'Formação',
             sinopse: 'Uma oficina e uma apresentação pública sobre a liberdade dentro de casa, a partir de um texto de Adolf Loos.' },
-      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Various locations', natureza: 'Training',
+      en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Casa da Música', natureza: 'Training',
             sinopse: 'A workshop and a public showing about freedom inside the house, departing from a text by Adolf Loos.' },
       alt: { pt: 'A apresentação final vista de trás da plateia: uma criança aparece na janela redonda da casa.',
              en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' } }
@@ -3934,7 +4004,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       pt: {
         natureza: 'Formação',
-        onde:     'Vários locais · Mês da Arquitectura da Maia',
+        onde:     'Casa da Música',
         quando:   'Novembro de 2024',
         resumo:   'Uma oficina e uma apresentação pública sobre a liberdade dentro de casa, a partir de um texto de Adolf Loos.',
         texto: [
@@ -3954,7 +4024,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       en: {
         natureza: 'Training',
-        onde:     'Various locations · Maia Architecture Month',
+        onde:     'Casa da Música',
         quando:   'November 2024',
         resumo:   'A workshop and a public showing about freedom inside the house, departing from a text by Adolf Loos.',
         texto: [
@@ -4051,27 +4121,37 @@ html.menu-open .menu::before { opacity: 1; }
   function lg() { return state.lang === 'en' ? 'en' : 'pt'; }
   function evTexto(e) { return e[lg()]; }
   function evAlt(e) { return e.alt[lg()]; }
+
+  /* Há eventos que duram mais do que um dia — três noites no Theatro Circo,
+     uma semana de residência —, e desses a lista guarda o último em
+     'diaFim'. Nenhum intervalo passa a fronteira do mês, e por isso basta o
+     número: "13–15 de outubro" escreve o mês uma vez só. Quem não traz
+     'diaFim' dura um dia e nada disto lhe toca. */
+  function evUmDia(e) { return !e.diaFim || e.diaFim === e.dia; }
+  function evDiaTxt(e) { return evUmDia(e) ? String(e.dia) : e.dia + '–' + e.diaFim; }
   function evData(e) {
     if (!e.mes) return String(e.ano || '');
     return lg() === 'en'
-      ? e.dia + ' ' + MESES.en[e.mes - 1]
-      : e.dia + ' de ' + MESES.pt[e.mes - 1];
+      ? evDiaTxt(e) + ' ' + MESES.en[e.mes - 1]
+      : evDiaTxt(e) + ' de ' + MESES.pt[e.mes - 1];
   }
   /* "21h30 · quarta · 18 mar": a hora primeiro, que é o que falta saber a
      quem já viu a data em corpo grande no cartaz. O dia da semana sai da
      data e não da lista — uma data escrita duas vezes é uma data para andar
      desencontrada. */
+  /* A um intervalo não se põe dia da semana: "quarta · 13–15 out" diz uma
+     verdade sobre o primeiro dia e uma mentira sobre os outros dois. Vem
+     vazio, e o join lá em baixo deita fora o que vier vazio — como já fazia
+     à hora de quem não a tem. */
   function evSemana(e) {
+    if (!evUmDia(e)) return '';
     return SEMANA[lg()][new Date(evAnoDe(e), e.mes - 1, e.dia).getDay()];
   }
   function evDiaMes(e) {
-    return e.dia + ' ' + MESES_C[lg()][e.mes - 1];
+    return evDiaTxt(e) + ' ' + MESES_C[lg()][e.mes - 1];
   }
   function evQuando(e) {
-    var partes = [];
-    if (e.hora) partes.push(e.hora);
-    partes.push(evSemana(e), evDiaMes(e));
-    return partes.join(' · ');
+    return [e.hora, evSemana(e), evDiaMes(e)].filter(Boolean).join(' · ');
   }
 
   /* O mesmo, com o mês por extenso: na lista dos projetos há largura para
@@ -4079,7 +4159,7 @@ html.menu-open .menu::before { opacity: 1; }
      português o mês é nome comum e escreve-se em caixa baixa; em inglês não. */
   function evDiaMesLongo(e) {
     var m = MESES[lg()][e.mes - 1];
-    return lg() === 'en' ? e.dia + ' ' + m : e.dia + ' de ' + m.toLowerCase();
+    return lg() === 'en' ? evDiaTxt(e) + ' ' + m : evDiaTxt(e) + ' de ' + m.toLowerCase();
   }
   /* "25 de abril de 2026": a data por extenso com o ano atrás. É a que o
      cartaz de um concluído põe ao lado do calendário e a que a lista de
@@ -4088,22 +4168,17 @@ html.menu-open .menu::before { opacity: 1; }
     return evDiaMesLongo(e) + (lg() === 'en' ? ' ' : ' de ') + e.ano;
   }
   function evQuandoLongo(e) {
-    var partes = [];
-    if (e.hora) partes.push(e.hora);
-    partes.push(evSemana(e), evDiaMesLongo(e));
-    return partes.join(' · ');
+    return [e.hora, evSemana(e), evDiaMesLongo(e)].filter(Boolean).join(' · ');
   }
 
   /* As mesmas duas datas em ponto pequeno, para a lista em telefone
      estreito: o dia da semana em três letras e o mês sem o "de". */
   function evSemanaCurta(e) {
+    if (!evUmDia(e)) return '';
     return SEMANA_C[lg()][new Date(evAnoDe(e), e.mes - 1, e.dia).getDay()];
   }
   function evQuandoCurto(e) {
-    var partes = [];
-    if (e.hora) partes.push(e.hora);
-    partes.push(evSemanaCurta(e), evDiaMes(e));
-    return partes.join(' · ');
+    return [e.hora, evSemanaCurta(e), evDiaMes(e)].filter(Boolean).join(' · ');
   }
   function evDataCurta(e) {
     return evDiaMes(e) + ' ' + e.ano;
@@ -4592,7 +4667,8 @@ html.menu-open .menu::before { opacity: 1; }
 
   function calEventosNoDia(ano, mes, dia) {
     return EVENTOS.filter(function (e) {
-      return evAnoDe(e) === ano && e.mes === mes && e.dia === dia;
+      return evAnoDe(e) === ano && e.mes === mes &&
+             dia >= e.dia && dia <= (evUmDia(e) ? e.dia : e.diaFim);
     });
   }
 
