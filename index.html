@@ -2204,6 +2204,40 @@ html[lang="en"] .title-art {
 .ficha__seta--ant { justify-self: start; }
 .ficha__seta--seg { justify-self: end; }
 
+/* --- o desfile dos espaços, no menu --- */
+
+/* Reaproveita a caixa e o rodapé do desfile das fotografias de um projeto.
+   Só duas coisas mudam. A primeira: contain em vez de cover. As nove imagens
+   não têm todas a mesma forma — há fotografias ao alto da nave e plantas
+   muito ao baixo — e um cover em 4:3 cortava as pontas às duas: à nave a
+   cabeça, à planta de faseamento a legenda das fases, que é metade do que
+   ela tem para dizer. Com contain nenhuma é cortada, e o que sobra é a
+   moldura, que fica igual para todas. */
+.espacos__palco {
+  background: none;
+  border: 1.5px solid currentColor;
+}
+.espacos__palco img { object-fit: contain; }
+
+/* A segunda: no meio do rodapé está a legenda, e não a conta. As nove
+   legendas vivem todas aqui, e vê-se a da fotografia da vez — é o que lhes
+   dá uma chave data-i18n a cada uma e deixa o applyLang traduzi-las. O corpo
+   é o das legendas das fotografias (.shot figcaption), que é o que estas
+   eram antes de o desfile as juntar. */
+.espacos__legenda {
+  min-width: 0;
+  padding: 0 12px;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: .8;
+  line-height: 1.4;
+}
+.espacos__legenda > span { display: none; }
+.espacos__legenda > span.is-on { display: block; }
+
 /* A conta, no corpo pequeno dos rótulos e sem caixa nenhuma: entre duas
    setas soltas, um contorno à volta de dois algarismos era a única coisa
    desenhada num rodapé que não tem de se dar a ver. Fica a tabular para os
@@ -2331,6 +2365,14 @@ html.menu-open .menu::before { opacity: 1; }
   align-items: baseline;
 }
 .menu-row + .menu-row { margin-top: 34px; }
+
+/* Salvo quando o corpo não começa por uma linha de texto. A linha dos
+   espaços começa por uma fotografia, e a baseline de uma caixa dessas é a
+   última linha que tem lá dentro — a legenda, no rodapé do desfile. O
+   título descia meio ecrã para ir ter com ela, e ficava a assentar debaixo
+   da fotografia em vez de ao lado dela. Sem primeira linha a que assentar,
+   o que resta é o topo. */
+.menu-row--topo { align-items: start; }
 
 .menu-row__title {
   padding-right: var(--menu-folga);
@@ -3074,7 +3116,7 @@ html.menu-open .menu::before { opacity: 1; }
         </div>
       </div>
 
-      <div class="menu-row">
+      <div class="menu-row menu-row--topo">
         <div class="menu-row__title">
           <h3 class="menu__h3"><span class="title-txt" data-i18n="secEspacos">espaços</span><span
                 class="title-art title-art--espacar" aria-hidden="true"
@@ -3082,23 +3124,50 @@ html.menu-open .menu::before { opacity: 1; }
                        --art-en: url(&quot;fonts/spaces.svg&quot;); --art-w-en: 145.7802734; --art-h-en: 34.939828; --art-base-en: 9.516;"></span></h3>
         </div>
         <div class="menu-row__body">
-          <ul class="menu__list-plain">
-            <li data-i18n="espLi1">Estúdio / palco</li>
-            <li data-i18n="espLi2">Igreja: espaço multiusos</li>
-            <li data-i18n="espLi3">Alojamento: residências artísticas</li>
-            <li data-i18n="espLi4">Restauração · estacionamento</li>
-            <li data-i18n="espLi5">Floresta: percursos de lazer e pedagógicos</li>
-            <li data-i18n="espLi6">Clareira: espaço para festival</li>
-          </ul>
-          <div class="shots">
-            <figure class="shot">
-              <img src="dossier/assets/vista-aerea.jpg" data-i18n-alt="altVista" alt="Implantação aérea do complexo da antiga Igreja de Retorta" loading="lazy">
-              <figcaption data-i18n="capVista">Implantação · 18.000 m²</figcaption>
-            </figure>
-            <figure class="shot">
-              <img src="dossier/assets/faseamento.jpg" data-i18n-alt="altFase" alt="Planta de faseamento da intervenção na antiga Igreja de Retorta" loading="lazy">
-              <figcaption data-i18n="capFase">Faseamento da intervenção</figcaption>
-            </figure>
+          <!-- O desfile dos espaços é o mesmo dos cartazes e o das fotografias
+               de um projeto: a caixa deles (.evcard__foto) e o mesmo
+               evSlideshow a dar-lhe o clique, o deslize e as setas. O que
+               muda é o meio do rodapé — aqui as nove imagens não são nove
+               momentos do mesmo, são sítios e plantas diferentes, e a conta
+               "1/9" não dizia qual. Fica a legenda no lugar dela.
+
+               As legendas estão todas no HTML, uma por fotografia, e só a da
+               vez se vê: assim cada uma tem a sua chave data-i18n e é o
+               applyLang que as traduz, sem o desfile ter de saber a língua.
+
+               O object-fit aqui é contain, e não o cover dos cartazes: entre
+               as nove há fotografias ao alto e plantas ao baixo, e uma planta
+               cortada aos lados perde a legenda das fases. -->
+          <div class="ficha__fotos espacos" id="espacos-desfile">
+            <div class="evcard__foto espacos__palco" role="region" tabindex="0"
+                 data-i18n-alabel="espDesfile" aria-label="Fotografias do espaço">
+              <img src="dossier/assets/hero.jpg" class="is-on" data-i18n-alt="altEsp1" alt="A antiga Igreja de Retorta e a casa do padre, ao fim da tarde" loading="eager" draggable="false">
+              <img src="dossier/assets/vista-aerea.jpg" data-i18n-alt="altEsp2" alt="Levantamento aéreo do terreno, com o limite da propriedade marcado a vermelho" loading="lazy" draggable="false">
+              <img src="dossier/assets/faseamento.jpg" data-i18n-alt="altEsp3" alt="Planta de faseamento da intervenção, com as cinco fases a cores diferentes" loading="lazy" draggable="false">
+              <img src="dossier/assets/nave-2025.jpg" data-i18n-alt="altEsp4" alt="A nave da igreja ainda em terra batida, com os altares por recuperar" loading="lazy" draggable="false">
+              <img src="dossier/assets/nave-2026.jpg" data-i18n-alt="altEsp5" alt="A mesma nave já com pavimento de madeira novo" loading="lazy" draggable="false">
+              <img src="dossier/assets/arco.jpg" data-i18n-alt="altEsp6" alt="O interior em obra visto através do arco de pedra, com tábuas empilhadas no chão" loading="lazy" draggable="false">
+              <img src="dossier/assets/altares.jpg" data-i18n-alt="altEsp7" alt="Pormenor de um dos altares dourados, encostado à parede de granito" loading="lazy" draggable="false">
+              <img src="dossier/assets/scene-estudio.jpg" data-i18n-alt="altEsp8" alt="Proposta: estúdio de dança com bailarinas e plateia sentada ao lado" loading="lazy" draggable="false">
+              <img src="dossier/assets/scene-aerea.jpg" data-i18n-alt="altEsp9" alt="Proposta: o complexo visto de cima à noite, com plateia iluminada ao ar livre" loading="lazy" draggable="false">
+            </div>
+            <div class="ficha__fotosnav">
+              <button type="button" class="ficha__seta ficha__seta--ant"
+                      data-i18n-alabel="espAnt" aria-label="Imagem anterior">←</button>
+              <span class="espacos__legenda">
+                <span class="is-on" data-i18n="capEsp1">A igreja e a casa do padre</span>
+                <span data-i18n="capEsp2">Implantação · 18.000 m²</span>
+                <span data-i18n="capEsp3">Faseamento da intervenção</span>
+                <span data-i18n="capEsp4">Antes · a nave sem pavimento</span>
+                <span data-i18n="capEsp5">Depois · pavimento novo</span>
+                <span data-i18n="capEsp6">Interior · o arco e a obra</span>
+                <span data-i18n="capEsp7">Altares · recuperação prevista</span>
+                <span data-i18n="capEsp8">Proposta · estúdio de dança</span>
+                <span data-i18n="capEsp9">Proposta · vista noturna</span>
+              </span>
+              <button type="button" class="ficha__seta ficha__seta--seg"
+                      data-i18n-alabel="espSeg" aria-label="Imagem seguinte">→</button>
+            </div>
           </div>
         </div>
       </div>
@@ -3279,8 +3348,25 @@ html.menu-open .menu::before { opacity: 1; }
       chegarLi1: 'Santa Clara / V. do Conde metro — 5–15 min', chegarLi2: 'Historic centre — 10–20 min', chegarLi3: 'Beaches — 20–30 min',
       chegarLi4: 'Trindade / Porto metro — 40–60 min', chegarLi5: 'Sá Carneiro Airport — 20–50 min',
       espP: 'It is a collective, and also a physical space, in Vila do Conde. By rehabilitating the architectural complex of the former Church of Retorta, the aim is to create there an intergenerational meeting point, connected to the arts and to nature.',
-      espLi1: 'Studio / stage', espLi2: 'Church: multipurpose space', espLi3: 'Lodging: artistic residencies',
-      espLi4: 'Food · parking', espLi5: 'Forest: leisure and educational trails', espLi6: 'Clearing: festival space',
+      espDesfile: 'Photographs of the space', espAnt: 'Previous image', espSeg: 'Next image',
+      altEsp1: 'The former Church of Retorta and the priest’s house, late in the day',
+      capEsp1: 'The church and the priest’s house',
+      altEsp2: 'Aerial survey of the site, with the property boundary marked in red',
+      capEsp2: 'Site · 18,000 m²',
+      altEsp3: 'Phasing plan for the works, with the five phases in different colours',
+      capEsp3: 'Phasing of the works',
+      altEsp4: 'The nave of the church still bare ground, the altars yet to be restored',
+      capEsp4: 'Before · the nave with no floor',
+      altEsp5: 'The same nave with its new wooden floor',
+      capEsp5: 'After · the new floor',
+      altEsp6: 'The interior under works, seen through the stone arch, with boards stacked on the floor',
+      capEsp6: 'Interior · the arch and the works',
+      altEsp7: 'Detail of one of the gilded altars, against the granite wall',
+      capEsp7: 'Altars · restoration planned',
+      altEsp8: 'Proposal: dance studio with dancers and an audience seated alongside',
+      capEsp8: 'Proposal · the dance studio',
+      altEsp9: 'Proposal: the complex seen from above at night, with a lit open-air audience',
+      capEsp9: 'Proposal · at night',
       mapsLink: 'Open in maps',
 
       /* --- informações --- */
@@ -3326,10 +3412,6 @@ html.menu-open .menu::before { opacity: 1; }
       /* --- legendas e textos alternativos --- */
       capEstudio: 'Proposal · dance studio with seating',
       altEstudio: 'Proposal: dance studio with seating',
-      capVista: 'Layout · 18,000 m²',
-      altVista: 'Aerial layout of the former Retorta Church complex',
-      capFase: 'Phasing of the works',
-      altFase: 'Phasing plan for the works at the former Retorta Church',
       altAerea: 'Aerial view of Retorta: a Sineira, the bridge over the river Ave, the schools and surroundings',
       alt5: 'Performer leaping down an aisle of shelving',
       altSaco: 'Natural canvas tote bag printed with the Sineira triangle in blue',
@@ -4990,6 +5072,39 @@ html.menu-open .menu::before { opacity: 1; }
     /* A abertura fica para depois do primeiro layout: o applyRoute mede
        cartões, e antes disso a grelha ainda não tem alturas. */
     window.addEventListener('load', function () { applyRoute(at.route); });
+  }());
+
+  /* ---------- o desfile dos espaços ---------- */
+
+  /* O mesmo evSlideshow das outras fotografias, com o rodapé escrito no HTML
+     em vez de montado aqui: as legendas precisam de chave data-i18n para o
+     applyLang as traduzir, e uma legenda que o JS escrevesse tinha de ser
+     reescrita a cada troca de língua. Assim o que este bloco faz é só ligar
+     as setas e acender a legenda da imagem da vez.
+
+     As setas ficam de fora do palco de propósito, como lá: dentro dele, o
+     clique que avança apanhava também a seta de recuar. */
+  (function () {
+    var caixa = document.getElementById('espacos-desfile');
+    if (!caixa) return;
+
+    var palco = caixa.querySelector('.espacos__palco');
+    var legendas = caixa.querySelectorAll('.espacos__legenda > span');
+    var total = palco.querySelectorAll('img').length;
+    if (!total) return;
+
+    var atual = 0;
+    var ir = evSlideshow(palco, total, function (i) {
+      atual = i;
+      for (var k = 0; k < legendas.length; k++) {
+        legendas[k].classList.toggle('is-on', k === i);
+      }
+    });
+
+    caixa.querySelector('.ficha__seta--ant')
+         .addEventListener('click', function () { ir(atual - 1); });
+    caixa.querySelector('.ficha__seta--seg')
+         .addEventListener('click', function () { ir(atual + 1); });
   }());
 
   /* ---------- mosaicos (+ / −) ---------- */
