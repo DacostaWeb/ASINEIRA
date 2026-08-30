@@ -1363,12 +1363,19 @@ html[lang="en"] .title-art {
 .events--prox,
 .events--conc { margin-top: 6px; }
 
-/* Enquanto a data vai por extenso, a coluna dos sinais não precisa dos 22%
+/* Enquanto a data vai por extenso, a coluna dos sinais não precisa dos 30%
    que ela precisa, e uma coluna quase vazia entre o rótulo e o título só
    fazia buraco. Abaixo dos 1080 a data encurta, as duas listas voltam à
-   mesma repartição e os títulos ficam um debaixo do outro. */
+   mesma repartição e os títulos ficam um debaixo do outro.
+
+   Os 90px são os 50px que os três sinais medem mais 40px de folga. Estiveram
+   em 62px — os sinais e o respiro da célula, e mais nada — enquanto a coluna
+   do título tinha medida escrita e a tabela repartia o que sobrava por
+   todas. Desde que o título passou a ficar com o que sobra, essa repartição
+   deixou de existir e os 62px passaram a ser mesmo 62: o título encostava
+   aos ícones. A folga tem de estar aqui, que é onde se lê. */
 @media (min-width: 1080px) {
-  .events--conc td:nth-child(1) { width: 62px; }
+  .events--conc td:nth-child(1) { width: 90px; }
 }
 
 /* O que ficou de cada concluído, na primeira coluna: os mesmos três sinais
@@ -3943,7 +3950,6 @@ html.menu-open .menu::before { opacity: 1; }
 
     { dia: 24, mes: 10, ano: 2026, hora: '21h30',
       img: 'dossier/assets/hero.jpg',
-      imgs: ['dossier/assets/hero.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/vista-aerea.jpg'],
       bilhetes: null,
       pt: { titulo: "Inauguração d'a Sineira!", sitio: 'Igreja e Jardim', natureza: 'Apresentação',
             sinopse: 'A casa abre as portas: o adro, a nave e o auditório mostram-se pela primeira vez a quem cá vive.' },
@@ -3953,7 +3959,6 @@ html.menu-open .menu::before { opacity: 1; }
 
     { dia: 2, mes: 11, ano: 2026,
       img: 'dossier/assets/nave-2026.jpg',
-      imgs: ['dossier/assets/nave-2026.jpg', 'dossier/assets/altares.jpg', 'dossier/assets/arco.jpg'],
       bilhetes: null,
       pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim', natureza: 'Formação',
             sinopse: 'A casa passa a ter semana: as aulas e os ensaios entram na nave e ficam.' },
@@ -3963,8 +3968,7 @@ html.menu-open .menu::before { opacity: 1; }
              en: 'The nave of the former church set up for classes and rehearsals.' } },
 
     { dia: 19, mes: 12, ano: 2026,
-      img: 'dossier/assets/scene-estudio.jpg',
-      imgs: ['dossier/assets/scene-estudio.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/faseamento.jpg'],
+      img: 'dossier/assets/altares.jpg',
       bilhetes: null,
       pt: { titulo: 'Workshop', sitio: 'Igreja e Jardim',
             natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR',
@@ -3972,23 +3976,21 @@ html.menu-open .menu::before { opacity: 1; }
       en: { titulo: 'Workshop', sitio: 'Church and Garden',
             natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE',
             sinopse: 'A whole day of working together, from the morning exercise to a showing of the work at dusk.' },
-      alt: { pt: 'O estúdio da Sineira preparado para uma oficina.',
-             en: 'The Sineira studio set up for a workshop.' } },
+      alt: { pt: 'Os altares da antiga igreja, ao fundo da nave.',
+             en: 'The altars of the former church, at the far end of the nave.' } },
 
     { dia: 4, diaFim: 9, mes: 1, ano: 2027,
-      img: 'dossier/assets/altares.jpg',
-      imgs: ['dossier/assets/altares.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/scene-estudio.jpg'],
+      img: 'dossier/assets/arco.jpg',
       bilhetes: null,
       pt: { titulo: 'Residência de Criação', sitio: 'Igreja e Jardim', natureza: 'Criação',
             sinopse: 'Uma semana de casa entregue a quem cria: o trabalho faz-se aqui, do princípio ao fim.' },
       en: { titulo: 'Residência de Criação', sitio: 'Church and Garden', natureza: 'Creation',
             sinopse: 'A week with the house given over to those who make: the work happens here, start to finish.' },
-      alt: { pt: 'Os altares da antiga igreja, ao fundo da nave.',
-             en: 'The altars of the former church, at the far end of the nave.' } },
+      alt: { pt: 'O arco da antiga igreja visto de dentro da nave.',
+             en: 'The arch of the former church seen from inside the nave.' } },
 
     { dia: 8, diaFim: 13, mes: 2, ano: 2027,
       img: 'dossier/assets/arco.jpg',
-      imgs: ['dossier/assets/arco.jpg', 'dossier/assets/vista-aerea.jpg', 'dossier/assets/nave-2026.jpg'],
       bilhetes: null,
       pt: { titulo: 'Residência de Criação', sitio: 'Igreja e Jardim', natureza: 'Criação',
             sinopse: 'A segunda semana de residência do ano, outra vez com a casa toda ao serviço de uma peça a nascer.' },
@@ -4485,6 +4487,12 @@ html.menu-open .menu::before { opacity: 1; }
   /* A caixa de um cartaz, a mesma nos próximos e nos concluídos: a
      fotografia (agora um desfile), a legenda — título, "+" e data — e a
      linha de detalhes por fora. */
+  /* Um cartaz com uma fotografia só é o caso normal, e é por isso que a
+     lista guarda o 'img' sempre e o 'imgs' quase nunca: o desfile é do Voar,
+     que tem um arquivo de nove fotografias de uma peça que já se fez. Quem
+     ainda não aconteceu tem a imagem da casa onde vai acontecer, e três
+     vistas da mesma casa a passar não são um desfile — são a mesma coisa
+     três vezes. */
   function evFotosDe(e) {
     if (e.imgs && e.imgs.length) return e.imgs.slice();
     return e.img ? [e.img] : [];
