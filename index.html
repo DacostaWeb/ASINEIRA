@@ -1048,7 +1048,6 @@ html[lang="en"] .title-art {
 .aerial__tag--home   { left: 92%; top: 96%; }
 .aerial__tag--bridge { left: 24%; top: 58%; }
 .aerial__tag--school { left: 70%; top: 35%; }
-.aerial__tag--metro  { left: 15%; top: 11%; }
 
 @media (max-width: 640px) {
   .aerial__tag { font-size: 9px; padding: 4px 7px; border-radius: 10px; }
@@ -3466,13 +3465,6 @@ html.menu-open .menu::before { opacity: 1; }
                 </span>
                 <span class="aerial__time"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg>3 min<svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg>14 min</span>
               </span>
-              <span class="aerial__tag aerial__tag--metro">
-                <span class="aerial__nome">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
-                  <span data-i18n="row3">Metro Vila do Conde</span>
-                </span>
-                <span class="aerial__time"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg>4 min<svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg>24 min</span>
-              </span>
             </div>
 
             <a class="menu__maps" href="https://www.google.com/maps/search/?api=1&amp;query=Igreja+de+Retorta%2C+Vila+do+Conde" target="_blank" rel="noopener">
@@ -3483,7 +3475,7 @@ html.menu-open .menu::before { opacity: 1; }
               <li>
                 <span class="rota__nome">
                   <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
-                  <span data-i18n="dest1">Estação de Metro Santa Clara / Vila do Conde</span>
+                  <span data-i18n="dest1">Estação de Metro Santa Clara</span>
                 </span>
                 <span class="rota__ts">
                   <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>5 min</span>
@@ -3550,7 +3542,7 @@ html.menu-open .menu::before { opacity: 1; }
                    um acaba onde começa a etiqueta que aponta. As posições das
                    etiquetas estão nas mesmas fracções, no CSS. -->
               <svg class="dossier__raios" viewBox="0 0 1000 760" aria-hidden="true">
-                <line x1="601" y1="380" x2="540" y2="150"></line>
+                <line x1="601" y1="380" x2="540" y2="124"></line>
                 <line x1="601" y1="380" x2="355" y2="240"></line>
                 <line x1="601" y1="380" x2="355" y2="565"></line>
                 <line x1="601" y1="380" x2="700" y2="555"></line>
@@ -3558,7 +3550,7 @@ html.menu-open .menu::before { opacity: 1; }
               </svg>
 
               <div class="dossier__no dossier__no--n">
-                <h4 data-i18n="dest1">Estação de Metro Santa Clara / Vila do Conde</h4>
+                <h4 data-i18n="dest1">Estação de Metro Santa Clara</h4>
                 <div class="dossier__ts">
                   <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-i18n="modoBici">de bicicleta</span>5 min</span>
                   <span class="dossier__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-i18n="modoPe">a pé</span>15 min</span>
@@ -3620,7 +3612,7 @@ html.menu-open .menu::before { opacity: 1; }
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row" data-i18n="dest1">Estação de Metro Santa Clara / Vila do Conde</th>
+                  <th scope="row" data-i18n="dest1">Estação de Metro Santa Clara</th>
                   <td>15</td><td>5</td>
                   <td class="tabl__vazio" aria-hidden="true">—</td><td class="tabl__vazio" aria-hidden="true">—</td>
                 </tr>
@@ -3660,7 +3652,7 @@ html.menu-open .menu::before { opacity: 1; }
 
             <div class="barras">
               <div class="barras__g">
-                <p class="barras__nome"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span data-i18n="dest1">Estação de Metro Santa Clara / Vila do Conde</span></p>
+                <p class="barras__nome"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span data-i18n="dest1">Estação de Metro Santa Clara</span></p>
                 <div class="barras__l">
                   <svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg>
                   <span class="barras__b" style="--m: 5" aria-hidden="true"></span>
@@ -3966,11 +3958,11 @@ html.menu-open .menu::before { opacity: 1; }
       /* --- como chegar? --- */
       chegarH2: 'how to get here?',
       secEspacos: 'Spaces',
-      row1: 'Retorta Bridge / Aquaculture Station', row2: 'Secondary and primary schools / Vocational school', row3: 'Vila do Conde metro',
+      row1: 'Retorta Bridge / Aquaculture Station', row2: 'Secondary and primary schools / Vocational school',
       /* Os cinco destinos e os quatro meios servem as quatro versões do
          "como chegar" ao mesmo tempo: cada chave aparece em vários sítios
          do HTML e o applyLang traduz-lhe todas as cópias. */
-      dest1: 'Santa Clara / Vila do Conde metro station',
+      dest1: 'Santa Clara metro station',
       dest2: 'Historic centre of Vila do Conde',
       dest3: 'Vila do Conde beaches',
       dest4: 'Trindade / Porto metro station',
