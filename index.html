@@ -922,6 +922,14 @@ html[lang="en"] .title-art {
   text-transform: uppercase;
 }
 
+/* As ligações do rodapé não se vestem de ligação: o rodapé já tinha este
+   desenho antes de levar a algum lado e continua a ter o mesmo. O que
+   ganham é o sublinhado ao passar e o anel do foco — que é o que diz que
+   ali se carrega, e o que dá o caminho a quem anda pelo teclado. */
+.tile__capl { color: inherit; text-decoration: none; }
+.tile__capl:hover { text-decoration: underline; text-underline-offset: 3px; }
+.tile__capl:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
 /* Sem rodapé em versaletes, é o botão que assenta no fundo do cartão: o
    margin-top: auto empurra-o para lá, como fazia a legenda. */
 .tile__cta {
@@ -3050,7 +3058,7 @@ html.menu-open .menu::before { opacity: 1; }
       <table class="events events--conc"><tbody id="ev-concluidos"></tbody></table>
 
       <div class="tile__body" data-tile-body="Eventos">
-        <div class="panel-section">
+        <div class="panel-section" id="ev-sec-prox">
           <h3 class="panel-section__title" data-i18n="secProx">Próximos</h3>
           <div class="evgrid" id="ev-grelha"></div>
         </div>
@@ -3060,7 +3068,7 @@ html.menu-open .menu::before { opacity: 1; }
           <div class="evgrid evgrid--conc" id="ev-grelha-conc"></div>
         </div>
 
-        <div class="panel-section panel-section--cal">
+        <div class="panel-section panel-section--cal" id="ev-sec-cal">
           <div class="cal">
             <div class="cal__side">
               <h3 class="panel-section__title" data-i18n="secCal">Calendário</h3>
@@ -3085,7 +3093,16 @@ html.menu-open .menu::before { opacity: 1; }
         </div>
       </div>
 
-      <p class="tile__caption" data-i18n="capEv">Próximos · concluídos · calendário</p>
+      <!-- O rodapé em versaletes nomeava as três secções do painel e não
+           levava a nenhuma. Cada nome é agora a ligação para a sua: o
+           endereço é o do painel, que é o único que existe, e o clique leva
+           depois até à secção. O data-i18n vai em cada <a> e não no <p>, que
+           a troca de idioma escreve textContent e apagava as ligações. -->
+      <p class="tile__caption">
+        <a class="tile__capl" href="#eventos" data-sec="ev-sec-prox" data-i18n="capEvProx">Próximos</a> ·
+        <a class="tile__capl" href="#eventos" data-sec="ev-sec-conc" data-i18n="capEvConc">concluídos</a> ·
+        <a class="tile__capl" href="#eventos" data-sec="ev-sec-cal" data-i18n="capEvCal">calendário</a>
+      </p>
     </div>
     <button class="tile__toggle" type="button" data-tile="Eventos" aria-expanded="false" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
@@ -3185,7 +3202,11 @@ html.menu-open .menu::before { opacity: 1; }
       <p class="tile__lead" data-i18n="infoP">Quem somos, onde estamos e como falar connosco: tudo o que há para saber sobre a Sineira.</p>
 
 
-      <p class="tile__caption" data-i18n="capInfo">Sobre nós - acessos - contactos</p>
+      <p class="tile__caption">
+        <a class="tile__capl" href="#sobre" data-menu-link="menu-sobre" data-i18n="capInfoSobre">Sobre nós</a> -
+        <a class="tile__capl" href="#onde" data-menu-link="menu-onde" data-i18n="capInfoAcess">acessos</a> -
+        <a class="tile__capl" href="#contactos" data-menu-link="menu-fala" data-i18n="capInfoCont">contactos</a>
+      </p>
     </div>
     <button class="tile__toggle" type="button" data-menu="menu-sobre" aria-label="Mostrar mais"><span class="tile__toggle-mark">+</span></button>
   </article>
@@ -3620,7 +3641,9 @@ html.menu-open .menu::before { opacity: 1; }
          línguas dentro: aqui ficam só os títulos das secções. */
       evH2: 'events',
       secProx: 'Upcoming', secConc: 'completed', secCal: 'Calendar', secProj: 'Every event',
-      capEv: 'Upcoming · completed · calendar',
+      /* Os três nomes do rodapé, um por ligação: a legenda deixou de ser uma
+         frase só e a tradução acompanhou-a. */
+      capEvProx: 'Upcoming', capEvConc: 'completed', capEvCal: 'calendar',
 
       /* --- atividades --- */
       atH2: 'activities',
@@ -3674,7 +3697,7 @@ html.menu-open .menu::before { opacity: 1; }
       /* --- informações --- */
       infoH2: 'information',
       infoP: 'Who we are, where we are and how to reach us: everything there is to know about a Sineira.',
-      capInfo: 'About us - access - contacts',
+      capInfoSobre: 'About us', capInfoAcess: 'access', capInfoCont: 'contacts',
 
       /* --- fala connosco --- */
       falaH2: 'talk to us!',
@@ -3894,6 +3917,7 @@ html.menu-open .menu::before { opacity: 1; }
     btnPt.style.opacity = lang === 'pt' ? '1' : '.38';
     btnEn.style.opacity = lang === 'en' ? '1' : '.38';
     amigoCta.href = amigoMailto(lang);
+    capHrefs();
 
     /* Depois do texto, porque é o lang do <html> que escolhe o desenho. */
     partirTitulos();
@@ -5357,6 +5381,7 @@ html.menu-open .menu::before { opacity: 1; }
     { pt: 'eventos',    en: 'events',     tile: 'Eventos' },
     { pt: 'onde',       en: 'where',      menu: 'menu-onde' },
     { pt: 'sobre',      en: 'about',      menu: 'menu-sobre' },
+    { pt: 'contactos',  en: 'contacts',   menu: 'menu-fala' },
 
     /* As atividades e o amigo da Sineira dizem "brevemente" e não abrem: sem
        rota, um #atividades colado à mão não encontra nada e o parseHash
@@ -5606,6 +5631,39 @@ html.menu-open .menu::before { opacity: 1; }
   document.querySelectorAll('[data-menu]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       go(routeByMenu(btn.getAttribute('data-menu')));
+    });
+  });
+
+  /* --- os rodapés em versaletes, que agora levam a algum lado --- */
+
+  /* Os endereços mudam com o idioma como todos os outros — o "sobre" é
+     "about" em inglês —, e por isso escrevem-se aqui e não à mão no HTML.
+     Lá ficam escritos os portugueses, que é o que serve enquanto o JS não
+     chega e o que se lê ao ver o ficheiro. */
+  function capHrefs() {
+    if (!ROUTES) return;
+    var ev = routeByTile('Eventos');
+    document.querySelectorAll('[data-sec]').forEach(function (a) {
+      if (ev) a.href = '#' + slugOf(ev, state.lang);
+    });
+    document.querySelectorAll('[data-menu-link]').forEach(function (a) {
+      var r = routeByMenu(a.getAttribute('data-menu-link'));
+      if (r) a.href = '#' + slugOf(r, state.lang);
+    });
+  }
+  capHrefs();
+
+  /* As três dos eventos levam todas ao mesmo endereço — o do painel, que é o
+     único que existe — e é o clique que as separa, levando cada uma até à
+     sua secção. Quem abrir a ligação num separador novo fica no princípio do
+     painel, que é o que o endereço promete e não mente a ninguém.
+
+     As três das informações não precisam de nada disto: cada secção do menu
+     tem endereço seu, e o <a> sozinho faz o caminho todo. */
+  document.querySelectorAll('[data-sec]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      evAbrePainel(a.getAttribute('data-sec'));
     });
   });
 
