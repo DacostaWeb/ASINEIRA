@@ -1239,11 +1239,18 @@ html[lang="en"] .title-art {
   table-layout: fixed;
 }
 
+/* Três colunas têm medida e a do título não tem: fica com o que sobrar. É
+   a única das quatro que se pode partir em duas linhas sem se ler pior, e
+   por isso é ela quem absorve a folga — as outras ou cabem numa linha ou
+   estão a mentir sobre o seu tamanho.
+
+   A repartição continua a valer à letra nas duas tabelas, que é o que as
+   mantém alinhadas uma com a outra: as duas têm a mesma largura e as mesmas
+   regras, e por isso a coluna que sobra sobra igual nas duas. */
 .events td { padding: 4px 12px 4px 0; vertical-align: top; }
 .events td:nth-child(1) { width: 22%; }
-.events td:nth-child(2) { width: 32%; }
-.events td:nth-child(3) { width: 24%; }
-.events td:last-child { width: 22%; padding-right: 0; text-align: right; }
+.events td:nth-child(3) { width: 23%; }
+.events td:last-child { width: 18%; padding-right: 0; text-align: right; }
 
 .events__date { white-space: nowrap; }
 
@@ -1264,7 +1271,12 @@ html[lang="en"] .title-art {
    cai aos 598. */
 .events__d--curta { display: none; }
 
-@media (max-width: 1079px) and (min-width: 599px), (max-width: 419px) {
+/* A data por extenso é a das quatro colunas; onde a tabela cai para duas,
+   a data encurta. A fronteira de baixo passou dos 420 aos 450 — os 420 eram
+   a medida de "26 de setembro", e um intervalo contado como "13, 14 e 15 de
+   outubro" pede quase o dobro. Aos 450 é onde as quatro colunas voltam, e
+   as duas coisas passaram a mudar ao mesmo tempo, que é como se explicam. */
+@media (max-width: 1079px) and (min-width: 599px), (max-width: 449px) {
   .events__d--longa { display: none; }
   .events__d--curta { display: inline; }
 }
@@ -1285,15 +1297,35 @@ html[lang="en"] .title-art {
 @media (max-width: 819px) and (min-width: 599px), (max-width: 449px) {
   .events td:nth-child(3), .events td:last-child { display: none; }
   .events td:nth-child(1) { width: 40%; }
-  .events td:nth-child(2) { width: 60%; }
 }
 
-@media (max-width: 598px) and (min-width: 450px) {
-  .events td:nth-child(1) { width: 33%; }
-  .events td:nth-child(2) { width: 27%; }
-  .events td:nth-child(3) { width: 23%; }
-  .events td:last-child   { width: 17%; }
-}
+/* Nas duas faixas da data por extenso a primeira coluna alarga, porque é
+   nelas que ela tem de levar um intervalo contado: "13, 14 e 15 de outubro"
+   mede 172px, e com a folga da coluna são 184. A data não parte em duas
+   linhas — é o que ela é, e uma data partida ao meio obriga a reler —, por
+   isso ou a coluna lhos dá ou a data sai por cima do título do lado, que era
+   o que fazia com os 22%.
+
+   O que a coluna tem de aguentar não é o outubro de hoje, é o mês mais
+   comprido do ano: "13, 14 e 15 de fevereiro" mede 187px, e com a folga são
+   199. É por esse que a fração se escolhe, e não pelo evento que lá está
+   agora — senão a próxima data de fevereiro voltava a sair por cima do
+   título.
+
+   Dos 1080 para cima a tabela mais estreita mede uns 672px: é a das quatro
+   colunas do mosaico aos 1440, e é a mesma das três aos 1080, porque o
+   cartão dos eventos ocupa sempre duas delas. Os 30% dão-lhe 202px. Dos 450
+   aos 598 a tabela tem uns 545px e a fração tem de subir aos 37%.
+
+   Não é só a data que ganha com isto: o título começa mais à direita do que
+   começava, e com os 23% do sítio e os 18% da natureza — que antes eram 24%
+   e 22% — o sítio começa mais à direita ainda. Numa tabela de 672px são
+   202px à data, 195px ao título, 155px ao sítio e 121px à natureza: o sítio
+   parte-se em duas linhas nessa largura, e parte-se bem — um nome de lugar
+   quebra sem perder nada, ao contrário de uma data. As quatro repartem a linha em
+   vez de se juntarem à esquerda dela. */
+@media (min-width: 1080px) { .events td:nth-child(1) { width: 30%; } }
+@media (min-width: 450px) and (max-width: 598px) { .events td:nth-child(1) { width: 37%; } }
 
 
 /* A linha em foco — a que o rato aponta, ou a que a vez calhou — sublinha-se
@@ -1708,24 +1740,21 @@ html[lang="en"] .title-art {
    ocupa mais uma folga igual à das outras — é a folga que se quer igual, e
    não a coluna.
 
-   Medidos no ecrã, nos dois idiomas, esses máximos são 187px para o título,
-   71px para a natureza, 141px para o sítio e 242px para o quando, que é o
-   mais comprido de todos: "21h30 · sábado · 26 de setembro". A natureza é a
-   mais estreita das quatro — é sempre uma palavra em corpo 9 — e por isso
-   é a que menos fração leva: era ela que, larga de mais, empurrava o sítio
-   e o quando para a direita e deixava a data a partir-se em duas linhas com
-   meia coluna vazia ao lado.
+   Medidos no ecrã, nos dois idiomas, esses máximos são 242px para o título
+   ("Início das atividades regulares"), 100px para a natureza com o seu
+   triângulo ("FOR + CRI + APR"), 163px para o sítio com o alfinete
+   ("Theatro Circo, Braga") e 242px para o quando com o relógio ("concluído
+   · 25 de abril de 2026").
 
-   A folga não é a mesma nas quatro, e é de propósito. As três primeiras
-   levam o que o seu texto pede e pouco mais; o quando fica com o resto. É
-   ele a coluna mais comprida da linha e a única cuja quebra se lê mal —
-   uma data partida ao meio de "26 de setembro" obriga a reler —, enquanto
-   um título ou um nome de lugar se partem em duas linhas sem perder nada.
-   Daí as quatro frações — 2.8, 1.4, 2.1 e 4.7 —, que numa lista de 1200px
-   dão 249px ao título (mede 187), 124px à natureza (71), 187px ao sítio
-   (141) e 418px ao quando (242). Ao ler-se a linha da esquerda para a
-   direita, cada coluna comprime-se um pouco mais do que a anterior, e é
-   isso que traz a data para trás em vez de a deixar encostada ao "+".
+   A folga não é a mesma nas quatro, e é de propósito — mas nenhuma leva o
+   dobro do que pede. O quando levava: com 4.7fr ficava-lhe uma coluna de
+   410px para um texto de 242, e os 170px que sobravam ficavam em branco
+   entre a data e o "+", com as outras três encostadas à esquerda. As
+   frações — 3.0, 1.5, 2.0 e 3.1 — dão numa lista de 1200px cerca de 300px
+   ao título (mede 242), 150px à natureza (100), 200px ao sítio (163) e
+   310px ao quando (242). O título e a natureza puxam o sítio e a data para
+   a direita, e as quatro repartem a linha inteira em vez de se juntarem a
+   um canto dela.
 
    As larguras têm de ser frações e não max-content: cada linha é uma grelha
    sua, e é só por serem as mesmas frações da mesma largura que as colunas
@@ -1735,7 +1764,7 @@ html[lang="en"] .title-art {
    marcas e o "+" ou para o "brevemente". */
 .prj__linha {
   display: grid;
-  grid-template-columns: 46px minmax(0, 2.8fr) minmax(0, 1.4fr) minmax(0, 2.1fr) minmax(0, 4.7fr) 86px;
+  grid-template-columns: 46px minmax(0, 3fr) minmax(0, 1.5fr) minmax(0, 2fr) minmax(0, 3.1fr) 86px;
   align-items: center;
   gap: 18px;
   padding: 10px 0;
@@ -4095,8 +4124,13 @@ html.menu-open .menu::before { opacity: 1; }
   /* Os meses por extenso ficam aqui e não no browser: o toLocaleDateString
      devolve-os em caixa baixa em português e em caixa alta em inglês, e a
      lista precisa deles sempre da mesma maneira. */
+  /* Em português o mês é nome comum e escreve-se em caixa baixa — na data
+     de um cartaz, no rótulo do calendário, em qualquer sítio. Vem daqui
+     assim escrito e não de um toLowerCase() em cada uso: um mês com maiúscula
+     era sempre um sítio que se tinha esquecido de o baixar. Em inglês é nome
+     próprio e mantém a maiúscula. */
   var MESES = {
-    pt: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    pt: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
     en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
   };
 
@@ -4193,7 +4227,7 @@ html.menu-open .menu::before { opacity: 1; }
      português o mês é nome comum e escreve-se em caixa baixa; em inglês não. */
   function evDiaMesLongo(e) {
     var m = MESES[lg()][e.mes - 1];
-    return lg() === 'en' ? evDiaTxt(e) + ' ' + m : evDiaTxt(e) + ' de ' + m.toLowerCase();
+    return lg() === 'en' ? evDiaTxt(e) + ' ' + m : evDiaTxt(e) + ' de ' + m;
   }
   /* "25 de abril de 2026": a data por extenso com o ano atrás. É a que o
      cartaz de um concluído põe ao lado do calendário e a que a lista de
@@ -4360,21 +4394,10 @@ html.menu-open .menu::before { opacity: 1; }
      HTML de propósito: assim a lista não se volta a montar de cada vez que a
      janela muda de tamanho, e a data acerta com a largura ainda antes de o
      JS dar por ela. */
-  /* A data por extenso da tabela abrevia os intervalos, ao contrário da do
-     cartaz: a coluna tem 22% da largura e não parte em duas linhas, e "13,
-     14 e 15 de Outubro" saía-lhe por cima do título do lado. Aqui o
-     intervalo diz-se "13–15", como já dizia o das residências. */
-  function evDataTabela(e) {
-    if (!e.mes) return String(e.ano || '');
-    return lg() === 'en'
-      ? evDiaTxtCurto(e) + ' ' + MESES.en[e.mes - 1]
-      : evDiaTxtCurto(e) + ' de ' + MESES.pt[e.mes - 1];
-  }
-
   function evCelData(e) {
     var td = document.createElement('td');
     td.className = 'events__date';
-    [['events__d events__d--longa', evDataTabela(e)],
+    [['events__d events__d--longa', evData(e)],
      ['events__d events__d--curta', e.mes ? evDiaMes(e) : evData(e)]].forEach(function (par) {
       var n = document.createElement('span');
       n.className = par[0];
