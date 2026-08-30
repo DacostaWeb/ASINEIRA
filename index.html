@@ -2306,7 +2306,8 @@ html[lang="en"] .title-art {
 
 /* O rótulo dos próximos, dentro da mesma coluna: um respiro a mais por cima
    do que o intervalo das linhas, para se ver que abre um grupo. */
-.ficha__dets .ficha__prox { margin-top: 16px; }
+.ficha__dets .ficha__prox { margin-top: 20px; }
+.ficha__dets .ficha__proxmais { margin-top: 10px; }
 
 /* O rótulo pequeno em versaletes: é o .panel-section__title do site, dois
    pontos mais pequeno, porque aqui abre uma tabela e não uma secção. */
@@ -5187,8 +5188,8 @@ html.menu-open .menu::before { opacity: 1; }
 
     /* Os três sinais dos cartazes, em coluna: o que é, onde foi, quando. */
     var dets = nel('div', 'ficha__dets');
-    function sinal(qual, txt) {
-      var d = nel('p', 'evdet');
+    function sinal(qual, txt, cls) {
+      var d = nel('p', 'evdet' + (cls ? ' ' + cls : ''));
       d.innerHTML = SINAIS[qual];
       d.appendChild(nel('span', null, txt));
       dets.appendChild(d);
@@ -5208,12 +5209,15 @@ html.menu-open .menu::before { opacity: 1; }
     EVENTOS.forEach(function (e) {
       if (e.projeto !== nome) return;
       /* O rótulo entra uma vez só, na primeira data que aí vem: é ele que
-         diz que as linhas abaixo já não são as do que passou. */
+         diz que as linhas abaixo já não são as do que passou. Da segunda
+         data em diante o sítio abre com um respiro a mais, para se ver onde
+         acaba uma data e começa a seguinte. */
+      var seguinte = haProx;
       if (!haProx) {
         haProx = true;
         dets.appendChild(nel('p', 'lbl ficha__prox', lg() === 'en' ? 'Upcoming' : 'Próximos'));
       }
-      sinal('pin', evTexto(e).sitio);
+      sinal('pin', evTexto(e).sitio, seguinte ? 'ficha__proxmais' : null);
       sinal('relogio', evDataLonga(e));
     });
 
