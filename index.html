@@ -1052,20 +1052,33 @@ html[lang="en"] .title-art {
 }
 .aerial__tag--home svg { width: 17px; height: auto; }
 
-/* A etiqueta escrita é uma só, a da Sineira, e assenta pelo centro no ponto
-   (ver o translate lá em cima). Sai para fora da moldura de propósito: sobre
-   os telhados e a água não se lia nada, e ali por baixo há fotografia livre. */
-.aerial__tag--home { left: 92%; top: 95.8%; }
+/* A etiqueta escrita é uma só, a da Sineira, e passa as bordas de baixo e da
+   direita de propósito: sobre os telhados e a água não se lia nada, e ali é
+   onde há fundo limpo.
+
+   Encosta-se pela direita, e não por uma fracção da largura. A etiqueta tem
+   sempre o mesmo corpo e a fotografia é que estreita: em fracção, o que lhe
+   sobrava para fora crescia à medida que o ecrã encolhia — 5px no ecrã largo
+   e 21px num telemóvel, onde já punha o menu a rolar de lado. Assim são
+   sempre os mesmos seis. */
+.aerial__tag--home {
+  left: auto;
+  right: -6px;
+  top: 95.8%;
+  transform: translate(0, -50%);
+}
 
 /* Os outros três sítios ficam a ícone e mais nada — sem nome e sem tempo,
    que isso é o que a lista diz por baixo. Os nomes continuam lá no HTML para
    quem lê por leitor de ecrã, que a um ícone sozinho não chega.
 
-   O prato creme é o que os levanta da fotografia, e é o mesmo redondo que a
-   marca leva ao centro da versão 2. Duas destas fracções são o sítio certo
-   — a escola está mesmo debaixo do ícone dela —, e as outras duas são a
-   direcção: o metro e o centro histórico ficam fora do que a vista apanha,
-   e o ícone encosta à margem por onde se sai para lá. */
+   O prato creme é o que os levanta da fotografia. Uma destas fracções é o
+   sítio certo — a escola está mesmo debaixo do ícone dela —, e as outras
+   duas são a direcção: o metro e o centro histórico ficam fora do que a
+   vista apanha, e o ícone encosta à margem por onde se sai para lá.
+
+   Não encolhem em ecrã estreito, nem eles nem a etiqueta: um ícone sozinho
+   já é pequeno, e mais pequeno deixava de se ler o que desenha. */
 .aerial__pin {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -1082,15 +1095,6 @@ html[lang="en"] .title-art {
 .aerial__pin--escola { left: 40%; top: 34.8%; }
 .aerial__pin--metro  { left: 26%; top: 53.7%; }
 .aerial__pin--centro { left:  7%; top: 57.9%; }
-
-/* No ecrã estreito encolhe a etiqueta escrita, que é texto e tem de caber na
-   fotografia. Os pinos não: um ícone sozinho já é pequeno, e mais pequeno
-   deixava de se ler o que desenha. */
-@media (max-width: 640px) {
-  .aerial__tag { font-size: 9px; padding: 4px 7px; border-radius: 10px; }
-  .aerial__tag--home { font-size: 9.5px; }
-  .aerial__tag--home svg { width: 12px; }
-}
 
 
 /* ==== "como chegar?": o mapa e a lista ==================================
