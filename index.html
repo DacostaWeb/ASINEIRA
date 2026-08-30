@@ -1030,7 +1030,6 @@ html[lang="en"] .title-art {
   line-height: 1;
   white-space: nowrap;
 }
-.aerial__time { font-size: 10.5px; font-weight: 400; }
 
 .aerial__tag--home {
   flex-direction: row;
@@ -1041,19 +1040,43 @@ html[lang="en"] .title-art {
 }
 .aerial__tag--home svg { width: 17px; height: auto; }
 
-/* Posições sobre a fotografia, em fracção dela: é o centro de cada etiqueta
-   que assenta no ponto (ver o translate lá em cima). Não estão em cima do
-   sítio que nomeiam — estão onde há fotografia livre para as ler, que sobre
-   os telhados e a água não se lia nada. */
-.aerial__tag--home   { left: 92%; top: 96%; }
-.aerial__tag--bridge { left: 24%; top: 58%; }
-.aerial__tag--school { left: 70%; top: 35%; }
+/* A etiqueta escrita é uma só, a da Sineira, e assenta pelo centro no ponto
+   (ver o translate lá em cima). Sai para fora da moldura de propósito: sobre
+   os telhados e a água não se lia nada, e ali por baixo há fotografia livre. */
+.aerial__tag--home { left: 92%; top: 96%; }
+
+/* Os outros três sítios ficam a ícone e mais nada — sem nome e sem tempo,
+   que isso é o que a lista diz por baixo. Os nomes continuam lá no HTML para
+   quem lê por leitor de ecrã, que a um ícone sozinho não chega.
+
+   O prato creme é o que os levanta da fotografia, e é o mesmo redondo que a
+   marca leva ao centro da versão 2. Duas destas fracções são o sítio certo
+   — a escola está mesmo debaixo do ícone dela —, e as outras duas são a
+   direcção: o metro e o centro histórico ficam fora do que a vista apanha,
+   e o ícone encosta à margem por onde se sai para lá. */
+.aerial__pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--blue);
+  border-radius: 50%;
+  background: var(--cream);
+  color: var(--blue);
+}
+.aerial__pin .ic { width: 19px; height: 19px; vertical-align: baseline; }
+
+.aerial__pin--escola { left: 40%; top: 38%; }
+.aerial__pin--metro  { left: 26%; top: 56%; }
+.aerial__pin--centro { left:  7%; top: 60%; }
 
 @media (max-width: 640px) {
   .aerial__tag { font-size: 9px; padding: 4px 7px; border-radius: 10px; }
-  .aerial__time { font-size: 8.5px; }
   .aerial__tag--home { font-size: 9.5px; }
   .aerial__tag--home svg { width: 12px; }
+  .aerial__pin { width: 24px; height: 24px; }
+  .aerial__pin .ic { width: 14px; height: 14px; }
 }
 
 
@@ -1112,17 +1135,6 @@ html[lang="en"] .title-art {
 
 
 /* --- versão 1: o mapa que já temos, agora com ícones, e a lista toda ----- */
-
-/* Nas etiquetas do mapa o ícone entra na linha do nome, e não por cima dele:
-   uma etiqueta de três andares sobre a fotografia tapava o que nomeia. */
-.aerial__nome { display: inline-flex; align-items: center; gap: 6px; }
-
-/* Os dois tempos de cada etiqueta trocam os emoji pelos mesmos icones de
-   traco do resto da seccao: um mapa com dois desenhos diferentes para o
-   mesmo carro lia-se como dois mapas. */
-.aerial__time { display: inline-flex; align-items: center; gap: 5px; }
-.aerial__time .ic { width: 1.15em; height: 1.15em; stroke-width: 1.9; }
-.aerial__time .ic:not(:first-child) { margin-left: 5px; }
 
 .rota { list-style: none; margin: 18px 0 0; padding: 0; font-size: 13px; }
 .rota li {
@@ -3001,7 +3013,7 @@ html.menu-open .menu::before { opacity: 1; }
   </symbol>
 
   <!-- Ícones do "como chegar": os meios (a pé, bicicleta, carro, metro, avião)
-       e os destinos (praia, centro histórico, escola, ponte). Todos no mesmo
+       e os destinos (praia, centro histórico, escola). Todos no mesmo
        quadrado de 24 e todos de traço — quem lhes dá a espessura, o remate e
        a cor é a classe .ic, para que assentem numa linha de texto e mudem de
        cor com ela: creme no corrido do menu, azul dentro de uma etiqueta. -->
@@ -3050,11 +3062,6 @@ html.menu-open .menu::before { opacity: 1; }
     <path d="M2.4 9L12 4.6 21.6 9 12 13.4z"></path>
     <path d="M6.6 11v4.4c0 1.6 2.4 2.9 5.4 2.9s5.4-1.3 5.4-2.9V11"></path>
     <path d="M20.4 9.4v5.2"></path>
-  </symbol>
-  <symbol id="ic-ponte" viewBox="0 0 24 24">
-    <path d="M2 13.4h20"></path>
-    <path d="M2 13.4v-2.6M22 13.4v-2.6"></path>
-    <path d="M2 20.4c2.8 0 4.2-7 5.6-7s2.8 7 4.4 7 3-7 4.4-7 2.8 7 5.6 7"></path>
   </symbol>
 </svg>
 
@@ -3451,19 +3458,17 @@ html.menu-open .menu::before { opacity: 1; }
                 <svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
                 a Sineira
               </span>
-              <span class="aerial__tag aerial__tag--bridge">
-                <span class="aerial__nome">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-ponte"></use></svg>
-                  <span data-i18n="row1">Ponte de Retorta / Estação Aquícola</span>
-                </span>
-                <span class="aerial__time"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg>1 min<svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg>5 min</span>
+              <span class="aerial__pin aerial__pin--escola">
+                <svg class="ic" aria-hidden="true"><use href="#ic-escola"></use></svg>
+                <span class="vsr" data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</span>
               </span>
-              <span class="aerial__tag aerial__tag--school">
-                <span class="aerial__nome">
-                  <svg class="ic" aria-hidden="true"><use href="#ic-escola"></use></svg>
-                  <span data-i18n="row2">Escolas Secundária e Básica / Escola Profissional</span>
-                </span>
-                <span class="aerial__time"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg>3 min<svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg>14 min</span>
+              <span class="aerial__pin aerial__pin--metro">
+                <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
+                <span class="vsr" data-i18n="dest1">Estação de Metro Santa Clara</span>
+              </span>
+              <span class="aerial__pin aerial__pin--centro">
+                <svg class="ic" aria-hidden="true"><use href="#ic-centro"></use></svg>
+                <span class="vsr" data-i18n="dest2">Centro histórico de Vila do Conde</span>
               </span>
             </div>
 
@@ -3958,7 +3963,7 @@ html.menu-open .menu::before { opacity: 1; }
       /* --- como chegar? --- */
       chegarH2: 'how to get here?',
       secEspacos: 'Spaces',
-      row1: 'Retorta Bridge / Aquaculture Station', row2: 'Secondary and primary schools / Vocational school',
+      row2: 'Secondary and primary schools / Vocational school',
       /* Os cinco destinos e os quatro meios servem as quatro versões do
          "como chegar" ao mesmo tempo: cada chave aparece em vários sítios
          do HTML e o applyLang traduz-lhe todas as cópias. */
