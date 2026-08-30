@@ -175,8 +175,7 @@ a:hover { text-decoration: underline; }
 /* Repartição das duas fontes, num sítio só em vez de espalhada pelas regras:
    o texto corrido fica na Roboto Mono (herdada do body) e tudo o que é
    título, rótulo ou etiqueta passa para a Helvetica. Aos 9px das legendas o
-   traço do Light não aguenta, e nas etiquetas sobre a fotografia aérea o
-   monospace transbordava da caixa. */
+   traço do Light não aguenta. */
 .tile__title,
 .tile__caption,
 .tile__cta,
@@ -187,8 +186,7 @@ a:hover { text-decoration: underline; }
 .evtag,
 .events__head,
 .events__mais,
-.panel-section__title,
-.aerial__tag { font-family: var(--font-display); }
+.panel-section__title { font-family: var(--font-display); }
 
 /* Aberto, o painel dos eventos fica todo no mono do texto — os rótulos
    deixam a Helvetica. O título "eventos" continua no desenho de cima. */
@@ -1078,60 +1076,17 @@ html[lang="en"] .title-art {
   object-position: 50% 100%;
 }
 
-.aerial__tag {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 6px 10px;
-  border: 1.5px solid var(--blue);
-  border-radius: 14px;
-  background: var(--cream);
-  color: var(--blue);
-  font-size: 11.5px;
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.aerial__tag--home {
-  flex-direction: row;
-  align-items: center;
-  gap: 6px;
-  border-radius: 99px;
-  font-size: 12.5px;
-}
-.aerial__tag--home svg { width: 17px; height: auto; }
-
-/* A etiqueta escrita é uma só, a da Sineira, e passa as bordas de baixo e da
-   direita de propósito: sobre os telhados e a água não se lia nada, e ali é
-   onde há fundo limpo.
-
-   Encosta-se pela direita, e não por uma fracção da largura. A etiqueta tem
-   sempre o mesmo corpo e a fotografia é que estreita: em fracção, o que lhe
-   sobrava para fora crescia à medida que o ecrã encolhia — 5px no ecrã largo
-   e 21px num telemóvel, onde já punha o menu a rolar de lado. Assim são
-   sempre os mesmos seis. */
-.aerial__tag--home {
-  left: auto;
-  right: -6px;
-  top: 95.8%;
-  transform: translate(0, -50%);
-}
-
-/* Os outros três sítios ficam a ícone e mais nada — sem nome e sem tempo,
+/* Os quatro sítios ficam a ícone e mais nada — sem nome e sem tempo,
    que isso é o que a lista diz por baixo. Os nomes continuam lá no HTML para
    quem lê por leitor de ecrã, que a um ícone sozinho não chega.
 
-   O prato creme é o que os levanta da fotografia. Uma destas fracções é o
-   sítio certo — a escola está mesmo debaixo do ícone dela —, e as outras
-   duas são a direcção: o metro e o centro histórico ficam fora do que a
-   vista apanha, e o ícone encosta à margem por onde se sai para lá.
+   O prato creme é o que os levanta da fotografia. Duas destas fracções são o
+   sítio certo — a Sineira e a escola estão mesmo debaixo do ícone delas —, e
+   as outras duas são a direcção: o metro e o centro histórico ficam fora do
+   que a vista apanha, e o ícone encosta à margem por onde se sai para lá.
 
-   Não encolhem em ecrã estreito, nem eles nem a etiqueta: um ícone sozinho
-   já é pequeno, e mais pequeno deixava de se ler o que desenha. */
+   Não encolhem em ecrã estreito: um ícone sozinho já é pequeno, e mais
+   pequeno deixava de se ler o que desenha. */
 .aerial__pin {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -1145,6 +1100,21 @@ html[lang="en"] .title-art {
 }
 .aerial__pin .ic { width: 19px; height: 19px; vertical-align: baseline; }
 
+/* A marca não é um ícone de traço como os outros três: é o triângulo cheio
+   com o "aS" recortado, e traz as cores de dentro. Fica sem a classe .ic de
+   propósito — o stroke de lá herdava para os caminhos e engrossava o
+   desenho todo — e vai um ponto mais pequena, que uma forma cheia pesa mais
+   no prato do que três linhas. */
+.aerial__pin .marca { width: 16px; height: auto; }
+
+/* A Sineira é a antiga Igreja de Retorta, ali em baixo à direita, e o pino
+   assenta-lhe em cima. Esteve com nome escrito e encostado à borda de baixo,
+   por o rótulo ser largo de mais para caber sobre a igreja; a marca sozinha
+   cabe, e por isso volta ao sítio de que fala.
+
+   A fração vertical não é a da fotografia: o object-position corta-lhe 4.9%
+   por cima (ver .aerial img), e é do que sobra que se conta. */
+.aerial__pin--sineira { left: 81.5%; top: 88%; }
 .aerial__pin--escola { left: 40%; top: 34.8%; }
 .aerial__pin--metro  { left: 26%; top: 53.7%; }
 .aerial__pin--centro { left:  7%; top: 57.9%; }
@@ -3401,9 +3371,9 @@ html.menu-open .menu::before { opacity: 1; }
 
           <div class="aerial">
             <img src="mapsbirdseye.png" data-i18n-alt="altAerea" alt="Vista aérea de Retorta: a Sineira, a ponte sobre o rio Ave, as escolas e a envolvente" loading="lazy">
-            <span class="aerial__tag aerial__tag--home">
-              <svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
-              a Sineira
+            <span class="aerial__pin aerial__pin--sineira">
+              <svg class="marca" viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
+              <span class="vsr">a Sineira</span>
             </span>
             <span class="aerial__pin aerial__pin--escola">
               <svg class="ic" aria-hidden="true"><use href="#ic-escola"></use></svg>
