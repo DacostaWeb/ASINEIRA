@@ -1371,20 +1371,21 @@ html[lang="en"] .title-art {
 .events--prox,
 .events--conc { margin-top: 6px; }
 
-/* Enquanto a data vai por extenso, a coluna dos sinais não precisa dos 30%
-   que ela precisa, e uma coluna quase vazia entre o rótulo e o título só
-   fazia buraco. Abaixo dos 1080 a data encurta, as duas listas voltam à
-   mesma repartição e os títulos ficam um debaixo do outro.
+/* A coluna dos sinais tem a medida da coluna da data, e não a dos sinais.
 
-   Os 90px são os 50px que os três sinais medem mais 40px de folga. Estiveram
-   em 62px — os sinais e o respiro da célula, e mais nada — enquanto a coluna
-   do título tinha medida escrita e a tabela repartia o que sobrava por
-   todas. Desde que o título passou a ficar com o que sobra, essa repartição
-   deixou de existir e os 62px passaram a ser mesmo 62: o título encostava
-   aos ícones. A folga tem de estar aqui, que é onde se lê. */
-@media (min-width: 1080px) {
-  .events--conc td:nth-child(1) { width: 90px; }
-}
+   Teve a sua durante um tempo — os 62px que três ícones medem —, para não
+   deixar uma coluna quase vazia entre o rótulo e o título. Mas as duas
+   listas são a mesma tabela lida duas vezes, uma para o que aí vem e outra
+   para o que já foi, e o que as faz ler como uma são as quatro colunas a
+   caírem umas sobre as outras: o título do concluído debaixo dos títulos de
+   cima, o sítio debaixo dos sítios. Com a primeira coluna mais estreita do
+   que a de cima, o título do concluído ficava a meio do caminho e a segunda
+   lista lia-se como outra coisa.
+
+   O vazio ao lado dos sinais é o preço, e é o preço certo: uma coluna com
+   folga a mais nota-se menos do que uma lista desalinhada da que tem por
+   cima. Por isso não há aqui regra nenhuma — a repartição das quatro é a
+   mesma nas duas tabelas, e é isso que as alinha. */
 
 /* O que ficou de cada concluído, na primeira coluna: os mesmos três sinais
    dos cartazes do painel — linhas, câmara e play. Estiveram aqui por
