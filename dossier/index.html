@@ -20,8 +20,8 @@ html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light;
 <link rel="stylesheet" href="base.css">
 <style>
 
-/* Três opções, três colunas no máximo — senão sobra uma coluna vazia. */
-.escolha { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(100% / 3, min(100%, 300px)), 1fr)); }
+/* Quatro opções, quatro colunas no máximo — senão sobra uma coluna vazia. */
+.escolha { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(100% / 4, min(100%, 300px)), 1fr)); }
 .escolha__intro { grid-column: 1 / -1; padding: clamp(46px, 8vh, 110px) var(--gutter) clamp(30px, 5vh, 60px); }
 .escolha__intro h1 {
   font-size: clamp(32px, 5.4vw, 70px); font-weight: 700; line-height: .95;
@@ -60,11 +60,12 @@ html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light;
 <header class="topo"><a class="topo__marca" href="/"><svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg><span>a Sineira</span></a><p class="topo__titulo">Dossier de apresentação</p></header>
 
 <main class="escolha">
-<div class="escolha__intro"><p class="kicker">a Sineira &middot; dossier</p><h1>Três experiências</h1><p>O mesmo conteúdo, três desenhos. Todos usam a linguagem a que chegámos no site: creme e azul, a mesma tipografia e a mesma margem do logótipo.</p></div>
+<div class="escolha__intro"><p class="kicker">a Sineira &middot; dossier</p><h1>Quatro experiências</h1><p>O mesmo conteúdo, quatro desenhos. Todos usam a linguagem a que chegámos no site: creme e azul, a mesma tipografia e a mesma margem do logótipo. O <strong>D</strong> é o que junta as escolhas da associação, e é por onde se deve começar.</p></div>
+<a class="opcao opcao--azul invertido" href="d/"><p class="kicker">Versão final</p><h2>D · Dossier</h2><p>O formato base da opção C com as linhas que a associação escolheu (F0 a F9), o cabeçalho do site e um ecrã por linha. Já em português e inglês.</p><p class="seta">&rarr;</p></a>
 <a class="opcao" href="a/"><p class="kicker">Experiência</p><h2>A · Documento</h2><p>Uma coluna larga, secções numeradas e bandas alternadas. O mais próximo de um dossier impresso: lê-se de fio a pavio e imprime-se bem.</p><p class="seta">&rarr;</p></a>
 <a class="opcao opcao--azul invertido" href="b/"><p class="kicker">Experiência</p><h2>B · Mosaico</h2><p>A grelha de cartões do site aplicada ao dossier, com as fotografias intercaladas. Lê-se por blocos, em vez de seguido.</p><p class="seta">&rarr;</p></a>
 <a class="opcao" href="c/"><p class="kicker">Experiência</p><h2>C · Espaço</h2><p>Capítulos de ecrã inteiro, com o lugar a mandar: o espaço abre o dossier e as plantas e propostas ocupam metade do ecrã.</p><p class="seta">&rarr;</p></a>
-<div class="nota"><p><strong>Conteúdo:</strong> o que a associação escreveu na última revisão. O texto do nível <em>Patrocínio</em> ainda não existe e aparece marcado como por escrever, em vez de preenchido com texto inventado.</p><p><strong>Por fazer:</strong> versão em inglês, assim que houver uma direcção escolhida.</p></div>
+<div class="nota"><p><strong>A, B e C</strong> são o estudo que levou ao D, e ficam para consulta.</p><p><strong>Conteúdo:</strong> o que a associação escreveu na última revisão. O texto do nível <em>Patrocínio</em> ainda não existe e aparece marcado como por escrever, em vez de preenchido com texto inventado.</p><p><strong>Por fazer:</strong> versão em inglês, assim que houver uma direcção escolhida.</p></div>
 </main>
 
 </body>

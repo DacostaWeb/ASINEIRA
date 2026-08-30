@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<style>
+/* Bloqueia o modo escuro forçado dos navegadores (Brave/Safari iOS, Chrome
+   Android): sem isto o motor reescreve as cores da marca e inverte fundos. */
+:root { color-scheme: only light; }
+html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light; }
+@media (prefers-color-scheme: dark) {
+  :root, html, body { color-scheme: only light; forced-color-adjust: none; }
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F2E7A9">
+<title>a Sineira — Dossier de apresentação e mecenato</title>
+<meta name="description" content="Dossier de apresentação e mecenato da a Sineira — requalificação da antiga Igreja de Retorta, Vila do Conde.">
+<link rel="icon" href="../../favicon.ico" type="image/x-icon">
+
+<style>
+
+/* ==========================================================================
+   a Sineira — Dossier D
+   ==========================================================================
+
+   O dossier final. Segue o site: mesma paleta, mesma tipografia, mesmo
+   cabeçalho — logótipo à esquerda, PT—EN ao meio, triângulo à direita.
+
+   O corpo é uma pilha de LINHAS. Cada linha vale um ecrã (100svh menos o
+   cabeçalho) e é um ponto de paragem do scroll-snap: um gesto para baixo
+   leva à linha seguinte e pára lá. As linhas que, num ecrã muito baixo,
+   pedem mais do que um ecrã continuam a poder rolar por dentro — pela
+   especificação, uma área de snap maior do que a janela não prende
+   ninguém.
+
+   O alinhamento das linhas com os formatos que a cliente escolheu está
+   marcado em cada secção (F0…F9, e o formato A/B/C de origem).
+   ========================================================================== */
+
+
+/* 1. Tipos de letra ======================================================= */
+
+/* As mesmas do site, servidas do próprio site. */
+@font-face { font-family:"Roboto Mono"; src:url("../../fonts/RobotoMono.woff2") format("woff2"); font-weight:100 700; font-style:normal; font-display:swap;
+             unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family:"Roboto Mono"; src:url("../../fonts/RobotoMono-ext.woff2") format("woff2"); font-weight:100 700; font-style:normal; font-display:swap;
+             unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+
+
+/* 2. Variáveis ============================================================ */
+
+:root {
+  /* Paleta — a do site, sem um hexadecimal repetido. */
+  --blue:        #003C78;
+  --cream:       #F2E7A9;
+  --gold:        #D8B44A;
+  --gold-light:  #F0DFA0;
+  --gold-deep:   #A8842B;
+
+  --font:         "Roboto Mono", "Courier New", monospace;
+  --font-display: Helvetica, Arial, sans-serif;
+
+  /* Medidas do cabeçalho: as do site, para o logótipo e o triângulo caírem
+     no mesmo pixel em que caem lá. */
+  --header-h:       78px;
+  --gutter:         30px;
+  --wordmark-h:     40px;
+  --trigger-w:      62px;
+  --trigger-pull:   20px;
+  --close-size:     26px;
+
+  /* A altura útil de uma linha: o ecrã menos o cabeçalho. É daqui que sai
+     tudo o que tem de caber — imagens, títulos e listas. */
+  --linha-h: calc(100svh - var(--header-h));
+
+  /* Corpos de letra medidos nas duas dimensões do ecrã. O min(vw, vh) é o
+     que faz uma linha caber num portátil baixo e largo: sem a parcela em
+     vh, o título crescia com a largura e empurrava a lista para fora. */
+  --t-titulo:  clamp(23px, min(3.6vw, 5.4vh), 52px);
+  --t-titulao: clamp(30px, min(6.2vw, 8.4vh), 92px);
+  --t-corpo:   clamp(13px, min(1.05vw, 1.85vh), 16px);
+  --t-lista:   clamp(12.5px, min(1vw, 1.75vh), 15px);
+  --t-kicker:  clamp(9px, min(.75vw, 1.25vh), 11px);
+
+  /* Movimento */
+  --wm-dur: 2000ms;
+  --menu-dur: 800ms;
+  --ease: cubic-bezier(.2,.8,.2,1);
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-h:      66px;
+    --gutter:        18px;
+    --wordmark-h:    32px;
+    --trigger-w:     52px;
+    --trigger-pull:  15px;
+  }
+}
+/* Abaixo dos 598 o triângulo deixa de sair para fora da margem e assenta
+   nela, como o logótipo do outro lado — igual ao site. */
+@media (max-width: 598px) { :root { --trigger-pull: 0px; } }
+
+
+/* 3. Base ================================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* O snap vive no <html>, que é quem rola. O scroll-padding desconta o
+     cabeçalho fixo: sem ele, cada linha parava com o topo por baixo dele. */
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: var(--header-h);
+  background: var(--cream);
+}
+html, body { margin: 0; overflow-x: clip; }
+
+/* Nenhuma barra de scroll à vista, como no site. */
+* { scrollbar-width: none; }
+*::-webkit-scrollbar { display: none; }
+
+/* O azul entra por baixo do menu aberto, com o mesmo atraso do logótipo. */
+html, body { transition: background-color .4s ease var(--tint-delay, 0s); }
+html.menu-open, html.menu-open body { background-color: var(--blue); }
+
+body {
+  padding-top: var(--header-h);   /* o lugar que o cabeçalho fixo deixaria */
+  background: var(--cream);
+  color: var(--blue);
+  font-family: var(--font);
+  font-size: var(--t-corpo);
+  line-height: 1.55;
+  text-wrap: pretty;
+  touch-action: manipulation;
+}
+
+h1, h2, h3, p, ul, ol, figure, table, figcaption { margin: 0; }
+ul { list-style: none; padding: 0; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+a:hover { text-decoration: underline; }
+em { font-style: normal; font-weight: 700; }
+
+/* A repartição do site: texto corrido em Roboto Mono, títulos e rótulos em
+   Helvetica. */
+.titulo, .kicker, .sub, .pills li, .botao, .lang, .disciplinas,
+.acessos th, .figura figcaption, .nivel h3, .mapa__ponto,
+.mapa__legenda li::before, .area, .cartao-amigo b, .cartao-amigo small,
+.menu__link, .menu__num { font-family: var(--font-display); }
+
+.svg-defs { display: none; }
+
+
+/* 4. Cabeçalho ============================================================ */
+
+/* Igual ao do site, sem o "Dossier de…": logótipo à esquerda, PT—EN ao meio,
+   triângulo à direita. O logótipo e o PT—EN vivem fora do <header> — é o que
+   lhes permite subir acima do menu e ficar à vista com ele aberto. */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 20;              /* abaixo do menu: o triângulo cresce por baixo dele */
+  display: flex;
+  align-items: center;
+  height: var(--header-h);
+  padding: 0 var(--gutter);
+  background: var(--cream);
+}
+
+/* --- Logótipo --- */
+
+.wordmark {
+  position: fixed;
+  left: var(--gutter);
+  top: calc((var(--header-h) - var(--wordmark-h)) / 2);
+  z-index: 90;
+  display: block;
+  line-height: 0;
+}
+.wordmark:hover { text-decoration: none; }
+
+html.menu-open .wordmark__svg { fill: var(--cream); }
+html.menu-open .lang { color: var(--cream); }
+
+.wordmark__svg,
+.lang { transition: fill .4s ease var(--tint-delay, 0s), color .4s ease var(--tint-delay, 0s); }
+
+.wordmark__svg {
+  display: block;
+  height: var(--wordmark-h);
+  width: auto;
+  fill: var(--blue);
+  overflow: visible;   /* as letras saem da caixa a meio do salto */
+  shape-rendering: geometricPrecision;
+  image-rendering: optimizeQuality;
+}
+
+/* As letras saltam ao passar o rato e enquanto se faz scroll. A .wm-anim é
+   posta e retirada pelo JS; o hover funciona sem JS nenhum. */
+.wordmark:hover .wm__letter,
+.wordmark.wm-anim .wm__letter {
+  animation-duration: var(--wm-dur);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.wordmark:hover .wm__a,       .wordmark.wm-anim .wm__a       { animation-name: wm-a; }
+.wordmark:hover .wm__s,       .wordmark.wm-anim .wm__s       { animation-name: wm-s; }
+.wordmark:hover .wm__i1-dot,  .wordmark.wm-anim .wm__i1-dot  { animation-name: wm-i1-dot; }
+.wordmark:hover .wm__i1-stem, .wordmark.wm-anim .wm__i1-stem { animation-name: wm-i1-stem; }
+.wordmark:hover .wm__n,       .wordmark.wm-anim .wm__n       { animation-name: wm-n; }
+.wordmark:hover .wm__e,       .wordmark.wm-anim .wm__e       { animation-name: wm-e; }
+.wordmark:hover .wm__i2-dot,  .wordmark.wm-anim .wm__i2-dot  { animation-name: wm-i2-dot; }
+.wordmark:hover .wm__i2-stem, .wordmark.wm-anim .wm__i2-stem { animation-name: wm-i2-stem; }
+.wordmark:hover .wm__r,       .wordmark.wm-anim .wm__r       { animation-name: wm-r; }
+.wordmark:hover .wm__a2,      .wordmark.wm-anim .wm__a2      { animation-name: wm-a2; }
+
+/* Salto das dez formas do logótipo. Cada letra tem o seu percurso; a pausa
+   entre 50% e 100% é o repouso antes de repetir. */
+@keyframes wm-a { 0% { transform:translate(61.805172px,73.153994px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(61.805172px,73.153994px) rotate(-35deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(61.805172px,73.153994px) rotate(-35deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(61.805172px,73.153994px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(61.805172px,73.153994px) rotate(0deg); } }
+@keyframes wm-s { 0% { transform:translate(102.681297px,70.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(102.681297px,60.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(102.681297px,60.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(102.681297px,70.45px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(102.681297px,70.45px); } }
+@keyframes wm-i1-dot { 0% { transform:translate(122.109634px,64.644287px); } 7.5% { transform:translate(122.109634px,64.644287px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(122.109634px,56.64px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(122.109634px,56.64px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(122.109634px,64.644287px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(122.109634px,64.644287px); } }
+@keyframes wm-i1-stem { 0% { transform:translate(122.109634px,79.004761px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(122.109634px,71px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(122.109634px,71px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(122.109634px,79.004761px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(122.109634px,79.004761px); } }
+@keyframes wm-n { 0% { transform:translate(140.437744px,74.288086px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 20% { transform:translate(140.437744px,69.29px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 25% { transform:translate(140.437744px,69.29px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 45% { transform:translate(140.437744px,74.288086px); animation-timing-function:cubic-bezier(.81,.405,.015,1.005); } 50%,100% { transform:translate(140.437744px,74.288086px); } }
+@keyframes wm-e { 0% { transform:translate(165.976837px,74.576172px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(165.976837px,74.576172px) rotate(15deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(165.976837px,74.576172px) rotate(15deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(165.976837px,74.576172px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(165.976837px,74.576172px) rotate(0deg); } }
+@keyframes wm-i2-dot { 0% { transform:translate(183.770813px,56.491943px); } 7.5% { transform:translate(183.770813px,56.491943px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 20% { transform:translate(183.770813px,68.49px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 30% { transform:translate(183.770813px,68.49px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 45% { transform:translate(183.770813px,56.491943px); animation-timing-function:cubic-bezier(.915,.19,.15,1); } 50%,100% { transform:translate(183.770813px,56.491943px); } }
+@keyframes wm-i2-stem { 0% { transform:translate(183.77094px,86.9997px) scale(1,1); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(183.77094px,86.9997px) scale(1,.511932); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(183.77094px,86.9997px) scale(1,.511932); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(183.77094px,86.9997px) scale(1,1); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(183.77094px,86.9997px) scale(1,1); } }
+@keyframes wm-r { 0% { transform:translate(198.365051px,74.640503px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(198.365051px,74.640503px) rotate(-10deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(198.365051px,74.640503px) rotate(-10deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(198.365051px,74.640503px) rotate(0deg); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(198.365051px,74.640503px) rotate(0deg); } }
+@keyframes wm-a2 { 0% { transform:translate(217.027161px,74.288059px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 20% { transform:translate(217.027161px,69.29px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 25% { transform:translate(217.027161px,69.29px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 45% { transform:translate(217.027161px,74.288059px); animation-timing-function:cubic-bezier(.825,0,.115,.77); } 50%,100% { transform:translate(217.027161px,74.288059px); } }
+
+
+/* --- Selector de idioma --- */
+
+.lang {
+  position: fixed;
+  left: 50%;
+  top: calc(var(--header-h) / 2);
+  z-index: 90;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.lang__btn {
+  padding: 4px 0;
+  border: none;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  cursor: pointer;
+  opacity: .38;
+}
+.lang__btn[aria-pressed="true"] { opacity: 1; }
+.lang__sep { opacity: .38; }
+
+/* --- Triângulo que abre o menu --- */
+
+.menu-trigger {
+  margin-left: auto;
+  margin-right: calc(var(--trigger-pull) * -1);
+  flex-shrink: 0;
+  width: var(--trigger-w);
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  z-index: 50;
+  overflow: visible;
+  /* A ponta, e não o centro da caixa: é em torno dela que o triângulo cresce
+     até cobrir o ecrã. */
+  transform-origin: 41.7% 42.8%;
+}
+.menu-trigger__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  shape-rendering: geometricPrecision;
+  image-rendering: optimizeQuality;
+}
+.menu-trigger__shape { fill: var(--blue); }
+.menu-trigger__letters path { fill: var(--cream); }
+
+
+/* 5. Menu ================================================================= */
+
+/* O índice do dossier. Abre com o triângulo, tal como no site, e leva a cada
+   uma das linhas. */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  visibility: hidden;
+  pointer-events: none;
+  overflow-y: auto;
+  padding: calc(var(--header-h) + clamp(12px, 3vh, 40px)) var(--gutter) clamp(24px, 4vh, 50px);
+  color: var(--cream);
+}
+/* Tapa a faixa do cabeçalho, para o texto do menu não passar por trás do
+   logótipo e do PT—EN. Tem de ser desenhada aqui e não no <header>: o
+   cabeçalho vive abaixo do menu, e o que lá se pintasse ficava por baixo. */
+.menu::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: var(--blue);
+  opacity: 0;
+  transition: opacity .4s ease var(--tint-delay, 0s);
+  pointer-events: none;
+}
+html.menu-open .menu::before { opacity: 1; }
+
+.menu__lista { display: grid; gap: clamp(2px, .6vh, 8px); max-width: 1100px; }
+.menu-item { opacity: 0; transform: translateY(14px); }
+
+.menu__link {
+  display: grid;
+  grid-template-columns: 2.4em 1fr;
+  align-items: baseline;
+  gap: 14px;
+  padding: clamp(3px, .55vh, 9px) 0;
+  /* A parcela em vh é o que faz as treze linhas caberem num ecrã, em vez
+     de o índice ter de rolar. */
+  font-size: clamp(17px, min(3vw, 3.5vh), 40px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -.03em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--cream) 25%, transparent);
+}
+.menu__link:hover { text-decoration: none; color: var(--gold-light); }
+.menu__num {
+  font-size: clamp(9px, min(.8vw, 1.3vh), 11px);
+  font-weight: 700;
+  letter-spacing: .16em;
+  opacity: .55;
+}
+
+.menu-close {
+  position: fixed;
+  z-index: 70;
+  width: var(--close-size);
+  height: var(--close-size);
+  /* Em cima do triângulo que abriu o menu, ao pixel: fecha-se onde se abriu.
+     As contas saem das medidas que posicionam o triângulo no cabeçalho. */
+  right: calc(var(--gutter) - var(--trigger-pull) + (var(--trigger-w) - var(--close-size)) / 2);
+  top: calc((var(--header-h) - var(--close-size)) / 2);
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: rotate(-120deg) scale(.4);
+  pointer-events: none;
+}
+.menu-close svg { display: block; width: 100%; height: 100%; fill: var(--cream); }
+
+
+/* 6. A linha ============================================================== */
+
+/* A unidade do dossier. Vale um ecrã e é um ponto de paragem do snap. */
+.linha {
+  min-height: var(--linha-h);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: grid;
+  position: relative;
+  border-top: 1.5px solid color-mix(in srgb, var(--blue) 30%, transparent);
+}
+.linha:first-of-type { border-top: none; }
+/* De uma linha azul para a seguinte o traço não faz falta: a mudança de
+   fundo já é a divisão. */
+.linha--azul + .linha, .linha + .linha--azul { border-top: none; }
+.linha--azul { background: var(--blue); color: var(--cream); }
+
+/* O bloco de texto de uma linha, centrado na metade que lhe toca. */
+.texto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(8px, 1.4vh, 18px);
+  padding: clamp(22px, 4vh, 60px) var(--gutter);
+  min-width: 0;
+}
+.texto--azul { background: var(--blue); color: var(--cream); }
+
+.kicker {
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  opacity: .65;
+}
+.titulo {
+  font-size: var(--t-titulo);
+  font-weight: 700;
+  line-height: .95;
+  letter-spacing: -.03em;
+  text-transform: uppercase;
+  max-width: 20ch;
+}
+.sub {
+  font-size: clamp(13px, min(1.2vw, 2vh), 18px);
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.texto p { max-width: 56ch; }
+/* A mesma medida de leitura das listas e da tabela: sem ela as linhas
+   atravessam a metade inteira do ecrã. */
+.texto .lista, .texto .acessos, .texto .mapa__legenda { max-width: 64ch; }
+
+.lista li { position: relative; padding-left: 1.1em; font-size: var(--t-lista); line-height: 1.45; }
+.lista li + li { margin-top: .38em; }
+.lista li::before { content: "›"; position: absolute; left: 0; font-weight: 700; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pills li {
+  border: 1.5px solid currentColor;
+  border-radius: 99px;
+  padding: 5px 13px;
+  font-size: clamp(10px, min(.85vw, 1.4vh), 12px);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.botao {
+  display: inline-block;
+  align-self: start;
+  width: fit-content;
+  border: 1.5px solid currentColor;
+  padding: 10px 20px;
+  font-size: clamp(10px, min(.85vw, 1.4vh), 12px);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.botao:hover { background: currentColor; text-decoration: none; }
+.botao:hover span { color: var(--cream); }
+.linha--azul .botao:hover span,
+.texto--azul .botao:hover span { color: var(--blue); }
+
+.legal { font-size: clamp(10px, min(.85vw, 1.4vh), 12px); opacity: .75; max-width: 62ch; }
+
+/* Onde a associação ainda não escreveu o texto. */
+.por-escrever {
+  border: 1.5px dashed currentColor;
+  padding: 8px 12px;
+  font-size: var(--t-lista);
+  font-style: italic;
+  opacity: .7;
+}
+
+.duas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: clamp(14px, 2vw, 30px); }
+.tres { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: clamp(14px, 2vw, 30px); }
+.duas .kicker, .tres .kicker { margin-bottom: 8px; }
+
+.disciplinas {
+  font-size: clamp(12px, min(1.15vw, 1.9vh), 18px);
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+
+/* 7. Imagens ============================================================== */
+
+/* Uma figura enche a célula que lhe toca e não empurra a linha para fora do
+   ecrã: o min-height:0 é o que trava a expansão dentro da grelha. */
+.figura { position: relative; display: grid; background: var(--blue); min-height: 0; overflow: hidden; }
+/* O min-height:0 é o que trava o tamanho mínimo automático de um item de
+   grelha: sem ele a fotografia impõe a sua altura natural e transborda a
+   célula, em vez de se deixar recortar. */
+.figura img { width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: cover; }
+.figura figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 8px var(--gutter);
+  background: var(--cream);
+  color: var(--blue);
+  font-size: clamp(8px, min(.7vw, 1.15vh), 9.5px);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+/* As plantas não se cortam: mostram-se inteiras sobre creme. */
+.figura--planta { background: var(--cream); padding: clamp(14px, 3vh, 30px) var(--gutter) clamp(30px, 5vh, 46px); }
+.figura--planta img { object-fit: contain; }
+
+/* A área do terreno, posta sobre a fotografia da implantação (F1). */
+.area {
+  position: absolute;
+  left: var(--gutter);
+  top: clamp(16px, 3vh, 30px);
+  padding: 7px 14px;
+  background: var(--cream);
+  color: var(--blue);
+  font-size: clamp(10px, min(.9vw, 1.5vh), 13px);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* Fotografias de obra lado a lado, dentro da metade que lhes toca. Ficam em
+   coluna mesmo em ecrã estreito: são três verticais, e empilhadas davam três
+   tiras baixas em vez da sequência antes / durante / interior. */
+.tira { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; min-height: 0; }
+.tira figcaption { padding-inline: 12px; }
+
+
+/* 8. Os três formatos das linhas ========================================== */
+
+/* --- Formato C: metade texto, metade imagem ------------------------------
+   O formato base que a cliente escolheu. Em ecrã estreito as duas metades
+   passam a uma coluna, com a imagem a valer uma fatia fixa da altura. */
+.linha--par { grid-template-columns: 1fr 1fr; align-items: stretch; }
+.linha--espelhado .texto { order: 2; }
+@media (max-width: 860px) {
+  /* Empilhadas, as duas metades passam a texto em cima e imagem em baixo.
+     A faixa da imagem é medida em svh e não em 1fr: numa grelha de altura
+     indefinida o 1fr resolve para o tamanho natural da fotografia, e uma
+     única linha passava a valer dois ecrãs. */
+  .linha--par { grid-template-columns: 1fr; grid-template-rows: auto minmax(28svh, 42svh); }
+  .linha--espelhado .texto { order: 0; }
+}
+
+/* --- Formato B: mosaico de blocos ---------------------------------------- */
+.linha--mosaico { grid-template-columns: 1fr 1fr; align-items: stretch; }
+@media (max-width: 860px) {
+  .linha--mosaico { grid-template-columns: 1fr; grid-template-rows: auto minmax(28svh, 42svh); }
+}
+
+/* --- Formato A: banda de documento, uma coluna centrada ------------------ */
+.linha--banda { justify-content: center; grid-template-columns: minmax(0, 1180px); }
+.linha--banda > .texto { padding-inline: var(--gutter); }
+/* Dentro da banda o conteúdo reparte-se em duas colunas, para caber num
+   ecrã sem encolher a letra. */
+.banda__corpo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: clamp(18px, 3vw, 46px);
+  /* Estica e cresce: é assim que a planta do faseamento chega à altura da
+     linha em vez de ficar um selo no meio do creme. */
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
+/* O :not(.niveis) é preciso: sem ele esta regra ganhava ao display:grid
+   dos níveis de apoio, que passavam a empilhar-se em coluna. */
+.banda__corpo > div:not(.niveis) { display: flex; flex-direction: column; gap: clamp(8px, 1.4vh, 16px); }
+/* A planta, dentro da banda, mede-se pela altura do ecrã: sem isto o
+   object-fit:contain não tem caixa nenhuma para caber. */
+.banda__corpo .figura { min-height: clamp(180px, 30vh, 400px); }
+/* A planta do faseamento lê-se pelo desenho, não pela legenda: leva a
+   fatia maior da banda. Acima da quebra, onde há duas colunas. */
+@media (min-width: 621px) {
+  .banda__corpo--planta { grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); }
+}
+
+
+/* 9. F0 — a capa ========================================================== */
+
+/* A fotografia acaba no limite inferior do ecrã: a linha é o ecrã menos o
+   cabeçalho, o título vale o que pede (auto) e a fotografia fica com o
+   resto (1fr). Não há nada a rolar por baixo dela. */
+/* Altura fixa, e não mínima: numa grelha de altura indefinida o 1fr resolve
+   para o tamanho natural da fotografia e a capa passava do ecrã. Aqui a
+   capa é exactamente um ecrã, e é a fotografia que se ajusta. */
+.linha--capa { height: var(--linha-h); grid-template-rows: auto minmax(0, 1fr); }
+.capa__titulo {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.4vh, 16px);
+  padding: clamp(18px, 4vh, 52px) var(--gutter) clamp(16px, 3vh, 38px);
+}
+.capa__titulo h1 {
+  font-size: var(--t-titulao);
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+  max-width: 16ch;
+}
+/* A igreja está na parte de cima da fotografia: um recorte largo e baixo,
+   centrado, mostrava só a calçada. */
+.capa__figura img { object-position: 50% 30%; }
+
+
+/* 10. Peças de conteúdo =================================================== */
+
+/* --- O espaço identificado sobre a implantação (F4) ----------------------
+   A cliente tinha uma imagem com cada parte do complexo nomeada por setas.
+   A ideia mantém-se, com pontos numerados e legenda ao lado: não se
+   sobrepõem uns aos outros e lê-se em qualquer tamanho de ecrã. */
+.mapa__figura { position: relative; line-height: 0; display: grid; overflow: hidden; }
+.mapa__figura img { width: 100%; height: 100%; object-fit: cover; }
+.mapa__ponto {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: clamp(20px, 2.6vh, 26px);
+  height: clamp(20px, 2.6vh, 26px);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--cream);
+  color: var(--blue);
+  border: 1.5px solid var(--blue);
+  font-family: var(--font-display);
+  font-size: clamp(10px, 1.3vh, 12px);
+  font-weight: 700;
+  line-height: 1;
+}
+.mapa__legenda { counter-reset: parte; }
+.mapa__legenda li {
+  position: relative;
+  padding-left: 32px;
+  font-size: var(--t-lista);
+  line-height: 1.35;
+}
+.mapa__legenda li + li { margin-top: .45em; }
+.mapa__legenda li::before {
+  counter-increment: parte;
+  content: counter(parte);
+  position: absolute;
+  left: 0; top: -1px;
+  width: 23px; height: 23px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid currentColor;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* --- Tabela de acessos (F5) --- */
+.acessos { width: 100%; border-collapse: collapse; font-size: var(--t-lista); }
+.acessos th, .acessos td {
+  padding: clamp(5px, .9vh, 9px) 12px clamp(5px, .9vh, 9px) 0;
+  text-align: left;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+}
+.acessos th {
+  border-bottom-color: color-mix(in srgb, currentColor 55%, transparent);
+  font-size: clamp(8px, min(.7vw, 1.15vh), 9.5px);
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.acessos td:not(:first-child) { white-space: nowrap; }
+
+
+/* --- Níveis de apoio e cartão de amigo (F7) --- */
+.niveis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: clamp(14px, 2vw, 28px);
+  align-items: start;
+}
+/* O primeiro nível é o que traz o cartão, e o cartão pede largura: fica com
+   a linha inteira e os outros dois repartem a de baixo. Deixados à grelha,
+   ficava um deles pendurado com uma coluna vazia ao lado. */
+.niveis .nivel:first-child { grid-column: 1 / -1; }
+.nivel { display: flex; flex-direction: column; gap: 6px; }
+.nivel h3 {
+  font-size: clamp(15px, min(1.5vw, 2.5vh), 24px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -.02em;
+}
+.nivel p { font-size: var(--t-lista); }
+
+/* O cartão de amigo, como no site. */
+.cartao-amigo {
+  width: min(100%, 260px);
+  aspect-ratio: 1.586;
+  margin-top: 6px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 12px;
+  color: var(--blue);
+  background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold) 38%, var(--gold-light) 62%, var(--gold-deep) 100%);
+}
+.cartao-amigo svg { width: 24px; height: auto; }
+.cartao-amigo b { font-size: 16px; font-weight: 700; text-transform: lowercase; letter-spacing: -.025em; }
+.cartao-amigo small { font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+
+/* --- F9, o fecho: a fotografia do sítio com o convite por cima ----------- */
+.linha--fecho { grid-template-rows: minmax(0, 1fr); }
+.fecho__fundo { position: absolute; inset: 0; overflow: hidden; }
+.fecho__fundo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+.fecho__texto {
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.8vh, 20px);
+  margin: var(--gutter);
+  padding: clamp(20px, 3.5vh, 40px);
+  max-width: min(680px, calc(100% - var(--gutter) * 2));
+  background: var(--blue);
+  color: var(--cream);
+}
+.fecho__texto .titulo { font-size: clamp(24px, min(4.4vw, 6vh), 60px); max-width: 15ch; }
+
+/* Os pontos numerados marcam sítios da fotografia, e por isso a fotografia
+   não pode ser cortada: uma caixa com a proporção do ficheiro, centrada na
+   célula, guarda a correspondência entre as percentagens e o terreno. */
+.mapa__figura { background: var(--cream); place-items: center; padding: clamp(12px, 2.5vh, 26px) var(--gutter) clamp(28px, 4.5vh, 44px); }
+.mapa__box { position: relative; aspect-ratio: 1197 / 1019; max-width: 100%; max-height: 100%; line-height: 0; }
+.mapa__box img { width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; }
+
+
+/* 11. Ecrãs estreitos e impressão ========================================= */
+
+/* Num ecrã estreito uma linha pode pedir mais do que um ecrã. O snap
+   aguenta: uma área de paragem maior do que a janela deixa rolar por
+   dentro dela, e só a seguir salta para a linha seguinte. */
+@media (max-width: 620px) {
+  .banda__corpo { grid-template-columns: 1fr; }
+  .capa__titulo h1 { max-width: none; }
+  .acessos th:last-child, .acessos td:last-child { display: none; }
+}
+
+/* Quem pediu menos movimento não leva nem o salto das letras nem o
+   deslizar do scroll. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .wordmark:hover .wm__letter, .wordmark.wm-anim .wm__letter { animation: none; }
+}
+
+@media print {
+  html { scroll-snap-type: none; }
+  .site-header, .wordmark, .lang, .menu, .menu-close { display: none; }
+  body { padding-top: 0; }
+  .linha { min-height: 0; break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- A marca, usada no cartão de amigo. -->
+<svg class="svg-defs" aria-hidden="true">
+  <symbol id="mark-sineira" viewBox="0 0 382 387">
+    <path fill="var(--blue)" d="M95.7804 387L382 110.293L0 0L95.7804 387Z"></path>
+    <path fill="var(--cream)" d="M237.388 200.34C247.689 213.363 261.205 214.741 278 206.656C294.744 198.596 298.733 188.514 293.636 177.859C287.97 166.014 278.519 164.239 250.934 170.39C207 180.098 190.348 170.391 180.948 150.741C168.813 125.373 179.487 99.0424 213.836 82.5088C252.358 63.9658 277.644 77.3509 289.904 97.6398L258.295 112.855C252.495 104.628 242.906 97.2765 224.201 106.28C211.468 112.409 206.307 121.384 211.25 131.717C216.092 141.839 224.216 142.977 250.269 137.146C297.241 126.807 314.026 138.102 323.842 158.622C336.554 185.197 325.231 213.078 286.876 231.541C250.048 249.268 221.95 240.417 205.779 215.554L237.388 200.34Z"></path>
+    <path fill="var(--cream)" d="M127.809 268.327C123.481 279.019 118.021 294.985 117.576 297.957L87.9668 285.895C87.9997 283.319 89.7491 277.138 90.8443 274.28C84.2336 278.937 73.674 283.105 53.8757 275.039C26.8839 264.043 22.704 241.605 29.7557 224.188C40.1131 198.606 65.3714 195.148 98.1927 208.519L114.168 215.028L116.946 208.165C120.179 200.181 120.493 191.163 106.12 185.307C93.0352 179.976 87.9124 184.388 83.1947 191.939L53.7216 179.932C63.4814 160.661 82.3208 149.524 116.279 163.582C146.184 175.99 157.746 194.386 146.924 221.116L127.809 268.327ZM106.552 233.914L93.9249 228.77C75.2484 221.161 66.0077 224.06 61.6246 234.886C58.3332 243.015 60.5334 251.886 71.6733 256.424C91.3705 264.449 99.3509 251.7 105.357 236.865L106.552 233.914Z"></path>
+  </symbol>
+</svg>
+
+<!-- ===== Cabeçalho ======================================================
+     O do site, sem o "Dossier de…": logótipo à esquerda, PT—EN ao meio,
+     triângulo à direita. O logótipo e o PT—EN vivem fora do <header> de
+     propósito — é o que lhes permite subir acima do menu e ficar à vista
+     com ele aberto, que é onde o triângulo tem de continuar para poder
+     crescer por baixo dele. -->
+  <a class="wordmark" id="wm-link" href="../../" aria-label="a Sineira — voltar ao site">
+    <svg class="wordmark__svg" viewBox="48 42 194 58" role="img" aria-label="a Sineira" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+      <g class="wm__letter wm__a" id="wm-a" transform="translate(61.805172,73.153994) rotate(0)"><path d="M69.823985,81.501434c-.890183,2.191852-2.012935,5.465021-2.104465,6.074494l-6.089234-2.473037c.006775-.527952.366541-1.795292.59178-2.381029-1.359507.954594-3.531095,1.809153-7.602648.155563-5.550884-2.254396-6.410494-6.854411-4.960295-10.425162c2.130009-5.244613,7.324404-5.953472,14.074134-3.212186l3.285291,1.334264.571407-1.406947c.664744-1.636765.729446-3.485605-2.226502-4.686112-2.690844-1.092839-3.744337-.188405-4.714542,1.359611l-6.061185-2.461646c2.007121-3.950634,5.881465-6.233827,12.864932-3.351763c6.150156,2.54363,8.527829,6.315106,6.30228,11.794964l-3.930953,9.678986ZM65.45233,74.446331l-2.596746-1.054624c-3.840831-1.559887-5.741204-.965669-6.642595,1.253779-.67687,1.666623-.224395,3.485186,2.066532,4.415607c4.050743,1.645139,5.691927-.96846,6.927159-4.00991l.24565-.604852Z" transform="translate(-61.805172,-73.153994)"></path></g>
+      <g class="wm__letter wm__s" transform="translate(102.681297,70.45)"><path d="M96.421534,77.298584c.754883,3.323731,3.138672,4.780762,6.969727,4.780762c3.819336,0,5.453125-1.508789,5.453125-3.931641c0-2.693359-1.594727-3.862305-7.254883-5.179687-9.006836-2.114258-11.233398-5.390137-11.233398-9.858399c0-5.768554,4.314453-9.685547,12.149414-9.685547c8.787109,0,12.288086,4.723633,12.761719,9.564453h-7.209961c-.345703-2.036621-1.47168-4.248535-5.738281-4.248535-2.904297,0-4.657227,1.199707-4.657227,3.549317c0,2.301757,1.405273,3.234863,6.75293,4.475097c9.625976,2.268067,11.736328,5.849121,11.736328,10.515137c0,6.042969-4.572266,10.188965-13.321289,10.188965-8.400391,0-12.825196-4.135742-13.618165-10.169922h7.209961Z" transform="translate(-102.681297,-70.446289)"></path></g>
+      <g class="wm__letter wm__i1-dot" transform="translate(122.109634,64.644287)"><rect width="6.87987" height="6.13574" transform="translate(-3.439634,-3.067887)"></rect></g>
+      <g class="wm__letter wm__i1-stem" transform="translate(122.109634,79.004761)"><rect width="6.87987" height="15.99" transform="translate(-3.439634,-7.994961)"></rect></g>
+      <g class="wm__letter wm__n" transform="translate(140.437744,74.288086)"><path d="M129.301519,68.412354c0-2.112305,0-5.000489-.048828-6.835938h6.663086c.138671.641113.228515,2.942871.264648,3.741699.844727-1.560547,2.855469-3.741699,7.208008-3.741699c4.991211,0,8.234375,3.37207,8.234375,9.616211v15.807129h-6.879883v-15.042481c0-2.793457-.930664-4.816894-3.966797-4.816894-2.922852,0-4.595703,1.625-4.595703,6.012695v13.84668h-6.878906v-18.587402Z" transform="translate(-140.437744,-74.288086)"></path></g>
+      <g class="wm__letter wm__e" transform="translate(165.976837,74.576172) rotate(0)"><path d="M161.196567,76.047607c.005859,3.107422,1.5625,6.14502,4.987305,6.14502c2.864258,0,3.682617-1.149902,4.334961-2.65332h6.885742c-.881836,3.041504-3.594727,8.036621-11.401367,8.036621-8.183594,0-11.734375-6.119629-11.734375-12.638672c0-7.794434,4-13.36084,11.980468-13.36084c8.53418,0,11.435547,6.17334,11.435547,12.375977c0,.841308,0,1.38623-.09082,2.095214h-16.397461Zm9.59668-4.225585c-.047852-2.892579-1.203125-5.327149-4.555664-5.327149-3.295899,0-4.622071,2.272949-4.896485,5.327149h9.452149Z" transform="translate(-165.976837,-74.576172)"></path></g>
+      <g class="wm__letter wm__i2-dot" transform="translate(183.770813,56.491943)"><rect width="6.87988" height="6.13574" transform="translate(-3.439813,-3.067843)"></rect></g>
+      <g class="wm__letter wm__i2-stem" transform="translate(183.77094,86.9997) scale(1,1)"><rect width="6.87988" height="24.1423" transform="translate(-3.43994,-24.1423)"></rect></g>
+      <g class="wm__letter wm__r" transform="translate(198.365051,74.640503) rotate(0)"><path d="M190.962709,69.597168c0-2.46875-.005859-4.661621-.047852-6.739746h6.747071c.09082.556641.180664,3.022461.180664,4.362305c1.09668-2.839844,3.746094-4.915528,7.972656-4.938477v6.564453c-4.992188-.128418-7.972656.51001-7.972656,7.321045v10.833008h-6.879883v-17.402588Z" transform="translate(-198.365051,-74.640503)"></path></g>
+      <g class="wm__letter wm__a2" transform="translate(217.027161,74.288059)"><path d="M227.903139,80.291936c0,2.365722.191406,5.8208.335937,6.419921h-6.572265c-.192383-.491699-.335938-1.801269-.347657-2.42871-.90039,1.395996-2.589843,3.004882-6.985351,3.004882-5.991211,0-8.518555-3.938476-8.518555-7.79248c0-5.660645,4.545899-8.271973,11.831055-8.271973h3.545898v-1.907658c0-1.766602-.635742-3.114803-3.826172-3.114803-2.904297,0-3.540039.845272-3.856445,2.644588h-6.541992c.373047-4.415527,3.103515-7.599666,10.658203-7.557185c6.655273.04248,10.277344,2.252986,10.277344,8.167537v10.835881Zm-6.705094-4.891602h-2.802719c-4.145508,0-5.682617,1.265625-5.682617,3.661133c0,1.798828,1.103516,3.313476,3.576172,3.313476c4.37207,0,4.909164-3.039062,4.909164-6.321777v-.652832Z" transform="translate(-217.027161,-74.288059)"></path></g>
+    </svg>
+  </a>
+
+  <div class="lang" role="group" aria-label="PT — EN">
+    <button class="lang__btn" id="lang-pt" type="button" aria-pressed="true">PT</button>
+    <span class="lang__sep" aria-hidden="true">—</span>
+    <button class="lang__btn" id="lang-en" type="button" aria-pressed="false">EN</button>
+  </div>
+
+<header class="site-header" id="site-header">
+
+
+
+  <button class="menu-trigger" id="tri-btn" aria-label="Abrir menu" aria-expanded="false">
+    <svg class="menu-trigger__svg" viewBox="0 0 382 387" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+      <defs>
+        <clipPath id="triClip" clipPathUnits="userSpaceOnUse">
+          <path d="M95.7804 387L382 110.293L0 0L95.7804 387Z"></path>
+        </clipPath>
+      </defs>
+      <g id="triRot">
+        <path class="menu-trigger__shape" d="M95.7804 387L382 110.293L0 0L95.7804 387Z"></path>
+      </g>
+      <g class="menu-trigger__letters" id="triLetters" clip-path="url(#triClip)">
+        <path d="M237.388 200.34C247.689 213.363 261.205 214.741 278 206.656C294.744 198.596 298.733 188.514 293.636 177.859C287.97 166.014 278.519 164.239 250.934 170.39C207 180.098 190.348 170.391 180.948 150.741C168.813 125.373 179.487 99.0424 213.836 82.5088C252.358 63.9658 277.644 77.3509 289.904 97.6398L258.295 112.855C252.495 104.628 242.906 97.2765 224.201 106.28C211.468 112.409 206.307 121.384 211.25 131.717C216.092 141.839 224.216 142.977 250.269 137.146C297.241 126.807 314.026 138.102 323.842 158.622C336.554 185.197 325.231 213.078 286.876 231.541C250.048 249.268 221.95 240.417 205.779 215.554L237.388 200.34Z"></path>
+        <path d="M127.809 268.327C123.481 279.019 118.021 294.985 117.576 297.957L87.9668 285.895C87.9997 283.319 89.7491 277.138 90.8443 274.28C84.2336 278.937 73.674 283.105 53.8757 275.039C26.8839 264.043 22.704 241.605 29.7557 224.188C40.1131 198.606 65.3714 195.148 98.1927 208.519L114.168 215.028L116.946 208.165C120.179 200.181 120.493 191.163 106.12 185.307C93.0352 179.976 87.9124 184.388 83.1947 191.939L53.7216 179.932C63.4814 160.661 82.3208 149.524 116.279 163.582C146.184 175.99 157.746 194.386 146.924 221.116L127.809 268.327ZM106.552 233.914L93.9249 228.77C75.2484 221.161 66.0077 224.06 61.6246 234.886C58.3332 243.015 60.5334 251.886 71.6733 256.424C91.3705 264.449 99.3509 251.7 105.357 236.865L106.552 233.914Z"></path>
+      </g>
+    </svg>
+  </button>
+
+</header>
+
+<main id="dossier">
+
+<!-- F0 — Capa ------------------------------------------------------------
+     A fotografia do exterior acaba no limite inferior do ecrã: o título
+     vale o que pede e ela fica com o resto da altura. -->
+<section class="linha linha--capa" id="capa">
+  <div class="capa__titulo">
+    <p class="kicker" data-en="a Sineira &middot; Retorta, Vila do Conde">a Sineira &middot; Retorta, Vila do Conde</p>
+    <h1 data-en="Presentation and patronage dossier">Dossier de apresentação e mecenato</h1>
+    <p class="sub" data-en="Requalification of the former Church of Retorta">Requalificação da antiga Igreja de Retorta</p>
+  </div>
+  <figure class="figura capa__figura">
+    <img src="../assets/hero.jpg" alt="Antiga Igreja de Retorta e casa do padre, Vila do Conde" fetchpriority="high">
+  </figure>
+</section>
+
+<!-- F1 — Introdução · formato B: a descrição de um lado, a imagem com a
+     área do outro. -->
+<section class="linha linha--mosaico" id="introducao">
+  <div class="texto">
+    <p class="kicker" data-en="F1 &middot; Introduction">F1 &middot; Introdução</p>
+    <h2 class="titulo">a Sineira</h2>
+    <p class="sub" data-en="Association &amp; Cultural Space">Associação &amp; Espaço Cultural</p>
+    <p data-en="Founded in 2025, a Sineira — Associação Cultural sets out to work alongside the other structures already at work nationally and internationally, answering the needs and interests of the local artistic community and of everyone who wants to take part in the cultural and social activities it promotes.">Criada em 2025, a Sineira — Associação Cultural pretende colaborar com as demais estruturas existentes a nível nacional e internacional, para dar resposta às necessidades e interesses da comunidade artística local e a todo o público interessado em usufruir das actividades culturais e sociais por si promovidas.</p>
+    <p data-en="It comes into being as a collective, but also as a physical place, in Vila do Conde. By requalifying the architectural complex of the former Church of Retorta, the aim is to create there an <em>intergenerational</em> meeting point, connected to the <em>arts</em> and to <em>nature</em>.">Surge como um colectivo, mas também como espaço físico, em Vila do Conde. Requalificando o complexo arquitectónico da antiga Igreja de Retorta, pretende-se aí criar um ponto de encontro <em>intergeracional</em>, de conexão com as <em>artes</em> e com a <em>natureza</em>.</p>
+    <a class="botao" href="#mecenato"><span data-en="Support the project">Apoiar o projecto</span></a>
+  </div>
+  <figure class="figura">
+    <img src="../assets/vista-aerea.jpg" alt="Vista aérea do complexo da antiga Igreja de Retorta" loading="lazy">
+    <p class="area" data-en="Approx. area &middot; 18,000 m&sup2;">Área aproximada &middot; 18.000 m&sup2;</p>
+    <figcaption data-en="The complex &middot; former Church of Retorta">O complexo &middot; antiga Igreja de Retorta</figcaption>
+  </figure>
+</section>
+
+<!-- F2 — Missão · formato C, com o texto à direita. -->
+<section class="linha linha--par linha--espelhado linha--azul" id="missao">
+  <div class="texto">
+    <p class="kicker" data-en="F2 &middot; Mission">F2 &middot; Missão</p>
+    <h2 class="titulo" data-en="Mission and objectives">Missão e objetivos</h2>
+    <ul class="lista">
+      <li data-en="To foster the <em>creation and circulation</em> of artistic projects, through artistic residencies and performances;">Fomentar a <em>criação e divulgação</em> de projetos artísticos, através de residências artísticas e performances;</li>
+      <li data-en="To strengthen <em>collaboration</em> between artists, and between them and the local community;">Reforçar a <em>colaboração</em> entre artistas e entre estes e a comunidade local;</li>
+      <li data-en="To promote the <em>valuing</em> of the cultural and natural heritage of Vila do Conde;">Promover a <em>valorização</em> do património cultural e natural de Vila do Conde;</li>
+      <li data-en="To support artistic <em>literacy</em>, with activities of <em>mediation and training</em> such as workshops, intensive courses and regular classes;">Apoiar a <em>literacia</em> artística, promovendo atividades de <em>mediação e formação</em>, tais como workshops, cursos intensivos e aulas regulares;</li>
+      <li data-en="To run an annual dance and music <em>festival</em>.">Dinamizar um <em>festival</em> anual de dança e música.</li>
+    </ul>
+  </div>
+  <figure class="figura">
+    <img src="../assets/scene-aerea.jpg" alt="Proposta: vista aérea nocturna do complexo" loading="lazy">
+    <figcaption data-en="Proposal &middot; aerial view at night">Proposta &middot; vista aérea nocturna</figcaption>
+  </figure>
+</section>
+
+<!-- F3 — Actividades · formato C. -->
+<section class="linha linha--par" id="actividades">
+  <div class="texto">
+    <p class="kicker" data-en="F3 &middot; Activities">F3 &middot; Actividades</p>
+    <h2 class="titulo" data-en="Activities">Actividades</h2>
+    <p class="disciplinas" data-en="Dance &middot; Music &middot; Theatre &middot; Architecture &middot; Fine arts &middot; Visual arts &middot; Photography">Dança &middot; Música &middot; Teatro &middot; Arquitectura &middot; Artes plásticas &middot; Artes visuais &middot; Fotografia</p>
+    <div class="duas">
+      <div>
+        <p class="kicker" data-en="Artists">Artistas</p>
+        <ul class="lista">
+          <li data-en="Regular classes">Aulas regulares</li>
+          <li data-en="Workshops">Workshops</li>
+          <li data-en="Intensive courses">Cursos intensivos</li>
+          <li data-en="Artistic residencies">Residências artísticas</li>
+          <li data-en="Performances">Espetáculos</li>
+        </ul>
+      </div>
+      <div>
+        <p class="kicker" data-en="Community">Comunidade</p>
+        <ul class="lista">
+          <li data-en="Regular classes">Aulas regulares</li>
+          <li data-en="Workshops">Workshops</li>
+          <li data-en="Summer camp">Campo de férias</li>
+          <li data-en="Film screenings">Sessões de cinema</li>
+          <li data-en="Local produce">Produtos locais</li>
+          <li data-en="Experiences in nature">Experiências na natureza</li>
+        </ul>
+      </div>
+    </div>
+    <p class="kicker" data-en="For every age">Para todas as idades</p>
+    <ul class="pills">
+      <li data-en="Childhood">Infância</li>
+      <li data-en="Youth">Jovens</li>
+      <li data-en="Adults">Adultos</li>
+      <li data-en="Seniors">Séniores</li>
+    </ul>
+  </div>
+  <figure class="figura">
+    <img src="../assets/scene-estudio.jpg" alt="Proposta: estúdio de dança com plateia" loading="lazy">
+    <figcaption data-en="Proposal &middot; dance studio with seating">Proposta &middot; estúdio de dança com plateia</figcaption>
+  </figure>
+</section>
+
+<!-- F4 — O espaço · formato B, com a implantação identificada por pontos. -->
+<section class="linha linha--mosaico" id="espaco">
+  <div class="texto">
+    <p class="kicker" data-en="F4 &middot; The place">F4 &middot; O espaço</p>
+    <h2 class="titulo">Retorta — Vila do Conde</h2>
+    <p data-en="Approximate area: 18,000 m&sup2;. A complex to requalify — church, house, woodland and clearing — for training, creation and presentation.">Área aproximada: 18.000 m&sup2;. Um complexo a requalificar — igreja, casa, mata e clareira — para formação, criação e apresentação.</p>
+    <ul class="mapa__legenda">
+      <li data-en="Studio / stage">Estúdio / palco</li>
+      <li data-en="Church: multipurpose space">Igreja: espaço multiusos</li>
+      <li data-en="Lodging: artistic residency programme">Alojamento: programa de residências artísticas</li>
+      <li data-en="Food and drink">Restauração</li>
+      <li data-en="Parking">Estacionamento</li>
+      <li data-en="Woodland: leisure and educational trails">Floresta: percursos de lazer e pedagógicos</li>
+      <li data-en="Clearing: festival grounds">Clareira: espaço para festival</li>
+    </ul>
+  </div>
+  <figure class="figura mapa__figura">
+    <div class="mapa__box">
+      <img src="../assets/vista-aerea.jpg" alt="Implantação aérea do complexo da antiga Igreja de Retorta" loading="lazy">
+      <span class="mapa__ponto" style="left:79%; top:43%">1</span>
+      <span class="mapa__ponto" style="left:77%; top:50%">2</span>
+      <span class="mapa__ponto" style="left:62%; top:50%">3</span>
+      <span class="mapa__ponto" style="left:57%; top:42%">4</span>
+      <span class="mapa__ponto" style="left:70%; top:34%">5</span>
+      <span class="mapa__ponto" style="left:40%; top:60%">6</span>
+      <span class="mapa__ponto" style="left:66%; top:84%">7</span>
+    </div>
+    <figcaption data-en="Site plan &middot; 18,000 m&sup2;">Implantação &middot; 18.000 m&sup2;</figcaption>
+  </figure>
+</section>
+
+<!-- F5 — Acessos · formato B. -->
+<section class="linha linha--mosaico linha--azul" id="acessos">
+  <div class="texto">
+    <p class="kicker" data-en="F5 &middot; Getting here">F5 &middot; Acessos</p>
+    <h2 class="titulo" data-en="Getting here">Acessos</h2>
+    <p data-en="Retorta sits between the river, the woodland and the city. Metro, historic centre, beaches and airport are all minutes away.">Retorta fica entre o rio, a floresta e a cidade. Metro, centro histórico, praias e aeroporto estão a minutos.</p>
+    <table class="acessos">
+      <thead>
+        <tr>
+          <th data-en="Destination">Destino</th>
+          <th data-en="Mode A">Modo A</th>
+          <th data-en="Mode B">Modo B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-en="Santa Clara metro / Vila do Conde">Metro Santa Clara / Vila do Conde</td><td data-en="bike 5 min">bicicleta 5 min</td><td data-en="walk 15 min">a pé 15 min</td></tr>
+        <tr><td data-en="Historic centre of Vila do Conde">Centro histórico de Vila do Conde</td><td data-en="bike 10 min">bicicleta 10 min</td><td data-en="walk 30 min">a pé 30 min</td></tr>
+        <tr><td data-en="Beaches of Vila do Conde">Praias de Vila do Conde</td><td data-en="bike 20 min">bicicleta 20 min</td><td data-en="walk 60 min">a pé 60 min</td></tr>
+        <tr><td data-en="Trindade metro / Porto">Metro Trindade / Porto</td><td data-en="metro 40 min">metro 40 min</td><td>60 min</td></tr>
+        <tr><td data-en="Francisco Sá Carneiro airport">Aeroporto Francisco Sá Carneiro</td><td data-en="car 20 min">carro 20 min</td><td>50 min</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure class="figura">
+    <img src="../assets/vila-do-conde.jpg" alt="Vila do Conde, o rio Ave e o Atlântico" loading="lazy">
+    <figcaption data-en="Vila do Conde &middot; the river Ave and the Atlantic">Vila do Conde &middot; o rio Ave e o Atlântico</figcaption>
+  </figure>
+</section>
+
+<!-- F6 — Intervenção · formato C, com as fotografias da obra em tira. -->
+<section class="linha linha--par" id="intervencao">
+  <div class="texto">
+    <p class="kicker" data-en="F6 &middot; Works">F6 &middot; Intervenção</p>
+    <h2 class="titulo" data-en="Works under way">Intervenção</h2>
+    <p data-en="The work has already begun. The nave has a new floor; the altars and the gilded arch are waiting to be restored.">O trabalho já começou. A nave ganhou pavimento novo; os altares e o arco dourado aguardam recuperação.</p>
+    <p data-en="What is shown here was done with the association&rsquo;s own means. What follows — and is set out in the pages ahead — is what patronage is for.">O que aqui se vê foi feito com meios da própria associação. O que se segue — e que as páginas seguintes descrevem — é o que o mecenato vem permitir.</p>
+  </div>
+  <div class="tira">
+    <figure class="figura">
+      <img src="../assets/nave-2025.jpg" alt="Nave da igreja antes do pavimento" loading="lazy">
+      <figcaption data-en="Before &middot; the nave">Antes &middot; nave</figcaption>
+    </figure>
+    <figure class="figura">
+      <img src="../assets/nave-2026.jpg" alt="Nave com pavimento novo, em obra" loading="lazy">
+      <figcaption data-en="During &middot; new floor">Durante &middot; pavimento novo</figcaption>
+    </figure>
+    <figure class="figura">
+      <img src="../assets/arco.jpg" alt="Interior em obra, visto através do arco" loading="lazy">
+      <figcaption data-en="Interior &middot; arch and floor under way">Interior &middot; arco e pavimento</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- F6 — Faseamento · formato A, a banda de documento. -->
+<section class="linha linha--banda" id="faseamento">
+  <div class="texto">
+    <p class="kicker" data-en="F6 &middot; Phasing">F6 &middot; Faseamento</p>
+    <h2 class="titulo" data-en="Phasing of the works">Faseamento da intervenção</h2>
+    <div class="banda__corpo banda__corpo--planta">
+      <div>
+        <ul class="lista">
+          <li data-en="<strong>Phase 1</strong> — church, garden and parking"><strong>Fase 1</strong> — igreja, jardim e estacionamento</li>
+          <li data-en="<strong>Phase 2</strong> — the former priest&rsquo;s house"><strong>Fase 2</strong> — antiga casa do padre</li>
+          <li data-en="<strong>Phase 3</strong> — the former catechism building"><strong>Fase 3</strong> — antiga catequese</li>
+          <li data-en="<strong>Phase 4</strong> — food, drink and events facilities, and better parking"><strong>Fase 4</strong> — equipamento de restauração, eventos e melhoria do estacionamento</li>
+          <li data-en="<strong>Phase 5</strong> — area for future expansion (boundaries to be confirmed)"><strong>Fase 5</strong> — área de expansão futura (limites a verificar)</li>
+        </ul>
+      </div>
+      <figure class="figura figura--planta">
+        <img src="../assets/faseamento.jpg" alt="Planta de faseamento da intervenção na antiga Igreja de Retorta" loading="lazy">
+        <figcaption data-en="Phasing plan">Planta de faseamento</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- F6 — Plano de requalificação · formato C. -->
+<section class="linha linha--par linha--espelhado linha--azul" id="requalificacao">
+  <div class="texto">
+    <p class="kicker" data-en="F6 &middot; Requalification">F6 &middot; Requalificação</p>
+    <h2 class="titulo" data-en="Requalification plan">Plano de requalificação</h2>
+    <div class="duas">
+      <ul class="lista">
+        <li data-en="Topographic and architectural survey">Levantamento topográfico e arquitectónico</li>
+        <li data-en="Architecture and engineering design">Projecto de arquitectura e especialidades</li>
+        <li data-en="Sewage, water, electricity and telecoms networks">Construção: redes de esgotos, água, electricidade e telecomunicações</li>
+        <li data-en="Heating and cooling system">Sistema de aquecimento / arrefecimento</li>
+        <li data-en="Access roads and parking">Construção de acessos e estacionamento</li>
+        <li data-en="Windows">Execução de janelas</li>
+        <li data-en="Restoration of the church&rsquo;s main door">Recuperação da porta principal da igreja</li>
+        <li data-en="Restoration of the church altars">Recuperação dos altares da igreja</li>
+      </ul>
+      <ul class="lista">
+        <li data-en="Floors">Execução de pavimentos</li>
+        <li data-en="Wall treatment">Tratamento de paredes</li>
+        <li data-en="Toilets">Criação de instalações sanitárias</li>
+        <li data-en="Restoration of the priest&rsquo;s house roof">Recuperação do telhado da casa do padre</li>
+        <li data-en="Opening of the proscenium and slab demolition">Abertura de vão (proscénio) e demolição de laje</li>
+        <li data-en="Painting &middot; interior and exterior lighting">Pinturas &middot; iluminação interior e exterior</li>
+        <li data-en="Landscape design and outdoor works">Projecto de paisagismo e arranjos exteriores</li>
+      </ul>
+    </div>
+  </div>
+  <figure class="figura">
+    <img src="../assets/altares.jpg" alt="Pormenor dos altares a recuperar" loading="lazy">
+    <figcaption data-en="Altars — restoration foreseen in the plan">Altares — recuperação prevista no plano</figcaption>
+  </figure>
+</section>
+
+<!-- F7 — Plano de apoio e mecenato · formato A, a banda de documento. -->
+<section class="linha linha--banda" id="mecenato">
+  <div class="texto">
+    <p class="kicker" data-en="F7 &middot; Patronage">F7 &middot; Mecenato</p>
+    <h2 class="titulo" data-en="Support and patronage plan">Plano de apoio e mecenato</h2>
+    <div class="banda__corpo">
+      <div>
+        <p data-en="The requalification of the former Church of Retorta and a Sineira&rsquo;s artistic programme need company. People, companies and institutions can support the project — and become part of the community taking shape here.">A requalificação da antiga Igreja de Retorta e o programa artístico da Sineira pedem companhia. Pessoas, empresas e instituições podem apoiar o projecto — e fazer parte da comunidade que está a nascer.</p>
+        <ul class="lista">
+          <li data-en="Free access to every event">Acesso gratuito a todos os eventos</li>
+          <li data-en="Discount on regular classes, workshops and intensive courses">Desconto na frequência de aulas regulares, workshops e cursos intensivos</li>
+          <li data-en="A socio-cultural and economic dynamic for Vila do Conde">Criação de dinâmica socio-cultural e económica em Vila do Conde</li>
+          <li data-en="Visibility on posters and other communication materials">Publicidade através de cartazes e demais materiais de comunicação</li>
+          <li data-en="Tax benefits (Cultural Patronage Law)">Benefícios fiscais (Lei do Mecenato Cultural)</li>
+        </ul>
+        <p class="legal" data-en="a Sineira — Associação Cultural &middot; VAT 518858359. Support qualifies under the Portuguese Tax Benefits Statute (cultural patronage).">a Sineira — Associação Cultural &middot; NIF 518858359. Apoios enquadráveis no Estatuto dos Benefícios Fiscais (mecenato cultural).</p>
+        <a class="botao" href="mailto:ola@asineira.pt?subject=Apoiar%20a%20Sineira"><span data-en="I want to help">Quero apoiar</span></a>
+      </div>
+      <div class="niveis">
+        <article class="nivel">
+          <p class="kicker" data-en="01 &middot; People">01 &middot; Pessoas</p>
+          <h3 data-en="Friend">Amigo</h3>
+          <p data-en="Join the community. Events, discounts and a place in what is being born in Retorta.">Entra na comunidade. Eventos, descontos e um lugar no que está a nascer em Retorta.</p>
+          <div class="cartao-amigo">
+            <svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
+            <div><b data-en="Friend of a Sineira">Amigo da Sineira</b><br><small data-en="Friend card">Cartão de amigo</small></div>
+          </div>
+        </article>
+        <article class="nivel">
+          <p class="kicker" data-en="02 &middot; Companies and institutions">02 &middot; Empresas e instituições</p>
+          <h3 data-en="Sponsorship">Patrocínio</h3>
+          <p class="por-escrever" data-en="Text still to be written by the association.">Texto por escrever pela associação.</p>
+        </article>
+        <article class="nivel">
+          <p class="kicker" data-en="03 &middot; Institutions and associations">03 &middot; Instituições e associações</p>
+          <h3 data-en="Partner">Parceiro</h3>
+          <p data-en="An association named in the cultural life of Vila do Conde — posters, website, events and territory.">Associação nomeada à dinâmica cultural de Vila do Conde — cartazes, site, eventos e território.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Território · o "depois encaixamos" da nota da cliente: locais de
+     interesse e apoios ficam aqui, entre o mecenato e os contactos, até
+     ela dizer onde os quer. -->
+<section class="linha linha--banda linha--azul" id="territorio">
+  <div class="texto">
+    <p class="kicker" data-en="Territory">Território</p>
+    <h2 class="titulo" data-en="Partnerships, support and places nearby">Parcerias, apoios e locais de interesse</h2>
+    <div class="tres">
+      <div>
+        <p class="kicker" data-en="Partnerships (to date)">Parcerias (à data)</p>
+        <ul class="lista">
+          <li>Curtas de Vila do Conde</li>
+          <li data-en="Centro Ciência Viva science centre">Centro Ciência Viva</li>
+        </ul>
+      </div>
+      <div>
+        <p class="kicker" data-en="Support (to date)">Apoios (à data)</p>
+        <ul class="lista">
+          <li data-en="Retorta e Tougues parish council">Junta de Freguesia de Retorta e Tougues</li>
+          <li data-en="Vila do Conde town council">Câmara Municipal de Vila do Conde</li>
+        </ul>
+      </div>
+      <div>
+        <p class="kicker" data-en="Places of interest nearby">Locais de interesse na proximidade</p>
+        <ul class="lista">
+          <li data-en="Centro Ciência Viva science centre">Centro Ciência Viva</li>
+          <li data-en="Research hub">Pólo de investigação</li>
+          <li>ESMAD</li>
+          <li data-en="Sports centre">Centro gimnodesportivo</li>
+          <li data-en="Rio Ave football ground">Campo Rio Ave Futebol</li>
+          <li data-en="Sanches school">Escola Sanches</li>
+          <li data-en="Saul Dias school">Escola Saul Dias</li>
+          <li data-en="Clube Fluvial Vilacondense">Clube Fluvial Vilacondense</li>
+          <li data-en="Cycle path network (planned)">Rede de ciclovia (futuramente)</li>
+          <li data-en="River beach (planned)">Praia fluvial (futuramente)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- F8 — Mais informações · formato C. -->
+<section class="linha linha--par linha--espelhado" id="informacoes">
+  <div class="texto">
+    <p class="kicker" data-en="F8 &middot; Information">F8 &middot; Informações</p>
+    <h2 class="titulo" data-en="More information">Mais informações</h2>
+    <ul class="lista">
+      <li><a href="https://asineira.pt">asineira.pt</a></li>
+      <li><a href="https://instagram.com">Instagram</a></li>
+      <li><a href="mailto:ola@asineira.pt">ola@asineira.pt</a></li>
+    </ul>
+    <p class="legal" data-en="a Sineira — Associação Cultural &middot; VAT 518858359<br>Registered office: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde">a Sineira — Associação Cultural &middot; NIF 518858359<br>Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
+    <a class="botao" href="mailto:ola@asineira.pt"><span data-en="Write to us">Escrever-nos</span></a>
+  </div>
+  <figure class="figura">
+    <img src="../assets/scene-estudio.jpg" alt="Proposta: estúdio de dança com plateia" loading="lazy">
+    <figcaption data-en="Proposal &middot; the church as a multipurpose space">Proposta &middot; a igreja como espaço multiusos</figcaption>
+  </figure>
+</section>
+
+<!-- F9 — O convite. A fotografia do sítio, com o fecho por cima. -->
+<section class="linha linha--fecho" id="visita">
+  <div class="fecho__fundo">
+    <img src="../assets/hero.jpg" alt="Antiga Igreja de Retorta e casa do padre, Vila do Conde" loading="lazy">
+  </div>
+  <div class="fecho__texto">
+    <p class="kicker" data-en="F9 &middot; Invitation">F9 &middot; Convite</p>
+    <h2 class="titulo" data-en="Come and see the place. Come and support what is missing.">Vem ver o sítio. Vem apoiar o que falta.</h2>
+    <p data-en="This dossier is an invitation: to visit, to patronage, to partnership. The former Church of Retorta is becoming a home for the arts — and it needs people who want to be part of it.">Este dossier é um convite: à visita, ao mecenato, à parceria. A antiga Igreja de Retorta está a tornar-se casa para as artes — e precisa de quem queira fazer parte.</p>
+    <a class="botao" href="#mecenato"><span data-en="Patronage plan">Plano de mecenato</span></a>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== Menu ===========================================================
+     O índice do dossier. Abre com o triângulo, como no site. -->
+<nav class="menu" id="menu" aria-hidden="true" aria-label="Índice do dossier">
+  <ul class="menu__lista">
+    <li class="menu-item" data-delay="0"><a class="menu__link" href="#capa"><span class="menu__num">F0</span><span data-en="Cover">Capa</span></a></li>
+    <li class="menu-item" data-delay="1"><a class="menu__link" href="#introducao"><span class="menu__num">F1</span><span data-en="Introduction">Introdução</span></a></li>
+    <li class="menu-item" data-delay="2"><a class="menu__link" href="#missao"><span class="menu__num">F2</span><span data-en="Mission">Missão</span></a></li>
+    <li class="menu-item" data-delay="3"><a class="menu__link" href="#actividades"><span class="menu__num">F3</span><span data-en="Activities">Actividades</span></a></li>
+    <li class="menu-item" data-delay="4"><a class="menu__link" href="#espaco"><span class="menu__num">F4</span><span data-en="The place">O espaço</span></a></li>
+    <li class="menu-item" data-delay="5"><a class="menu__link" href="#acessos"><span class="menu__num">F5</span><span data-en="Getting here">Acessos</span></a></li>
+    <li class="menu-item" data-delay="6"><a class="menu__link" href="#intervencao"><span class="menu__num">F6</span><span data-en="Works">Intervenção</span></a></li>
+    <li class="menu-item" data-delay="7"><a class="menu__link" href="#faseamento"><span class="menu__num">F6</span><span data-en="Phasing">Faseamento</span></a></li>
+    <li class="menu-item" data-delay="8"><a class="menu__link" href="#requalificacao"><span class="menu__num">F6</span><span data-en="Requalification">Requalificação</span></a></li>
+    <li class="menu-item" data-delay="9"><a class="menu__link" href="#mecenato"><span class="menu__num">F7</span><span data-en="Patronage">Mecenato</span></a></li>
+    <li class="menu-item" data-delay="10"><a class="menu__link" href="#territorio"><span class="menu__num">&mdash;</span><span data-en="Territory">Território</span></a></li>
+    <li class="menu-item" data-delay="11"><a class="menu__link" href="#informacoes"><span class="menu__num">F8</span><span data-en="Information">Informações</span></a></li>
+    <li class="menu-item" data-delay="12"><a class="menu__link" href="#visita"><span class="menu__num">F9</span><span data-en="Come and visit">Vem ver o sítio</span></a></li>
+  </ul>
+</nav>
+
+<button class="menu-close" id="menu-close" aria-label="Fechar menu">
+  <svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+    <path d="M32.8795 0.0325423L37.6193 4.77237L23.5656 18.8261L37.5862 32.8467L32.8464 37.5865L18.8258 23.5659L4.77203 37.6197L0.0322052 32.8799L14.086 18.8261L-0.000940464 4.73922L4.73888 -0.000603347L18.8258 14.0863L32.8795 0.0325423Z"></path>
+  </svg>
+</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ======================================================================
+     1. O logótipo salta enquanto se faz scroll
+     ====================================================================== */
+
+  /* Igual ao site: as letras saltam ao passar o rato (só CSS) e enquanto a
+     página rola. A classe sai meio segundo depois de o scroll parar. */
+  var wm = document.getElementById('wm-link');
+  var wmTimer = null;
+
+  addEventListener('scroll', function () {
+    if (!wm) return;
+    wm.classList.add('wm-anim');
+    clearTimeout(wmTimer);
+    wmTimer = setTimeout(function () { wm.classList.remove('wm-anim'); }, 500);
+  }, { passive: true });
+
+
+  /* ======================================================================
+     2. PT — EN
+     ====================================================================== */
+
+  /* Cada peça de texto traduzível traz o inglês num data-en. O português
+     fica guardado na primeira troca, e a partir daí é só alternar entre os
+     dois — nada se perde e não há um segundo documento a manter alinhado. */
+  var TRADUZ = Array.prototype.slice.call(document.querySelectorAll('[data-en]'));
+  var btnPt = document.getElementById('lang-pt');
+  var btnEn = document.getElementById('lang-en');
+  var TITULOS = {
+    pt: 'a Sineira — Dossier de apresentação e mecenato',
+    en: 'a Sineira — Presentation and patronage dossier'
+  };
+
+  function idioma(lang) {
+    var en = lang === 'en';
+    TRADUZ.forEach(function (el) {
+      if (el.dataset.pt === undefined) el.dataset.pt = el.innerHTML;
+      el.innerHTML = en ? el.dataset.en : el.dataset.pt;
+    });
+    document.documentElement.lang = en ? 'en' : 'pt';
+    document.title = en ? TITULOS.en : TITULOS.pt;
+    btnPt.setAttribute('aria-pressed', String(!en));
+    btnEn.setAttribute('aria-pressed', String(en));
+    try { localStorage.setItem('sineira-lang', en ? 'en' : 'pt'); } catch (e) {}
+  }
+
+  btnPt.addEventListener('click', function () { idioma('pt'); });
+  btnEn.addEventListener('click', function () { idioma('en'); });
+
+  /* O idioma escolhido da última vez, e senão o do navegador. */
+  var guardado = null;
+  try { guardado = localStorage.getItem('sineira-lang'); } catch (e) {}
+  if (guardado === 'en' || (!guardado && !/^pt/i.test(navigator.language || ''))) idioma('en');
+
+
+  /* ======================================================================
+     3. O triângulo e o índice
+     ====================================================================== */
+
+  /* O triângulo do cabeçalho cresce em torno da própria ponta até cobrir o
+     ecrã, e o índice aparece por cima. É a abertura do site, reduzida ao
+     que este dossier precisa. */
+  var triBtn    = document.getElementById('tri-btn');
+  var triRot    = document.getElementById('triRot');
+  var triLetras = document.getElementById('triLetters');
+  var menu      = document.getElementById('menu');
+  var fechar    = document.getElementById('menu-close');
+  var itens     = Array.prototype.slice.call(menu.querySelectorAll('.menu-item'));
+
+  var DUR   = 800;
+  var EASE  = 'cubic-bezier(.2,.8,.2,1)';
+  var aberto = false;
+  var escala = 1;
+  var abrindoAte = 0;
+
+  /* Quanto tem o triângulo de crescer para tapar o ecrã: a distância da
+     ponta ao canto mais afastado, mais uma folga. */
+  function escalaDeCobertura() {
+    var r = triBtn.getBoundingClientRect();
+    var vw = innerWidth, vh = innerHeight;
+    var cx = r.left + r.width * 0.417, cy = r.top + r.height * 0.428;
+    var max = Math.max(
+      Math.hypot(cx, cy), Math.hypot(vw - cx, cy),
+      Math.hypot(cx, vh - cy), Math.hypot(vw - cx, vh - cy)
+    );
+    return (max / (r.width * 0.30)) * 1.25;
+  }
+
+  function desenha() {
+    triBtn.setAttribute('aria-expanded', String(aberto));
+    triBtn.style.pointerEvents = aberto ? 'none' : 'auto';
+    triBtn.style.transition = aberto
+      ? 'transform ' + (DUR / 1000) + 's ' + EASE + ' 0s'
+      : 'transform ' + (DUR / 2000) + 's ' + EASE + ' .12s';
+    triBtn.style.transform = aberto ? 'rotate(-108deg) scale(' + escala + ')' : 'none';
+
+    triLetras.style.opacity = aberto ? '0' : '1';
+    triLetras.style.transition = aberto ? 'opacity .18s ease 0s' : 'opacity .3s ease .45s';
+
+    /* Quem sabe quanto dura a abertura é este ficheiro: o creme do logótipo
+       e do PT—EN entra no fim dela. */
+    document.documentElement.style.setProperty('--tint-delay', aberto ? (DUR / 1000) + 's' : '0s');
+
+    menu.setAttribute('aria-hidden', String(!aberto));
+    menu.style.visibility = aberto ? 'visible' : 'hidden';
+    menu.style.pointerEvents = aberto ? 'auto' : 'none';
+    /* O triângulo tapa o ecrã a meio da abertura; o azul do menu só entra
+       depois, senão apagava-o. */
+    menu.style.background = aberto ? '#003C78' : 'transparent';
+    menu.style.transition = aberto ? 'background 0s linear .8s' : 'background 0s linear 0s';
+
+    /* A faixa do relógio e da barra de endereço, no iOS. */
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', aberto ? '#003C78' : '#F2E7A9');
+
+    itens.forEach(function (li) {
+      var d = 0.65 + Number(li.getAttribute('data-delay')) * 0.05;
+      li.style.opacity = aberto ? '1' : '0';
+      li.style.transform = aberto ? 'none' : 'translateY(14px)';
+      li.style.transition = aberto
+        ? 'opacity .45s ease ' + d + 's, transform .45s ease ' + d + 's'
+        : 'opacity .3s ease, transform .3s ease';
+    });
+
+    fechar.style.opacity = aberto ? '1' : '0';
+    fechar.style.transform = aberto ? 'rotate(0deg) scale(1)' : 'rotate(-120deg) scale(.4)';
+    fechar.style.pointerEvents = aberto ? 'auto' : 'none';
+    fechar.style.transition = aberto
+      ? 'opacity .4s ease .12s, transform .45s cubic-bezier(.2,1.4,.4,1) .12s'
+      : 'opacity .35s ease, transform .35s ease';
+  }
+
+  function abre() {
+    if (aberto) return;
+    abrindoAte = Date.now() + DUR + 80;
+    document.documentElement.classList.add('menu-open');
+    aberto = true;
+    escala = escalaDeCobertura();
+    desenha();
+  }
+
+  function fecha() {
+    if (!aberto || Date.now() < abrindoAte) return;
+    document.documentElement.classList.remove('menu-open');
+    aberto = false;
+    desenha();
+    /* O triângulo só volta a aceitar cliques depois de recolher: o X que se
+       acabou de carregar está no mesmo ponto, e um clique aí reabria o menu
+       por cima da animação a meio. */
+    triBtn.style.pointerEvents = 'none';
+    setTimeout(function () { if (!aberto) triBtn.style.pointerEvents = 'auto'; }, 700);
+  }
+
+  triBtn.addEventListener('click', abre);
+  fechar.addEventListener('click', fecha);
+
+  /* Uma linha escolhida no índice fecha-o e leva lá — o salto é o do
+     próprio <a>, com o scroll-padding a descontar o cabeçalho. */
+  menu.addEventListener('click', function (e) {
+    if (e.target.closest('.menu__link')) fecha();
+  });
+
+  addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && aberto) fecha();
+  });
+
+  /* Rodar o ecrã com o menu aberto mudava a distância a tapar. */
+  addEventListener('resize', function () {
+    if (!aberto) return;
+    escala = escalaDeCobertura();
+    triBtn.style.transition = 'none';
+    triBtn.style.transform = 'rotate(-108deg) scale(' + escala + ')';
+  });
+
+  desenha();
+
+
+  /* ======================================================================
+     4. O triângulo em repouso
+     ====================================================================== */
+
+  /* Fora da abertura o triângulo oscila devagar, como no site: é o que diz
+     que ali se carrega. */
+  var t0 = null;
+  function oscila(t) {
+    if (t0 === null) t0 = t;
+    if (!aberto) {
+      var a = Math.sin((t - t0) / 1400) * 4;
+      triRot.setAttribute('transform', 'rotate(' + a.toFixed(2) + ' 159 193)');
+    }
+    requestAnimationFrame(oscila);
+  }
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) requestAnimationFrame(oscila);
+
+})();
+</script>
+
+</body>
+</html>
