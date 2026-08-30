@@ -5786,37 +5786,35 @@ html.menu-open .menu::before { opacity: 1; }
       sum += rows[i];
     }
 
-    /* Sempre que der, as linhas ficam todas iguais e a dividir o ecrã em
-       partes certas: um ecrã mostra duas linhas inteiras, ou três, e nunca
-       meia linha cortada em baixo. São tantas quantas a linha mais alta
-       deixar — e nunca mais do que as linhas que a grelha tem, senão a
-       página ficava mais curta do que a janela e via-se fundo.
+    /* Com mais do que uma coluna as linhas ficam sempre todas iguais. A
+       grelha é uma grelha: linhas de alturas diferentes dão uma fila de
+       mosaicos e uma tira de mosaicos por baixo, e era isso que se via nas
+       "informações" e na "loja", que são as que têm menos texto — a linha
+       delas encolhia para metade da de cima.
 
-       "Sempre que der": se para lá chegar as linhas tivessem de crescer
-       muito mais do que o conteúdo pede, cada uma fica com a sua altura. É
-       essa a diferença para o que havia antes — quando só cabia uma linha
-       por ecrã, um cartão de três linhas de texto acabava com meio ecrã de
-       vazio por baixo. */
+       O que muda com a janela não é se elas são iguais, é a altura em que o
+       ficam:
+
+         · cabendo duas ou três linhas certas no ecrã, é essa a altura, e o
+           ecrã fecha sem meia linha cortada em baixo. Nunca mais linhas do
+           que a grelha tem, senão a página ficava mais curta do que a
+           janela e via-se fundo por baixo.
+
+         · não cabendo — a janela é baixa de mais, ou é tão alta que para
+           encher o ecrã as linhas teriam de crescer muito para lá do que o
+           conteúdo pede —, manda a linha mais alta e a grelha rola, que é
+           para isso que ela rola.
+
+       O SNAP_MAX é a fronteira do segundo caso: até 1.35 vezes o que o
+       conteúdo pede, uma linha ainda cresce para fechar o ecrã; daí para
+       cima já não, que era um cartão de três linhas de texto com meio ecrã
+       de vazio por baixo. */
     if (!oneCol && tallest > 0) {
       var n = Math.min(MAX_ROWS, rows.length, Math.max(1, Math.floor(avail / tallest)));
       var even = avail / n;
-
-      /* Numa janela mais baixa do que uma linha inteira não há divisão certa
-         a fazer, e antes não se fazia nenhuma: as linhas ficavam cada uma
-         com a sua altura medida e a última — a das "informações" e da
-         "loja", que é a que tem menos texto — encolhia para o seu mínimo ao
-         lado de linhas com o dobro. Uma fila de mosaicos iguais acabava numa
-         tira.
-
-         Numa janela dessas quem manda é a linha e não o ecrã: todas ficam
-         com a altura da mais alta e a grelha rola, que é o que ela já fazia
-         para o resto. */
-      if (even < tallest) even = tallest;
-
-      if (even <= tallest * SNAP_MAX) {
-        for (i = 0; i < rows.length; i++) rows[i] = even;
-        sum = even * rows.length;
-      }
+      if (even < tallest || even > tallest * SNAP_MAX) even = tallest;
+      for (i = 0; i < rows.length; i++) rows[i] = even;
+      sum = even * rows.length;
     }
 
     /* Se o conteúdo todo não chegar para encher o ecrã, cresce tudo na mesma
