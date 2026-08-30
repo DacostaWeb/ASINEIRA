@@ -935,10 +935,13 @@ html[lang="en"] .title-art {
   text-transform: uppercase;
 }
 
-/* A duas colunas o mosaico fica largo e baixo, e do cartão de amigo só
-   assomava uma tira de dois dedos — nem se percebe o que é. Mais vale não
-   estar: fica o texto e o botão, com o ar todo entre eles. */
-.tiles[data-cols="2"] #amigos .tile__aside { display: none; }
+/* A duas e a três colunas o mosaico fica largo e baixo, e do cartão de
+   amigo só assomava uma tira de dois dedos — nem se percebe o que é. Mais
+   vale não estar: fica o texto e o botão, com o ar todo entre eles. A uma
+   coluna o mosaico fica com o seu conteúdo todo, e a quatro o cartão sai
+   da coluna de leitura e vai inteiro para o canto (ver .tile--span). */
+.tiles[data-cols="2"] #amigos .tile__aside,
+.tiles[data-cols="3"] #amigos .tile__aside { display: none; }
 
 /* O ar por cima do botão não pode ser margem dele: com o margin-top: auto a
    encostá-lo ao fundo, uma margem fixa não sobrevivia. Fica na caixa do
