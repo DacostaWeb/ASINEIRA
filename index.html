@@ -3882,30 +3882,35 @@ html.menu-open .menu::before { opacity: 1; }
   var HOJE = new Date();
 
   var EVENTOS = [
-    { dia: 26, mes: 9, ano: 2026, hora: '21h30',
-      img: 'projetos2/img/voar4.jpg',
-      imgs: ['projetos2/img/voar4.jpg', 'projetos2/img/voar2.jpg', 'projetos2/img/voar3.jpg'],
+    /* As três noites do Theatro Circo são a mesma peça que já está nos
+       concluídos, e por isso dizem-se com as palavras dela e mostram as
+       fotografias dela, pela mesma ordem: a peça é uma só, e uma sinopse
+       escrita de novo para cada data era dizer que eram três. O que muda de
+       uma para a outra é a data e o sítio, que é o que uma data e um sítio
+       servem para dizer. */
+    { dia: 26, mes: 9, ano: 2026,
+      img: 'projetos2/img/voar5.jpg',
+      imgs: ['projetos2/img/voar5.jpg', 'projetos2/img/voar1.jpg', 'projetos2/img/voar7.jpg'],
       bilhetes: null,
       projeto: 'voar',
       pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Theatro Circo, Braga', natureza: 'Formação',
-            sinopse: 'A oficina e a apresentação sobre a liberdade dentro de casa voltam a fazer-se, agora em Braga.' },
+            sinopse: 'Uma oficina e uma apresentação pública sobre a liberdade dentro de casa, a partir de um texto de Adolf Loos.' },
       en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Theatro Circo, Braga', natureza: 'Training',
-            sinopse: 'The workshop and showing about freedom inside the house are staged again, now in Braga.' },
-      alt: { pt: 'A cenografia da casa montada em palco, vista da plateia.',
-             en: 'The house set built on stage, seen from the audience.' } },
+            sinopse: 'A workshop and a public showing about freedom inside the house, departing from a text by Adolf Loos.' },
+      alt: { pt: 'A apresentação final vista de trás da plateia: uma criança aparece na janela redonda da casa.',
+             en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' } },
 
-    /* Três noites seguidas, um cartaz só: ver o 'diaFim' lá em cima. */
-    { dia: 13, diaFim: 15, mes: 10, ano: 2026, hora: '21h30',
-      img: 'projetos2/img/voar6.jpg',
-      imgs: ['projetos2/img/voar6.jpg', 'projetos2/img/voar8.jpg', 'projetos2/img/voar9.jpg'],
+    { dia: 13, diaFim: 15, mes: 10, ano: 2026,
+      img: 'projetos2/img/voar5.jpg',
+      imgs: ['projetos2/img/voar5.jpg', 'projetos2/img/voar1.jpg', 'projetos2/img/voar7.jpg'],
       bilhetes: null,
       projeto: 'voar',
       pt: { titulo: 'Voar Muito Perto do Sol', sitio: 'Theatro Circo, Braga', natureza: 'Formação',
-            sinopse: 'Três dias de oficina com apresentação pública no fim, a partir do texto de Adolf Loos.' },
+            sinopse: 'Uma oficina e uma apresentação pública sobre a liberdade dentro de casa, a partir de um texto de Adolf Loos.' },
       en: { titulo: 'Voar Muito Perto do Sol', sitio: 'Theatro Circo, Braga', natureza: 'Training',
-            sinopse: 'Three days of workshop closing with a public showing, departing from the text by Adolf Loos.' },
-      alt: { pt: 'Uma criança à janela redonda da casa durante a apresentação.',
-             en: 'A child at the round window of the house during the showing.' } },
+            sinopse: 'A workshop and a public showing about freedom inside the house, departing from a text by Adolf Loos.' },
+      alt: { pt: 'A apresentação final vista de trás da plateia: uma criança aparece na janela redonda da casa.',
+             en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' } },
 
     { dia: 24, mes: 10, ano: 2026, hora: '21h30',
       img: 'dossier/assets/hero.jpg',
@@ -3928,13 +3933,15 @@ html.menu-open .menu::before { opacity: 1; }
       alt: { pt: 'A nave da antiga igreja preparada para receber aulas e ensaios.',
              en: 'The nave of the former church set up for classes and rehearsals.' } },
 
-    { dia: 19, mes: 12, ano: 2026, hora: '10h00',
+    { dia: 19, mes: 12, ano: 2026,
       img: 'dossier/assets/scene-estudio.jpg',
       imgs: ['dossier/assets/scene-estudio.jpg', 'dossier/assets/nave-2026.jpg', 'dossier/assets/faseamento.jpg'],
       bilhetes: null,
-      pt: { titulo: 'Workshop', sitio: 'Igreja e Jardim', natureza: 'Formação',
+      pt: { titulo: 'Workshop', sitio: 'Igreja e Jardim',
+            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR',
             sinopse: 'Um dia inteiro a trabalhar em conjunto, do exercício da manhã à mostra do que se fez ao fim da tarde.' },
-      en: { titulo: 'Workshop', sitio: 'Church and Garden', natureza: 'Training',
+      en: { titulo: 'Workshop', sitio: 'Church and Garden',
+            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE',
             sinopse: 'A whole day of working together, from the morning exercise to a showing of the work at dusk.' },
       alt: { pt: 'O estúdio da Sineira preparado para uma oficina.',
              en: 'The Sineira studio set up for a workshop.' } },
@@ -4005,7 +4012,7 @@ html.menu-open .menu::before { opacity: 1; }
       pt: {
         natureza: 'Formação',
         onde:     'Casa da Música',
-        quando:   'Novembro de 2024',
+        quando:   '25 de abril de 2026',
         resumo:   'Uma oficina e uma apresentação pública sobre a liberdade dentro de casa, a partir de um texto de Adolf Loos.',
         texto: [
           '“Voar Muito Perto do Sol” é um trabalho de cruzamento disciplinar entre as artes visuais, o teatro, a dança e a música.',
@@ -4025,7 +4032,7 @@ html.menu-open .menu::before { opacity: 1; }
       en: {
         natureza: 'Training',
         onde:     'Casa da Música',
-        quando:   'November 2024',
+        quando:   '25 April 2026',
         resumo:   'A workshop and a public showing about freedom inside the house, departing from a text by Adolf Loos.',
         texto: [
           '“Voar Muito Perto do Sol” is a cross-disciplinary work between the visual arts, theatre, dance and music.',
@@ -4125,10 +4132,37 @@ html.menu-open .menu::before { opacity: 1; }
   /* Há eventos que duram mais do que um dia — três noites no Theatro Circo,
      uma semana de residência —, e desses a lista guarda o último em
      'diaFim'. Nenhum intervalo passa a fronteira do mês, e por isso basta o
-     número: "13–15 de outubro" escreve o mês uma vez só. Quem não traz
-     'diaFim' dura um dia e nada disto lhe toca. */
+     número: o mês escreve-se uma vez só. Quem não traz 'diaFim' dura um dia
+     e nada disto lhe toca.
+
+     Poucos dias contam-se, muitos abreviam-se: "13, 14 e 15 de outubro" são
+     três noites e diz-se que são três; "4, 5, 6, 7, 8 e 9 de janeiro" é uma
+     semana escrita a contar pelos dedos, e essa lê-se melhor "4–9". A
+     fronteira está nos três, que é onde a enumeração ainda cabe numa
+     respiração.
+
+     A escrita curta — a da coluna estreita da tabela — abrevia sempre: lá o
+     que falta é largura, não é clareza. */
+  var EV_DIAS_A_CONTAR = 3;
   function evUmDia(e) { return !e.diaFim || e.diaFim === e.dia; }
-  function evDiaTxt(e) { return evUmDia(e) ? String(e.dia) : e.dia + '–' + e.diaFim; }
+  function evDiaTxtCurto(e) { return evUmDia(e) ? String(e.dia) : e.dia + '–' + e.diaFim; }
+  function evDiaTxt(e) {
+    if (evUmDia(e)) return String(e.dia);
+    var n = e.diaFim - e.dia + 1;
+    if (n > EV_DIAS_A_CONTAR) return evDiaTxtCurto(e);
+    var dias = [];
+    for (var d = e.dia; d <= e.diaFim; d++) dias.push(d);
+    var ultimo = dias.pop();
+    return dias.join(', ') + (lg() === 'en' ? ' and ' : ' e ') + ultimo;
+  }
+
+  /* A natureza tem duas escritas por causa do workshop, que é as três coisas
+     ao mesmo tempo. Por extenso nos cartazes, onde há linha para ela; em
+     sigla nas duas listas, onde a coluna da natureza tem 22% da tabela e
+     "Formação · Criação · Apresentação" se partia em quatro linhas. Quem só
+     é uma coisa escreve-se igual nos dois sítios e não precisa da sigla. */
+  function evNatureza(t) { return t.natureza || ''; }
+  function evNaturezaCurta(t) { return t.natCurta || t.natureza || ''; }
   function evData(e) {
     if (!e.mes) return String(e.ano || '');
     return lg() === 'en'
@@ -4148,7 +4182,7 @@ html.menu-open .menu::before { opacity: 1; }
     return SEMANA[lg()][new Date(evAnoDe(e), e.mes - 1, e.dia).getDay()];
   }
   function evDiaMes(e) {
-    return evDiaTxt(e) + ' ' + MESES_C[lg()][e.mes - 1];
+    return evDiaTxtCurto(e) + ' ' + MESES_C[lg()][e.mes - 1];
   }
   function evQuando(e) {
     return [e.hora, evSemana(e), evDiaMes(e)].filter(Boolean).join(' · ');
@@ -4326,10 +4360,21 @@ html.menu-open .menu::before { opacity: 1; }
      HTML de propósito: assim a lista não se volta a montar de cada vez que a
      janela muda de tamanho, e a data acerta com a largura ainda antes de o
      JS dar por ela. */
+  /* A data por extenso da tabela abrevia os intervalos, ao contrário da do
+     cartaz: a coluna tem 22% da largura e não parte em duas linhas, e "13,
+     14 e 15 de Outubro" saía-lhe por cima do título do lado. Aqui o
+     intervalo diz-se "13–15", como já dizia o das residências. */
+  function evDataTabela(e) {
+    if (!e.mes) return String(e.ano || '');
+    return lg() === 'en'
+      ? evDiaTxtCurto(e) + ' ' + MESES.en[e.mes - 1]
+      : evDiaTxtCurto(e) + ' de ' + MESES.pt[e.mes - 1];
+  }
+
   function evCelData(e) {
     var td = document.createElement('td');
     td.className = 'events__date';
-    [['events__d events__d--longa', evData(e)],
+    [['events__d events__d--longa', evDataTabela(e)],
      ['events__d events__d--curta', e.mes ? evDiaMes(e) : evData(e)]].forEach(function (par) {
       var n = document.createElement('span');
       n.className = par[0];
@@ -4343,7 +4388,7 @@ html.menu-open .menu::before { opacity: 1; }
     var tr = document.createElement('tr');
     var t = evTexto(e);
     tr.appendChild(evCelData(e));
-    [t.titulo, t.sitio, t.natureza].forEach(function (txt) {
+    [t.titulo, t.sitio, evNaturezaCurta(t)].forEach(function (txt) {
       var td = document.createElement('td');
       td.textContent = txt;
       tr.appendChild(td);
@@ -4376,7 +4421,7 @@ html.menu-open .menu::before { opacity: 1; }
     var marcas = evMarcas(c, 'events__marcas');
     if (marcas) media.appendChild(marcas);
     tr.appendChild(media);
-    [t.titulo, t.sitio, t.natureza].forEach(function (txt) {
+    [t.titulo, t.sitio, evNaturezaCurta(t)].forEach(function (txt) {
       var td = document.createElement('td');
       td.textContent = txt;
       tr.appendChild(td);
@@ -4900,7 +4945,7 @@ html.menu-open .menu::before { opacity: 1; }
     li.querySelector('.prj__q--longo').textContent = prjQuando(e);
     li.querySelector('.prj__q').appendChild(prjQuandoCurto(e));
     li.querySelector('.prj__s span').textContent = t.sitio;
-    li.querySelector('.evtag span').textContent = t.natureza || '';
+    li.querySelector('.evtag span').textContent = evNaturezaCurta(t);
 
     /* O fim da linha é uma célula só: as marcas do que ficou encostadas ao
        "+", e não cada uma na sua coluna. O "+" é o mesmo do cartaz — uma
@@ -5071,7 +5116,7 @@ html.menu-open .menu::before { opacity: 1; }
 
   /* --- a identificação --- */
 
-  function fichaId(p, t) {
+  function fichaId(p, t, nome) {
     fichaIdEl.textContent = '';
 
     fichaIdEl.appendChild(nel('h1', 'ficha__h1', p.titulo));
@@ -5079,12 +5124,29 @@ html.menu-open .menu::before { opacity: 1; }
 
     /* Os três sinais dos cartazes, em coluna: o que é, onde foi, quando. */
     var dets = nel('div', 'ficha__dets');
-    [['tipo', t.natureza], ['pin', t.onde], ['mes', t.quando]].forEach(function (par) {
+    function sinal(qual, txt) {
       var d = nel('p', 'evdet');
-      d.innerHTML = SINAIS[par[0]];
-      d.appendChild(nel('span', null, par[1]));
+      d.innerHTML = SINAIS[qual];
+      d.appendChild(nel('span', null, txt));
       dets.appendChild(d);
+    }
+    sinal('tipo', t.natureza);
+    sinal('pin', t.onde);
+    sinal('mes', t.quando);
+
+    /* Uma peça que volta a fazer-se tem mais do que uma data, e as que aí
+       vêm vão a seguir às que passaram — cada uma com o seu sítio, que nem
+       sempre é o mesmo. Saem da lista EVENTOS e não de um campo escrito aqui:
+       assim uma data só se muda num sítio, e a ficha nunca desmente o cartaz.
+
+       O relógio e não o calendário: é o sinal de quem ainda está para vir,
+       como nos cartazes dos próximos. */
+    EVENTOS.forEach(function (e) {
+      if (e.projeto !== nome) return;
+      sinal('pin', evTexto(e).sitio);
+      sinal('relogio', evDataLonga(e));
     });
+
     fichaIdEl.appendChild(dets);
 
     /* A ficha técnica vive aqui e não no fim da página: é identificação, e
@@ -5206,7 +5268,7 @@ html.menu-open .menu::before { opacity: 1; }
     if (!p) return false;
     var t = p[lg()];
 
-    fichaId(p, t);
+    fichaId(p, t, nome);
     fichaMatEl.textContent = '';
     fichaVideo(p, t);
     fichaTexto(p, t);
@@ -5736,9 +5798,22 @@ html.menu-open .menu::before { opacity: 1; }
        por ecrã, um cartão de três linhas de texto acabava com meio ecrã de
        vazio por baixo. */
     if (!oneCol && tallest > 0) {
-      var n = Math.min(MAX_ROWS, rows.length, Math.floor(avail / tallest));
-      var even = n >= 1 ? avail / n : 0;
-      if (even >= tallest && even <= tallest * SNAP_MAX) {
+      var n = Math.min(MAX_ROWS, rows.length, Math.max(1, Math.floor(avail / tallest)));
+      var even = avail / n;
+
+      /* Numa janela mais baixa do que uma linha inteira não há divisão certa
+         a fazer, e antes não se fazia nenhuma: as linhas ficavam cada uma
+         com a sua altura medida e a última — a das "informações" e da
+         "loja", que é a que tem menos texto — encolhia para o seu mínimo ao
+         lado de linhas com o dobro. Uma fila de mosaicos iguais acabava numa
+         tira.
+
+         Numa janela dessas quem manda é a linha e não o ecrã: todas ficam
+         com a altura da mais alta e a grelha rola, que é o que ela já fazia
+         para o resto. */
+      if (even < tallest) even = tallest;
+
+      if (even <= tallest * SNAP_MAX) {
         for (i = 0; i < rows.length; i++) rows[i] = even;
         sum = even * rows.length;
       }
