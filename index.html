@@ -186,6 +186,7 @@ a:hover { text-decoration: underline; }
 .marquee__text,
 .evtag,
 .events__head,
+.events__mais,
 .panel-section__title,
 .aerial__tag { font-family: var(--font-display); }
 
@@ -891,6 +892,7 @@ html[lang="en"] .title-art {
    seguir, nos cartazes e na lista de todos os projetos, e escrito duas vezes
    uma a seguir à outra não é lista nenhuma. Fechado, ela é o cartão. */
 .tile.is-expanded .events,
+.tile.is-expanded .events__mais,
 .tile.is-expanded .events__head { display: none; }
 
 /* Conteúdo escondido até se carregar no "+" (o JS troca o display). */
@@ -1370,6 +1372,26 @@ html[lang="en"] .title-art {
 .events__head--prox { margin-top: 34px; }
 .events--prox,
 .events--conc { margin-top: 6px; }
+
+/* Na capa, a lista dos próximos mostra três e pára (ver EV_NA_CAPA). O
+   cartão fechado é um cartaz do que aí vem, e a lista inteira — sete
+   linhas hoje, mais amanhã — já não é um cartaz: é o painel. Este “ver
+   mais” é o que leva lá, e diz quantas ficaram por dizer, que é a única
+   maneira de quem lê saber que ficou alguma.
+
+   Veste-se como o rótulo que a lista tem em cima e não como uma ligação:
+   é o mesmo desenho do rodapé em versaletes, que também leva a algum lado
+   sem se vestir de tal (ver .tile__capl). Quando não há mais nenhuma para
+   mostrar, o JS põe-lhe o --vazio e ele sai. */
+.events__mais {
+  margin-top: 12px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  opacity: .75;
+}
+.events__mais--vazio { display: none; }
 
 /* A coluna dos sinais tem a medida da coluna da data, e não a dos sinais.
 
@@ -3063,6 +3085,14 @@ html.menu-open .menu::before { opacity: 1; }
       <p class="events__head events__head--prox" data-i18n="secProx">Próximos</p>
       <table class="events events--prox"><tbody id="ev-lista"></tbody></table>
 
+      <!-- Só os três primeiros próximos ficam aqui; os outros estão no painel,
+           e é esta linha que lá leva — ao mesmo sítio a que levam o título, o
+           “+” e o “próximos” do rodapé. O texto é escrito pelo JS, que é quem
+           sabe quantas ficaram de fora (ver evPintaMais). -->
+      <p class="events__mais" id="ev-mais">
+        <a class="tile__capl" href="#eventos" data-sec="ev-sec-prox" id="ev-mais-liga">ver mais</a>
+      </p>
+
       <p class="events__head" data-i18n="secConc">concluídos</p>
       <table class="events events--conc"><tbody id="ev-concluidos"></tbody></table>
 
@@ -4361,6 +4391,15 @@ html.menu-open .menu::before { opacity: 1; }
   var evGrelhaEl = document.getElementById('ev-grelha');
   var evGrelhaConcEl = document.getElementById('ev-grelha-conc');
   var evTile     = document.getElementById('eventos');
+  var evMaisEl   = document.getElementById('ev-mais');
+  var evMaisLiga = document.getElementById('ev-mais-liga');
+
+  /* Quantos dos proximos se veem no cartao fechado. O cartao e um cartaz do
+     que ai vem e nao o arquivo: tres linhas dizem-no, e a lista inteira era
+     o painel escrito duas vezes. As restantes ficam a uma linha de distancia,
+     no "ver mais" que esta debaixo da tabela. */
+  var EV_NA_CAPA = 3;
+  function evNaCapa() { return Math.min(EV_NA_CAPA, EVENTOS.length); }
 
   var evEmFoco = 0;
   var evParado = false;   /* com o rato em cima, a vez não anda */
@@ -4371,8 +4410,10 @@ html.menu-open .menu::before { opacity: 1; }
      fotografia como o que aí vem, e não havia razão para a de baixo ser a
      única lista a apontar para uma célula vazia. A ordem é o que liga cada
      linha à sua: os concluídos ficam a seguir aos próximos, e por isso a
-     linha n dos concluídos é a fotografia EVENTOS.length + n. */
-  function evFotos() { return EVENTOS.concat(CONCLUIDOS); }
+     linha n dos concluídos é a fotografia evNaCapa() + n — e não
+     EVENTOS.length + n: as fotografias são as das linhas que se veem, e das
+     de cima só se veem as três primeiras (ver EV_NA_CAPA). */
+  function evFotos() { return EVENTOS.slice(0, EV_NA_CAPA).concat(CONCLUIDOS); }
 
   /* A fotografia em foco. Estão todas montadas por baixo umas das outras
      desde o início e a troca é só de opacidade: assim não há um salto em
@@ -4405,7 +4446,7 @@ html.menu-open .menu::before { opacity: 1; }
     }
     if (evConcEl) {
       Array.prototype.forEach.call(evConcEl.children, function (tr, n) {
-        tr.classList.toggle('is-on', EVENTOS.length + n === evEmFoco);
+        tr.classList.toggle('is-on', evNaCapa() + n === evEmFoco);
       });
     }
   }
@@ -4488,7 +4529,7 @@ html.menu-open .menu::before { opacity: 1; }
 
     /* Como as linhas de cima: o rato numa linha pára a vez e chama a
        fotografia dela para o lado. */
-    tr.addEventListener('mouseenter', function () { evParado = true; evFoco(EVENTOS.length + i); });
+    tr.addEventListener('mouseenter', function () { evParado = true; evFoco(evNaCapa() + i); });
     tr.addEventListener('mouseleave', function () { evParado = false; });
 
     /* E, como as de cima, carregar abre a lista inteira — mas esta vai ter
@@ -5097,13 +5138,32 @@ html.menu-open .menu::before { opacity: 1; }
     });
   }
 
+  /* O "ver mais" debaixo da lista dos próximos. Diz quantas linhas ficaram
+     de fora e não só que há mais: quem lê o cartão não tem como saber que
+     a lista foi cortada, e um número é o que lho diz. Sai quando não houver
+     nada de fora — com três eventos ou menos, a lista já está toda lá.
+
+     O texto é escrito aqui e não pelo dicionário porque muda com a conta;
+     o renderEventos volta a chamar isto a cada troca de idioma, que é quando
+     o resto da lista também se reescreve. */
+  function evPintaMais() {
+    if (!evMaisEl || !evMaisLiga) return;
+    var restam = EVENTOS.length - EV_NA_CAPA;
+    evMaisEl.classList.toggle('events__mais--vazio', restam <= 0);
+    if (restam <= 0) return;
+    evMaisLiga.textContent = lg() === 'en'
+      ? 'see ' + restam + ' more'
+      : 'ver mais ' + restam;
+  }
+
   /* Tudo de raiz a cada mudança de idioma: os textos dos eventos vêm da lista
      e não do dicionário, e por isso não passam pelo applyLang. */
   function renderEventos() {
     if (evListaEl) {
       evListaEl.textContent = '';
-      EVENTOS.forEach(function (e, i) { evListaEl.appendChild(evLinha(e, i)); });
+      EVENTOS.slice(0, EV_NA_CAPA).forEach(function (e, i) { evListaEl.appendChild(evLinha(e, i)); });
     }
+    evPintaMais();
     if (evConcEl) {
       evConcEl.textContent = '';
       CONCLUIDOS.forEach(function (c, i) { evConcEl.appendChild(evLinhaConc(c, i)); });
