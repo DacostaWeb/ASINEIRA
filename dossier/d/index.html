@@ -393,13 +393,21 @@ html.menu-open .menu::before { opacity: 1; }
    primeira coisa de cada bloco e caem sempre à mesma altura, linha após
    linha. Centrados, mudavam de sítio consoante o que tinham por baixo. */
 .texto {
+  /* O intervalo entre dois blocos de uma linha — o título e a lista, a lista
+     e a nota. Sobe com a altura do ecrã: onde há ecrã a mais, é aqui que ele
+     se gasta, e não a esticar a letra. */
+  --respiro: clamp(12px, 2.4vh, 34px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: clamp(8px, 1.4vh, 18px);
-  padding: clamp(22px, 4vh, 54px) var(--gutter);
+  gap: var(--respiro);
+  padding: clamp(24px, 4.5vh, 60px) var(--gutter);
   min-width: 0;
 }
+/* O rótulo e o título são uma coisa só, e o subtítulo vem colado ao título:
+   o respiro abre-se por baixo deles, não no meio. */
+.texto > .kicker { margin-bottom: calc(4px - var(--respiro)); }
+.texto > .titulo + .sub { margin-top: calc(6px - var(--respiro)); }
 /* E o botão assenta no fundo do bloco, como o .tile__cta do site. */
 .texto > .botao:last-child { margin-top: auto; }
 .texto--azul { background: var(--blue); color: var(--cream); }
@@ -434,11 +442,12 @@ html.menu-open .menu::before { opacity: 1; }
    atravessam a metade inteira do ecrã. */
 .texto .lista, .texto .rota, .texto .mapa__legenda { max-width: 58ch; }
 
-/* As listas não levam sinal nenhum antes do item. O "›" que aqui esteve
-   repetia-se doze vezes numa lista e passava a textura; o que separa um item
-   do seguinte é o ar entre eles, e o recuo que os afasta do título. */
-.lista li { position: relative; padding-left: 1em; font-size: var(--t-lista); line-height: 1.55; }
-.lista li + li { margin-top: .45em; }
+/* As listas não levam sinal nenhum antes do item, nem recuo. O "›" que aqui
+   esteve repetia-se doze vezes numa lista e passava a textura; e o recuo que
+   ficou no lugar dele desalinhava os itens do título que têm por cima. O que
+   separa um item do seguinte é o ar entre eles. */
+.lista li { position: relative; font-size: var(--t-lista); line-height: 1.55; }
+.lista li + li { margin-top: .6em; }
 /* Sem o sinal antes do item, um endereço numa lista não se distinguia de
    uma frase: os que levam a algum lado ficam sublinhados. */
 .lista a { text-decoration: underline; text-underline-offset: 3px; }
@@ -449,7 +458,7 @@ html.menu-open .menu::before { opacity: 1; }
 /* E ao contrário: quinze linhas seguidas — o plano de requalificação — só
    cabem num ecrã com o ar entre elas apertado ao mínimo. */
 .lista--cerrada li { line-height: 1.4; }
-.lista--cerrada li + li { margin-top: .22em; }
+.lista--cerrada li + li { margin-top: .34em; }
 
 .pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .pills li {
@@ -515,8 +524,14 @@ html.menu-open .menu::before { opacity: 1; }
 .figura { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; background: var(--blue); min-height: 0; overflow: hidden; }
 /* O min-height:0 é o que trava o tamanho mínimo automático de um item de
    grelha: sem ele a fotografia impõe a sua altura natural e transborda a
-   célula, em vez de se deixar recortar. */
-.figura img { width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: cover; }
+   célula, em vez de se deixar recortar.
+
+   E o max-height trava a outra ponta. Numa grelha sem altura definida — que
+   é o caso de uma linha com min-height e mais nada — o 1fr resolve-se pelo
+   conteúdo, e uma fotografia vertical em meia página pedia os seus 1024px e
+   esticava a linha a mais de um ecrã. Com o tecto no ecrã, ela recorta-se
+   como as outras. */
+.figura img { width: 100%; height: 100%; min-width: 0; min-height: 0; max-height: var(--linha-h); object-fit: cover; }
 /* A legenda saiu de cima da fotografia e passou para debaixo dela. Pousada
    sobre a imagem, tapava-lhe sempre uma tira — e era justamente a tira de
    que falava. Debaixo, em creme, é uma linha do documento e não um remendo:
@@ -526,7 +541,6 @@ html.menu-open .menu::before { opacity: 1; }
   background: var(--cream);
   color: var(--blue);
   font-size: var(--t-legenda);
-  opacity: .85;
   font-weight: 700;
   letter-spacing: .12em;
   line-height: 1.35;
@@ -562,7 +576,8 @@ html.menu-open .menu::before { opacity: 1; }
    coluna mesmo em ecrã estreito: são três verticais, e empilhadas davam três
    tiras baixas em vez da sequência antes / durante / interior. */
 .tira { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; min-height: 0; }
-.tira figcaption { padding-inline: 12px; }
+/* Sem margem própria: a legenda de cada fotografia da tira encosta à
+   mesma distância da borda dela que as outras encostam da sua. */
 
 
 /* 8. Os três formatos das linhas ========================================== */
@@ -599,15 +614,19 @@ html.menu-open .menu::before { opacity: 1; }
   .linha--tira .tira .figura { min-height: 32svh; }
 }
 
-/* --- Formato A: banda de documento, uma coluna centrada ------------------ */
-.linha--banda { justify-content: center; grid-template-columns: minmax(0, 1180px); }
+/* --- Formato A: banda de documento --------------------------------------
+   Ocupava 1180px centrados no ecrã, e por isso o rótulo e o título de uma
+   banda começavam mais para dentro do que os de todas as outras linhas. A
+   banda passa a valer a largura toda: o que a limita é a medida de leitura
+   de cada peça lá dentro, e a margem de entrada é a mesma do resto. */
+.linha--banda { grid-template-columns: minmax(0, 1fr); }
 .linha--banda > .texto { padding-inline: var(--gutter); }
 /* Dentro da banda o conteúdo reparte-se em duas colunas, para caber num
    ecrã sem encolher a letra. */
 .banda__corpo {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: clamp(18px, 3vw, 46px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 60px);
   /* Estica e cresce: é assim que a planta do faseamento chega à altura da
      linha em vez de ficar um selo no meio do creme. */
   align-items: stretch;
@@ -641,12 +660,17 @@ html.menu-open .menu::before { opacity: 1; }
    àquela altura —, e por isso não há recorte nenhum: nem em altura, nem em
    largura. */
 .linha--capa { height: var(--linha-h); grid-template-columns: minmax(0, 1fr) auto; }
+/* Na capa o título não recua: a linha de cima dele é a mesma linha por onde
+   a fotografia começa, do outro lado do ecrã. O recuo negativo desconta a
+   entrelinha, para o que alinha ser a altura das maiúsculas e não a caixa
+   invisível à volta delas. */
 .capa__titulo {
   display: flex;
   flex-direction: column;
   gap: clamp(8px, 1.4vh, 16px);
-  padding: clamp(22px, 4vh, 54px) var(--gutter);
+  padding: 0 var(--gutter) clamp(24px, 4.5vh, 60px);
 }
+.capa__titulo h1 { margin-top: -.13em; }
 .capa__pe {
   margin-top: auto;
   padding-top: 52px;
@@ -1085,7 +1109,6 @@ html.menu-open .menu::before { opacity: 1; }
 <section class="linha linha--capa" id="capa">
   <div class="capa__titulo">
     <h1 data-en="Presentation dossier">Dossier de apresentação</h1>
-    <p class="sub" data-en="Requalification of the former Church of Retorta">Requalificação da antiga Igreja de Retorta</p>
     <p class="capa__pe">Rua da Igreja, Retorta &middot; 4480-353 Vila do Conde</p>
   </div>
   <figure class="figura capa__figura">
@@ -1102,7 +1125,6 @@ html.menu-open .menu::before { opacity: 1; }
     <p class="sub" data-en="Association &amp; Cultural Space">Associação &amp; Espaço Cultural</p>
     <p data-en="Founded in 2025, a Sineira — Associação Cultural sets out to work alongside the other structures already at work nationally and internationally, answering the needs and interests of the local artistic community and of everyone who wants to take part in the cultural and social activities it promotes.">Criada em 2025, a Sineira — Associação Cultural pretende colaborar com as demais estruturas existentes a nível nacional e internacional, para dar resposta às necessidades e interesses da comunidade artística local e a todo o público interessado em usufruir das actividades culturais e sociais por si promovidas.</p>
     <p data-en="It comes into being as a collective, but also as a physical place, in Vila do Conde. By requalifying the architectural complex of the former Church of Retorta, the aim is to create there an <em>intergenerational</em> meeting point, connected to the <em>arts</em> and to <em>nature</em>.">Surge como um colectivo, mas também como espaço físico, em Vila do Conde. Requalificando o complexo arquitectónico da antiga Igreja de Retorta, pretende-se aí criar um ponto de encontro <em>intergeracional</em>, de conexão com as <em>artes</em> e com a <em>natureza</em>.</p>
-    <a class="botao" href="#mecenato"><span data-en="Support the project">Apoiar o projecto</span></a>
   </div>
   <figure class="figura">
     <img src="../assets/vista-aerea.jpg" alt="Vista aérea do complexo da antiga Igreja de Retorta" loading="lazy">
@@ -1125,8 +1147,7 @@ html.menu-open .menu::before { opacity: 1; }
     </ul>
   </div>
   <figure class="figura">
-    <img src="../assets/scene-aerea.jpg" alt="Proposta: vista aérea nocturna do complexo" loading="lazy">
-    <figcaption data-en="Proposal &middot; aerial view at night">Proposta &middot; vista aérea nocturna</figcaption>
+    <img src="../assets/arco.jpg" alt="Interior da igreja: o arco, a cobertura de madeira e o coro" loading="lazy">
   </figure>
 </section>
 
