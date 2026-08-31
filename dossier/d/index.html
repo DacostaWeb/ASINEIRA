@@ -442,11 +442,27 @@ html.menu-open .menu::before { opacity: 1; }
    atravessam a metade inteira do ecrã. */
 .texto .lista, .texto .rota, .texto .mapa__legenda { max-width: 58ch; }
 
-/* As listas não levam sinal nenhum antes do item, nem recuo. O "›" que aqui
-   esteve repetia-se doze vezes numa lista e passava a textura; e o recuo que
-   ficou no lugar dele desalinhava os itens do título que têm por cima. O que
-   separa um item do seguinte é o ar entre eles. */
+/* Cada item leva um ponto, e o ponto fica pendurado fora da coluna: o texto
+   continua a alinhar pelo título que tem por cima, e o sinal vive na margem.
+   É o contrário do "›" que aqui esteve, que empurrava o texto todo para
+   dentro e desalinhava a lista de tudo o resto.
+
+   O ponto cabe na goteira da página (var(--gutter)), e por isso não precisa
+   de recuo nenhum para ser desenhado. */
 .lista li { position: relative; font-size: var(--t-lista); line-height: 1.55; }
+.lista li::before {
+  content: "";
+  position: absolute;
+  left: -.85em;
+  top: .62em;
+  width: .28em;
+  height: .28em;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .55;
+}
+/* As fases já se anunciam pelo nome — "Fase 1 —" — e não pedem sinal. */
+.lista--sem-ponto li::before { content: none; }
 .lista li + li { margin-top: .6em; }
 /* Sem o sinal antes do item, um endereço numa lista não se distinguia de
    uma frase: os que levam a algum lado ficam sublinhados. */
@@ -460,6 +476,10 @@ html.menu-open .menu::before { opacity: 1; }
 .lista--cerrada li { line-height: 1.4; }
 .lista--cerrada li + li { margin-top: .34em; }
 
+/* As idades são o rodapé das actividades: descem para o fim do bloco, e o
+   ar que sobrava por baixo delas passa a estar por cima. */
+.idades { margin-top: auto; padding-top: clamp(16px, 3vh, 40px); }
+.idades .kicker { margin-bottom: 12px; }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .pills li {
   border: 1.5px solid currentColor;
@@ -482,10 +502,15 @@ html.menu-open .menu::before { opacity: 1; }
   letter-spacing: .12em;
   text-transform: uppercase;
 }
+/* Ao passar o rato o botão inverte-se: enche-se da cor da letra, e a letra
+   veste a cor do fundo. Qual é o fundo é o que a caixa onde ele está sabe —
+   e o fecho, que é azul sem ser uma .linha--azul, ficava de fora da conta:
+   creme sobre creme, o texto desaparecia. */
 .botao:hover { background: currentColor; text-decoration: none; }
 .botao:hover span { color: var(--cream); }
 .linha--azul .botao:hover span,
-.texto--azul .botao:hover span { color: var(--blue); }
+.texto--azul .botao:hover span,
+.fecho__texto .botao:hover span { color: var(--blue); }
 
 .legal { font-size: clamp(10px, min(.9vw, 1.5vh), 13px); line-height: 1.5; opacity: .75; max-width: 58ch; }
 
@@ -639,6 +664,13 @@ html.menu-open .menu::before { opacity: 1; }
 /* A planta, dentro da banda, mede-se pela altura do ecrã: sem isto o
    object-fit:contain não tem caixa nenhuma para caber. */
 .banda__corpo .figura { min-height: clamp(180px, 30vh, 400px); }
+/* Sozinha na linha, a planta cresce até ao que a linha lhe deixar. Para
+   isso a linha tem de ter altura definida e não apenas mínima: numa grelha
+   de altura indefinida, o 1fr resolve-se pelo conteúdo, e a planta pedia a
+   altura natural àquela largura — mais de um ecrã. É o mesmo height que a
+   capa usa, e pela mesma razão. */
+.linha--faseamento { height: var(--linha-h); }
+.linha--banda > .texto > .figura--planta { flex: 1; min-height: 0; }
 /* A planta do faseamento lê-se pelo desenho, não pela legenda: leva a
    fatia maior da banda. Acima da quebra, onde há duas colunas. */
 @media (min-width: 621px) {
@@ -764,6 +796,10 @@ html.menu-open .menu::before { opacity: 1; }
   font-weight: 700;
 }
 
+/* Uma fotografia pequena dentro de um bloco de texto: a proposta nocturna,
+   à escala de uma vinheta, por baixo da legenda do terreno. */
+.vinheta { width: min(100%, 260px); aspect-ratio: 16 / 9; object-fit: cover; }
+
 /* --- Acessos (F5): o mapa e a lista do "como chegar?" do site -----------
 
    A tabela de três colunas que aqui esteve dizia os mesmos tempos, mas sem
@@ -830,7 +866,7 @@ html.menu-open .menu::before { opacity: 1; }
    e traz as cores de dentro. Vai um ponto mais pequena — uma forma cheia
    pesa mais no prato do que três linhas. */
 .aerial__pin .marca { width: 16px; height: auto; }
-.aerial__pin--sineira { left: 81.5%; top: 88%; }
+.aerial__pin--sineira { left: 86.5%; top: 88%; }
 .aerial__pin--escola { left: 40%; top: 34.8%; }
 .aerial__pin--metro  { left: 26%; top: 53.7%; }
 .aerial__pin--centro { left:  7%; top: 57.9%; }
@@ -891,18 +927,72 @@ html.menu-open .menu::before { opacity: 1; }
   letter-spacing: -.01em;
   text-transform: uppercase;
 }
-.nivel p { font-size: var(--t-lista); }
+.nivel p { font-size: var(--t-lista); line-height: 1.45; }
 
 /* As parcerias e os apoios, no fundo da banda do mecenato. Um filete fino
    é o que os separa do plano — a mesma página, o mesmo creme. */
 .parcerias {
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 1.4vh, 18px);
-  margin-top: clamp(24px, 4.5vh, 52px);
-  padding-top: clamp(18px, 3vh, 36px);
+  gap: clamp(5px, .9vh, 11px);
+  margin-top: clamp(12px, 2vh, 24px);
+  padding-top: clamp(10px, 1.7vh, 20px);
   border-top: 1.5px solid color-mix(in srgb, currentColor 30%, transparent);
 }
+/* Quatro colunas iguais: parcerias, apoios e — porque são dez — os pontos
+   de interesse a ocupar duas. */
+.parcerias__grelha {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 32px);
+  align-items: start;
+}
+@media (max-width: 900px) { .parcerias__grelha { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .parcerias__grelha { grid-template-columns: 1fr; } }
+.parcerias__grelha .kicker { margin-bottom: 8px; }
+/* Os pontos de interesse são dez — o dobro dos outros dois juntos. Ficam com
+   duas colunas e o dobro da largura, para a folha não crescer por causa de
+   uma lista só. */
+.parcerias__pontos { grid-column: span 2; }
+.parcerias__pontos .lista { columns: 2; column-gap: clamp(14px, 2vw, 32px); }
+.parcerias__pontos .lista li { break-inside: avoid; }
+@media (max-width: 620px) {
+  .parcerias__pontos { grid-column: auto; }
+  .parcerias__pontos .lista { columns: 1; }
+}
+
+/* O mecenato é a folha mais cheia, e é a que menos pode crescer: tudo aqui
+   dentro anda um ponto mais apertado do que nas outras linhas. */
+.linha--mecenato .texto { --respiro: clamp(10px, 1.8vh, 24px); padding-block: clamp(16px, 2.7vh, 34px); }
+/* A nota legal é o rodapé da folha, à largura dela: uma linha e não quatro.
+   O max-width tem de ganhar ao do .texto p, que é mais específico. */
+.texto > .legal--pe { margin-top: auto; padding-top: clamp(10px, 1.7vh, 20px); max-width: none; }
+/* As parcerias, os apoios e os pontos são nomes próprios em lista, não
+   texto corrido: um degrau abaixo do corpo chega-lhes, e é o que deixa a
+   folha inteira caber num ecrã. */
+.parcerias .lista li { font-size: clamp(11.5px, min(.92vw, 1.55vh), 14px); }
+/* Dois a dois, sempre: a três colunas ficava um nível pendurado sozinho na
+   fila de baixo, e a ordem 01-02-03 / 04 deixava de se ler aos pares. */
+.linha--mecenato .niveis { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(11px, 1.7vh, 18px); }
+@media (max-width: 620px) { .linha--mecenato .niveis { grid-template-columns: 1fr; } }
+/* Os quatro níveis empilham-se dois a dois; entre as duas filas basta o ar
+   que separa duas colunas. */
+/* Os cinco benefícios em duas colunas: são cinco linhas curtas, e numa
+   coluna só empurravam a folha para lá do ecrã. O ponto de cada item cabe
+   na goteira entre as colunas. */
+.linha--mecenato .mecenato__corpo > div > .lista {
+  columns: 2;
+  column-gap: clamp(24px, 3vw, 40px);
+  max-width: none;
+}
+.linha--mecenato .mecenato__corpo > div > .lista li { break-inside: avoid; margin-left: .85em; }
+@media (max-width: 620px) {
+  .linha--mecenato .mecenato__corpo > div > .lista { columns: 1; }
+  .linha--mecenato .mecenato__corpo > div > .lista li { margin-left: 0; }
+}
+/* Os quatro níveis começam antes do meio do ecrã, e não nele: o plano à
+   esquerda cabe em menos de metade, e o que sobrava ali era um vazio. */
+.mecenato__corpo { grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); }
 /* Um título de dentro de uma linha, e não de uma linha inteira: um degrau
    abaixo do .titulo que tem por cima. */
 .titulo--menor { font-size: clamp(19px, min(2vw, 3.1vh), 30px); }
@@ -937,11 +1027,15 @@ html.menu-open .menu::before { opacity: 1; }
   gap: clamp(10px, 1.8vh, 20px);
   margin: var(--gutter);
   padding: clamp(20px, 3.5vh, 40px);
-  max-width: min(680px, calc(100% - var(--gutter) * 2));
+  max-width: min(820px, calc(100% - var(--gutter) * 2));
   background: var(--blue);
   color: var(--cream);
 }
-.fecho__texto .titulo { font-size: var(--t-titulao); max-width: 20ch; }
+/* As duas frases do convite partem-se onde a frase acaba, e não onde a
+   caixa acaba: o <br> está no texto, e a medida é larga que chegue para
+   nenhuma delas se partir a meio. */
+.fecho__texto .titulo { font-size: var(--t-titulao); max-width: none; line-height: 1.1; }
+.fecho__texto p { max-width: 62ch; }
 
 /* Os pontos numerados marcam sítios da fotografia, e por isso a fotografia
    não pode ser cortada: uma caixa com a proporção do ficheiro, centrada na
@@ -986,6 +1080,9 @@ html.menu-open .menu::before { opacity: 1; }
   .site-header, .wordmark, .lang, .menu, .menu-close { display: none; }
   body { padding-top: 0; }
   .linha { min-height: 0; break-inside: avoid; }
+  /* As duas linhas de altura fixa medem-se pelo ecrã, e no papel não há
+     ecrã nenhum: no impresso valem o que o conteúdo pedir. */
+  .linha--capa, .linha--faseamento { height: auto; }
 }
 
 </style>
@@ -1180,13 +1277,15 @@ html.menu-open .menu::before { opacity: 1; }
         </ul>
       </div>
     </div>
-    <p class="kicker" data-en="For every age">Para todas as idades</p>
-    <ul class="pills">
-      <li data-en="Childhood">Infância</li>
-      <li data-en="Youth">Jovens</li>
-      <li data-en="Adults">Adultos</li>
-      <li data-en="Seniors">Séniores</li>
-    </ul>
+    <div class="idades">
+      <p class="kicker" data-en="For every age">Para todas as idades</p>
+      <ul class="pills">
+        <li data-en="Childhood">Infância</li>
+        <li data-en="Youth">Jovens</li>
+        <li data-en="Adults">Adultos</li>
+        <li data-en="Seniors">Séniores</li>
+      </ul>
+    </div>
   </div>
   <figure class="figura">
     <img src="../assets/scene-estudio.jpg" alt="Proposta: estúdio de dança com plateia" loading="lazy">
@@ -1210,6 +1309,7 @@ html.menu-open .menu::before { opacity: 1; }
       <li data-en="Woodland: leisure and educational trails">Floresta: percursos de lazer e pedagógicos</li>
       <li data-en="Clearing: festival grounds">Clareira: espaço para festival</li>
     </ul>
+    <img class="vinheta" src="../assets/scene-aerea.jpg" alt="Proposta: vista aérea nocturna do complexo" loading="lazy">
   </div>
   <figure class="figura mapa__figura">
     <div class="mapa__box">
@@ -1342,26 +1442,17 @@ html.menu-open .menu::before { opacity: 1; }
   </div>
 </section>
 
-<!-- F6 — Faseamento · formato A, a banda de documento. -->
-<section class="linha linha--banda" id="faseamento">
+<!-- F6 — Faseamento · a planta e mais nada. A lista das cinco fases que
+     aqui esteve dizia, por palavras, a mesma legenda que o desenho já traz
+     ao lado das cores — e a planta lê-se pelo desenho. -->
+<section class="linha linha--banda linha--faseamento" id="faseamento">
   <div class="texto">
     <p class="kicker" data-en="6 &middot; Phasing">6 &middot; Faseamento</p>
     <h2 class="titulo" data-en="Phasing of the works">Faseamento da intervenção</h2>
-    <div class="banda__corpo banda__corpo--planta">
-      <div>
-        <ul class="lista">
-          <li data-en="<strong>Phase 1</strong> — church, garden and parking"><strong>Fase 1</strong> — igreja, jardim e estacionamento</li>
-          <li data-en="<strong>Phase 2</strong> — the former priest&rsquo;s house"><strong>Fase 2</strong> — antiga casa do padre</li>
-          <li data-en="<strong>Phase 3</strong> — the former catechism building"><strong>Fase 3</strong> — antiga catequese</li>
-          <li data-en="<strong>Phase 4</strong> — food, drink and events facilities, and better parking"><strong>Fase 4</strong> — equipamento de restauração, eventos e melhoria do estacionamento</li>
-          <li data-en="<strong>Phase 5</strong> — area for future expansion (boundaries to be confirmed)"><strong>Fase 5</strong> — área de expansão futura (limites a verificar)</li>
-        </ul>
-      </div>
-      <figure class="figura figura--planta">
-        <img src="../assets/faseamento.jpg" alt="Planta de faseamento da intervenção na antiga Igreja de Retorta" loading="lazy">
-        <figcaption data-en="Phasing plan">Planta de faseamento</figcaption>
-      </figure>
-    </div>
+    <figure class="figura figura--planta">
+      <img src="../assets/faseamento.jpg" alt="Planta de faseamento da intervenção na antiga Igreja de Retorta" loading="lazy">
+      <figcaption data-en="Phasing plan">Planta de faseamento</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -1397,27 +1488,30 @@ html.menu-open .menu::before { opacity: 1; }
   </figure>
 </section>
 
-<!-- F7 — Plano de apoio e mecenato · formato A, a banda de documento.
-     As parcerias e os apoios estavam numa linha azul à parte, a seguir a
-     esta. Vêm para dentro dela, no mesmo creme e por baixo do plano: são a
-     mesma conversa — quem já está com a Sineira, e como se entra. -->
-<section class="linha linha--banda" id="mecenato">
+<!-- F7 — Plano de apoio e mecenato · a folha mais cheia do dossier, e por
+     isso a que foi desenhada ao contrário: a partir do que tem de caber num
+     ecrã. O que a fez caber foi tirar o cartão de amigo — que já está no
+     site, à escala em que se lê — e o botão, que repete o convite do fecho.
+
+     Três andares: o plano à esquerda, os quatro níveis à direita e, por
+     baixo dos dois, quem já cá está. -->
+<section class="linha linha--banda linha--mecenato" id="mecenato">
   <div class="texto">
     <p class="kicker" data-en="7 &middot; Patronage">7 &middot; Mecenato</p>
     <h2 class="titulo" data-en="Support and patronage plan">Plano de apoio e mecenato</h2>
-    <div class="banda__corpo">
+
+    <div class="banda__corpo mecenato__corpo">
       <div>
         <p data-en="The requalification of the former Church of Retorta and a Sineira&rsquo;s artistic programme need company. People, companies and institutions can support the project — and become part of the community taking shape here.">A requalificação da antiga Igreja de Retorta e o programa artístico da Sineira pedem companhia. Pessoas, empresas e instituições podem apoiar o projecto — e fazer parte da comunidade que está a nascer.</p>
-        <ul class="lista">
+        <ul class="lista lista--cerrada">
           <li data-en="Free access to every event">Acesso gratuito a todos os eventos</li>
           <li data-en="Discount on regular classes, workshops and intensive courses">Desconto na frequência de aulas regulares, workshops e cursos intensivos</li>
           <li data-en="A socio-cultural and economic dynamic for Vila do Conde">Criação de dinâmica socio-cultural e económica em Vila do Conde</li>
           <li data-en="Visibility on posters and other communication materials">Publicidade através de cartazes e demais materiais de comunicação</li>
           <li data-en="Tax benefits (Cultural Patronage Law)">Benefícios fiscais (Lei do Mecenato Cultural)</li>
         </ul>
-        <p class="legal" data-en="a Sineira — Associação Cultural &middot; VAT 518858359. Support qualifies under the Portuguese Tax Benefits Statute (cultural patronage).">a Sineira — Associação Cultural &middot; NIF 518858359. Apoios enquadráveis no Estatuto dos Benefícios Fiscais (mecenato cultural).</p>
-        <a class="botao" href="mailto:ola@asineira.pt?subject=Apoiar%20a%20Sineira"><span data-en="I want to help">Quero apoiar</span></a>
       </div>
+
       <!-- Quatro maneiras de entrar, duas a duas. O mecenato é o degrau que
            a associação quis pôr à vista, e é o único com o nome em caixa
            alta: os outros três lêem-se à volta dele. -->
@@ -1426,10 +1520,6 @@ html.menu-open .menu::before { opacity: 1; }
           <p class="kicker" data-en="01 &middot; People">01 &middot; Pessoas</p>
           <h3 data-en="Friend">Amigo</h3>
           <p data-en="Join the community. Events, discounts and a place in what is being born in Retorta.">Entra na comunidade. Eventos, descontos e um lugar no que está a nascer em Retorta.</p>
-          <div class="cartao-amigo">
-            <svg viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
-            <div><b data-en="Friend of a Sineira">Amigo da Sineira</b><br><small data-en="Friend card">Cartão de amigo</small></div>
-          </div>
         </article>
         <article class="nivel">
           <p class="kicker" data-en="02 &middot; People and companies">02 &middot; Pessoas e empresas</p>
@@ -1449,11 +1539,13 @@ html.menu-open .menu::before { opacity: 1; }
       </div>
     </div>
 
-    <!-- Quem já cá está, e o que há à volta. -->
+    <!-- Quem já cá está, e o que há à volta. Em quatro colunas e não em
+         três: os pontos de interesse são dez, e numa coluna só faziam a
+         folha crescer para lá do ecrã. -->
     <div class="parcerias">
       <p class="kicker" data-en="Territory">Território</p>
       <h3 class="titulo titulo--menor" data-en="Partnerships and support">Parcerias e apoios</h3>
-      <div class="tres">
+      <div class="parcerias__grelha">
         <div>
           <p class="kicker" data-en="Partnerships (to date)">Parcerias (à data)</p>
           <ul class="lista lista--cerrada">
@@ -1468,7 +1560,7 @@ html.menu-open .menu::before { opacity: 1; }
             <li data-en="Vila do Conde town council">Câmara Municipal de Vila do Conde</li>
           </ul>
         </div>
-        <div>
+        <div class="parcerias__pontos">
           <p class="kicker" data-en="Points of interest nearby">Pontos de interesse na proximidade</p>
           <ul class="lista lista--cerrada">
             <li data-en="Centro Ciência Viva science centre">Centro Ciência Viva</li>
@@ -1485,6 +1577,8 @@ html.menu-open .menu::before { opacity: 1; }
         </div>
       </div>
     </div>
+
+    <p class="legal legal--pe" data-en="a Sineira — Associação Cultural &middot; VAT 518858359 &middot; Support qualifies under the Portuguese Tax Benefits Statute (cultural patronage) &middot; info@asineira.pt">a Sineira — Associação Cultural &middot; NIF 518858359 &middot; Apoios enquadráveis no Estatuto dos Benefícios Fiscais (mecenato cultural) &middot; info@asineira.pt</p>
   </div>
 </section>
 
@@ -1495,11 +1589,11 @@ html.menu-open .menu::before { opacity: 1; }
     <h2 class="titulo" data-en="More information">Mais informações</h2>
     <ul class="lista">
       <li><a href="https://asineira.pt">asineira.pt</a></li>
-      <li><a href="https://instagram.com">Instagram</a></li>
-      <li><a href="mailto:ola@asineira.pt">ola@asineira.pt</a></li>
+      <li><a href="https://www.instagram.com/asineira.pt/" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a href="mailto:info@asineira.pt">info@asineira.pt</a></li>
     </ul>
-    <p class="legal" data-en="a Sineira — Associação Cultural &middot; VAT 518858359<br>Registered office: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Church: Rua da Igreja, Retorta, 4480-353 Vila do Conde">a Sineira — Associação Cultural &middot; NIF 518858359<br>Sede: Av. General Humberto Delgado 103 – 3.º I, 4480-905 Vila do Conde<br>Igreja: Rua da Igreja, Retorta, 4480-353 Vila do Conde</p>
-    <a class="botao" href="mailto:ola@asineira.pt"><span data-en="Write to us">Escrever-nos</span></a>
+    <p class="legal">Rua da Igreja 4480-353 Retorta, Vila do Conde<br>a Sineira — Associação Cultural &middot; <span data-en="Tax ID 518858359">NIF 518858359</span></p>
+    <a class="botao" href="mailto:info@asineira.pt?subject=Quero%20saber%20mais%20sobre%20a%20Sineira"><span data-en="Talk to us">Falar connosco</span></a>
   </div>
   <figure class="figura">
     <img src="../assets/scene-estudio.jpg" alt="Proposta: estúdio de dança com plateia" loading="lazy">
@@ -1514,7 +1608,7 @@ html.menu-open .menu::before { opacity: 1; }
   </div>
   <div class="fecho__texto">
     <p class="kicker" data-en="9 &middot; Invitation">9 &middot; Convite</p>
-    <h2 class="titulo" data-en="Come and see the place. Come and support what is missing.">Vem ver o sítio. Vem apoiar o que falta.</h2>
+    <h2 class="titulo" data-en="Come and see the place.<br>Come and support what is missing.">Vem ver o sítio.<br>Vem apoiar o que falta.</h2>
     <p data-en="This dossier is an invitation: to visit, to patronage, to partnership. The former Church of Retorta is becoming a home for the arts — and it needs people who want to be part of it.">Este dossier é um convite: à visita, ao mecenato, à parceria. A antiga Igreja de Retorta está a tornar-se casa para as artes — e precisa de quem queira fazer parte.</p>
     <a class="botao" href="#mecenato"><span data-en="Patronage plan">Plano de mecenato</span></a>
   </div>
