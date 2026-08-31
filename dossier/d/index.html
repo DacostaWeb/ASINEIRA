@@ -437,23 +437,20 @@ html.menu-open .menu::before { opacity: 1; }
   font-size: var(--t-corpo);
   font-weight: 700;
 }
-.texto p { max-width: 52ch; }
+.texto p { max-width: 55ch; }
 /* A mesma medida de leitura das listas e da tabela: sem ela as linhas
    atravessam a metade inteira do ecrã. */
 .texto .lista, .texto .rota, .texto .mapa__legenda { max-width: 58ch; }
 
-/* Cada item leva um ponto, e o ponto fica pendurado fora da coluna: o texto
-   continua a alinhar pelo título que tem por cima, e o sinal vive na margem.
-   É o contrário do "›" que aqui esteve, que empurrava o texto todo para
-   dentro e desalinhava a lista de tudo o resto.
-
-   O ponto cabe na goteira da página (var(--gutter)), e por isso não precisa
-   de recuo nenhum para ser desenhado. */
-.lista li { position: relative; font-size: var(--t-lista); line-height: 1.55; }
+/* Cada item leva um ponto, e é o ponto que alinha pelo rótulo e pelo título
+   que tem por cima — o texto é que recua para lhe dar lugar. Pendurado na
+   margem, como esteve, o ponto ficava fora da coluna da página e era o
+   texto que fingia estar alinhado. */
+.lista li { position: relative; padding-left: 1.15em; font-size: var(--t-lista); line-height: 1.55; }
 .lista li::before {
   content: "";
   position: absolute;
-  left: -.85em;
+  left: 0;
   top: .62em;
   width: .28em;
   height: .28em;
@@ -471,6 +468,10 @@ html.menu-open .menu::before { opacity: 1; }
 /* A missão são cinco frases inteiras, e não cinco palavras: entre elas vai
    uma linha de intervalo, para cada uma se ler como um parágrafo seu. */
 .lista--solta li + li { margin-top: 1.15em; }
+/* E a lista da missão, que é o corpo todo da linha, centra-se no que sobra
+   por baixo do título: as duas margens automáticas repartem o vazio, em vez
+   de o deixar todo no fundo do ecrã. */
+.lista--solta { margin-block: auto; }
 /* E ao contrário: quinze linhas seguidas — o plano de requalificação — só
    cabem num ecrã com o ar entre elas apertado ao mínimo. */
 .lista--cerrada li { line-height: 1.4; }
@@ -478,7 +479,11 @@ html.menu-open .menu::before { opacity: 1; }
 
 /* As idades são o rodapé das actividades: descem para o fim do bloco, e o
    ar que sobrava por baixo delas passa a estar por cima. */
-.idades { margin-top: auto; padding-top: clamp(16px, 3vh, 40px); }
+/* Duas margens automáticas na mesma coluna repartem o vazio entre si: as
+   listas descem, as idades sobem, e o que sobrava todo no fundo passa a
+   estar metade acima de cada uma. */
+.duas--desce { margin-top: auto; }
+.idades { margin-top: auto; }
 .idades .kicker { margin-bottom: 12px; }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .pills li {
@@ -628,14 +633,17 @@ html.menu-open .menu::before { opacity: 1; }
 }
 
 /* --- A linha da tira: texto em cima, fotografias em baixo ---------------
-   O texto vale o que pedir e a tira fica com o resto da altura. */
-.linha--tira { grid-template-rows: auto minmax(0, 1fr); }
+   O texto vale o que pedir e a tira fica com o resto da altura. A altura é
+   definida e não apenas mínima: sem isso o 1fr resolve-se pelo tamanho
+   natural das quatro verticais, e eram as legendas — que vivem no fim da
+   tira — as primeiras a cair para fora do ecrã. */
+.linha--tira { height: var(--linha-h); grid-template-rows: auto minmax(0, 1fr); }
 .linha--tira .texto { padding-bottom: clamp(14px, 2.5vh, 30px); }
 /* Quatro verticais lado a lado precisam de largura. Abaixo dos 860 passam a
    duas por linha, que é onde cada uma ainda se vê. */
 @media (max-width: 860px) {
   .tira { grid-auto-flow: row; grid-template-columns: 1fr 1fr; }
-  .linha--tira { grid-template-rows: auto auto; }
+  .linha--tira { height: auto; grid-template-rows: auto auto; }
   .linha--tira .tira .figura { min-height: 32svh; }
 }
 
@@ -798,7 +806,7 @@ html.menu-open .menu::before { opacity: 1; }
 
 /* Uma fotografia pequena dentro de um bloco de texto: a proposta nocturna,
    à escala de uma vinheta, por baixo da legenda do terreno. */
-.vinheta { width: min(100%, 260px); aspect-ratio: 16 / 9; object-fit: cover; }
+.vinheta { width: min(100%, 400px); aspect-ratio: 16 / 9; object-fit: cover; }
 
 /* --- Acessos (F5): o mapa e a lista do "como chegar?" do site -----------
 
@@ -935,9 +943,7 @@ html.menu-open .menu::before { opacity: 1; }
   display: flex;
   flex-direction: column;
   gap: clamp(5px, .9vh, 11px);
-  margin-top: clamp(12px, 2vh, 24px);
-  padding-top: clamp(10px, 1.7vh, 20px);
-  border-top: 1.5px solid color-mix(in srgb, currentColor 30%, transparent);
+  margin-top: clamp(14px, 2.4vh, 30px);
 }
 /* Quatro colunas iguais: parcerias, apoios e — porque são dez — os pontos
    de interesse a ocupar duas. */
@@ -985,14 +991,14 @@ html.menu-open .menu::before { opacity: 1; }
   column-gap: clamp(24px, 3vw, 40px);
   max-width: none;
 }
-.linha--mecenato .mecenato__corpo > div > .lista li { break-inside: avoid; margin-left: .85em; }
+.linha--mecenato .mecenato__corpo > div > .lista li { break-inside: avoid; }
 @media (max-width: 620px) {
   .linha--mecenato .mecenato__corpo > div > .lista { columns: 1; }
-  .linha--mecenato .mecenato__corpo > div > .lista li { margin-left: 0; }
 }
-/* Os quatro níveis começam antes do meio do ecrã, e não nele: o plano à
-   esquerda cabe em menos de metade, e o que sobrava ali era um vazio. */
-.mecenato__corpo { grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); }
+/* Os quatro níveis começam no meio da folha, e não antes dele: o limite
+   esquerdo deles é o centro, e em colunas mais estreitas cada um lê-se de
+   cima para baixo em vez de se espalhar pela linha. */
+.mecenato__corpo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 /* Um título de dentro de uma linha, e não de uma linha inteira: um degrau
    abaixo do .titulo que tem por cima. */
 .titulo--menor { font-size: clamp(19px, min(2vw, 3.1vh), 30px); }
@@ -1045,6 +1051,11 @@ html.menu-open .menu::before { opacity: 1; }
    duas faixas a legenda ficava colada ao fundo do ecrã e o mapa a meio, com
    um palmo de nada entre os dois. */
 .mapa__figura { background: transparent; display: flex; flex-direction: column; justify-content: center; }
+/* Nos acessos o mapa não flutua a meio: começa na linha por onde o texto ao
+   lado começa, e é por ela que os dois se alinham. O recuo de cima é o
+   mesmo respiro que o bloco de texto tem. */
+.mapa__figura--topo { justify-content: flex-start; }
+.mapa__figura--topo .aerial { margin-top: clamp(24px, 4.5vh, 60px); }
 .mapa__box { position: relative; aspect-ratio: 1197 / 1019; max-width: 100%; max-height: 100%; margin: clamp(12px, 2.5vh, 26px) var(--gutter); justify-self: center; align-self: center; line-height: 0; }
 .mapa__box img { width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; }
 
@@ -1254,7 +1265,7 @@ html.menu-open .menu::before { opacity: 1; }
     <p class="kicker" data-en="3 &middot; Activities">3 &middot; Actividades</p>
     <h2 class="titulo" data-en="Activities">Actividades</h2>
     <p class="disciplinas" data-en="Dance &middot; Music &middot; Theatre &middot; Architecture &middot; Fine arts &middot; Visual arts &middot; Photography">Dança &middot; Música &middot; Teatro &middot; Arquitectura &middot; Artes plásticas &middot; Artes visuais &middot; Fotografia</p>
-    <div class="duas">
+    <div class="duas duas--desce">
       <div>
         <p class="kicker" data-en="Artists">Artistas</p>
         <ul class="lista">
@@ -1389,7 +1400,7 @@ html.menu-open .menu::before { opacity: 1; }
     </ul>
     <a class="maps-link" href="https://www.google.com/maps/search/?api=1&amp;query=Igreja+de+Retorta%2C+Vila+do+Conde" target="_blank" rel="noopener"><span data-en="Open in maps">Abre no maps</span> <span aria-hidden="true">&#8599;</span></a>
   </div>
-  <figure class="figura mapa__figura">
+  <figure class="figura mapa__figura mapa__figura--topo">
     <div class="aerial">
       <img src="../../mapsbirdseye.png" alt="Vista aérea de Retorta: a Sineira, a ponte sobre o rio Ave, as escolas e a envolvente" loading="lazy">
       <span class="aerial__pin aerial__pin--sineira">
