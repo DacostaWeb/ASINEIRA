@@ -2419,17 +2419,17 @@ html[lang="en"] .title-art {
 /* --- o desfile dos espaços, no menu --- */
 
 /* Reaproveita a caixa e o rodapé do desfile das fotografias de um projeto.
-   Só duas coisas mudam. A primeira: contain em vez de cover. As nove imagens
-   não têm todas a mesma forma — há fotografias ao alto da nave e plantas
-   muito ao baixo — e um cover em 4:3 cortava as pontas às duas: à nave a
-   cabeça, à planta de faseamento a legenda das fases, que é metade do que
-   ela tem para dizer. Com contain nenhuma é cortada, e o que sobra de cada
+   Só duas coisas mudam. A primeira: contain em vez de cover. As oito imagens
+   não têm todas a mesma forma — há fotografias ao alto da nave e o
+   levantamento aéreo muito ao baixo — e um cover em 4:3 cortava as pontas às
+   duas: à nave a cabeça, ao levantamento o limite da propriedade, que é o
+   que ele tem para dizer. Com contain nenhuma é cortada, e o que sobra de cada
    lado fica vazio — sem fundo e sem moldura, para o que se vê ser a imagem
    e não a caixa onde ela está. */
 .espacos__palco { background: none; }
 .espacos__palco img { object-fit: contain; }
 
-/* A segunda: no meio do rodapé está a legenda, e não a conta. As nove
+/* A segunda: no meio do rodapé está a legenda, e não a conta. As oito
    legendas vivem todas aqui, e vê-se a da fotografia da vez — é o que lhes
    dá uma chave data-i18n a cada uma e deixa o applyLang traduzi-las. O corpo
    é o das legendas das fotografias (.shot figcaption), que é o que estas
@@ -3459,23 +3459,22 @@ html.menu-open .menu::before { opacity: 1; }
           <!-- O desfile dos espaços é o mesmo dos cartazes e o das fotografias
                de um projeto: a caixa deles (.evcard__foto) e o mesmo
                evSlideshow a dar-lhe o clique, o deslize e as setas. O que
-               muda é o meio do rodapé — aqui as nove imagens não são nove
+               muda é o meio do rodapé — aqui as oito imagens não são oito
                momentos do mesmo, são sítios e plantas diferentes, e a conta
-               "1/9" não dizia qual. Fica a legenda no lugar dela.
+               "1/8" não dizia qual. Fica a legenda no lugar dela.
 
                As legendas estão todas no HTML, uma por fotografia, e só a da
                vez se vê: assim cada uma tem a sua chave data-i18n e é o
                applyLang que as traduz, sem o desfile ter de saber a língua.
 
                O object-fit aqui é contain, e não o cover dos cartazes: entre
-               as nove há fotografias ao alto e plantas ao baixo, e uma planta
-               cortada aos lados perde a legenda das fases. -->
+               as oito há fotografias ao alto e o levantamento aéreo ao baixo,
+               e um levantamento cortado aos lados perde o limite do terreno. -->
           <div class="ficha__fotos espacos" id="espacos-desfile">
             <div class="evcard__foto espacos__palco" role="region" tabindex="0"
                  data-i18n-alabel="espDesfile" aria-label="Fotografias do espaço">
               <img src="dossier/assets/hero.jpg" class="is-on" data-i18n-alt="altEsp1" alt="A antiga Igreja de Retorta e a casa do padre, ao fim da tarde" loading="eager" draggable="false">
               <img src="dossier/assets/vista-aerea.jpg" data-i18n-alt="altEsp2" alt="Levantamento aéreo do terreno, com o limite da propriedade marcado a vermelho" loading="lazy" draggable="false">
-              <img src="dossier/assets/faseamento.jpg" data-i18n-alt="altEsp3" alt="Planta de faseamento da intervenção, com as cinco fases a cores diferentes" loading="lazy" draggable="false">
               <img src="dossier/assets/nave-2025.jpg" data-i18n-alt="altEsp4" alt="A nave da igreja ainda em terra batida, com os altares por recuperar" loading="lazy" draggable="false">
               <img src="dossier/assets/nave-2026.jpg" data-i18n-alt="altEsp5" alt="A mesma nave já com pavimento de madeira novo" loading="lazy" draggable="false">
               <img src="dossier/assets/arco.jpg" data-i18n-alt="altEsp6" alt="O interior em obra visto através do arco de pedra, com tábuas empilhadas no chão" loading="lazy" draggable="false">
@@ -3489,7 +3488,6 @@ html.menu-open .menu::before { opacity: 1; }
               <span class="espacos__legenda">
                 <span class="is-on" data-i18n="capEsp1">A igreja e a casa do padre</span>
                 <span data-i18n="capEsp2">Implantação · 18.000 m²</span>
-                <span data-i18n="capEsp3">Faseamento da intervenção</span>
                 <span data-i18n="capEsp4">Antes · a nave sem pavimento</span>
                 <span data-i18n="capEsp5">Depois · pavimento novo</span>
                 <span data-i18n="capEsp6">Interior · o arco e a obra</span>
@@ -3697,8 +3695,6 @@ html.menu-open .menu::before { opacity: 1; }
       capEsp1: 'The church and the priest’s house',
       altEsp2: 'Aerial survey of the site, with the property boundary marked in red',
       capEsp2: 'Site · 18,000 m²',
-      altEsp3: 'Phasing plan for the works, with the five phases in different colours',
-      capEsp3: 'Phasing of the works',
       altEsp4: 'The nave of the church still bare ground, the altars yet to be restored',
       capEsp4: 'Before · the nave with no floor',
       altEsp5: 'The same nave with its new wooden floor',
