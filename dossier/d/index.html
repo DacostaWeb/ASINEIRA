@@ -78,16 +78,19 @@ html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light;
   /* Corpos de letra medidos nas duas dimensões do ecrã. O min(vw, vh) é o
      que faz uma linha caber num portátil baixo e largo: sem a parcela em
      vh, o título crescia com a largura e empurrava a lista para fora. */
-  /* A escala é a do site, não uma escala de cartaz. Lá, o nome de uma peça
-     (.ficha__h1) são 23px de Helvetica em peso normal, o texto corrido são
-     13px de mono e o rótulo são 9px em versaletes — e não há mais degraus.
-     Aqui os três valores respiram um pouco com o ecrã, mas partem daqueles
-     e não sobem muito acima deles: um dossier lê-se, não se grita. */
-  --t-titulo:  clamp(20px, min(2vw, 3vh), 30px);
-  --t-titulao: clamp(26px, min(3.2vw, 4.6vh), 46px);
-  --t-corpo:   clamp(12.5px, min(.95vw, 1.6vh), 14.5px);
-  --t-lista:   clamp(12.5px, min(.95vw, 1.6vh), 14px);
-  --t-kicker:  clamp(9px, min(.7vw, 1.15vh), 10px);
+  /* A escala é a do site na estrutura — três degraus e mais nada: título,
+     texto corrido, rótulo em versaletes — mas não nos corpos. O site lê-se
+     num ecrã, com o menu aberto e uma coluna estreita; o dossier lê-se de
+     longe, projectado e impresso, e a primeira revisão saiu pequena de mais.
+     Os três degraus sobem, e a distância entre eles com eles: o título passa
+     a mandar na linha, e o texto corrido chega aos 17px em ecrã largo. */
+  --t-titulo:  clamp(24px, min(2.7vw, 4.2vh), 40px);
+  --t-titulao: clamp(28px, min(3vw, 4.6vh), 44px);
+  --t-corpo:   clamp(13.5px, min(1.15vw, 1.95vh), 17px);
+  --t-lista:   clamp(13.5px, min(1.1vw, 1.9vh), 16.5px);
+  --t-kicker:  clamp(9.5px, min(.78vw, 1.3vh), 11px);
+  /* A legenda de uma fotografia é o degrau mais baixo, e vive fora dela. */
+  --t-legenda: clamp(9px, min(.75vw, 1.25vh), 11px);
 
   /* Movimento */
   --wm-dur: 2000ms;
@@ -152,7 +155,7 @@ em { font-style: normal; font-weight: 700; }
 /* A repartição do site: texto corrido em Roboto Mono, títulos e rótulos em
    Helvetica. */
 .titulo, .kicker, .sub, .pills li, .botao, .lang, .disciplinas,
-.acessos th, .figura figcaption, .nivel h3, .mapa__ponto,
+.figura figcaption, .nivel h3, .mapa__ponto, .maps-link,
 .mapa__legenda li::before, .area, .cartao-amigo b, .cartao-amigo small,
 .menu__link, .menu__num { font-family: var(--font-display); }
 
@@ -426,21 +429,34 @@ html.menu-open .menu::before { opacity: 1; }
   font-size: var(--t-corpo);
   font-weight: 700;
 }
-.texto p { max-width: 56ch; }
+.texto p { max-width: 52ch; }
 /* A mesma medida de leitura das listas e da tabela: sem ela as linhas
    atravessam a metade inteira do ecrã. */
-.texto .lista, .texto .acessos, .texto .mapa__legenda { max-width: 64ch; }
+.texto .lista, .texto .rota, .texto .mapa__legenda { max-width: 58ch; }
 
-.lista li { position: relative; padding-left: 1.1em; font-size: var(--t-lista); line-height: 1.6; }
-.lista li + li { margin-top: .38em; }
-.lista li::before { content: "›"; position: absolute; left: 0; font-weight: 700; }
+/* As listas não levam sinal nenhum antes do item. O "›" que aqui esteve
+   repetia-se doze vezes numa lista e passava a textura; o que separa um item
+   do seguinte é o ar entre eles, e o recuo que os afasta do título. */
+.lista li { position: relative; padding-left: 1em; font-size: var(--t-lista); line-height: 1.55; }
+.lista li + li { margin-top: .45em; }
+/* Sem o sinal antes do item, um endereço numa lista não se distinguia de
+   uma frase: os que levam a algum lado ficam sublinhados. */
+.lista a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* A missão são cinco frases inteiras, e não cinco palavras: entre elas vai
+   uma linha de intervalo, para cada uma se ler como um parágrafo seu. */
+.lista--solta li + li { margin-top: 1.15em; }
+/* E ao contrário: quinze linhas seguidas — o plano de requalificação — só
+   cabem num ecrã com o ar entre elas apertado ao mínimo. */
+.lista--cerrada li { line-height: 1.4; }
+.lista--cerrada li + li { margin-top: .22em; }
 
 .pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .pills li {
   border: 1.5px solid currentColor;
   border-radius: 99px;
-  padding: 5px 13px;
-  font-size: clamp(10px, min(.85vw, 1.4vh), 12px);
+  padding: 6px 15px;
+  font-size: clamp(10.5px, min(.95vw, 1.6vh), 13.5px);
   font-weight: 700;
   letter-spacing: .06em;
   text-transform: uppercase;
@@ -451,8 +467,8 @@ html.menu-open .menu::before { opacity: 1; }
   align-self: start;
   width: fit-content;
   border: 1.5px solid currentColor;
-  padding: 10px 20px;
-  font-size: clamp(10px, min(.85vw, 1.4vh), 12px);
+  padding: 11px 22px;
+  font-size: clamp(10.5px, min(.95vw, 1.6vh), 13px);
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -462,7 +478,7 @@ html.menu-open .menu::before { opacity: 1; }
 .linha--azul .botao:hover span,
 .texto--azul .botao:hover span { color: var(--blue); }
 
-.legal { font-size: clamp(10px, min(.85vw, 1.4vh), 12px); opacity: .75; max-width: 62ch; }
+.legal { font-size: clamp(10px, min(.9vw, 1.5vh), 13px); line-height: 1.5; opacity: .75; max-width: 58ch; }
 
 /* Onde a associação ainda não escreveu o texto. */
 .por-escrever {
@@ -477,38 +493,56 @@ html.menu-open .menu::before { opacity: 1; }
 .tres { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: clamp(14px, 2vw, 30px); }
 .duas .kicker, .tres .kicker { margin-bottom: 8px; }
 
+/* A enumeração das disciplinas é o subtítulo das Actividades, e não uma
+   nota: fica um degrau acima do rótulo, em versaletes e a negrito. */
 .disciplinas {
-  font-size: clamp(10px, min(.85vw, 1.4vh), 12px);
+  font-size: clamp(11px, min(1.05vw, 1.75vh), 15px);
   font-weight: 700;
-  letter-spacing: .1em;
+  letter-spacing: .06em;
   text-transform: uppercase;
-  line-height: 1.6;
+  line-height: 1.45;
+  max-width: 34ch;
 }
 
 
 /* 7. Imagens ============================================================== */
 
 /* Uma figura enche a célula que lhe toca e não empurra a linha para fora do
-   ecrã: o min-height:0 é o que trava a expansão dentro da grelha. */
-.figura { position: relative; display: grid; background: var(--blue); min-height: 0; overflow: hidden; }
+   ecrã: o min-height:0 é o que trava a expansão dentro da grelha.
+
+   Duas faixas: a fotografia leva o que houver (1fr) e a legenda o que pedir
+   (auto). Sem legenda, a segunda faixa vale zero e não se dá por ela. */
+.figura { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; background: var(--blue); min-height: 0; overflow: hidden; }
 /* O min-height:0 é o que trava o tamanho mínimo automático de um item de
    grelha: sem ele a fotografia impõe a sua altura natural e transborda a
    célula, em vez de se deixar recortar. */
 .figura img { width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: cover; }
+/* A legenda saiu de cima da fotografia e passou para debaixo dela. Pousada
+   sobre a imagem, tapava-lhe sempre uma tira — e era justamente a tira de
+   que falava. Debaixo, em creme, é uma linha do documento e não um remendo:
+   lê-se em ecrã claro e em ecrã azul da mesma maneira. */
 .figura figcaption {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  padding: 8px var(--gutter);
+  padding: 9px var(--gutter);
   background: var(--cream);
   color: var(--blue);
-  font-size: clamp(8px, min(.7vw, 1.15vh), 9.5px);
+  font-size: var(--t-legenda);
+  opacity: .85;
   font-weight: 700;
   letter-spacing: .12em;
+  line-height: 1.35;
   text-transform: uppercase;
 }
-/* As plantas não se cortam: mostram-se inteiras sobre creme. */
-.figura--planta { background: var(--cream); padding: clamp(14px, 3vh, 30px) var(--gutter) clamp(30px, 5vh, 46px); }
-.figura--planta img { object-fit: contain; }
+/* Numa linha azul a legenda é azul sobre azul: uma linha de texto por baixo
+   da fotografia, e não uma tira creme atravessada no fundo do ecrã. */
+.linha--azul .figura figcaption { background: var(--blue); color: var(--cream); }
+
+/* As plantas não se cortam: mostram-se inteiras sobre creme. O respiro vai
+   na imagem e não na figura, para a legenda continuar a encostar à margem. */
+.figura--planta { background: var(--cream); }
+.figura--planta img { object-fit: contain; padding: clamp(14px, 3vh, 30px) var(--gutter) clamp(10px, 2vh, 20px); }
+/* Uma planta lê-se pelo desenho e a legenda dela é um remate: encosta à
+   direita, por baixo do canto onde o desenho acaba. */
+.figura--planta figcaption { text-align: right; }
 
 /* A área do terreno, posta sobre a fotografia da implantação (F1). */
 .area {
@@ -551,6 +585,18 @@ html.menu-open .menu::before { opacity: 1; }
 .linha--mosaico { grid-template-columns: 1fr 1fr; align-items: stretch; }
 @media (max-width: 860px) {
   .linha--mosaico { grid-template-columns: 1fr; grid-template-rows: auto minmax(28svh, 42svh); }
+}
+
+/* --- A linha da tira: texto em cima, fotografias em baixo ---------------
+   O texto vale o que pedir e a tira fica com o resto da altura. */
+.linha--tira { grid-template-rows: auto minmax(0, 1fr); }
+.linha--tira .texto { padding-bottom: clamp(14px, 2.5vh, 30px); }
+/* Quatro verticais lado a lado precisam de largura. Abaixo dos 860 passam a
+   duas por linha, que é onde cada uma ainda se vê. */
+@media (max-width: 860px) {
+  .tira { grid-auto-flow: row; grid-template-columns: 1fr 1fr; }
+  .linha--tira { grid-template-rows: auto auto; }
+  .linha--tira .tira .figura { min-height: 32svh; }
 }
 
 /* --- Formato A: banda de documento, uma coluna centrada ------------------ */
@@ -605,7 +651,7 @@ html.menu-open .menu::before { opacity: 1; }
   margin-top: auto;
   padding-top: 52px;
   font-family: var(--font-display);
-  font-size: var(--t-kicker);
+  font-size: clamp(10px, min(.9vw, 1.5vh), 13px);
   font-weight: 700;
   letter-spacing: .14em;
   text-transform: uppercase;
@@ -616,7 +662,7 @@ html.menu-open .menu::before { opacity: 1; }
   font-weight: 400;
   line-height: 1.02;
   letter-spacing: -.025em;
-  max-width: 18ch;
+  max-width: 24ch;
 }
 /* A coluna da fotografia vale o que ela pediria à altura da linha — e nunca
    mais do que 62% do ecrã, senão num portátil largo e baixo a fotografia
@@ -659,8 +705,8 @@ html.menu-open .menu::before { opacity: 1; }
 .mapa__ponto {
   position: absolute;
   transform: translate(-50%, -50%);
-  width: clamp(20px, 2.6vh, 26px);
-  height: clamp(20px, 2.6vh, 26px);
+  width: clamp(22px, 3vh, 30px);
+  height: clamp(22px, 3vh, 30px);
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -668,69 +714,174 @@ html.menu-open .menu::before { opacity: 1; }
   color: var(--blue);
   border: 1.5px solid var(--blue);
   font-family: var(--font-display);
-  font-size: clamp(10px, 1.3vh, 12px);
+  font-size: clamp(10px, 1.45vh, 13px);
   font-weight: 700;
   line-height: 1;
 }
 .mapa__legenda { counter-reset: parte; }
 .mapa__legenda li {
   position: relative;
-  padding-left: 32px;
+  padding-left: 2.3em;
   font-size: var(--t-lista);
-  line-height: 1.35;
+  line-height: 1.4;
 }
-.mapa__legenda li + li { margin-top: .45em; }
+.mapa__legenda li + li { margin-top: .5em; }
 .mapa__legenda li::before {
   counter-increment: parte;
   content: counter(parte);
   position: absolute;
-  left: 0; top: -1px;
-  width: 23px; height: 23px;
+  left: 0; top: -.05em;
+  width: 1.7em; height: 1.7em;
   border-radius: 50%;
   display: grid;
   place-items: center;
   border: 1.5px solid currentColor;
-  font-size: 11px;
+  font-size: .78em;
   font-weight: 700;
 }
 
-/* --- Tabela de acessos (F5) --- */
-.acessos { width: 100%; border-collapse: collapse; font-size: var(--t-lista); }
-.acessos th, .acessos td {
-  padding: clamp(5px, .9vh, 9px) 12px clamp(5px, .9vh, 9px) 0;
-  text-align: left;
-  border-bottom: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+/* --- Acessos (F5): o mapa e a lista do "como chegar?" do site -----------
+
+   A tabela de três colunas que aqui esteve dizia os mesmos tempos, mas sem
+   dizer de que meio eram: "bicicleta 5 min / a pé 15 min" em duas colunas
+   chamadas Modo A e Modo B. No site isto já estava resolvido — a vista aérea
+   com quatro pinos e, por baixo, uma linha por destino com o ícone do meio
+   colado ao tempo —, e é essa peça que vem para aqui, ícones incluídos.
+   ------------------------------------------------------------------------ */
+
+/* O ícone vale uma linha do texto onde assenta e veste-lhe a cor. O desenho
+   vem todo de traço e sem enchimento: a espessura decide-se aqui, uma vez,
+   para os oito terem o mesmo peso do texto ao lado. */
+.ic {
+  width: 1.3em;
+  height: 1.3em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -.3em;
 }
-.acessos th {
-  border-bottom-color: color-mix(in srgb, currentColor 55%, transparent);
-  font-size: clamp(8px, min(.7vw, 1.15vh), 9.5px);
+
+/* Só para quem lê por leitor de ecrã: o nome do meio que o ícone desenha. */
+.vsr {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* A vista aérea. O object-position em baixo corta-lhe a fatia de cima — os
+   4.9% de campo que não diziam nada —, e é por isso que as fracções dos
+   pinos, ali em baixo, não são as da fotografia inteira. São as mesmas do
+   site: mudá-las aqui sem mudar lá desencontra os dois. */
+.aerial { position: relative; line-height: 0; align-self: center; margin: clamp(12px, 2.5vh, 26px) var(--gutter); max-width: 100%; }
+.aerial img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: 50% 100%;
+}
+
+/* Os quatro sítios ficam a ícone e mais nada — o nome e o tempo é a lista
+   que os diz. O prato creme é o que os levanta da fotografia. */
+.aerial__pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--blue);
+  border-radius: 50%;
+  background: var(--cream);
+  color: var(--blue);
+}
+.aerial__pin .ic { width: 19px; height: 19px; vertical-align: baseline; }
+/* A marca não é um ícone de traço: é o triângulo cheio com o "aS" recortado
+   e traz as cores de dentro. Vai um ponto mais pequena — uma forma cheia
+   pesa mais no prato do que três linhas. */
+.aerial__pin .marca { width: 16px; height: auto; }
+.aerial__pin--sineira { left: 81.5%; top: 88%; }
+.aerial__pin--escola { left: 40%; top: 34.8%; }
+.aerial__pin--metro  { left: 26%; top: 53.7%; }
+.aerial__pin--centro { left:  7%; top: 57.9%; }
+
+/* A lista das distâncias. Sem filetes: o que afasta uma linha da outra é o
+   ar, e o par de tempos encosta à direita para se comparar de linha para
+   linha. */
+.rota { font-size: var(--t-lista); }
+.rota li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 18px;
+  padding: clamp(4px, .8vh, 8px) 0;
+}
+.rota__nome { flex: 1 1 210px; display: flex; align-items: center; gap: 9px; line-height: 1.35; }
+.rota__ts { margin-left: auto; display: flex; gap: 18px; }
+.rota__t {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* "Abre no maps ↗", como no site. */
+.maps-link {
+  align-self: start;
+  font-size: clamp(10px, min(.9vw, 1.5vh), 12px);
   font-weight: 700;
-  letter-spacing: .14em;
+  letter-spacing: .12em;
   text-transform: uppercase;
 }
-.acessos td:not(:first-child) { white-space: nowrap; }
 
 
 /* --- Níveis de apoio e cartão de amigo (F7) --- */
+/* Quatro maneiras de entrar, duas a duas: o cartão de amigo pede largura, e
+   a duas colunas cada nível tem a dele. */
 .niveis {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  gap: clamp(14px, 2vw, 28px);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: clamp(16px, 2.2vw, 32px);
   align-items: start;
 }
-/* O primeiro nível é o que traz o cartão, e o cartão pede largura: fica com
-   a linha inteira e os outros dois repartem a de baixo. Deixados à grelha,
-   ficava um deles pendurado com uma coluna vazia ao lado. */
-.niveis .nivel:first-child { grid-column: 1 / -1; }
-.nivel { display: flex; flex-direction: column; gap: 6px; }
+.nivel { display: flex; flex-direction: column; gap: 7px; }
 .nivel h3 {
   font-family: var(--font-display);
-  font-size: clamp(15px, min(1.5vw, 2.4vh), 21px);
+  font-size: clamp(17px, min(1.8vw, 2.8vh), 25px);
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -.02em;
 }
+/* O mecenato é o degrau que a associação quis pôr à vista: é o único nome
+   em caixa alta e a negrito, e é por aí que a coluna se lê primeiro. */
+.nivel__destaque {
+  font-size: clamp(21px, min(2.2vw, 3.4vh), 33px);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+}
 .nivel p { font-size: var(--t-lista); }
+
+/* As parcerias e os apoios, no fundo da banda do mecenato. Um filete fino
+   é o que os separa do plano — a mesma página, o mesmo creme. */
+.parcerias {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.4vh, 18px);
+  margin-top: clamp(24px, 4.5vh, 52px);
+  padding-top: clamp(18px, 3vh, 36px);
+  border-top: 1.5px solid color-mix(in srgb, currentColor 30%, transparent);
+}
+/* Um título de dentro de uma linha, e não de uma linha inteira: um degrau
+   abaixo do .titulo que tem por cima. */
+.titulo--menor { font-size: clamp(19px, min(2vw, 3.1vh), 30px); }
 
 /* O cartão de amigo, como no site. */
 .cartao-amigo {
@@ -770,9 +921,13 @@ html.menu-open .menu::before { opacity: 1; }
 
 /* Os pontos numerados marcam sítios da fotografia, e por isso a fotografia
    não pode ser cortada: uma caixa com a proporção do ficheiro, centrada na
-   célula, guarda a correspondência entre as percentagens e o terreno. */
-.mapa__figura { background: var(--cream); place-items: center; padding: clamp(12px, 2.5vh, 26px) var(--gutter) clamp(28px, 4.5vh, 44px); }
-.mapa__box { position: relative; aspect-ratio: 1197 / 1019; max-width: 100%; max-height: 100%; line-height: 0; }
+   célula, guarda a correspondência entre as percentagens e o terreno. O
+   respiro vai na caixa e não na figura, senão empurrava também a legenda. */
+/* O mapa e a legenda dele andam juntos, centrados na célula. Em grelha de
+   duas faixas a legenda ficava colada ao fundo do ecrã e o mapa a meio, com
+   um palmo de nada entre os dois. */
+.mapa__figura { background: transparent; display: flex; flex-direction: column; justify-content: center; }
+.mapa__box { position: relative; aspect-ratio: 1197 / 1019; max-width: 100%; max-height: 100%; margin: clamp(12px, 2.5vh, 26px) var(--gutter); justify-self: center; align-self: center; line-height: 0; }
 .mapa__box img { width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; }
 
 
@@ -784,7 +939,15 @@ html.menu-open .menu::before { opacity: 1; }
 @media (max-width: 620px) {
   .banda__corpo { grid-template-columns: 1fr; }
   .capa__titulo h1 { max-width: none; }
-  .acessos th:last-child, .acessos td:last-child { display: none; }
+}
+
+/* Numa coluna estreita a linha do destino parte-se em duas: o nome a
+   negrito em cima e os tempos por baixo, encostados à esquerda. Encostados
+   à direita ficavam longe do nome a que pertencem. É a regra do site. */
+@media (max-width: 893px) {
+  .rota li { display: block; padding: 9px 0; }
+  .rota__nome { font-weight: 700; }
+  .rota__ts { margin: 7px 0 0; gap: 22px; }
 }
 
 /* Quem pediu menos movimento não leva nem o salto das letras nem o
@@ -805,8 +968,58 @@ html.menu-open .menu::before { opacity: 1; }
 </head>
 <body>
 
-<!-- A marca, usada no cartão de amigo. -->
+<!-- A marca, usada no cartão de amigo e no pino da Sineira, e os ícones do
+     "como chegar" — os meios (a pé, bicicleta, carro, metro, avião) e os
+     destinos (praia, centro histórico, escola). Vêm do site tal e qual: são
+     os mesmos desenhos, no mesmo quadrado de 24 e todos de traço. Quem lhes
+     dá a espessura, o remate e a cor é a classe .ic. -->
 <svg class="svg-defs" aria-hidden="true">
+  <symbol id="ic-pe" viewBox="0 0 24 24">
+    <circle cx="13.2" cy="4" r="2"></circle>
+    <path d="M9.4 21.2l2.1-6-2.3-2.5.8-4.3 3.4-1 2.4 3.3 2.8.9"></path>
+    <path d="M11.7 15.2l3.1 2 1.1 4"></path>
+  </symbol>
+  <symbol id="ic-bici" viewBox="0 0 24 24">
+    <circle cx="5.6" cy="16.6" r="3.7"></circle>
+    <circle cx="18.4" cy="16.6" r="3.7"></circle>
+    <path d="M5.6 16.6L10 8.2h4.6"></path>
+    <path d="M10 8.2l4.3 8.4"></path>
+    <path d="M18.4 16.6L15.5 7.6h-2"></path>
+    <path d="M8.9 8.2h2.6"></path>
+  </symbol>
+  <symbol id="ic-carro" viewBox="0 0 24 24">
+    <path d="M4.6 16.6v-3.9l2-4.3a2 2 0 0 1 1.8-1.2h7.2a2 2 0 0 1 1.8 1.2l2 4.3v3.9"></path>
+    <path d="M4.6 12.9h14.8"></path>
+    <circle cx="7.9" cy="16.8" r="1.8"></circle>
+    <circle cx="16.1" cy="16.8" r="1.8"></circle>
+  </symbol>
+  <symbol id="ic-metro" viewBox="0 0 24 24">
+    <rect x="6" y="3.2" width="12" height="13.2" rx="3.2"></rect>
+    <path d="M6 10.2h12"></path>
+    <path d="M9.4 13.3h.01"></path>
+    <path d="M14.6 13.3h.01"></path>
+    <path d="M9.2 16.4l-2.6 4.4"></path>
+    <path d="M14.8 16.4l2.6 4.4"></path>
+  </symbol>
+  <symbol id="ic-aviao" viewBox="0 0 24 24">
+    <path d="M10.4 3.2a1.6 1.6 0 0 1 3.2 0V9l7.4 4.4v2l-7.4-2.2v4.2l2.4 1.8v1.6L12 19.6l-4 1.2v-1.6l2.4-1.8v-4.2L3 15.4v-2L10.4 9z"></path>
+  </symbol>
+  <symbol id="ic-praia" viewBox="0 0 24 24">
+    <path d="M2.9 11.4a9.2 9.2 0 0 1 18.2 0z"></path>
+    <path d="M12 11.4v7.2"></path>
+    <path d="M2.4 20.8c1.6 0 1.6-1.4 3.2-1.4s1.6 1.4 3.2 1.4 1.6-1.4 3.2-1.4 1.6 1.4 3.2 1.4 1.6-1.4 3.2-1.4 1.6 1.4 3.2 1.4"></path>
+  </symbol>
+  <symbol id="ic-centro" viewBox="0 0 24 24">
+    <path d="M3.4 20.8V9.4l5-3 5 3v11.4"></path>
+    <path d="M13.4 20.8v-7.2l3.6-2.1 3.6 2.1v7.2"></path>
+    <path d="M2 20.8h20"></path>
+    <path d="M6.6 12.6h3.6M6.6 16.2h3.6M16.2 16.2h1.6"></path>
+  </symbol>
+  <symbol id="ic-escola" viewBox="0 0 24 24">
+    <path d="M2.4 9L12 4.6 21.6 9 12 13.4z"></path>
+    <path d="M6.6 11v4.4c0 1.6 2.4 2.9 5.4 2.9s5.4-1.3 5.4-2.9V11"></path>
+    <path d="M20.4 9.4v5.2"></path>
+  </symbol>
   <symbol id="mark-sineira" viewBox="0 0 382 387">
     <path fill="var(--blue)" d="M95.7804 387L382 110.293L0 0L95.7804 387Z"></path>
     <path fill="var(--cream)" d="M237.388 200.34C247.689 213.363 261.205 214.741 278 206.656C294.744 198.596 298.733 188.514 293.636 177.859C287.97 166.014 278.519 164.239 250.934 170.39C207 180.098 190.348 170.391 180.948 150.741C168.813 125.373 179.487 99.0424 213.836 82.5088C252.358 63.9658 277.644 77.3509 289.904 97.6398L258.295 112.855C252.495 104.628 242.906 97.2765 224.201 106.28C211.468 112.409 206.307 121.384 211.25 131.717C216.092 141.839 224.216 142.977 250.269 137.146C297.241 126.807 314.026 138.102 323.842 158.622C336.554 185.197 325.231 213.078 286.876 231.541C250.048 249.268 221.95 240.417 205.779 215.554L237.388 200.34Z"></path>
@@ -871,8 +1084,7 @@ html.menu-open .menu::before { opacity: 1; }
      vale o que pede e ela fica com o resto da altura. -->
 <section class="linha linha--capa" id="capa">
   <div class="capa__titulo">
-    <p class="kicker" data-en="a Sineira &middot; Retorta, Vila do Conde">a Sineira &middot; Retorta, Vila do Conde</p>
-    <h1 data-en="Presentation and patronage dossier">Dossier de apresentação e mecenato</h1>
+    <h1 data-en="Presentation dossier">Dossier de apresentação</h1>
     <p class="sub" data-en="Requalification of the former Church of Retorta">Requalificação da antiga Igreja de Retorta</p>
     <p class="capa__pe">Rua da Igreja, Retorta &middot; 4480-353 Vila do Conde</p>
   </div>
@@ -885,7 +1097,7 @@ html.menu-open .menu::before { opacity: 1; }
      área do outro. -->
 <section class="linha linha--mosaico" id="introducao">
   <div class="texto">
-    <p class="kicker" data-en="F1 &middot; Introduction">F1 &middot; Introdução</p>
+    <p class="kicker" data-en="1 &middot; Introduction">1 &middot; Introdução</p>
     <h2 class="titulo">a Sineira</h2>
     <p class="sub" data-en="Association &amp; Cultural Space">Associação &amp; Espaço Cultural</p>
     <p data-en="Founded in 2025, a Sineira — Associação Cultural sets out to work alongside the other structures already at work nationally and internationally, answering the needs and interests of the local artistic community and of everyone who wants to take part in the cultural and social activities it promotes.">Criada em 2025, a Sineira — Associação Cultural pretende colaborar com as demais estruturas existentes a nível nacional e internacional, para dar resposta às necessidades e interesses da comunidade artística local e a todo o público interessado em usufruir das actividades culturais e sociais por si promovidas.</p>
@@ -902,9 +1114,9 @@ html.menu-open .menu::before { opacity: 1; }
 <!-- F2 — Missão · formato C, com o texto à direita. -->
 <section class="linha linha--par linha--espelhado linha--azul" id="missao">
   <div class="texto">
-    <p class="kicker" data-en="F2 &middot; Mission">F2 &middot; Missão</p>
+    <p class="kicker" data-en="2 &middot; Mission">2 &middot; Missão</p>
     <h2 class="titulo" data-en="Mission and objectives">Missão e objetivos</h2>
-    <ul class="lista">
+    <ul class="lista lista--solta">
       <li data-en="To foster the <em>creation and circulation</em> of artistic projects, through artistic residencies and performances;">Fomentar a <em>criação e divulgação</em> de projetos artísticos, através de residências artísticas e performances;</li>
       <li data-en="To strengthen <em>collaboration</em> between artists, and between them and the local community;">Reforçar a <em>colaboração</em> entre artistas e entre estes e a comunidade local;</li>
       <li data-en="To promote the <em>valuing</em> of the cultural and natural heritage of Vila do Conde;">Promover a <em>valorização</em> do património cultural e natural de Vila do Conde;</li>
@@ -921,7 +1133,7 @@ html.menu-open .menu::before { opacity: 1; }
 <!-- F3 — Actividades · formato C. -->
 <section class="linha linha--par" id="actividades">
   <div class="texto">
-    <p class="kicker" data-en="F3 &middot; Activities">F3 &middot; Actividades</p>
+    <p class="kicker" data-en="3 &middot; Activities">3 &middot; Actividades</p>
     <h2 class="titulo" data-en="Activities">Actividades</h2>
     <p class="disciplinas" data-en="Dance &middot; Music &middot; Theatre &middot; Architecture &middot; Fine arts &middot; Visual arts &middot; Photography">Dança &middot; Música &middot; Teatro &middot; Arquitectura &middot; Artes plásticas &middot; Artes visuais &middot; Fotografia</p>
     <div class="duas">
@@ -961,10 +1173,11 @@ html.menu-open .menu::before { opacity: 1; }
   </figure>
 </section>
 
-<!-- F4 — O espaço · formato B, com a implantação identificada por pontos. -->
-<section class="linha linha--mosaico" id="espaco">
+<!-- F4 — O espaço · formato B espelhado: a implantação à esquerda e a
+     legenda dos sete lugares à direita, que é o lado por onde se lê. -->
+<section class="linha linha--mosaico linha--espelhado" id="espaco">
   <div class="texto">
-    <p class="kicker" data-en="F4 &middot; The place">F4 &middot; O espaço</p>
+    <p class="kicker" data-en="4 &middot; The place">4 &middot; O espaço</p>
     <h2 class="titulo">Retorta — Vila do Conde</h2>
     <p data-en="Approximate area: 18,000 m&sup2;. A complex to requalify — church, house, woodland and clearing — for training, creation and presentation.">Área aproximada: 18.000 m&sup2;. Um complexo a requalificar — igreja, casa, mata e clareira — para formação, criação e apresentação.</p>
     <ul class="mapa__legenda">
@@ -992,39 +1205,99 @@ html.menu-open .menu::before { opacity: 1; }
   </figure>
 </section>
 
-<!-- F5 — Acessos · formato B. -->
+<!-- F5 — Acessos · formato B, com o "como chegar?" do site: a vista aérea
+     com os quatro pinos e, por baixo do título, uma linha por destino com o
+     ícone do meio colado ao tempo. A tabela de "Modo A / Modo B" que aqui
+     esteve dizia os mesmos números sem dizer de que meio eram. -->
 <section class="linha linha--mosaico linha--azul" id="acessos">
   <div class="texto">
-    <p class="kicker" data-en="F5 &middot; Getting here">F5 &middot; Acessos</p>
+    <p class="kicker" data-en="5 &middot; Getting here">5 &middot; Acessos</p>
     <h2 class="titulo" data-en="Getting here">Acessos</h2>
-    <table class="acessos">
-      <thead>
-        <tr>
-          <th data-en="Destination">Destino</th>
-          <th data-en="Mode A">Modo A</th>
-          <th data-en="Mode B">Modo B</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td data-en="Santa Clara metro / Vila do Conde">Metro Santa Clara / Vila do Conde</td><td data-en="bike 5 min">bicicleta 5 min</td><td data-en="walk 15 min">a pé 15 min</td></tr>
-        <tr><td data-en="Historic centre of Vila do Conde">Centro histórico de Vila do Conde</td><td data-en="bike 10 min">bicicleta 10 min</td><td data-en="walk 30 min">a pé 30 min</td></tr>
-        <tr><td data-en="Beaches of Vila do Conde">Praias de Vila do Conde</td><td data-en="bike 20 min">bicicleta 20 min</td><td data-en="walk 60 min">a pé 60 min</td></tr>
-        <tr><td data-en="Trindade metro / Porto">Metro Trindade / Porto</td><td data-en="metro 40 min">metro 40 min</td><td>60 min</td></tr>
-        <tr><td data-en="Francisco Sá Carneiro airport">Aeroporto Francisco Sá Carneiro</td><td data-en="car 20 min">carro 20 min</td><td>50 min</td></tr>
-      </tbody>
-    </table>
     <p data-en="Retorta sits between the river, the woodland and the city. Metro, historic centre, beaches and airport are all minutes away.">Retorta fica entre o rio, a floresta e a cidade. Metro, centro histórico, praias e aeroporto estão a minutos.</p>
+    <ul class="rota">
+      <li>
+        <span class="rota__nome">
+          <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
+          <span data-en="Santa Clara metro station">Estação de Metro Santa Clara</span>
+        </span>
+        <span class="rota__ts">
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-en="by bike">de bicicleta</span>5 min</span>
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-en="on foot">a pé</span>15 min</span>
+        </span>
+      </li>
+      <li>
+        <span class="rota__nome">
+          <svg class="ic" aria-hidden="true"><use href="#ic-centro"></use></svg>
+          <span data-en="Historic centre of Vila do Conde">Centro histórico de Vila do Conde</span>
+        </span>
+        <span class="rota__ts">
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-en="by bike">de bicicleta</span>10 min</span>
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-en="on foot">a pé</span>30 min</span>
+        </span>
+      </li>
+      <li>
+        <span class="rota__nome">
+          <svg class="ic" aria-hidden="true"><use href="#ic-praia"></use></svg>
+          <span data-en="Beaches of Vila do Conde">Praias de Vila do Conde</span>
+        </span>
+        <span class="rota__ts">
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-bici"></use></svg><span class="vsr" data-en="by bike">de bicicleta</span>20 min</span>
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-pe"></use></svg><span class="vsr" data-en="on foot">a pé</span>60 min</span>
+        </span>
+      </li>
+      <li>
+        <span class="rota__nome">
+          <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
+          <span data-en="Trindade metro station / Porto">Estação de Metro Trindade / Porto</span>
+        </span>
+        <span class="rota__ts">
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg><span class="vsr" data-en="by car">de carro</span>40 min</span>
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span class="vsr" data-en="by metro">de metro</span>60 min</span>
+        </span>
+      </li>
+      <li>
+        <span class="rota__nome">
+          <svg class="ic" aria-hidden="true"><use href="#ic-aviao"></use></svg>
+          <span data-en="Francisco Sá Carneiro airport">Aeroporto Francisco Sá Carneiro</span>
+        </span>
+        <span class="rota__ts">
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-carro"></use></svg><span class="vsr" data-en="by car">de carro</span>20 min</span>
+          <span class="rota__t"><svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg><span class="vsr" data-en="by metro">de metro</span>50 min</span>
+        </span>
+      </li>
+    </ul>
+    <a class="maps-link" href="https://www.google.com/maps/search/?api=1&amp;query=Igreja+de+Retorta%2C+Vila+do+Conde" target="_blank" rel="noopener"><span data-en="Open in maps">Abre no maps</span> <span aria-hidden="true">&#8599;</span></a>
   </div>
-  <figure class="figura">
-    <img src="../assets/vila-do-conde.jpg" alt="Vila do Conde, o rio Ave e o Atlântico" loading="lazy">
-    <figcaption data-en="Vila do Conde &middot; the river Ave and the Atlantic">Vila do Conde &middot; o rio Ave e o Atlântico</figcaption>
+  <figure class="figura mapa__figura">
+    <div class="aerial">
+      <img src="../../mapsbirdseye.png" alt="Vista aérea de Retorta: a Sineira, a ponte sobre o rio Ave, as escolas e a envolvente" loading="lazy">
+      <span class="aerial__pin aerial__pin--sineira">
+        <svg class="marca" viewBox="0 0 382 387" aria-hidden="true"><use href="#mark-sineira"></use></svg>
+        <span class="vsr">a Sineira</span>
+      </span>
+      <span class="aerial__pin aerial__pin--escola">
+        <svg class="ic" aria-hidden="true"><use href="#ic-escola"></use></svg>
+        <span class="vsr" data-en="Secondary and primary schools / vocational school">Escolas Secundária e Básica / Escola Profissional</span>
+      </span>
+      <span class="aerial__pin aerial__pin--metro">
+        <svg class="ic" aria-hidden="true"><use href="#ic-metro"></use></svg>
+        <span class="vsr" data-en="Santa Clara metro station">Estação de Metro Santa Clara</span>
+      </span>
+      <span class="aerial__pin aerial__pin--centro">
+        <svg class="ic" aria-hidden="true"><use href="#ic-centro"></use></svg>
+        <span class="vsr" data-en="Historic centre of Vila do Conde">Centro histórico de Vila do Conde</span>
+      </span>
+    </div>
+    <figcaption data-en="Retorta &middot; a Sineira, the river Ave and the surroundings">Retorta &middot; a Sineira, o rio Ave e a envolvente</figcaption>
   </figure>
 </section>
 
-<!-- F6 — Intervenção · formato C, com as fotografias da obra em tira. -->
-<section class="linha linha--par" id="intervencao">
+<!-- F6 — Intervenção · o texto em cima, a largura toda, e por baixo a
+     sequência da obra: antes, durante, interior e os altares que faltam.
+     Em meia página as quatro verticais ficavam do tamanho de selos. -->
+<section class="linha linha--tira" id="intervencao">
   <div class="texto">
-    <p class="kicker" data-en="F6 &middot; Works">F6 &middot; Intervenção</p>
+    <p class="kicker" data-en="6 &middot; Works">6 &middot; Intervenção</p>
     <h2 class="titulo" data-en="Works under way">Intervenção</h2>
     <p data-en="The work has already begun. The nave has a new floor; the altars and the gilded arch are waiting to be restored.">O trabalho já começou. A nave ganhou pavimento novo; os altares e o arco dourado aguardam recuperação.</p>
   </div>
@@ -1039,7 +1312,11 @@ html.menu-open .menu::before { opacity: 1; }
     </figure>
     <figure class="figura">
       <img src="../assets/arco.jpg" alt="Interior em obra, visto através do arco" loading="lazy">
-      <figcaption data-en="Interior &middot; arch and floor under way">Interior &middot; arco e pavimento</figcaption>
+      <figcaption data-en="Interior &middot; arch and floor under way">Interior &middot; arco e pavimento em execução</figcaption>
+    </figure>
+    <figure class="figura">
+      <img src="../assets/altares.jpg" alt="Pormenor dos altares a recuperar" loading="lazy">
+      <figcaption data-en="Altars — restoration foreseen in the plan">Altares — recuperação prevista no plano</figcaption>
     </figure>
   </div>
 </section>
@@ -1047,7 +1324,7 @@ html.menu-open .menu::before { opacity: 1; }
 <!-- F6 — Faseamento · formato A, a banda de documento. -->
 <section class="linha linha--banda" id="faseamento">
   <div class="texto">
-    <p class="kicker" data-en="F6 &middot; Phasing">F6 &middot; Faseamento</p>
+    <p class="kicker" data-en="6 &middot; Phasing">6 &middot; Faseamento</p>
     <h2 class="titulo" data-en="Phasing of the works">Faseamento da intervenção</h2>
     <div class="banda__corpo banda__corpo--planta">
       <div>
@@ -1070,29 +1347,28 @@ html.menu-open .menu::before { opacity: 1; }
 <!-- F6 — Plano de requalificação · formato C. -->
 <section class="linha linha--par linha--espelhado linha--azul" id="requalificacao">
   <div class="texto">
-    <p class="kicker" data-en="F6 &middot; Requalification">F6 &middot; Requalificação</p>
+    <p class="kicker" data-en="6 &middot; Requalification">6 &middot; Requalificação</p>
     <h2 class="titulo" data-en="Requalification plan">Plano de requalificação</h2>
-    <div class="duas">
-      <ul class="lista">
-        <li data-en="Topographic and architectural survey">Levantamento topográfico e arquitectónico</li>
-        <li data-en="Architecture and engineering design">Projecto de arquitectura e especialidades</li>
-        <li data-en="Sewage, water, electricity and telecoms networks">Construção: redes de esgotos, água, electricidade e telecomunicações</li>
-        <li data-en="Heating and cooling system">Sistema de aquecimento / arrefecimento</li>
-        <li data-en="Access roads and parking">Construção de acessos e estacionamento</li>
-        <li data-en="Windows">Execução de janelas</li>
-        <li data-en="Restoration of the church&rsquo;s main door">Recuperação da porta principal da igreja</li>
-        <li data-en="Restoration of the church altars">Recuperação dos altares da igreja</li>
-      </ul>
-      <ul class="lista">
-        <li data-en="Floors">Execução de pavimentos</li>
-        <li data-en="Wall treatment">Tratamento de paredes</li>
-        <li data-en="Toilets">Criação de instalações sanitárias</li>
-        <li data-en="Restoration of the priest&rsquo;s house roof">Recuperação do telhado da casa do padre</li>
-        <li data-en="Opening of the proscenium and slab demolition">Abertura de vão (proscénio) e demolição de laje</li>
-        <li data-en="Painting &middot; interior and exterior lighting">Pinturas &middot; iluminação interior e exterior</li>
-        <li data-en="Landscape design and outdoor works">Projecto de paisagismo e arranjos exteriores</li>
-      </ul>
-    </div>
+    <!-- Uma coluna só, e não duas. O plano é uma sequência de obra — do
+         levantamento aos arranjos exteriores — e em duas colunas lia-se
+         primeiro metade da sequência e só depois a outra. -->
+    <ul class="lista lista--cerrada">
+      <li data-en="Topographic and architectural survey">Levantamento topográfico e arquitectónico</li>
+      <li data-en="Architecture and engineering design">Projecto de arquitectura e especialidades</li>
+      <li data-en="Sewage, water, electricity and telecoms networks">Construção: redes de esgotos, água, electricidade e telecomunicações</li>
+      <li data-en="Heating and cooling system">Sistema de aquecimento / arrefecimento</li>
+      <li data-en="Access roads and parking">Construção de acessos e estacionamento</li>
+      <li data-en="Windows">Execução de janelas</li>
+      <li data-en="Restoration of the church&rsquo;s main door">Recuperação da porta principal da igreja</li>
+      <li data-en="Restoration of the church altars">Recuperação dos altares da igreja</li>
+      <li data-en="Floors">Execução de pavimentos</li>
+      <li data-en="Wall treatment">Tratamento de paredes</li>
+      <li data-en="Toilets">Criação de instalações sanitárias</li>
+      <li data-en="Restoration of the priest&rsquo;s house roof">Recuperação do telhado da casa do padre</li>
+      <li data-en="Opening of the proscenium and slab demolition">Abertura de vão (proscénio) e demolição de laje</li>
+      <li data-en="Painting &middot; interior and exterior lighting">Pinturas &middot; iluminação interior e exterior</li>
+      <li data-en="Landscape design and outdoor works">Projecto de paisagismo e arranjos exteriores</li>
+    </ul>
   </div>
   <figure class="figura">
     <img src="../assets/altares.jpg" alt="Pormenor dos altares a recuperar" loading="lazy">
@@ -1100,10 +1376,13 @@ html.menu-open .menu::before { opacity: 1; }
   </figure>
 </section>
 
-<!-- F7 — Plano de apoio e mecenato · formato A, a banda de documento. -->
+<!-- F7 — Plano de apoio e mecenato · formato A, a banda de documento.
+     As parcerias e os apoios estavam numa linha azul à parte, a seguir a
+     esta. Vêm para dentro dela, no mesmo creme e por baixo do plano: são a
+     mesma conversa — quem já está com a Sineira, e como se entra. -->
 <section class="linha linha--banda" id="mecenato">
   <div class="texto">
-    <p class="kicker" data-en="F7 &middot; Patronage">F7 &middot; Mecenato</p>
+    <p class="kicker" data-en="7 &middot; Patronage">7 &middot; Mecenato</p>
     <h2 class="titulo" data-en="Support and patronage plan">Plano de apoio e mecenato</h2>
     <div class="banda__corpo">
       <div>
@@ -1118,6 +1397,9 @@ html.menu-open .menu::before { opacity: 1; }
         <p class="legal" data-en="a Sineira — Associação Cultural &middot; VAT 518858359. Support qualifies under the Portuguese Tax Benefits Statute (cultural patronage).">a Sineira — Associação Cultural &middot; NIF 518858359. Apoios enquadráveis no Estatuto dos Benefícios Fiscais (mecenato cultural).</p>
         <a class="botao" href="mailto:ola@asineira.pt?subject=Apoiar%20a%20Sineira"><span data-en="I want to help">Quero apoiar</span></a>
       </div>
+      <!-- Quatro maneiras de entrar, duas a duas. O mecenato é o degrau que
+           a associação quis pôr à vista, e é o único com o nome em caixa
+           alta: os outros três lêem-se à volta dele. -->
       <div class="niveis">
         <article class="nivel">
           <p class="kicker" data-en="01 &middot; People">01 &middot; Pessoas</p>
@@ -1129,56 +1411,57 @@ html.menu-open .menu::before { opacity: 1; }
           </div>
         </article>
         <article class="nivel">
-          <p class="kicker" data-en="02 &middot; Companies and institutions">02 &middot; Empresas e instituições</p>
+          <p class="kicker" data-en="02 &middot; People and companies">02 &middot; Pessoas e empresas</p>
+          <h3 class="nivel__destaque" data-en="Patrons">Mecenas</h3>
+          <p data-en="Support under the Cultural Patronage Law: tax benefits, visibility and a close view of the project.">Apoio ao abrigo da Lei do Mecenato Cultural: benefícios fiscais, visibilidade e acompanhamento do projecto.</p>
+        </article>
+        <article class="nivel">
+          <p class="kicker" data-en="03 &middot; Companies and institutions">03 &middot; Empresas e instituições</p>
           <h3 data-en="Sponsorship">Patrocínio</h3>
           <p class="por-escrever" data-en="Text still to be written by the association.">Texto por escrever pela associação.</p>
         </article>
         <article class="nivel">
-          <p class="kicker" data-en="03 &middot; Institutions and associations">03 &middot; Instituições e associações</p>
+          <p class="kicker" data-en="04 &middot; Institutions and associations">04 &middot; Instituições e associações</p>
           <h3 data-en="Partner">Parceiro</h3>
           <p data-en="An association named in the cultural life of Vila do Conde — posters, website, events and territory.">Associação nomeada à dinâmica cultural de Vila do Conde — cartazes, site, eventos e território.</p>
         </article>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- Território · o "depois encaixamos" da nota da cliente: locais de
-     interesse e apoios ficam aqui, entre o mecenato e os contactos, até
-     ela dizer onde os quer. -->
-<section class="linha linha--banda linha--azul" id="territorio">
-  <div class="texto">
-    <p class="kicker" data-en="Territory">Território</p>
-    <h2 class="titulo" data-en="Partnerships and support">Parcerias e apoios</h2>
-    <div class="tres">
-      <div>
-        <p class="kicker" data-en="Partnerships (to date)">Parcerias (à data)</p>
-        <ul class="lista">
-          <li>Curtas de Vila do Conde</li>
-          <li data-en="Centro Ciência Viva science centre">Centro Ciência Viva</li>
-        </ul>
-      </div>
-      <div>
-        <p class="kicker" data-en="Support (to date)">Apoios (à data)</p>
-        <ul class="lista">
-          <li data-en="Retorta e Tougues parish council">Junta de Freguesia de Retorta e Tougues</li>
-          <li data-en="Vila do Conde town council">Câmara Municipal de Vila do Conde</li>
-        </ul>
-      </div>
-      <div>
-        <p class="kicker" data-en="Points of interest nearby">Pontos de interesse na proximidade</p>
-        <ul class="lista">
-          <li data-en="Centro Ciência Viva science centre">Centro Ciência Viva</li>
-          <li data-en="Research hub">Pólo de investigação</li>
-          <li>ESMAD</li>
-          <li data-en="Sports centre">Centro gimnodesportivo</li>
-          <li data-en="Rio Ave football ground">Campo Rio Ave Futebol</li>
-          <li data-en="Sanches school">Escola Sanches</li>
-          <li data-en="Saul Dias school">Escola Saul Dias</li>
-          <li data-en="Clube Fluvial Vilacondense">Clube Fluvial Vilacondense</li>
-          <li data-en="Cycle path network (planned)">Rede ciclovia (futuramente)</li>
-          <li data-en="River beach (planned)">Praia fluvial (futuramente)</li>
-        </ul>
+    <!-- Quem já cá está, e o que há à volta. -->
+    <div class="parcerias">
+      <p class="kicker" data-en="Territory">Território</p>
+      <h3 class="titulo titulo--menor" data-en="Partnerships and support">Parcerias e apoios</h3>
+      <div class="tres">
+        <div>
+          <p class="kicker" data-en="Partnerships (to date)">Parcerias (à data)</p>
+          <ul class="lista lista--cerrada">
+            <li>Curtas de Vila do Conde</li>
+            <li data-en="Centro Ciência Viva science centre">Centro Ciência Viva</li>
+          </ul>
+        </div>
+        <div>
+          <p class="kicker" data-en="Support (to date)">Apoios (à data)</p>
+          <ul class="lista lista--cerrada">
+            <li data-en="Retorta e Tougues parish council">Junta de Freguesia de Retorta e Tougues</li>
+            <li data-en="Vila do Conde town council">Câmara Municipal de Vila do Conde</li>
+          </ul>
+        </div>
+        <div>
+          <p class="kicker" data-en="Points of interest nearby">Pontos de interesse na proximidade</p>
+          <ul class="lista lista--cerrada">
+            <li data-en="Centro Ciência Viva science centre">Centro Ciência Viva</li>
+            <li data-en="Research hub">Pólo de investigação</li>
+            <li>ESMAD</li>
+            <li data-en="Sports centre">Centro gimnodesportivo</li>
+            <li data-en="Rio Ave football ground">Campo Rio Ave Futebol</li>
+            <li data-en="Sanches school">Escola Sanches</li>
+            <li data-en="Saul Dias school">Escola Saul Dias</li>
+            <li data-en="Clube Fluvial Vilacondense">Clube Fluvial Vilacondense</li>
+            <li data-en="Cycle path network (planned)">Rede ciclovia (futuramente)</li>
+            <li data-en="River beach (planned)">Praia fluvial (futuramente)</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -1187,7 +1470,7 @@ html.menu-open .menu::before { opacity: 1; }
 <!-- F8 — Mais informações · formato C. -->
 <section class="linha linha--par linha--espelhado" id="informacoes">
   <div class="texto">
-    <p class="kicker" data-en="F8 &middot; Information">F8 &middot; Informações</p>
+    <p class="kicker" data-en="8 &middot; Information">8 &middot; Informações</p>
     <h2 class="titulo" data-en="More information">Mais informações</h2>
     <ul class="lista">
       <li><a href="https://asineira.pt">asineira.pt</a></li>
@@ -1209,7 +1492,7 @@ html.menu-open .menu::before { opacity: 1; }
     <img src="../assets/hero.jpg" alt="Antiga Igreja de Retorta e casa do padre, Vila do Conde" loading="lazy">
   </div>
   <div class="fecho__texto">
-    <p class="kicker" data-en="F9 &middot; Invitation">F9 &middot; Convite</p>
+    <p class="kicker" data-en="9 &middot; Invitation">9 &middot; Convite</p>
     <h2 class="titulo" data-en="Come and see the place. Come and support what is missing.">Vem ver o sítio. Vem apoiar o que falta.</h2>
     <p data-en="This dossier is an invitation: to visit, to patronage, to partnership. The former Church of Retorta is becoming a home for the arts — and it needs people who want to be part of it.">Este dossier é um convite: à visita, ao mecenato, à parceria. A antiga Igreja de Retorta está a tornar-se casa para as artes — e precisa de quem queira fazer parte.</p>
     <a class="botao" href="#mecenato"><span data-en="Patronage plan">Plano de mecenato</span></a>
@@ -1222,19 +1505,18 @@ html.menu-open .menu::before { opacity: 1; }
      O índice do dossier. Abre com o triângulo, como no site. -->
 <nav class="menu" id="menu" aria-hidden="true" aria-label="Índice do dossier">
   <ul class="menu__lista">
-    <li class="menu-item" data-delay="0"><a class="menu__link" href="#capa"><span class="menu__num">F0</span><span data-en="Cover">Capa</span></a></li>
-    <li class="menu-item" data-delay="1"><a class="menu__link" href="#introducao"><span class="menu__num">F1</span><span data-en="Introduction">Introdução</span></a></li>
-    <li class="menu-item" data-delay="2"><a class="menu__link" href="#missao"><span class="menu__num">F2</span><span data-en="Mission">Missão</span></a></li>
-    <li class="menu-item" data-delay="3"><a class="menu__link" href="#actividades"><span class="menu__num">F3</span><span data-en="Activities">Actividades</span></a></li>
-    <li class="menu-item" data-delay="4"><a class="menu__link" href="#espaco"><span class="menu__num">F4</span><span data-en="The place">O espaço</span></a></li>
-    <li class="menu-item" data-delay="5"><a class="menu__link" href="#acessos"><span class="menu__num">F5</span><span data-en="Getting here">Acessos</span></a></li>
-    <li class="menu-item" data-delay="6"><a class="menu__link" href="#intervencao"><span class="menu__num">F6</span><span data-en="Works">Intervenção</span></a></li>
-    <li class="menu-item" data-delay="7"><a class="menu__link" href="#faseamento"><span class="menu__num">F6</span><span data-en="Phasing">Faseamento</span></a></li>
-    <li class="menu-item" data-delay="8"><a class="menu__link" href="#requalificacao"><span class="menu__num">F6</span><span data-en="Requalification">Requalificação</span></a></li>
-    <li class="menu-item" data-delay="9"><a class="menu__link" href="#mecenato"><span class="menu__num">F7</span><span data-en="Patronage">Mecenato</span></a></li>
-    <li class="menu-item" data-delay="10"><a class="menu__link" href="#territorio"><span class="menu__num">&mdash;</span><span data-en="Territory">Território</span></a></li>
-    <li class="menu-item" data-delay="11"><a class="menu__link" href="#informacoes"><span class="menu__num">F8</span><span data-en="Information">Informações</span></a></li>
-    <li class="menu-item" data-delay="12"><a class="menu__link" href="#visita"><span class="menu__num">F9</span><span data-en="Come and visit">Vem ver o sítio</span></a></li>
+    <li class="menu-item" data-delay="0"><a class="menu__link" href="#capa"><span class="menu__num">0</span><span data-en="Cover">Capa</span></a></li>
+    <li class="menu-item" data-delay="1"><a class="menu__link" href="#introducao"><span class="menu__num">1</span><span data-en="Introduction">Introdução</span></a></li>
+    <li class="menu-item" data-delay="2"><a class="menu__link" href="#missao"><span class="menu__num">2</span><span data-en="Mission">Missão</span></a></li>
+    <li class="menu-item" data-delay="3"><a class="menu__link" href="#actividades"><span class="menu__num">3</span><span data-en="Activities">Actividades</span></a></li>
+    <li class="menu-item" data-delay="4"><a class="menu__link" href="#espaco"><span class="menu__num">4</span><span data-en="The place">O espaço</span></a></li>
+    <li class="menu-item" data-delay="5"><a class="menu__link" href="#acessos"><span class="menu__num">5</span><span data-en="Getting here">Acessos</span></a></li>
+    <li class="menu-item" data-delay="6"><a class="menu__link" href="#intervencao"><span class="menu__num">6</span><span data-en="Works">Intervenção</span></a></li>
+    <li class="menu-item" data-delay="7"><a class="menu__link" href="#faseamento"><span class="menu__num">6</span><span data-en="Phasing">Faseamento</span></a></li>
+    <li class="menu-item" data-delay="8"><a class="menu__link" href="#requalificacao"><span class="menu__num">6</span><span data-en="Requalification">Requalificação</span></a></li>
+    <li class="menu-item" data-delay="9"><a class="menu__link" href="#mecenato"><span class="menu__num">7</span><span data-en="Patronage">Mecenato</span></a></li>
+    <li class="menu-item" data-delay="10"><a class="menu__link" href="#informacoes"><span class="menu__num">8</span><span data-en="Information">Informações</span></a></li>
+    <li class="menu-item" data-delay="11"><a class="menu__link" href="#visita"><span class="menu__num">9</span><span data-en="Come and visit">Vem ver o sítio</span></a></li>
   </ul>
 </nav>
 
