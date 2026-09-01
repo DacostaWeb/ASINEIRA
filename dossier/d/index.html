@@ -30,10 +30,9 @@ html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light;
 
    O corpo é uma pilha de LINHAS. Cada linha vale um ecrã (100svh menos o
    cabeçalho) e é um ponto de paragem do scroll-snap: um gesto para baixo
-   leva à linha seguinte e pára lá. As linhas que, num ecrã muito baixo,
-   pedem mais do que um ecrã continuam a poder rolar por dentro — pela
-   especificação, uma área de snap maior do que a janela não prende
-   ninguém.
+   leva à linha seguinte e pára lá. Quando as imagens passam para baixo ou
+   uma linha cresce para além da altura útil, o snap e o avanço por folha
+   desligam-se e a página volta ao scroll normal.
 
    O alinhamento das linhas com os formatos que a cliente escolheu está
    marcado em cada secção (F0…F9, e o formato A/B/C de origem).
@@ -125,6 +124,10 @@ html {
   background: var(--cream);
 }
 html, body { margin: 0; overflow-x: clip; }
+/* O snap é uma ajuda enquanto todas as folhas cabem num ecrã. Esta classe é
+   posta pelo JS quando uma quebra responsiva ou o conteúdo de uma folha
+   exigem mais altura: nesse caso a página tem de poder rolar normalmente. */
+html.scroll-livre { scroll-snap-type: none; scroll-behavior: auto; }
 
 /* Nenhuma barra de scroll à vista, como no site. */
 * { scrollbar-width: none; }
@@ -1128,9 +1131,9 @@ html.menu-open .menu::before { opacity: 1; }
 
 /* 11. Ecrãs estreitos e impressão ========================================= */
 
-/* Num ecrã estreito uma linha pode pedir mais do que um ecrã. O snap
-   aguenta: uma área de paragem maior do que a janela deixa rolar por
-   dentro dela, e só a seguir salta para a linha seguinte. */
+/* Num ecrã estreito as imagens passam para baixo e uma linha pode pedir mais
+   do que um ecrã. Nessa situação o JS desliga o snap e o avanço por folha,
+   para que a página possa ser percorrida de forma contínua. */
 @media (max-width: 620px) {
   .banda__corpo { grid-template-columns: 1fr; }
   .capa__titulo h1 { max-width: none; }
@@ -1771,8 +1774,14 @@ html.menu-open .menu::before { opacity: 1; }
     try { localStorage.setItem('sineira-lang', en ? 'en' : 'pt'); } catch (e) {}
   }
 
-  btnPt.addEventListener('click', function () { idioma('pt'); });
-  btnEn.addEventListener('click', function () { idioma('en'); });
+  btnPt.addEventListener('click', function () {
+    idioma('pt');
+    if (typeof atualizaModoScroll === 'function') atualizaModoScroll();
+  });
+  btnEn.addEventListener('click', function () {
+    idioma('en');
+    if (typeof atualizaModoScroll === 'function') atualizaModoScroll();
+  });
 
   /* O idioma escolhido da última vez, e senão o do navegador. */
   var guardado = null;
@@ -1909,11 +1918,60 @@ html.menu-open .menu::before { opacity: 1; }
   /* O trackpad já traz inércia e muitos incrementos pequenos, por isso fica
      entregue ao scroll-snap nativo. A roda física anuncia cada entalhe com
      wheelDelta em múltiplos de 120: nesse caso, até o gesto mínimo leva de
-     imediato à ficha seguinte ou anterior, sem acumular vários impulsos. */
+     imediato à ficha seguinte ou anterior, sem acumular vários impulsos.
+
+     Quando as imagens passam para baixo ou uma folha deixa de caber na
+     altura útil, o snap deixa de ser uma boa unidade de navegação. O modo
+     livre desliga tanto o snap CSS como esta interceptação da roda. */
   var fichas = Array.prototype.slice.call(document.querySelectorAll('.linha'));
   var rodaBloqueada = false;
   var rodaTimer = null;
   var movimentoReduzido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var larguraEmpilhada = matchMedia('(max-width: 860px)');
+  var scrollLivre = false;
+
+  function alturaUtilDaJanela() {
+    var css = getComputedStyle(document.documentElement);
+    var altura = parseFloat(css.getPropertyValue('--linha-h'));
+    if (isFinite(altura)) return altura;
+
+    var cabecalho = parseFloat(css.getPropertyValue('--header-h')) || 0;
+    return Math.max(0, innerHeight - cabecalho);
+  }
+
+  function haFolhaQueExcedeJanela() {
+    var alturaUtil = alturaUtilDaJanela();
+    return fichas.some(function (ficha) {
+      /* scrollHeight apanha conteúdo que transborda uma altura fixa; a
+         bounding box apanha linhas que cresceram naturalmente no mobile. */
+      var altura = Math.max(ficha.scrollHeight, ficha.getBoundingClientRect().height);
+      return altura > alturaUtil + 2;
+    });
+  }
+
+  function atualizaModoScroll() {
+    var livre = larguraEmpilhada.matches || haFolhaQueExcedeJanela();
+    scrollLivre = livre;
+    document.documentElement.classList.toggle('scroll-livre', livre);
+
+    /* Se o modo mudou durante uma animação, nenhum impulso antigo deve
+       bloquear o primeiro scroll normal. */
+    if (livre) {
+      rodaBloqueada = false;
+      clearTimeout(rodaTimer);
+    }
+  }
+
+  function agendaAtualizacaoDoScroll() {
+    requestAnimationFrame(atualizaModoScroll);
+  }
+
+  atualizaModoScroll();
+  addEventListener('resize', agendaAtualizacaoDoScroll, { passive: true });
+  if (typeof ResizeObserver === 'function') {
+    var observaFolhas = new ResizeObserver(agendaAtualizacaoDoScroll);
+    fichas.forEach(function (ficha) { observaFolhas.observe(ficha); });
+  }
 
   function eventoDaRoda(e) {
     if (e.deltaMode !== 0) return true;
@@ -1935,7 +1993,7 @@ html.menu-open .menu::before { opacity: 1; }
   }
 
   addEventListener('wheel', function (e) {
-    if (aberto || e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX) || !eventoDaRoda(e)) return;
+    if (scrollLivre || aberto || e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX) || !eventoDaRoda(e)) return;
 
     var direccao = e.deltaY > 0 ? 1 : -1;
     var destino = fichaMaisProxima() + direccao;
