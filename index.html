@@ -3984,6 +3984,9 @@ html.menu-open .menu::before { opacity: 1; }
 
     { ano: 2026, porAnunciar: true,
       img: 'dossier/assets/hero.jpg',
+      /* A que fica sozinha na célula da fotografia quando a grelha só tem
+         uma ou duas colunas (ver evFotoFixa). */
+      fotoDaCapa: true,
       bilhetes: null,
       pt: { titulo: "Inauguração d'a Sineira!", sitio: 'Igreja e Jardim', natureza: 'Apresentação' },
       en: { titulo: "Inauguração d'a Sineira!", sitio: 'Church and Garden', natureza: 'Presentation' },
@@ -4397,18 +4400,64 @@ html.menu-open .menu::before { opacity: 1; }
      de cima só se veem as três primeiras (ver EV_NA_CAPA). */
   function evFotos() { return EVENTOS.slice(0, EV_NA_CAPA).concat(CONCLUIDOS); }
 
+  /* Numa coluna e em duas, a célula da fotografia fica sozinha por cima do
+     cartão — ou ao lado dele — e é a primeira coisa que se vê da página: aí
+     não é o desfile do que aí vem, é o cartaz da inauguração. A vez pára, a
+     fotografia não troca de projeto e nenhuma linha se sublinha sozinha; o
+     sublinhado volta a ser só do rato, como em qualquer lista.
+
+     De três colunas para cima o cartão tem duas delas e a fotografia é uma
+     terceira ao lado da lista: aí acompanha-a, que é o desenho de sempre. */
+  function evFotoFixa() { return state.cols <= 2; }
+
+  /* Onde é que a da inauguração está na lista das fotografias (ver
+     fotoDaCapa). Se um dia deixar de lá estar, fica a primeira. */
+  function evIdxCapa() {
+    var fotos = evFotos();
+    for (var i = 0; i < fotos.length; i++) if (fotos[i].fotoDaCapa) return i;
+    return 0;
+  }
+
+  /* Tira o sublinhado a todas as linhas, nas duas listas. Com a fotografia
+     fixa não há vez nenhuma a andar para o levar dali, e sem isto o
+     sublinhado do rato ficava para trás depois de ele sair. */
+  function evSemFoco() {
+    [evListaEl, evConcEl].forEach(function (corpo) {
+      if (!corpo) return;
+      Array.prototype.forEach.call(corpo.children, function (tr) { tr.classList.remove('is-on'); });
+    });
+  }
+
+  /* Chamado de cada vez que a grelha muda de número de colunas (ver layout):
+     é aí que a fotografia passa de fixa a desfile, ou o contrário, e a
+     célula tem de ser escrita de novo. */
+  var evFixaAgora = null;
+  function evAcertaFotos() {
+    var fixa = evFotoFixa();
+    if (fixa === evFixaAgora) return;
+    evFixaAgora = fixa;
+    evEmFoco = fixa ? evIdxCapa() : 0;
+    evPintaFotos();
+    if (fixa) evSemFoco(); else evFoco(evEmFoco);
+  }
+
   /* A fotografia em foco. Estão todas montadas por baixo umas das outras
      desde o início e a troca é só de opacidade: assim não há um salto em
      branco à espera de carregar. */
   function evPintaFotos() {
     if (!evFotoEl) return;
     evFotoEl.textContent = '';
-    evFotos().forEach(function (e, i) {
+    /* Fixa, vai uma só ao HTML: as outras não se veem nem se hão-de ver, e
+       montá-las era pedir ao telemóvel — que é quem tem uma coluna — que
+       carregasse quatro fotografias para mostrar uma. */
+    var fixa = evFotoFixa();
+    var lista = fixa ? [evFotos()[evIdxCapa()]] : evFotos();
+    lista.forEach(function (e, i) {
       var img = document.createElement('img');
       img.src = e.img;
       img.alt = evAlt(e);
       img.loading = 'lazy';
-      if (i === evEmFoco) img.className = 'is-on';
+      if (fixa || i === evEmFoco) img.className = 'is-on';
       evFotoEl.appendChild(img);
     });
   }
@@ -4416,7 +4465,9 @@ html.menu-open .menu::before { opacity: 1; }
   function evFoco(i) {
     var n_fotos = evFotos().length;
     evEmFoco = (i + n_fotos) % n_fotos;
-    if (evFotoEl) {
+    /* Fixa, a célula tem uma fotografia só e é sempre essa que se vê: o rato
+       numa linha sublinha-a, e não chama fotografia nenhuma para o lado. */
+    if (evFotoEl && !evFotoFixa()) {
       Array.prototype.forEach.call(evFotoEl.children, function (img, n) {
         img.classList.toggle('is-on', n === evEmFoco);
       });
@@ -4439,6 +4490,7 @@ html.menu-open .menu::before { opacity: 1; }
      ser esbatida e passa a ser seca (ver .media--eventos img). */
   function evAnda() {
     if (evParado || document.hidden) return;
+    if (evFotoFixa()) return;
     if (evTile && evTile.classList.contains('is-expanded')) return;
     evFoco(evEmFoco + 1);
   }
@@ -4476,7 +4528,7 @@ html.menu-open .menu::before { opacity: 1; }
       tr.appendChild(td);
     });
     tr.addEventListener('mouseenter', function () { evParado = true; evFoco(i); });
-    tr.addEventListener('mouseleave', function () { evParado = false; });
+    tr.addEventListener('mouseleave', function () { evParado = false; if (evFotoFixa()) evSemFoco(); });
 
     /* Carregar numa linha abre o painel dos eventos, como carregar no título
        do cartão ou no "+". Fechado, este mosaico é um cartaz do que aí vem, e
@@ -4512,7 +4564,7 @@ html.menu-open .menu::before { opacity: 1; }
     /* Como as linhas de cima: o rato numa linha pára a vez e chama a
        fotografia dela para o lado. */
     tr.addEventListener('mouseenter', function () { evParado = true; evFoco(evNaCapa() + i); });
-    tr.addEventListener('mouseleave', function () { evParado = false; });
+    tr.addEventListener('mouseleave', function () { evParado = false; if (evFotoFixa()) evSemFoco(); });
 
     /* E, como as de cima, carregar abre a lista inteira — mas esta vai ter
        com ela: o painel abre pelos próximos, e quem carregou num concluído
@@ -5171,7 +5223,7 @@ html.menu-open .menu::before { opacity: 1; }
       evPintaComTexto(evGrelhaConcEl, CONCLUIDOS);
     }
     evPintaFotos();
-    evFoco(evEmFoco);
+    if (evFotoFixa()) evSemFoco(); else evFoco(evEmFoco);
     calDesenha();
     calEscreveDetalhe();
 
@@ -5187,7 +5239,7 @@ html.menu-open .menu::before { opacity: 1; }
   /* O rato em cima do cartão trava a vez; ao sair, ela volta a andar. */
   if (evTile) {
     evTile.addEventListener('mouseenter', function () { evParado = true; });
-    evTile.addEventListener('mouseleave', function () { evParado = false; });
+    evTile.addEventListener('mouseleave', function () { evParado = false; if (evFotoFixa()) evSemFoco(); });
   }
 
   function setLang(lang) { state.lang = lang; applyLang(); renderEventos(); }
@@ -5817,6 +5869,10 @@ html.menu-open .menu::before { opacity: 1; }
     span(tileEventos, cols >= 3);
     span(tileAmigos, cols >= 4);
     span(tileLoja, cols === 3);
+
+    /* A uma e a duas colunas a fotografia dos eventos fica fixa na da
+       inauguração; de três para cima volta ao desfile (ver evFotoFixa). */
+    evAcertaFotos();
   }
 
   /* Agrupa os mosaicos por linha e devolve a altura que cada uma pede.
