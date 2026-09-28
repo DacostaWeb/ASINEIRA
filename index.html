@@ -4047,6 +4047,38 @@ html.menu-open .menu::before { opacity: 1; }
              en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' } }
   ];
 
+  /* Um próximo passa a concluído no dia seguinte ao último dia dele — o
+     'diaFim', quando dura mais do que um —, e passa sozinho: ninguém tem de
+     se lembrar de mudar o site na manhã a seguir. A conta faz-se com o
+     relógio de quem visita, à meia-noite dele.
+
+     Nos concluídos cada peça aparece uma vez só, com a última data em que se
+     fez: o que passou toma o lugar do concluído com o mesmo nome, e fica com
+     o que ele tinha e o próximo não traz — as marcas do que ficou (texto,
+     fotografias, vídeo), que são da peça e não de uma noite. Vai para o
+     princípio da lista, que é onde fica o mais recente.
+
+     Quem ainda não tem data ('porAnunciar') não passa nunca: não há dia
+     seguinte a um dia que não existe. */
+  function evJaPassou(e) {
+    if (evPorAnunciar(e) || !e.dia || !e.mes || !e.ano) return false;
+    return new Date(e.ano, e.mes - 1, (e.diaFim || e.dia) + 1) <= HOJE;
+  }
+  (function evArrumaPassados() {
+    EVENTOS.filter(evJaPassou).forEach(function (e) {
+      EVENTOS.splice(EVENTOS.indexOf(e), 1);
+      var novo = {};
+      for (var i = 0; i < CONCLUIDOS.length; i++) {
+        if (CONCLUIDOS[i].pt.titulo !== e.pt.titulo) continue;
+        var antes = CONCLUIDOS.splice(i, 1)[0];
+        for (var k in antes) novo[k] = antes[k];
+        break;
+      }
+      for (var k2 in e) novo[k2] = e[k2];
+      CONCLUIDOS.unshift(novo);
+    });
+  })();
+
   /* ---------- os projetos com ficha própria ---------- */
 
   /* Um evento na lista de cima é uma data e uma sinopse; um projeto é o que
