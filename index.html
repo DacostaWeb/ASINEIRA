@@ -998,11 +998,14 @@ html[lang="en"] .title-art {
 /* A célula ao lado do cartão dos eventos tem lá dentro as quatro fotografias,
    uma por evento, empilhadas na mesma casa da grelha: a troca é só de
    opacidade, e assim não há um salto em branco à espera de carregar. */
-.media--eventos img { grid-area: 1 / 1; opacity: 0; transition: opacity .45s ease; }
-.media--eventos img.is-on { opacity: 1; }
+.media--eventos img,
+.media--eventos video { grid-area: 1 / 1; opacity: 0; transition: opacity .45s ease; }
+.media--eventos img.is-on,
+.media--eventos video.is-on { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
-  .media--eventos img { transition: none; }
+  .media--eventos img,
+  .media--eventos video { transition: none; }
 }
 
 
@@ -1465,16 +1468,19 @@ html[lang="en"] .title-art {
   user-select: none;
 }
 .evcard__foto:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
-.evcard__foto img {
+.evcard__foto img,
+.evcard__foto video {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   opacity: 0;
   pointer-events: none;         /* o palco é quem recebe o clique e o deslize */
   -webkit-user-drag: none;
   user-select: none;
 }
-.evcard__foto img.is-on { opacity: 1; }
+.evcard__foto img.is-on,
+.evcard__foto video.is-on { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  .evcard__foto img { transition: opacity 240ms ease; }
+  .evcard__foto img,
+  .evcard__foto video { transition: opacity 240ms ease; }
 }
 
 /* A data, o título e o "+": esteve pousada sobre a fotografia, descolada das
@@ -3982,17 +3988,33 @@ html.menu-open .menu::before { opacity: 1; }
       alt: { pt: 'A apresentação final vista de trás da plateia: uma criança aparece na janela redonda da casa.',
              en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' } },
 
-    { ano: 2026, porAnunciar: true,
-      img: 'dossier/assets/hero.jpg',
-      /* A que fica sozinha na célula da fotografia quando a grelha só tem
-         uma ou duas colunas (ver evFotoFixa). */
-      fotoDaCapa: true,
-      bilhetes: null,
-      pt: { titulo: "Inauguração d'a Sineira!", sitio: 'Igreja e Jardim', natureza: 'Apresentação' },
-      en: { titulo: "Inauguração d'a Sineira!", sitio: 'Church and Garden', natureza: 'Presentation' },
-      alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } },
+    /* Três dias que não se seguem — terça, quinta e sábado —, e por isso
+       'dias' e não 'diaFim': um intervalo "2–6" dizia que a casa abria
+       também à segunda, à quarta e à sexta (ver evDias).
 
-    { ano: 2026, porAnunciar: true,
+       Em vez de fotografia tem o vídeo da marca, e o 'img' é o primeiro
+       fotograma dele: é o que se vê enquanto o vídeo não chega, e o que vai
+       para onde só cabe uma imagem parada (a lista dos projetos). */
+    { dias: [2, 4, 6], mes: 11, ano: 2026,
+      img: 'portas-abertas-poster.jpg',
+      video: 'portas-abertas.mp4',
+      /* A segunda da capa, depois da inauguração (ver evCapa). */
+      fotoDaCapa: 2,
+      bilhetes: null,
+      /* O título traduz-se, como o da inauguração e o do início das
+         atividades: os nomes das peças ficam na língua delas, mas estes não
+         são nomes, são convites, e um convite que não se entende não
+         convida ninguém. */
+      pt: { titulo: 'Portas Abertas!', sitio: 'Igreja e Jardim',
+            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR',
+            sinopse: 'Vem conhecer o nosso espaço.' },
+      en: { titulo: 'Open Doors!', sitio: 'Church and Garden',
+            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE',
+            sinopse: 'Come and see our space.' },
+      alt: { pt: "O triângulo d'a Sineira a rodar até se ler o nome.",
+             en: "The a Sineira triangle turning until the name can be read." } },
+
+    { dia: 9, mes: 11, ano: 2026,
       img: 'dossier/assets/nave-2026.jpg',
       bilhetes: null,
       pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim',
@@ -4024,7 +4046,16 @@ html.menu-open .menu::before { opacity: 1; }
       pt: { titulo: 'Residência de Criação', sitio: 'Igreja e Jardim', natureza: 'Criação' },
       en: { titulo: 'Residência de Criação', sitio: 'Church and Garden', natureza: 'Creation' },
       alt: { pt: 'O arco da antiga igreja visto de dentro da nave.',
-             en: 'The arch of the former church seen from inside the nave.' } }
+             en: 'The arch of the former church seen from inside the nave.' } },
+
+    { dia: 20, mes: 3, ano: 2027,
+      img: 'dossier/assets/hero.jpg',
+      /* A primeira da capa (ver evCapa). */
+      fotoDaCapa: 1,
+      bilhetes: null,
+      pt: { titulo: "Inauguração d'a Sineira!", sitio: 'Igreja e Jardim', natureza: 'Apresentação' },
+      en: { titulo: 'Opening of a Sineira!', sitio: 'Church and Garden', natureza: 'Presentation' },
+      alt: { pt: 'Antiga Igreja de Retorta vista da rua', en: 'The former Retorta Church seen from the street' } }
   ];
 
   /* O que já aconteceu, e o que ficou de cada um: fotografias, vídeo, texto.
@@ -4061,8 +4092,9 @@ html.menu-open .menu::before { opacity: 1; }
      Quem ainda não tem data ('porAnunciar') não passa nunca: não há dia
      seguinte a um dia que não existe. */
   function evJaPassou(e) {
-    if (evPorAnunciar(e) || !e.dia || !e.mes || !e.ano) return false;
-    return new Date(e.ano, e.mes - 1, (e.diaFim || e.dia) + 1) <= HOJE;
+    if (evPorAnunciar(e) || !evDias(e).length || !e.mes || !e.ano) return false;
+    var dias = evDias(e);
+    return new Date(e.ano, e.mes - 1, dias[dias.length - 1] + 1) <= HOJE;
   }
   (function evArrumaPassados() {
     EVENTOS.filter(evJaPassou).forEach(function (e) {
@@ -4237,16 +4269,29 @@ html.menu-open .menu::before { opacity: 1; }
      respiração.
 
      A escrita curta — a da coluna estreita da tabela — abrevia sempre: lá o
-     que falta é largura, não é clareza. */
+     que falta é largura, não é clareza.
+
+     E há quem venha em dias soltos — as portas abertas, a 2, 4 e 6 —, que
+     a lista guarda em 'dias'. Esses contam-se sempre, mesmo na escrita
+     curta: o traço diria que os dias do meio também contam. */
   var EV_DIAS_A_CONTAR = 3;
-  function evUmDia(e) { return !e.diaFim || e.diaFim === e.dia; }
-  function evDiaTxtCurto(e) { return evUmDia(e) ? String(e.dia) : e.dia + '–' + e.diaFim; }
-  function evDiaTxt(e) {
-    if (evUmDia(e)) return String(e.dia);
-    var n = e.diaFim - e.dia + 1;
-    if (n > EV_DIAS_A_CONTAR) return evDiaTxtCurto(e);
+  function evDias(e) {
+    if (e.dias) return e.dias.slice();
+    if (!e.dia) return [];
     var dias = [];
-    for (var d = e.dia; d <= e.diaFim; d++) dias.push(d);
+    for (var d = e.dia; d <= (e.diaFim || e.dia); d++) dias.push(d);
+    return dias;
+  }
+  function evUmDia(e) { return evDias(e).length <= 1; }
+  function evDiaTxtCurto(e) {
+    var dias = evDias(e);
+    if (e.dias) return dias.join(', ');
+    return evUmDia(e) ? String(e.dia) : e.dia + '–' + e.diaFim;
+  }
+  function evDiaTxt(e) {
+    var dias = evDias(e);
+    if (dias.length <= 1) return String(dias[0]);
+    if (!e.dias && dias.length > EV_DIAS_A_CONTAR) return evDiaTxtCurto(e);
     var ultimo = dias.pop();
     return dias.join(', ') + (lg() === 'en' ? ' and ' : ' e ') + ultimo;
   }
@@ -4292,7 +4337,7 @@ html.menu-open .menu::before { opacity: 1; }
      à hora de quem não a tem. */
   function evSemana(e) {
     if (evPorAnunciar(e) || !evUmDia(e)) return '';
-    return SEMANA[lg()][new Date(evAnoDe(e), e.mes - 1, e.dia).getDay()];
+    return SEMANA[lg()][new Date(evAnoDe(e), e.mes - 1, evDias(e)[0]).getDay()];
   }
   function evDiaMes(e) {
     if (evPorAnunciar(e)) return evAnunciar();
@@ -4325,7 +4370,7 @@ html.menu-open .menu::before { opacity: 1; }
      estreito: o dia da semana em três letras e o mês sem o "de". */
   function evSemanaCurta(e) {
     if (evPorAnunciar(e) || !evUmDia(e)) return '';
-    return SEMANA_C[lg()][new Date(evAnoDe(e), e.mes - 1, e.dia).getDay()];
+    return SEMANA_C[lg()][new Date(evAnoDe(e), e.mes - 1, evDias(e)[0]).getDay()];
   }
   function evQuandoCurto(e) {
     return [e.hora, evSemanaCurta(e), evDiaMes(e)].filter(Boolean).join(' · ');
@@ -4419,6 +4464,7 @@ html.menu-open .menu::before { opacity: 1; }
   function evNaCapa() { return Math.min(EV_NA_CAPA, EVENTOS.length); }
 
   var evEmFoco = 0;
+  var evCapaVez = 0;      /* qual das da capa se vê, quando a célula é fixa */
   var evParado = false;   /* com o rato em cima, a vez não anda */
   var evRelogio = null;
 
@@ -4434,20 +4480,24 @@ html.menu-open .menu::before { opacity: 1; }
 
   /* Numa coluna e em duas, a célula da fotografia fica sozinha por cima do
      cartão — ou ao lado dele — e é a primeira coisa que se vê da página: aí
-     não é o desfile do que aí vem, é o cartaz da inauguração. A vez pára, a
-     fotografia não troca de projeto e nenhuma linha se sublinha sozinha; o
-     sublinhado volta a ser só do rato, como em qualquer lista.
+     não é o desfile do que aí vem, é a capa — a fotografia da inauguração e o
+     vídeo das portas abertas, um a seguir ao outro (ver evCapaAnda). A capa
+     não acompanha a lista e nenhuma linha se sublinha sozinha; o sublinhado
+     volta a ser só do rato, como em qualquer lista.
 
      De três colunas para cima o cartão tem duas delas e a fotografia é uma
      terceira ao lado da lista: aí acompanha-a, que é o desenho de sempre. */
   function evFotoFixa() { return state.cols <= 2; }
 
-  /* Onde é que a da inauguração está na lista das fotografias (ver
-     fotoDaCapa). Se um dia deixar de lá estar, fica a primeira. */
-  function evIdxCapa() {
-    var fotos = evFotos();
-    for (var i = 0; i < fotos.length; i++) if (fotos[i].fotoDaCapa) return i;
-    return 0;
+  /* As da capa, pela ordem que o 'fotoDaCapa' lhes dá. Procuram-se na lista
+     inteira, e não só nas linhas que se veem: a inauguração é em março e já
+     não cabe nos três primeiros, mas continua a ser a cara da casa. Se um
+     dia não houver nenhuma, fica a primeira fotografia. */
+  function evCapa() {
+    var capa = EVENTOS.concat(CONCLUIDOS)
+      .filter(function (e) { return e.fotoDaCapa; })
+      .sort(function (a, b) { return a.fotoDaCapa - b.fotoDaCapa; });
+    return capa.length ? capa : evFotos().slice(0, 1);
   }
 
   /* Tira o sublinhado a todas as linhas, nas duas listas. Com a fotografia
@@ -4468,7 +4518,8 @@ html.menu-open .menu::before { opacity: 1; }
     var fixa = evFotoFixa();
     if (fixa === evFixaAgora) return;
     evFixaAgora = fixa;
-    evEmFoco = fixa ? evIdxCapa() : 0;
+    evEmFoco = 0;
+    evCapaVez = 0;
     evPintaFotos();
     if (fixa) evSemFoco(); else evFoco(evEmFoco);
   }
@@ -4479,17 +4530,18 @@ html.menu-open .menu::before { opacity: 1; }
   function evPintaFotos() {
     if (!evFotoEl) return;
     evFotoEl.textContent = '';
-    /* Fixa, vai uma só ao HTML: as outras não se veem nem se hão-de ver, e
-       montá-las era pedir ao telemóvel — que é quem tem uma coluna — que
-       carregasse quatro fotografias para mostrar uma. */
+    /* Fixa, vão ao HTML só as da capa: as outras não se veem nem se hão-de
+       ver, e montá-las era pedir ao telemóvel — que é quem tem uma coluna —
+       que carregasse fotografias que não mostra. O vídeo da capa não anda em
+       volta: corre uma vez de cada vez que chega a sua vez (ver evCapaAnda). */
     var fixa = evFotoFixa();
-    var lista = fixa ? [evFotos()[evIdxCapa()]] : evFotos();
+    var lista = fixa ? evCapa() : evFotos();
+    var vez = fixa ? evCapaVez : evEmFoco;
     lista.forEach(function (e, i) {
-      var img = document.createElement('img');
-      img.src = e.img;
-      img.alt = evAlt(e);
-      img.loading = 'lazy';
-      if (fixa || i === evEmFoco) img.className = 'is-on';
+      var img = evPeca(e.video || e.img, e.img, evAlt(e));
+      if (img.tagName === 'IMG') img.loading = 'lazy';
+      else if (fixa) { img.loop = false; img.removeAttribute('loop'); if (i !== vez) img.autoplay = false; }
+      if (i === vez) img.className = 'is-on';
       evFotoEl.appendChild(img);
     });
   }
@@ -4521,10 +4573,36 @@ html.menu-open .menu::before { opacity: 1; }
      mexer, a lista anda na mesma — é isso que ela é —, mas a troca deixa de
      ser esbatida e passa a ser seca (ver .media--eventos img). */
   function evAnda() {
-    if (evParado || document.hidden) return;
-    if (evFotoFixa()) return;
+    if (document.hidden) return;
     if (evTile && evTile.classList.contains('is-expanded')) return;
+    if (evFotoFixa()) { evCapaAnda(); return; }
+    if (evParado) return;
     evFoco(evEmFoco + 1);
+  }
+
+  /* A capa passa ao mesmo compasso da lista, mas o vídeo tem a vez inteira:
+     corre do princípio ao fim e só então dá lugar à fotografia — três
+     segundos dele a meio eram um triângulo a rodar sem nunca se ler o nome.
+     Fica parado no último fotograma, que é o nome, até ao tique seguinte.
+     O rato no cartão não a pára: a capa não é de linha nenhuma. */
+  function evCapaAnda() {
+    if (!evFotoEl) return;
+    var pecas = evFotoEl.children;
+    if (pecas.length < 2) return;
+    var agora = pecas[evCapaVez];
+    /* Parado sem ter acabado é o browser a recusar o autoplay (o modo de
+       poupança do iPhone, por exemplo): aí não se espera por um fim que não vem. */
+    if (agora && agora.tagName === 'VIDEO' && !agora.ended && !agora.paused) return;
+    evCapaVez = (evCapaVez + 1) % pecas.length;
+    Array.prototype.forEach.call(pecas, function (p, n) {
+      p.classList.toggle('is-on', n === evCapaVez);
+    });
+    var nova = pecas[evCapaVez];
+    if (nova.tagName === 'VIDEO') {
+      nova.currentTime = 0;
+      var tocar = nova.play();
+      if (tocar && tocar.catch) tocar.catch(function () {});
+    }
   }
 
   function evRelogioLiga() {
@@ -4625,6 +4703,28 @@ html.menu-open .menu::before { opacity: 1; }
     inner.scrollTop += sec.getBoundingClientRect().top - inner.getBoundingClientRect().top;
   }
 
+  /* Uma fotografia ou um vídeo, conforme o que a lista guarda — o das
+     portas abertas é um vídeo, os outros são fotografias. O vídeo anda como
+     o das obras: mudo, em volta e sozinho (sem muted nenhum browser deixa o
+     autoplay pegar), e com o primeiro fotograma por cartaz enquanto não
+     chega. Não tem alt: o que o diz é o aria-label. */
+  function evPeca(src, capa, alt) {
+    if (!/\.mp4$/i.test(src)) {
+      var img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+      return img;
+    }
+    var v = document.createElement('video');
+    if (capa) v.poster = capa;
+    v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
+    ['muted', 'loop', 'autoplay', 'playsinline'].forEach(function (a) { v.setAttribute(a, ''); });
+    if (alt) v.setAttribute('aria-label', alt);
+    else v.setAttribute('aria-hidden', 'true');
+    v.src = src;
+    return v;
+  }
+
   /* A caixa de um cartaz, a mesma nos próximos e nos concluídos: a
      fotografia (agora um desfile), a legenda — título, "+" e data — e a
      linha de detalhes por fora. */
@@ -4635,6 +4735,7 @@ html.menu-open .menu::before { opacity: 1; }
      vistas da mesma casa a passar não são um desfile — são a mesma coisa
      três vezes. */
   function evFotosDe(e) {
+    if (e.video) return [e.video];
     if (e.imgs && e.imgs.length) return e.imgs.slice();
     return e.img ? [e.img] : [];
   }
@@ -4732,7 +4833,7 @@ html.menu-open .menu::before { opacity: 1; }
     return mostra;
   }
 
-  function evCaixa(t, alt, fotos, rotulo) {
+  function evCaixa(t, alt, fotos, rotulo, capa) {
     if (typeof fotos === 'string') fotos = [fotos];
     if (!fotos || !fotos.length) fotos = [];
 
@@ -4759,10 +4860,8 @@ html.menu-open .menu::before { opacity: 1; }
     palco.setAttribute('aria-label', t.titulo);
     palco.tabIndex = 0;
     fotos.forEach(function (src, i) {
-      var img = document.createElement('img');
-      img.src = src;
-      img.alt = i === 0 ? alt : '';
-      img.loading = i === 0 ? 'eager' : 'lazy';
+      var img = evPeca(src, capa, i === 0 ? alt : '');
+      if (img.tagName === 'IMG') img.loading = i === 0 ? 'eager' : 'lazy';
       img.draggable = false;
       if (i === 0) img.className = 'is-on';
       palco.appendChild(img);
@@ -4809,7 +4908,7 @@ html.menu-open .menu::before { opacity: 1; }
   function evCartaz(e, i) {
     var t = evTexto(e);
     var rotulo = evData(e);
-    var art = evCaixa(t, evAlt(e), evFotosDe(e), rotulo);
+    var art = evCaixa(t, evAlt(e), evFotosDe(e), rotulo, e.img);
     if (e.projeto) evMais(art, evParaOnde(e), t.titulo);
 
     var det = art.querySelector('.evcard__detalhes');
@@ -4841,7 +4940,7 @@ html.menu-open .menu::before { opacity: 1; }
      sai. */
   function evCartazConc(c) {
     var t = evTexto(c);
-    var art = evCaixa(t, evAlt(c), evFotosDe(c), '');
+    var art = evCaixa(t, evAlt(c), evFotosDe(c), '', c.img);
     art.classList.add('evcard--conc');
     var filete = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     filete.setAttribute('class', 'evcard__filete');
@@ -4894,7 +4993,7 @@ html.menu-open .menu::before { opacity: 1; }
   function calEventosNoDia(ano, mes, dia) {
     return EVENTOS.filter(function (e) {
       return evAnoDe(e) === ano && e.mes === mes &&
-             dia >= e.dia && dia <= (evUmDia(e) ? e.dia : e.diaFim);
+             evDias(e).indexOf(dia) !== -1;
     });
   }
 
