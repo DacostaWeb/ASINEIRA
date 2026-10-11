@@ -1544,16 +1544,12 @@ html[lang="en"] .title-art {
    placa mantém-se do mesmo tamanho seja qual for o comprimento do texto, e
    tapa menos fotografia.
 
-   Três linhas é o que a sinopse tem, escreva-se o que se escrever: o que
-   passar disso fica cortado com reticências. Uma medida certa em todos os
-   cartazes é o que põe os bilhetes de todos na mesma linha — em coluna
-   única não há vizinho com quem alinhar, e aí a caixa encolhe ao texto. */
+   A caixa cresce ao texto e lê-se sempre inteiro: o convite das portas
+   abertas não cabia em três linhas, e cortá-lo era esconder metade do que
+   há para saber. A medida guardada em baixo continua a pôr os bilhetes de
+   quem tem texto curto na mesma linha — em coluna única não há vizinho com
+   quem alinhar, e aí a caixa encolhe ao texto. */
 .evcard__sinopse {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  overflow: hidden;
   margin-top: 16px;
   max-width: 62ch;
   font-size: 12px;
@@ -3988,14 +3984,22 @@ html.menu-open .menu::before { opacity: 1; }
       alt: { pt: 'A apresentação final vista de trás da plateia: uma criança aparece na janela redonda da casa.',
              en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' } },
 
-    /* Três dias que não se seguem — terça, quinta e sábado —, e por isso
-       'dias' e não 'diaFim': um intervalo "2–6" dizia que a casa abria
-       também à segunda, à quarta e à sexta (ver evDias).
+    { dia: 9, mes: 11, ano: 2026,
+      img: 'dossier/assets/nave-2026.jpg',
+      bilhetes: null,
+      pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim',
+            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR' },
+      en: { titulo: 'Regular activities begin', sitio: 'Church and Garden',
+            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE' },
+      alt: { pt: 'A nave da antiga igreja preparada para receber aulas e ensaios.',
+             en: 'The nave of the former church set up for classes and rehearsals.' } },
+
+    /* Um dia só, e por isso 'dia' como nos outros (ver evDias).
 
        Em vez de fotografia tem o vídeo da marca, e o 'img' é o primeiro
        fotograma dele: é o que se vê enquanto o vídeo não chega, e o que vai
        para onde só cabe uma imagem parada (a lista dos projetos). */
-    { dias: [2, 4, 6], mes: 11, ano: 2026,
+    { dia: 14, mes: 11, ano: 2026,
       img: 'portas-abertas-poster.jpg',
       video: 'portas-abertas.mp4',
       /* A segunda da capa, depois da inauguração (ver evCapa). */
@@ -4007,22 +4011,12 @@ html.menu-open .menu::before { opacity: 1; }
          convida ninguém. */
       pt: { titulo: 'Portas Abertas!', sitio: 'Igreja e Jardim',
             natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR',
-            sinopse: 'Vem conhecer o nosso espaço.' },
+            sinopse: 'Dia 14 de novembro, entre as 10:00-13:00 e as 15:00-18:00, abrimos as portas da Sineira! O que podes esperar deste momento: conhecer o nosso espaço e atividades previstas para 2026/2027. E ainda, acompanhar a obra da primeira fase, que está quase a terminar.' },
       en: { titulo: 'Open Doors!', sitio: 'Church and Garden',
             natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE',
-            sinopse: 'Come and see our space.' },
+            sinopse: 'On 14 November, between 10:00-13:00 and 15:00-18:00, a Sineira opens its doors! What you can expect from this moment: getting to know our space and the activities planned for 2026/2027. And also following the works of the first phase, which are almost finished.' },
       alt: { pt: "O triângulo d'a Sineira a rodar até se ler o nome.",
              en: "The a Sineira triangle turning until the name can be read." } },
-
-    { dia: 9, mes: 11, ano: 2026,
-      img: 'dossier/assets/nave-2026.jpg',
-      bilhetes: null,
-      pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim',
-            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR' },
-      en: { titulo: 'Regular activities begin', sitio: 'Church and Garden',
-            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE' },
-      alt: { pt: 'A nave da antiga igreja preparada para receber aulas e ensaios.',
-             en: 'The nave of the former church set up for classes and rehearsals.' } },
 
     { dia: 19, mes: 12, ano: 2026,
       img: 'dossier/assets/altares.jpg',
@@ -4271,9 +4265,9 @@ html.menu-open .menu::before { opacity: 1; }
      A escrita curta — a da coluna estreita da tabela — abrevia sempre: lá o
      que falta é largura, não é clareza.
 
-     E há quem venha em dias soltos — as portas abertas, a 2, 4 e 6 —, que
-     a lista guarda em 'dias'. Esses contam-se sempre, mesmo na escrita
-     curta: o traço diria que os dias do meio também contam. */
+     E há quem venha em dias soltos, que a lista guarda em 'dias'. Esses
+     contam-se sempre, mesmo na escrita curta: o traço diria que os dias do
+     meio também contam. */
   var EV_DIAS_A_CONTAR = 3;
   function evDias(e) {
     if (e.dias) return e.dias.slice();
