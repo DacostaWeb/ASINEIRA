@@ -3984,16 +3984,6 @@ html.menu-open .menu::before { opacity: 1; }
       alt: { pt: 'A apresentação final vista de trás da plateia: uma criança aparece na janela redonda da casa.',
              en: 'The final showing seen from behind the audience: a child appears in the round window of the house.' } },
 
-    { dia: 9, mes: 11, ano: 2026,
-      img: 'dossier/assets/nave-2026.jpg',
-      bilhetes: null,
-      pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim',
-            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR' },
-      en: { titulo: 'Regular activities begin', sitio: 'Church and Garden',
-            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE' },
-      alt: { pt: 'A nave da antiga igreja preparada para receber aulas e ensaios.',
-             en: 'The nave of the former church set up for classes and rehearsals.' } },
-
     /* Um dia só, e por isso 'dia' como nos outros (ver evDias).
 
        Em vez de fotografia tem o vídeo da marca, e o 'img' é o primeiro
@@ -4010,21 +4000,47 @@ html.menu-open .menu::before { opacity: 1; }
          são nomes, são convites, e um convite que não se entende não
          convida ninguém. */
       pt: { titulo: 'Portas Abertas!', sitio: 'Igreja e Jardim',
-            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR',
-            sinopse: 'Dia 14 de novembro, entre as 10:00-13:00 e as 15:00-18:00, abrimos as portas da Sineira! O que podes esperar deste momento: conhecer o nosso espaço e atividades previstas para 2026/2027. E ainda, acompanhar a obra da primeira fase, que está quase a terminar.' },
+            natureza: 'Apresentação',
+            sinopse: 'Dia 14 de novembro, entre as 11:00-13:00 e as 14:30-18:30, abrimos as portas da Sineira! O que podes esperar deste momento: conhecer o nosso espaço e atividades previstas para 2026/2027. E ainda, acompanhar a obra da primeira fase, que está quase a terminar. Às 15:00 teremos ainda um momento de visita guiada aos nossos espaços.' },
       en: { titulo: 'Open Doors!', sitio: 'Church and Garden',
-            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE',
-            sinopse: 'On 14 November, between 10:00-13:00 and 15:00-18:00, a Sineira opens its doors! What you can expect from this moment: getting to know our space and the activities planned for 2026/2027. And also following the works of the first phase, which are almost finished.' },
+            natureza: 'Presentation',
+            sinopse: 'On 14 November, between 11:00-13:00 and 14:30-18:30, a Sineira opens its doors! What you can expect from this moment: getting to know our space and the activities planned for 2026/2027. And also following the works of the first phase, which are almost finished. At 15:00 there will also be a guided tour of our spaces.' },
       alt: { pt: "O triângulo d'a Sineira a rodar até se ler o nome.",
              en: "The a Sineira triangle turning until the name can be read." } },
 
-    { dia: 19, mes: 12, ano: 2026,
+    { dia: 22, mes: 11, ano: 2026,
       img: 'dossier/assets/altares.jpg',
       bilhetes: null,
-      pt: { titulo: 'Workshop', sitio: 'Igreja e Jardim', natureza: 'Formação' },
-      en: { titulo: 'Workshop', sitio: 'Church and Garden', natureza: 'Training' },
+      pt: { titulo: 'Workshop em parceria com o projeto Yolk', tituloCurto: 'Workshop Yolk', sitio: 'Igreja e Jardim', natureza: 'Formação' },
+      en: { titulo: 'Workshop in partnership with the Yolk project', tituloCurto: 'Yolk workshop', sitio: 'Church and Garden', natureza: 'Training' },
       alt: { pt: 'Os altares da antiga igreja, ao fundo da nave.',
              en: 'The altars of the former church, at the far end of the nave.' } },
+
+    { dia: 12, mes: 12, ano: 2026,
+      img: 'dossier/assets/nave-2025.jpg',
+      bilhetes: null,
+      pt: { titulo: 'Workshop de impressão 3D', tituloCurto: 'Workshop 3D', sitio: 'Igreja e Jardim', natureza: 'Formação' },
+      en: { titulo: '3D printing workshop', tituloCurto: '3D workshop', sitio: 'Church and Garden', natureza: 'Training' },
+      alt: { pt: 'A nave da igreja ainda em terra batida, com os altares por recuperar.',
+             en: 'The nave of the church still bare ground, the altars yet to be restored.' } },
+
+    { dia: 12, mes: 12, ano: 2026,
+      img: 'dossier/assets/scene-estudio.jpg',
+      bilhetes: null,
+      pt: { titulo: 'Workshop de circo', sitio: 'Igreja e Jardim', natureza: 'Formação' },
+      en: { titulo: 'Circus workshop', sitio: 'Church and Garden', natureza: 'Training' },
+      alt: { pt: 'Proposta: estúdio de dança com bailarinas e plateia sentada ao lado.',
+             en: 'Proposal: dance studio with dancers and an audience seated alongside.' } },
+
+    { dia: 4, mes: 1, ano: 2027,
+      img: 'dossier/assets/nave-2026.jpg',
+      bilhetes: null,
+      pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim',
+            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR' },
+      en: { titulo: 'Regular activities begin', sitio: 'Church and Garden',
+            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE' },
+      alt: { pt: 'A nave da antiga igreja preparada para receber aulas e ensaios.',
+             en: 'The nave of the former church set up for classes and rehearsals.' } },
 
     { dia: 4, diaFim: 9, mes: 1, ano: 2027,
       img: 'dossier/assets/arco.jpg',
@@ -4299,6 +4315,12 @@ html.menu-open .menu::before { opacity: 1; }
      escreve-se igual nos dois sítios e não precisa da sigla. */
   function evNatureza(t) { return t.natureza || ''; }
   function evNaturezaCurta(t) { return t.natCurta || t.natureza || ''; }
+
+  /* O título também, pela mesma razão: na coluna das duas listas do cartão
+     fechado um nome comprido parte-se, e duas linhas partidas nos três
+     primeiros empurram o rodapé do mosaico para fora dele, que tem a altura
+     contada. No cartaz, onde há linha, vai o nome inteiro. */
+  function evTituloCurto(t) { return t.tituloCurto || t.titulo; }
 
   /* Há coisas marcadas que ainda não têm dia. A lista di-lo com o
      'porAnunciar' e não com a ausência da data: uma data que falta por
@@ -4626,7 +4648,7 @@ html.menu-open .menu::before { opacity: 1; }
     var tr = document.createElement('tr');
     var t = evTexto(e);
     tr.appendChild(evCelData(e));
-    [t.titulo, t.sitio, evNaturezaCurta(t)].forEach(function (txt) {
+    [evTituloCurto(t), t.sitio, evNaturezaCurta(t)].forEach(function (txt) {
       var td = document.createElement('td');
       td.textContent = txt;
       tr.appendChild(td);
@@ -4659,7 +4681,7 @@ html.menu-open .menu::before { opacity: 1; }
     var marcas = evMarcas(c, 'events__marcas');
     if (marcas) media.appendChild(marcas);
     tr.appendChild(media);
-    [t.titulo, t.sitio, evNaturezaCurta(t)].forEach(function (txt) {
+    [evTituloCurto(t), t.sitio, evNaturezaCurta(t)].forEach(function (txt) {
       var td = document.createElement('td');
       td.textContent = txt;
       tr.appendChild(td);
@@ -5085,7 +5107,7 @@ html.menu-open .menu::before { opacity: 1; }
         bt.textContent = String(dia);
         bt.setAttribute('aria-pressed', String(calDia === dia));
         bt.setAttribute('aria-label', ev
-          ? evData(ev) + ' — ' + evTexto(ev).titulo
+          ? evData(ev) + ' — ' + noDia.map(function (e) { return evTexto(e).titulo; }).join(' · ')
           : String(dia) + ' ' + MESES[lg()][calMes - 1]);
         bt.addEventListener('click', function () {
           calDia = dia;
