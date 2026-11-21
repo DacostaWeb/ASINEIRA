@@ -19,7 +19,7 @@ html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light;
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>a Sineira — Associação &amp; Espaço Cultural</title>
-<meta name="description" content="a Sineira — Associação e Espaço Cultural em Retorta, Vila do Conde. Formação, criação e apresentação nas artes.">
+<meta name="description" content="a Sineira — Associação e Espaço Cultural em Retorta, Vila do Conde. Apresentação, criação e formação nas artes.">
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 
 <style>
@@ -63,6 +63,7 @@ html, body, img, svg, picture, video, canvas, iframe { color-scheme: only light;
   --gold:        #D8B44A;   /* cartão de Amigo da Sineira */
   --gold-light:  #F0DFA0;
   --gold-deep:   #A8842B;
+  --sky:         #A9C7E6;   /* azul claro: caixa dos cartazes de criação */
 
   /* Tipografia */
   --font:         "Roboto Mono", "Courier New", monospace;    /* texto corrido */
@@ -1523,7 +1524,15 @@ html[lang="en"] .title-art {
   top: 0;
   right: 0;
   padding-left: .3em;
-  background: var(--tile-fg);   /* o fundo da caixa, para as sustentar */
+  background: var(--ev-caixa-fim);   /* o fundo da caixa, para as sustentar */
+}
+
+/* O subtítulo, por baixo do título: no corpo da sinopse, e esse pode partir
+   em duas linhas — o título é que não. */
+.evcard__sub {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1634,8 +1643,26 @@ html[lang="en"] .title-art {
    é uma caixa só, encostada à fotografia, começada pela data e pelo título. */
 .evcard__info {
   padding: 20px 27px 22px;
-  background: var(--tile-fg);
+  background: var(--ev-caixa);
   color: var(--tile-bg);
+}
+
+/* A cor da caixa diz a natureza do trabalho (ver evCores): o amarelo do
+   site para a formação, o dourado do cartão de amigo para a apresentação e
+   um azul claro para a criação — claro, que um azul escuro sobre o azul do
+   painel desaparecia, e era o dos concluídos. As três levam a letra azul.
+
+   Quem é as três coisas leva as três, em faixas iguais e pela ordem em que
+   se dizem. As reticências de um título comprido pousam na última faixa, e
+   por isso pedem a cor dela à parte (--ev-caixa-fim): um degradê não serve
+   de fundo a um carácter. */
+.evcard           { --ev-caixa: var(--tile-fg); --ev-caixa-fim: var(--ev-caixa); }
+.evcard--for      { --ev-caixa: var(--cream); }
+.evcard--apr      { --ev-caixa: var(--gold); }
+.evcard--cri      { --ev-caixa: var(--sky); }
+.evcard--apr-cri-for {
+  --ev-caixa: linear-gradient(90deg, var(--gold) 0 33.34%, var(--sky) 0 66.67%, var(--cream) 0);
+  --ev-caixa-fim: var(--cream);
 }
 
 /* Dentro da caixa as cores estão trocadas, e o botão dos bilhetes tem de
@@ -1679,6 +1706,28 @@ html[lang="en"] .title-art {
   align-items: center;
   margin-top: 26px;
 }
+
+/* Nos próximos, a caixa de cor desce até ao fundo da linha da grelha e os
+   bilhetes vão com ela: os workshops têm mais duas linhas de detalhes (a
+   duração e o público) do que os vizinhos, e sem isto as caixas coloridas
+   da mesma fila acabavam a alturas diferentes. Os concluídos não precisam —
+   lá a caixa é da cor do painel e o fundo dela não se vê. */
+.evcard:not(.evcard--conc) .evcard__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.evcard:not(.evcard--conc) .evcard__bilhetes {
+  margin-top: auto;
+  padding-top: 26px;
+}
+
+/* O texto esbatido a 80% lia-se bem no amarelo, mas no dourado e no azul
+   claro o contraste descia abaixo de 4,5:1 — e o "brevemente", a 60%, ainda
+   mais. A 90% passam os dois nas três cores. */
+.evcard:not(.evcard--conc) .evcard__info .evdet,
+.evcard:not(.evcard--conc) .evcard__sinopse { opacity: .9; }
+.evcard:not(.evcard--conc) .evbt--soon { opacity: .9; }
 
 .evbt {
   display: inline-block;
@@ -1760,7 +1809,7 @@ html[lang="en"] .title-art {
 
    Medidos no ecrã, nos dois idiomas, esses máximos são 242px para o título
    ("Início das atividades regulares"), 100px para a natureza com o seu
-   triângulo ("FOR + CRI + APR"), 163px para o sítio com o alfinete
+   triângulo ("APR + CRI + FOR"), 163px para o sítio com o alfinete
    ("Theatro Circo, Braga") e 242px para o quando com o relógio ("concluído
    · 25 de abril de 2026").
 
@@ -2421,7 +2470,7 @@ html[lang="en"] .title-art {
 /* --- o desfile dos espaços, no menu --- */
 
 /* Reaproveita a caixa e o rodapé do desfile das fotografias de um projeto.
-   Só duas coisas mudam. A primeira: contain em vez de cover. As oito imagens
+   Só duas coisas mudam. A primeira: contain em vez de cover. As seis imagens
    não têm todas a mesma forma — há fotografias ao alto da nave e o
    levantamento aéreo muito ao baixo — e um cover em 4:3 cortava as pontas às
    duas: à nave a cabeça, ao levantamento o limite da propriedade, que é o
@@ -2431,7 +2480,7 @@ html[lang="en"] .title-art {
 .espacos__palco { background: none; }
 .espacos__palco img { object-fit: contain; }
 
-/* A segunda: no meio do rodapé está a legenda, e não a conta. As oito
+/* A segunda: no meio do rodapé está a legenda, e não a conta. As seis
    legendas vivem todas aqui, e vê-se a da fotografia da vez — é o que lhes
    dá uma chave data-i18n a cada uma e deixa o applyLang traduzi-las. O corpo
    é o das legendas das fotografias (.shot figcaption), que é o que estas
@@ -3148,7 +3197,7 @@ html.menu-open .menu::before { opacity: 1; }
               style="--art-pt: url(&quot;fonts/atividades.svg&quot;); --art-w-pt: 211.9082031; --art-h-pt: 35.6171875; --art-base-pt: 0.576;
                      --art-en: url(&quot;fonts/activities.svg&quot;); --art-w-en: 184.3037109; --art-h-en: 35.6171875; --art-base-en: 0.576;"></span></h2>
       </div>
-      <p class="tile__lead" data-i18n="atP">Apoio à criação, através do acolhimento de projetos artísticos e residências de criação. Apresentações e espetáculos. Aulas e workshops regulares. Aluguer de espaço para ensaios, apresentações, reuniões e outras finalidades. Artes para a comunidade e uma comunidade para as Artes!</p>
+      <p class="tile__lead" data-i18n-html="atP"><strong>Apoio à criação</strong> através do acolhimento de projetos artísticos e residências artísticas. <strong>Apresentações e espetáculos</strong>. <strong>Aulas e workshops regulares</strong>. <strong>Aluguer de espaço</strong> para ensaios, apresentações, reuniões e outras finalidades. Artes para a comunidade e uma comunidade para as Artes!</p>
 
       <div class="tile__body" data-tile-body="Atividades">
         <div class="panel-section">
@@ -3170,10 +3219,6 @@ html.menu-open .menu::before { opacity: 1; }
             <li data-i18n="criaLi3">Estúdio de dança profissional</li>
             <li data-i18n="criaLi4">Igreja: espaço multiusos</li>
           </ul>
-          <figure class="shot">
-            <img src="dossier/assets/scene-estudio.jpg" data-i18n-alt="altEstudio" alt="Proposta: estúdio de dança com plateia" loading="lazy">
-            <figcaption data-i18n="capEstudio">Proposta · estúdio de dança com plateia</figcaption>
-          </figure>
         </div>
 
         <div class="panel-section">
@@ -3461,16 +3506,16 @@ html.menu-open .menu::before { opacity: 1; }
           <!-- O desfile dos espaços é o mesmo dos cartazes e o das fotografias
                de um projeto: a caixa deles (.evcard__foto) e o mesmo
                evSlideshow a dar-lhe o clique, o deslize e as setas. O que
-               muda é o meio do rodapé — aqui as oito imagens não são oito
+               muda é o meio do rodapé — aqui as seis imagens não são seis
                momentos do mesmo, são sítios e plantas diferentes, e a conta
-               "1/8" não dizia qual. Fica a legenda no lugar dela.
+               "1/6" não dizia qual. Fica a legenda no lugar dela.
 
                As legendas estão todas no HTML, uma por fotografia, e só a da
                vez se vê: assim cada uma tem a sua chave data-i18n e é o
                applyLang que as traduz, sem o desfile ter de saber a língua.
 
                O object-fit aqui é contain, e não o cover dos cartazes: entre
-               as oito há fotografias ao alto e o levantamento aéreo ao baixo,
+               as seis há fotografias ao alto e o levantamento aéreo ao baixo,
                e um levantamento cortado aos lados perde o limite do terreno. -->
           <div class="ficha__fotos espacos" id="espacos-desfile">
             <div class="evcard__foto espacos__palco" role="region" tabindex="0"
@@ -3480,7 +3525,6 @@ html.menu-open .menu::before { opacity: 1; }
               <img src="dossier/assets/nave-2026.jpg" data-i18n-alt="altEsp5" alt="A mesma nave já com pavimento de madeira novo" loading="lazy" draggable="false">
               <img src="dossier/assets/arco.jpg" data-i18n-alt="altEsp6" alt="O interior em obra visto através do arco de pedra, com tábuas empilhadas no chão" loading="lazy" draggable="false">
               <img src="dossier/assets/altares.jpg" data-i18n-alt="altEsp7" alt="Pormenor de um dos altares dourados, encostado à parede de granito" loading="lazy" draggable="false">
-              <img src="dossier/assets/scene-estudio.jpg" data-i18n-alt="altEsp8" alt="Proposta: estúdio de dança com bailarinas e plateia sentada ao lado" loading="lazy" draggable="false">
               <img src="dossier/assets/scene-aerea.jpg" data-i18n-alt="altEsp9" alt="Proposta: o complexo visto de cima à noite, com plateia iluminada ao ar livre" loading="lazy" draggable="false">
             </div>
             <div class="ficha__fotosnav">
@@ -3492,7 +3536,6 @@ html.menu-open .menu::before { opacity: 1; }
                 <span data-i18n="capEsp5">Depois · pavimento novo</span>
                 <span data-i18n="capEsp6">Interior · o arco e a obra</span>
                 <span data-i18n="capEsp7">Altares · recuperação prevista</span>
-                <span data-i18n="capEsp8">Proposta · estúdio de dança</span>
                 <span data-i18n="capEsp9">Proposta · vista noturna</span>
               </span>
               <button type="button" class="ficha__seta ficha__seta--seg"
@@ -3630,16 +3673,16 @@ html.menu-open .menu::before { opacity: 1; }
 
 <div class="marquee">
   <div class="marquee__track">
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
-    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de criação, apresentação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
+    <span class="marquee__text" data-i18n="marquee">A Sineira - espaço de apresentação, criação e formação</span>
   </div>
 </div>
 
@@ -3651,7 +3694,7 @@ html.menu-open .menu::before { opacity: 1; }
     pt: null,
     en: {
       title: 'a Sineira — Association & Cultural Space',
-      desc: 'a Sineira — Cultural Association and Space in Retorta, Vila do Conde. Training, creation and presentation in the arts.',
+      desc: 'a Sineira — Cultural Association and Space in Retorta, Vila do Conde. Presentation, creation and training in the arts.',
 
       /* --- eventos --- */
       /* Os eventos em si vivem na lista EVENTOS, lá em baixo, com as duas
@@ -3664,7 +3707,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       /* --- atividades --- */
       atH2: 'activities',
-      atP: 'Support for creation, hosting artistic projects and creative residencies. Presentations and performances. Regular classes and workshops. Space for hire — rehearsals, presentations, meetings and other uses. Arts for the community and a community for the Arts!',
+      atP: '<strong>Support for creation</strong> by hosting artistic projects and artistic residencies. <strong>Presentations and performances</strong>. <strong>Regular classes and workshops</strong>. <strong>Space for hire</strong> for rehearsals, presentations, meetings and other uses. Arts for the community and a community for the Arts!',
       secApres: 'Presentation', secCria: 'Creation', secForm: 'Training', secResid: 'Residencies',
       apresP: 'We present artistic projects in the studio/stage and in the church.',
       apresLi1: 'Performances', apresLi2: 'Film screenings', apresLi3: 'Exhibitions and gatherings', apresLi4: 'Annual dance and music festival',
@@ -3701,8 +3744,6 @@ html.menu-open .menu::before { opacity: 1; }
       capEsp6: 'Interior · the arch and the works',
       altEsp7: 'Detail of one of the gilded altars, against the granite wall',
       capEsp7: 'Altars · restoration planned',
-      altEsp8: 'Proposal: dance studio with dancers and an audience seated alongside',
-      capEsp8: 'Proposal · the dance studio',
       altEsp9: 'Proposal: the complex seen from above at night, with a lit open-air audience',
       capEsp9: 'Proposal · at night',
       mapsLink: 'Open in maps',
@@ -3746,15 +3787,13 @@ html.menu-open .menu::before { opacity: 1; }
       brevemente: 'Coming soon',
 
       /* --- legendas e textos alternativos --- */
-      capEstudio: 'Proposal · dance studio with seating',
-      altEstudio: 'Proposal: dance studio with seating',
       altAerea: 'Aerial view of Retorta: a Sineira, the bridge over the river Ave, the schools and surroundings',
       alt5: 'Performer leaping down an aisle of shelving',
       altSaco: 'Natural canvas tote bag printed with the Sineira triangle in blue',
       alt6: 'Gilded altarpiece at the former Retorta Church, beside the granite column',
       vidObras: 'Work under way at the former Retorta Church: the wall being rolled with paint, beside the gilded pulpit and its stair.',
 
-      marquee: 'a Sineira - a space for creation, presentation and training'
+      marquee: 'a Sineira - a space for presentation, creation and training'
     }
   };
 
@@ -4008,55 +4047,74 @@ html.menu-open .menu::before { opacity: 1; }
       alt: { pt: "O triângulo d'a Sineira a rodar até se ler o nome.",
              en: "The a Sineira triangle turning until the name can be read." } },
 
-    { dia: 22, mes: 11, ano: 2026,
-      img: 'dossier/assets/altares.jpg',
-      bilhetes: null,
-      pt: { titulo: 'Workshop em parceria com o projeto Yolk', tituloCurto: 'Workshop Yolk', sitio: 'Igreja e Jardim', natureza: 'Formação' },
-      en: { titulo: 'Workshop in partnership with the Yolk project', tituloCurto: 'Yolk workshop', sitio: 'Church and Garden', natureza: 'Training' },
-      alt: { pt: 'Os altares da antiga igreja, ao fundo da nave.',
-             en: 'The altars of the former church, at the far end of the nave.' } },
-
+    /* A hora, a duração e o público vêm no texto de cada língua, e não ao
+       lado da data: "11h" e "11:00", "90 minutos" e "90 minutes" escrevem-se
+       de maneira diferente numa e noutra. */
     { dia: 12, mes: 12, ano: 2026,
       img: 'dossier/assets/nave-2025.jpg',
       bilhetes: null,
-      pt: { titulo: 'Workshop de impressão 3D', tituloCurto: 'Workshop 3D', sitio: 'Igreja e Jardim', natureza: 'Formação' },
-      en: { titulo: '3D printing workshop', tituloCurto: '3D workshop', sitio: 'Church and Garden', natureza: 'Training' },
+      pt: { titulo: 'Workshop de impressão 3D', tituloCurto: 'Workshop 3D', sitio: 'Igreja', natureza: 'Formação',
+            hora: '11h', duracao: '90 minutos', publico: '10–100 anos' },
+      en: { titulo: '3D printing workshop', tituloCurto: '3D workshop', sitio: 'Church', natureza: 'Training',
+            hora: '11:00', duracao: '90 minutes', publico: 'ages 10–100' },
       alt: { pt: 'A nave da igreja ainda em terra batida, com os altares por recuperar.',
              en: 'The nave of the church still bare ground, the altars yet to be restored.' } },
 
     { dia: 12, mes: 12, ano: 2026,
-      img: 'dossier/assets/scene-estudio.jpg',
+      img: 'dossier/assets/arco.jpg',
       bilhetes: null,
-      pt: { titulo: 'Workshop de circo', sitio: 'Igreja e Jardim', natureza: 'Formação' },
-      en: { titulo: 'Circus workshop', sitio: 'Church and Garden', natureza: 'Training' },
-      alt: { pt: 'Proposta: estúdio de dança com bailarinas e plateia sentada ao lado.',
-             en: 'Proposal: dance studio with dancers and an audience seated alongside.' } },
+      pt: { titulo: 'Workshop de circo', sitio: 'Igreja', natureza: 'Formação',
+            hora: '15h', duracao: '90 minutos', publico: '6–12 anos' },
+      en: { titulo: 'Circus workshop', sitio: 'Church', natureza: 'Training',
+            hora: '15:00', duracao: '90 minutes', publico: 'ages 6–12' },
+      alt: { pt: 'O interior da igreja visto através do arco de pedra.',
+             en: 'The church interior seen through the stone arch.' } },
 
     { dia: 4, mes: 1, ano: 2027,
       img: 'dossier/assets/nave-2026.jpg',
       bilhetes: null,
       pt: { titulo: 'Início das atividades regulares', sitio: 'Igreja e Jardim',
-            natureza: 'Formação · Criação · Apresentação', natCurta: 'FOR + CRI + APR' },
+            natureza: 'Apresentação · Criação · Formação', natCurta: 'APR + CRI + FOR' },
       en: { titulo: 'Regular activities begin', sitio: 'Church and Garden',
-            natureza: 'Training · Creation · Presentation', natCurta: 'TRA + CRE + PRE' },
+            natureza: 'Presentation · Creation · Training', natCurta: 'PRE + CRE + TRA' },
       alt: { pt: 'A nave da antiga igreja preparada para receber aulas e ensaios.',
              en: 'The nave of the former church set up for classes and rehearsals.' } },
 
-    { dia: 4, diaFim: 9, mes: 1, ano: 2027,
+    /* Uma residência só, em duas semanas de meses diferentes: as datas vão
+       em 'sessoes' (ver evSessoes), e o cartaz, a lista e o calendário
+       dizem-nas as duas. */
+    { sessoes: [{ dia: 4, diaFim: 9, mes: 1, ano: 2027 },
+                { dia: 8, diaFim: 13, mes: 2, ano: 2027 }],
       img: 'dossier/assets/arco.jpg',
       bilhetes: null,
-      pt: { titulo: 'Residência de Criação', sitio: 'Igreja e Jardim', natureza: 'Criação' },
-      en: { titulo: 'Residência de Criação', sitio: 'Church and Garden', natureza: 'Creation' },
+      pt: { titulo: 'Residência Artística', sitio: 'Igreja', natureza: 'Criação' },
+      en: { titulo: 'Artistic Residency', sitio: 'Church', natureza: 'Creation' },
       alt: { pt: 'O arco da antiga igreja visto de dentro da nave.',
              en: 'The arch of the former church seen from inside the nave.' } },
 
-    { dia: 8, diaFim: 13, mes: 2, ano: 2027,
-      img: 'dossier/assets/arco.jpg',
+    /* Três masterclasses, uma por sessão, todas ao domingo de manhã. Cada
+       sessão tem por nome só o estilo: "Masterclass" já o diz o subtítulo, e
+       repetido em cada linha partia-a em duas. A de House ainda não tem dia:
+       a sessão traz só o mês, e diz-se "maio". */
+    { sessoes: [{ dia: 17, mes: 1, ano: 2027,
+                  pt: { nome: 'Waacking' }, en: { nome: 'Waacking' } },
+                { dia: 21, mes: 3, ano: 2027,
+                  pt: { nome: 'Hip Hop' }, en: { nome: 'Hip Hop' } },
+                { mes: 5, ano: 2027,
+                  pt: { nome: 'House' }, en: { nome: 'House' } }],
+      img: 'dossier/assets/altares.jpg',
       bilhetes: null,
-      pt: { titulo: 'Residência de Criação', sitio: 'Igreja e Jardim', natureza: 'Criação' },
-      en: { titulo: 'Residência de Criação', sitio: 'Church and Garden', natureza: 'Creation' },
-      alt: { pt: 'O arco da antiga igreja visto de dentro da nave.',
-             en: 'The arch of the former church seen from inside the nave.' } },
+      pt: { titulo: 'YOLK em parceria com A SINEIRA', tituloCurto: 'Masterclasses YOLK',
+            /* Os espaços duros ( ) agarram o "+" ao estilo de antes e o
+               "Hip Hop" a si mesmo: a linha parte-se depois de um "+", nunca
+               antes, e nunca a meio de um nome. */
+            subtitulo: 'Masterclasses: Waacking + Hip Hop + House',
+            sitio: 'Igreja', natureza: 'Formação', hora: 'domingos, 10h–13h' },
+      en: { titulo: 'YOLK in partnership with A SINEIRA', tituloCurto: 'YOLK masterclasses',
+            subtitulo: 'Masterclasses: Waacking + Hip Hop + House',
+            sitio: 'Church', natureza: 'Training', hora: 'Sundays, 10:00–13:00' },
+      alt: { pt: 'Os altares da antiga igreja, ao fundo da nave.',
+             en: 'The altars of the former church, at the far end of the nave.' } },
 
     { dia: 20, mes: 3, ano: 2027,
       img: 'dossier/assets/hero.jpg',
@@ -4101,19 +4159,67 @@ html.menu-open .menu::before { opacity: 1; }
 
      Quem ainda não tem data ('porAnunciar') não passa nunca: não há dia
      seguinte a um dia que não existe. */
+  /* Quem tem várias sessões passa depois da última; uma sessão que só tem o
+     mês passa no primeiro dia do mês seguinte. */
   function evJaPassou(e) {
-    if (evPorAnunciar(e) || !evDias(e).length || !e.mes || !e.ano) return false;
-    var dias = evDias(e);
-    return new Date(e.ano, e.mes - 1, dias[dias.length - 1] + 1) <= HOJE;
+    if (evPorAnunciar(e)) return false;
+    var s = evSessoes(e);
+    var ult = s[s.length - 1];
+    if (!ult.mes || !ult.ano) return false;
+    var dias = evDias(ult);
+    var fim = dias.length
+      ? new Date(ult.ano, ult.mes - 1, dias[dias.length - 1] + 1)
+      : new Date(ult.ano, ult.mes, 1);
+    return fim <= HOJE;
   }
+  /* A lista está escrita por ordem, mas quem tem várias sessões muda de
+     lugar com o tempo: passada a masterclass de janeiro, o YOLK só volta a
+     21 de março, e tem de ir para depois da inauguração (dia 20). Por isso
+     a ordem acerta-se aqui, pela próxima data de cada um — o primeiro dia da
+     primeira sessão que ainda não acabou; um mês sem dia conta do dia 1. Os
+     que não têm data vão para o fim. A ordenação é estável: quem calha no
+     mesmo dia fica pela ordem em que está escrito. */
+  /* A próxima sessão: a primeira que ainda não acabou, ou a última, quando
+     já acabaram todas. É ela que ordena a lista e é a data dela que o
+     cartão fechado mostra (ver evCelData). */
+  function evProximaSessao(e) {
+    var hoje = new Date(HOJE.getFullYear(), HOJE.getMonth(), HOJE.getDate());
+    var s = evSessoes(e);
+    for (var i = 0; i < s.length; i++) {
+      if (!s[i].mes) continue;
+      var dias = evDias(s[i]);
+      var fim = dias.length
+        ? new Date(evAnoDe(s[i]), s[i].mes - 1, dias[dias.length - 1])
+        : new Date(evAnoDe(s[i]), s[i].mes, 0);
+      if (fim >= hoje) return s[i];
+    }
+    return s[s.length - 1];
+  }
+  function evProximaData(e) {
+    if (evPorAnunciar(e)) return Infinity;
+    var s = evProximaSessao(e);
+    if (!s.mes) return Infinity;
+    var dias = evDias(s);
+    return new Date(evAnoDe(s), s.mes - 1, dias.length ? dias[0] : 1).getTime();
+  }
+
+  /* As datas de um evento, todas as maneiras de as escrever. Na fusão com
+     o concluído do mesmo nome saem as dele antes de entrarem as do que
+     passou: um 'sessoes' antigo que ficasse ganhava ao 'dia' novo, e o
+     concluído mostrava as datas de outra vez. */
+  var EV_CAMPOS_DATA = ['dia', 'diaFim', 'dias', 'mes', 'ano', 'sessoes', 'porAnunciar', 'hora'];
+
   (function evArrumaPassados() {
+    EVENTOS.sort(function (a, b) { return evProximaData(a) - evProximaData(b); });
     EVENTOS.filter(evJaPassou).forEach(function (e) {
       EVENTOS.splice(EVENTOS.indexOf(e), 1);
       var novo = {};
       for (var i = 0; i < CONCLUIDOS.length; i++) {
         if (CONCLUIDOS[i].pt.titulo !== e.pt.titulo) continue;
         var antes = CONCLUIDOS.splice(i, 1)[0];
-        for (var k in antes) novo[k] = antes[k];
+        for (var k in antes) {
+          if (EV_CAMPOS_DATA.indexOf(k) === -1) novo[k] = antes[k];
+        }
         break;
       }
       for (var k2 in e) novo[k2] = e[k2];
@@ -4306,15 +4412,61 @@ html.menu-open .menu::before { opacity: 1; }
     return dias.join(', ') + (lg() === 'en' ? ' and ' : ' e ') + ultimo;
   }
 
+  /* E há quem venha mais do que uma vez, em meses diferentes — a residência
+     artística em janeiro e em fevereiro, as três masterclasses do YOLK.
+     Esses trazem as datas em 'sessoes', cada uma escrita como se fosse um
+     evento de um mês só (dia, diaFim ou dias, mes, ano) e, quando tem nome,
+     o nome nas duas línguas. Uma sessão sem dia é um mês em que o dia ainda
+     não se sabe, e diz-se só o mês: "maio".
+
+     Quem não traz sessões é uma sessão só, ele mesmo — e é por isso que as
+     contas das datas passam todas por aqui e não perguntam qual é o caso. */
+  function evSessoes(e) { return e.sessoes || [e]; }
+  function evVarias(e) { return evSessoes(e).length > 1; }
+
+  /* "17 de janeiro", "4–9 de janeiro", ou só "maio". */
+  function evSessaoTxt(s) {
+    var m = MESES[lg()][s.mes - 1];
+    if (!evDias(s).length) return m;
+    return lg() === 'en' ? evDiaTxt(s) + ' ' + m : evDiaTxt(s) + ' de ' + m;
+  }
+  /* "17 jan", "4–9 jan", "mai". */
+  function evSessaoCurta(s) {
+    var m = MESES_C[lg()][s.mes - 1];
+    return evDias(s).length ? evDiaTxtCurto(s) + ' ' + m : m;
+  }
+  /* "a, b e c" — e "a, b and c" em inglês. */
+  function evJunta(partes) {
+    partes = partes.slice();
+    if (partes.length < 2) return partes.join('');
+    var ultima = partes.pop();
+    return partes.join(', ') + (lg() === 'en' ? ' and ' : ' e ') + ultima;
+  }
+
   /* A natureza tem duas escritas por causa de quem é as três coisas ao mesmo
      tempo — o início das atividades regulares, que é o dia em que a casa
-     passa a formar, a criar e a apresentar. Por extenso nos cartazes, onde há
+     passa a apresentar, a criar e a formar. Por extenso nos cartazes, onde há
      linha para ela; em sigla nas duas listas, onde a coluna da natureza tem
-     22% da tabela e "Formação · Criação · Apresentação" se partia em quatro
+     22% da tabela e "Apresentação · Criação · Formação" se partia em quatro
      linhas. Quem só é uma coisa — o workshop é formação e nada mais —
      escreve-se igual nos dois sítios e não precisa da sigla. */
   function evNatureza(t) { return t.natureza || ''; }
   function evNaturezaCurta(t) { return t.natCurta || t.natureza || ''; }
+
+  /* A cor da caixa de cada cartaz diz a natureza do trabalho: amarelo para
+     a formação, dourado para a apresentação, azul claro para a criação (ver
+     .evcard--for, --apr e --cri). Lê-se da natureza em português, que não
+     muda com a língua da página. Quem é as três coisas leva as três cores,
+     pela ordem em que se dizem: evcard--apr-cri-for. */
+  var EV_CORES = { 'Apresentação': 'apr', 'Criação': 'cri', 'Formação': 'for' };
+  function evCores(e) {
+    return (e.pt.natureza || '').split(' · ')
+      .map(function (n) { return EV_CORES[n]; })
+      .filter(Boolean);
+  }
+
+  /* A hora vem do texto da língua: "11h" num lado, "11:00" no outro. */
+  function evHora(e) { return evTexto(e).hora || e.hora || ''; }
 
   /* O título também, pela mesma razão: na coluna das duas listas do cartão
      fechado um nome comprido parte-se, e duas linhas partidas nos três
@@ -4336,12 +4488,12 @@ html.menu-open .menu::before { opacity: 1; }
   function evPorAnunciar(e) { return !!e.porAnunciar; }
   function evAnunciar() { return lg() === 'en' ? 'to be announced' : 'a anunciar'; }
 
+  /* Com sessões, as datas de todas, juntas: "4–9 de janeiro e 8–13 de
+     fevereiro", "17 de janeiro, 21 de março e maio". */
   function evData(e) {
     if (evPorAnunciar(e)) return evAnunciar();
-    if (!e.mes) return String(e.ano || '');
-    return lg() === 'en'
-      ? evDiaTxt(e) + ' ' + MESES.en[e.mes - 1]
-      : evDiaTxt(e) + ' de ' + MESES.pt[e.mes - 1];
+    if (!e.sessoes && !e.mes) return String(e.ano || '');
+    return evJunta(evSessoes(e).map(evSessaoTxt));
   }
   /* "21h30 · quarta · 18 mar": a hora primeiro, que é o que falta saber a
      quem já viu a data em corpo grande no cartaz. O dia da semana sai da
@@ -4350,17 +4502,20 @@ html.menu-open .menu::before { opacity: 1; }
   /* A um intervalo não se põe dia da semana: "quarta · 13–15 out" diz uma
      verdade sobre o primeiro dia e uma mentira sobre os outros dois. Vem
      vazio, e o join lá em baixo deita fora o que vier vazio — como já fazia
-     à hora de quem não a tem. */
-  function evSemana(e) {
-    if (evPorAnunciar(e) || !evUmDia(e)) return '';
-    return SEMANA[lg()][new Date(evAnoDe(e), e.mes - 1, evDias(e)[0]).getDay()];
+     à hora de quem não a tem. O mesmo a quem tem várias sessões, ou uma
+     sessão sem dia: não há um dia só a que pôr o nome. */
+  function evDiaDaSemana(e, nomes) {
+    var s = evSessoes(e);
+    if (evPorAnunciar(e) || s.length > 1 || evDias(s[0]).length !== 1) return '';
+    return nomes[lg()][new Date(evAnoDe(s[0]), s[0].mes - 1, evDias(s[0])[0]).getDay()];
   }
+  function evSemana(e) { return evDiaDaSemana(e, SEMANA); }
   function evDiaMes(e) {
     if (evPorAnunciar(e)) return evAnunciar();
-    return evDiaTxtCurto(e) + ' ' + MESES_C[lg()][e.mes - 1];
+    return evSessoes(e).map(evSessaoCurta).join(', ');
   }
   function evQuando(e) {
-    return [e.hora, evSemana(e), evDiaMes(e)].filter(Boolean).join(' · ');
+    return [evHora(e), evSemana(e), evDiaMes(e)].filter(Boolean).join(' · ');
   }
 
   /* O mesmo, com o mês por extenso: na lista dos projetos há largura para
@@ -4368,32 +4523,38 @@ html.menu-open .menu::before { opacity: 1; }
      português o mês é nome comum e escreve-se em caixa baixa; em inglês não. */
   function evDiaMesLongo(e) {
     if (evPorAnunciar(e)) return evAnunciar();
-    var m = MESES[lg()][e.mes - 1];
-    return lg() === 'en' ? evDiaTxt(e) + ' ' + m : evDiaTxt(e) + ' de ' + m;
+    return evJunta(evSessoes(e).map(evSessaoTxt));
   }
   /* "25 de abril de 2026": a data por extenso com o ano atrás. É a que o
      cartaz de um concluído põe ao lado do calendário e a que a lista de
-     todos os projetos escreve a seguir a "concluído". */
+     todos os projetos escreve a seguir a "concluído". Sessões do mesmo ano
+     levam-no uma vez só, no fim; de anos diferentes, cada uma o seu. */
   function evDataLonga(e) {
     if (evPorAnunciar(e)) return evAnunciar();
-    return evDiaMesLongo(e) + (lg() === 'en' ? ' ' : ' de ') + e.ano;
+    var s = evSessoes(e);
+    var de = lg() === 'en' ? ' ' : ' de ';
+    var umAno = s.every(function (x) { return x.ano === s[0].ano; });
+    if (umAno) return evDiaMesLongo(e) + de + s[0].ano;
+    return evJunta(s.map(function (x) { return evSessaoTxt(x) + de + x.ano; }));
   }
   function evQuandoLongo(e) {
-    return [e.hora, evSemana(e), evDiaMesLongo(e)].filter(Boolean).join(' · ');
+    return [evHora(e), evSemana(e), evDiaMesLongo(e)].filter(Boolean).join(' · ');
   }
 
   /* As mesmas duas datas em ponto pequeno, para a lista em telefone
      estreito: o dia da semana em três letras e o mês sem o "de". */
-  function evSemanaCurta(e) {
-    if (evPorAnunciar(e) || !evUmDia(e)) return '';
-    return SEMANA_C[lg()][new Date(evAnoDe(e), e.mes - 1, evDias(e)[0]).getDay()];
-  }
+  function evSemanaCurta(e) { return evDiaDaSemana(e, SEMANA_C); }
   function evQuandoCurto(e) {
-    return [e.hora, evSemanaCurta(e), evDiaMes(e)].filter(Boolean).join(' · ');
+    return [evHora(e), evSemanaCurta(e), evDiaMes(e)].filter(Boolean).join(' · ');
   }
+  /* Como na longa: um ano só, no fim, ou um por sessão quando são vários
+     — "28 dez, 3 jan 2027" deixava dezembro sem dizer de que ano era. */
   function evDataCurta(e) {
     if (evPorAnunciar(e)) return evAnunciar();
-    return evDiaMes(e) + ' ' + e.ano;
+    var s = evSessoes(e);
+    var umAno = s.every(function (x) { return x.ano === s[0].ano; });
+    if (umAno) return evDiaMes(e) + ' ' + s[0].ano;
+    return s.map(function (x) { return evSessaoCurta(x) + ' ' + x.ano; }).join(', ');
   }
 
   /* Os três sinais dos detalhes: o que é, onde e quando. O do tipo é o
@@ -4407,7 +4568,18 @@ html.menu-open .menu::before { opacity: 1; }
        "Novembro de 2024" mentia, e a linha de um concluído na lista de
        todos os projetos, que diz o dia em que foi e não a que horas começou.
        O relógio fica para os que aí vêm, que ainda têm hora de começar. */
-    mes:     '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.4" y="3.6" width="11.2" height="10" rx="1.4"/><path d="M2.4 6.6h11.2M5.6 2.2v2.8M10.4 2.2v2.8"/></svg>'
+    mes:     '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.4" y="3.6" width="11.2" height="10" rx="1.4"/><path d="M2.4 6.6h11.2M5.6 2.2v2.8M10.4 2.2v2.8"/></svg>',
+    /* A ampulheta para quanto dura, e uma pessoa para a quem se destina:
+       os workshops dizem os dois, a seguir ao quando. */
+    duracao: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.2 2.4h7.6M4.2 13.6h7.6M5.2 2.4v1.4c0 1.8 2.8 2.6 2.8 4.2s-2.8 2.4-2.8 4.2v1.4M10.8 2.4v1.4c0 1.8-2.8 2.6-2.8 4.2s2.8 2.4 2.8 4.2v1.4"/></svg>',
+    publico: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5" r="2.5"/><path d="M3.3 13.8c.5-2.8 2.4-4.4 4.7-4.4s4.2 1.6 4.7 4.4"/></svg>'
+  };
+
+  /* Quem lê com o leitor de ecrã não vê a ampulheta nem a pessoa, e "90
+     minutos" sozinho não diz o que é: leva à frente a palavra, escondida. */
+  var SINAIS_TXT = {
+    duracao: { pt: 'Duração: ', en: 'Duration: ' },
+    publico: { pt: 'Público-alvo: ', en: 'Audience: ' }
   };
 
   /* Linhas, câmara (sem flash) e play tipo YouTube: o que ficou de cada
@@ -4447,6 +4619,12 @@ html.menu-open .menu::before { opacity: 1; }
     var n = document.createElement('span');
     n.className = 'evdet';
     n.innerHTML = SINAIS[sinal];
+    if (SINAIS_TXT[sinal]) {
+      var dito = document.createElement('span');
+      dito.className = 'vsr';
+      dito.textContent = SINAIS_TXT[sinal][lg()];
+      n.appendChild(dito);
+    }
     n.appendChild(document.createTextNode(texto));
     return n;
   }
@@ -4634,8 +4812,14 @@ html.menu-open .menu::before { opacity: 1; }
   function evCelData(e) {
     var td = document.createElement('td');
     td.className = 'events__date';
-    [['events__d events__d--longa', evData(e)],
-     ['events__d events__d--curta', e.mes ? evDiaMes(e) : evData(e)]].forEach(function (par) {
+    /* Quem tem várias sessões mostra aqui só a próxima: "17 de janeiro, 21
+       de março e maio" não cabe na coluna da data, que não parte (ver
+       .events__date), e saía por cima do título. Esta lista é a dos
+       próximos, e a próxima data é a que ela tem de dizer — é também a que a
+       ordena (ver evProximaData). As outras estão no cartaz, no painel. */
+    var s = evVarias(e) ? evProximaSessao(e) : null;
+    [['events__d events__d--longa', s ? evSessaoTxt(s) : evData(e)],
+     ['events__d events__d--curta', s ? evSessaoCurta(s) : ((e.mes || e.sessoes) ? evDiaMes(e) : evData(e))]].forEach(function (par) {
       var n = document.createElement('span');
       n.className = par[0];
       n.textContent = par[1];
@@ -4864,6 +5048,7 @@ html.menu-open .menu::before { opacity: 1; }
           '<div class="evcard__col">' +
             '<p class="evcard__kick"></p>' +
             '<p class="evcard__title"><span></span></p>' +
+            '<p class="evcard__sub"></p>' +
           '</div>' +
         '</div>' +
         '<div class="evcard__detalhes"></div>' +
@@ -4891,6 +5076,11 @@ html.menu-open .menu::before { opacity: 1; }
     if (rotulo) kick.textContent = rotulo;
     else kick.parentNode.removeChild(kick);
     art.querySelector('.evcard__title span').textContent = t.titulo;
+    /* O subtítulo, quando há: o título do YOLK diz quem, e é ele que diz o
+       quê. Quem não o tem não fica com a linha vazia. */
+    var sub = art.querySelector('.evcard__sub');
+    if (t.subtitulo) sub.textContent = t.subtitulo;
+    else sub.parentNode.removeChild(sub);
     art.querySelector('.evcard__sinopse').textContent = t.sinopse || '';
     return art;
   }
@@ -4925,12 +5115,29 @@ html.menu-open .menu::before { opacity: 1; }
     var t = evTexto(e);
     var rotulo = evData(e);
     var art = evCaixa(t, evAlt(e), evFotosDe(e), rotulo, e.img);
+    var cores = evCores(e);
+    if (cores.length) art.classList.add('evcard--' + cores.join('-'));
     if (e.projeto) evMais(art, evParaOnde(e), t.titulo);
 
     var det = art.querySelector('.evcard__detalhes');
     det.appendChild(evDetalhe('tipo', t.natureza));
     det.appendChild(evDetalhe('pin', t.sitio));
-    det.appendChild(evDetalhe('relogio', evQuandoLongo(e)));
+
+    /* Sessões com nome — as masterclasses — dizem-se uma por linha, com o
+       calendário de cada uma, e a hora, que é a mesma para todas, vai
+       sozinha no relógio. As outras são o quando de sempre, numa linha. */
+    var sessoes = evSessoes(e);
+    var comNome = evVarias(e) && sessoes.every(function (s) { return s[lg()] && s[lg()].nome; });
+    if (comNome) {
+      if (evHora(e)) det.appendChild(evDetalhe('relogio', evHora(e)));
+      sessoes.forEach(function (s) {
+        det.appendChild(evDetalhe('mes', s[lg()].nome + ' · ' + evSessaoTxt(s)));
+      });
+    } else {
+      det.appendChild(evDetalhe('relogio', evQuandoLongo(e)));
+    }
+    if (t.duracao) det.appendChild(evDetalhe('duracao', t.duracao));
+    if (t.publico) det.appendChild(evDetalhe('publico', t.publico));
 
     var caixa = document.createElement('div');
     caixa.className = 'evcard__bilhetes';
@@ -5006,15 +5213,33 @@ html.menu-open .menu::before { opacity: 1; }
   var calDia = null;
   var CAL_ANO_MAX = 2027;
 
+  /* Um evento com sessões está em cada uma delas: a residência marca a
+     semana de janeiro e a de fevereiro. A sessão sem dia aparece na lista do
+     mês, mas não marca dia nenhum na grelha. */
   function calEventosNoDia(ano, mes, dia) {
     return EVENTOS.filter(function (e) {
-      return evAnoDe(e) === ano && e.mes === mes &&
-             evDias(e).indexOf(dia) !== -1;
+      return evSessoes(e).some(function (s) {
+        return evAnoDe(s) === ano && s.mes === mes && evDias(s).indexOf(dia) !== -1;
+      });
     });
   }
 
+  /* Pela ordem dos dias dentro do mês, e não pela da lista: a lista está
+     ordenada pela primeira data de cada evento, e em março a segunda
+     masterclass do YOLK (dia 21) vinha antes da inauguração (dia 20). A
+     sessão sem dia vai para o fim. A ordenação é estável, e quem calha no
+     mesmo dia fica pela ordem da lista. */
   function calDoMes(ano, mes) {
-    return EVENTOS.filter(function (e) { return evAnoDe(e) === ano && e.mes === mes; });
+    function primeiroDia(e) {
+      var dias = [];
+      evSessoes(e).forEach(function (s) {
+        if (evAnoDe(s) === ano && s.mes === mes) dias = dias.concat(evDias(s));
+      });
+      return dias.length ? Math.min.apply(null, dias) : 99;
+    }
+    return EVENTOS.filter(function (e) {
+      return evSessoes(e).some(function (s) { return evAnoDe(s) === ano && s.mes === mes; });
+    }).sort(function (a, b) { return primeiroDia(a) - primeiroDia(b); });
   }
 
   function calNoLimite() {
@@ -5106,9 +5331,15 @@ html.menu-open .menu::before { opacity: 1; }
         bt.type = 'button';
         bt.textContent = String(dia);
         bt.setAttribute('aria-pressed', String(calDia === dia));
+        /* O dia do botão, e não a data inteira do evento: num evento com
+           sessões em dois meses, "4–9 de janeiro e 8–13 de fevereiro" não
+           diz qual dos dias é este. */
+        var esteDia = lg() === 'en'
+          ? dia + ' ' + MESES.en[calMes - 1]
+          : dia + ' de ' + MESES.pt[calMes - 1];
         bt.setAttribute('aria-label', ev
-          ? evData(ev) + ' — ' + noDia.map(function (e) { return evTexto(e).titulo; }).join(' · ')
-          : String(dia) + ' ' + MESES[lg()][calMes - 1]);
+          ? esteDia + ' — ' + noDia.map(function (e) { return evTexto(e).titulo; }).join(' · ')
+          : esteDia);
         bt.addEventListener('click', function () {
           calDia = dia;
           calDesenha();
@@ -5307,11 +5538,20 @@ html.menu-open .menu::before { opacity: 1; }
     if (!prjFiltrosEl) return;
     prjFiltrosEl.textContent = '';
 
+    /* Pela ordem por que a casa se diz — apresentação, criação, formação —
+       e não pela ordem em que aparecem na lista; quem é mais do que uma
+       coisa vai no fim. */
+    var ORDEM = ['apr', 'cri', 'for'];
     var naturezas = [];
+    var lugar = {};
     prjTodos().forEach(function (e) {
       var n = evTexto(e).natureza;
-      if (n && naturezas.indexOf(n) === -1) naturezas.push(n);
+      if (!n || naturezas.indexOf(n) !== -1) return;
+      var c = evCores(e);
+      naturezas.push(n);
+      lugar[n] = c.length === 1 ? ORDEM.indexOf(c[0]) : ORDEM.length + c.length;
     });
+    naturezas.sort(function (a, b) { return lugar[a] - lugar[b]; });
 
     var todos = lg() === 'en' ? 'All' : 'Todos';
     [null].concat(naturezas).forEach(function (n) {
