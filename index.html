@@ -489,17 +489,6 @@ html.menu-open .lang { color: var(--cream); }
    nada na conta, e a linha saía mais baixa do que o conteúdo que a pediu. */
 .tiles.is-measuring .tile__inner { flex: none; min-height: auto; }
 
-/* A duas colunas ou mais, o cartão de amigo também não conta: é ele que cede
-   o espaço para o mosaico acompanhar a altura do vizinho do lado. Numa
-   coluna só não há vizinho nenhum, e então conta como tudo o resto.
-
-   Fica a zero e não em display: none, para que o desenho não peça altura
-   nenhuma mas a margem que ele leva por baixo — o ar por cima do botão —
-   continue a ser pedida. Escondido de todo, esse ar ficava de fora da conta
-   e depois saía do fundo do mosaico: o botão descia para cima da margem e
-   quase encostava à aresta. */
-.tiles.is-measuring--tight .tile__aside { height: 0; }
-
 /* Cada mosaico recebe o seu par fundo/texto por uma classe modificadora,
    para que nenhuma cor apareça solta dentro dos blocos. */
 .tile {
@@ -536,12 +525,10 @@ html.menu-open .lang { color: var(--cream); }
   min-height: 0;
 }
 
-/* Quando o cartão fica mais baixo do que o seu conteúdo, alguém tem de ceder.
-   O texto e o rodapé não cedem nada — é por eles que a linha foi medida —, e
-   o cartão de amigo encolhe até desaparecer. Sem isto, o que saía do mosaico
-   era o rodapé em versaletes, que está colado ao fundo. */
+/* Ninguém cede: a linha é medida pelo texto, pelo rodapé e também pelo cartão
+   de amigo, que se vê inteiro em todos os ecrãs. Sem isto, num mosaico mais
+   baixo o que saía era o rodapé em versaletes, que está colado ao fundo. */
 .tile__inner > * { flex-shrink: 0; }
-.tile__aside { flex-shrink: 1; min-height: 0; overflow: clip; }
 
 .tile--cream { --tile-bg: var(--cream); --tile-fg: var(--blue); }
 .tile--blue  { --tile-bg: var(--blue);  --tile-fg: var(--cream); }
@@ -778,13 +765,13 @@ html[lang="en"] .title-art {
     position: absolute;
     bottom: var(--tile-pad);
     right: var(--gutter);
-    width: min(250px, 34%);
+    width: min(210px, 29%);
     margin: 0;
   }
 
   /* Encostado ao fundo, o ar por cima é do desenho em coluna e aqui não
      serve para nada. */
-  .tile--span .friend-card { margin-top: 0; }
+  .tile--span .friend-card { width: 100%; margin-top: 0; }
 }
 
 .tile__lead {
@@ -917,19 +904,12 @@ html[lang="en"] .title-art {
   text-transform: uppercase;
 }
 
-/* A duas e a três colunas o mosaico fica largo e baixo, e do cartão de
-   amigo só assomava uma tira de dois dedos — nem se percebe o que é. Mais
-   vale não estar: fica o texto e o botão, com o ar todo entre eles. A uma
-   coluna o mosaico fica com o seu conteúdo todo, e a quatro o cartão sai
-   da coluna de leitura e vai inteiro para o canto (ver .tile--span). */
-.tiles[data-cols="2"] #amigos .tile__aside,
-.tiles[data-cols="3"] #amigos .tile__aside { display: none; }
-
 /* O ar por cima do botão não pode ser margem dele: com o margin-top: auto a
    encostá-lo ao fundo, uma margem fixa não sobrevivia. Fica na caixa do
-   cartão de amigo, que é quem está por cima — e como é essa a caixa que
-   encolhe, é dela que sai o espaço quando o cartão não cabe todo. */
-.tile__aside { margin-bottom: 26px; }
+   cartão de amigo, que é quem está por cima. E onde a linha sobra, o auto
+   de cima reparte a folga com o do botão: o cartão fica a meio dela, e não
+   colado ao texto com o vazio todo por baixo. */
+.tile__aside { margin-top: auto; margin-bottom: 26px; }
 
 .tile__cta:hover {
   background: var(--cream);
@@ -1024,12 +1004,13 @@ html[lang="en"] .title-art {
 
 /* Cartão de Amigo da Sineira: o dourado que a associação desenhou, recortado
    pelos cantos redondos (cartao-amigo.webp, 807×509). É o mesmo no mosaico e
-   na página da adesão (ver .adesao). */
+   na página da adesão (ver .adesao). Numa coluna do mosaico vai entre o texto
+   e o botão, a esta medida; em duas vai para o canto (ver .tile--span). */
 .friend-card {
   display: block;
-  width: min(100%, 330px);
+  width: min(100%, 186px);
   height: auto;
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
 /* A página da adesão (#amigo): o painel do quadrado do amigo. O cartão de um
@@ -1037,7 +1018,7 @@ html[lang="en"] .title-art {
    O cartão do mosaico sai, que seria o mesmo duas vezes, e o botão deixa de
    se colar ao fundo: segue o texto. */
 #amigos.tile.is-expanded .tile__aside { display: none; }
-#amigos.tile.is-expanded .tile__cta { margin-top: 44px; }
+#amigos.tile.is-expanded #amigo-cta { margin-top: 44px; }
 
 .adesao {
   display: grid;
@@ -1048,8 +1029,8 @@ html[lang="en"] .title-art {
 }
 .adesao__cartao {
   display: block;
-  width: 100%;
-  max-width: 404px;   /* metade do ficheiro: nítido num ecrã de 2x */
+  width: 84%;         /* em percentagem, para também ser menor em telemóvel */
+  max-width: 340px;
   height: auto;
 }
 .adesao .panel-section + .panel-section { margin-top: 32px; }
@@ -1075,7 +1056,18 @@ html[lang="en"] .title-art {
   clip-path: polygon(25% 100%, 100% 28.5%, 0 0);
 }
 .adesao__ressalva { display: block; margin-top: 2px; font-size: 11px; }
-.adesao__valor { font-size: 23px; white-space: nowrap; }
+.adesao__valor { font-weight: 700; white-space: nowrap; }
+
+/* O botão de aderir vai cheio, para não se confundir com o das novidades,
+   que fica só em contorno ao fundo da página. */
+.tile__cta.adesao__botao {
+  display: inline-block;
+  margin-top: 22px;
+  border-color: var(--tile-fg);
+  background: var(--tile-fg);
+  color: var(--tile-bg);
+}
+.tile__cta.adesao__botao:hover { background: transparent; color: var(--tile-fg); }
 
 
 /* Vista aérea com etiquetas, como na experiência 6. Sem moldura: a
@@ -1622,6 +1614,17 @@ html[lang="en"] .title-art {
 .evgrid--comtexto .evcard__sinopse:empty { margin-top: 16px; }
 @media (min-width: 600px) { .evgrid--comtexto .evcard__sinopse { min-height: calc(3 * 1.55em); } }
 
+/* O formador abre o texto, que é a sua biografia: ficam juntos, e com a
+   opacidade que o texto tiver (a dos concluídos é mais baixa). */
+.evcard__formador {
+  margin-top: 16px;
+  font-size: 12px;
+  line-height: 1.55;
+  opacity: .8;
+}
+.evcard__formador strong { font-weight: 700; }
+.evcard__formador + .evcard__sinopse { margin-top: 4px; }
+
 /* O "+" é o mesmo do mosaico, no mesmo corpo: quem o carrega no cartão
    reconhece-o no cartaz. */
 /* As marcas do que ficou (texto, fotografias, vídeo) ficam à esquerda do
@@ -1793,6 +1796,7 @@ html[lang="en"] .title-art {
    claro o contraste descia abaixo de 4,5:1 — e o "brevemente", a 60%, ainda
    mais. A 90% passam os dois nas três cores. */
 .evcard:not(.evcard--conc) .evcard__info .evdet,
+.evcard:not(.evcard--conc) .evcard__formador,
 .evcard:not(.evcard--conc) .evcard__sinopse { opacity: .9; }
 .evcard:not(.evcard--conc) .evbt--soon { opacity: .9; }
 
@@ -2495,12 +2499,10 @@ html[lang="en"] .title-art {
 .ficha__vid + .ficha__sec { margin-top: 32px; }
 .ficha__sech { margin-bottom: 18px; }
 
-.ficha__texto p { max-width: 62ch; }
+/* O texto das fichas é corrido e denso, e lê-se com a entrelinha do texto
+   do menu. */
+.ficha__texto p { max-width: 62ch; line-height: 1.65; }
 .ficha__texto p + p { margin-top: 16px; }
-
-/* O texto da residência é corrido e denso — dois parágrafos grandes —, e lê-se
-   com a entrelinha do texto do menu. */
-.ficha[data-projeto="residencia-artistica"] .ficha__texto p { line-height: 1.65; }
 
 
 /* --- as fotografias --- */
@@ -3029,13 +3031,6 @@ html.menu-open .menu::before { opacity: 1; }
   .tile__title { font-size: calc(var(--wordmark-h) * 48 / 58); }
 
   #amigos .tile__title { --titulo: calc(var(--wordmark-h) * 48 / 58); }
-
-  /* Em telemóvel não há segunda coluna onde pousar o cartão de amigo: fica
-     entre o texto e o botão, mais pequeno, na margem do texto. */
-  .friend-card {
-    width: min(100%, 220px);
-    margin-top: 16px;
-  }
 }
 </style>
 </head>
@@ -3380,21 +3375,30 @@ html.menu-open .menu::before { opacity: 1; }
             <div class="panel-section">
               <h3 class="panel-section__title" data-i18n="secVantagens">Vantagens</h3>
               <ul class="adesao__lista">
-                <li><span data-i18n="amLi1">Desconto em aulas regulares, workshops e espetáculos produzidos ou co-produzidos pela A&nbsp;Sineira.</span>
+                <li><span data-i18n="amLi1">Desconto em aulas regulares, workshops e espetáculos produzidos ou co-&#8288;produzidos pel'a&nbsp;Sineira.</span>
                   <small class="adesao__ressalva" data-i18n="amRessalva">Excluem-se tarifas de valor único</small></li>
                 <li><span data-i18n="amLi2">Acesso aos planos exclusivos para Profissionais das Artes Performativas.</span></li>
-                <li><span data-i18n="amLi3">Apoio das atividades da A&nbsp;Sineira.</span></li>
+                <li><span data-i18n="amLi3">Apoio às atividades d'a&nbsp;Sineira.</span></li>
               </ul>
             </div>
             <div class="panel-section">
-              <h3 class="panel-section__title" data-i18n="secDonativo">Donativo</h3>
-              <p class="adesao__valor" data-i18n="amValor">20€ / ano</p>
+              <h3 class="panel-section__title" data-i18n="secAdesao">Adesão</h3>
+              <ul class="adesao__lista">
+                <li><span data-i18n="amValorRot">Valor:</span> <strong class="adesao__valor" data-i18n="amValor">20€ / ano</strong></li>
+                <li><span data-i18n="amAd1">Por e-mail, clicando em “Quero ser Amigo”.</span></li>
+                <li><span data-i18n="amAd2">Pagamento por MB&nbsp;WAY, transferência bancária ou numerário (no espaço d'a&nbsp;Sineira).</span></li>
+              </ul>
+              <!-- Como no das novidades, o correio já vai escrito, aqui com os
+                   campos por preencher (ver AM_ADESAO). -->
+              <a class="tile__cta adesao__botao" id="adesao-cta" data-i18n="amAdCta"
+                 href="mailto:info@asineira.pt?subject=Quero%20ser%20Amigo%20d'a%20Sineira&amp;body=Ol%C3%A1!%0D%0A%0D%0AQuero%20ser%20Amigo%20d'a%20Sineira.%0D%0A%0D%0ANome%3A%20%0D%0AE-mail%20e%2Fou%20Telem%C3%B3vel%3A%20%0D%0ANIF%3A%20%0D%0A%0D%0APrincipais%20interesses%20(assinala%20com%20um%20X%20uma%20ou%20v%C3%A1rias%20op%C3%A7%C3%B5es)%3A%0D%0A%5B%20%5D%20Dan%C3%A7a%0D%0A%5B%20%5D%20Teatro%0D%0A%5B%20%5D%20Performance%0D%0A%5B%20%5D%20M%C3%BAsica%0D%0A%5B%20%5D%20Artes%20Visuais%0D%0A%5B%20%5D%20Artes%20Pl%C3%A1sticas%0D%0A%5B%20%5D%20Fotografia%0D%0A%5B%20%5D%20Cinema%0D%0A%5B%20%5D%20Arquitetura%0D%0A%5B%20%5D%20Natureza%0D%0A">Quero ser Amigo</a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Com o mosaico a ocupar duas colunas, o cartão sai da coluna de
+      <!-- O cartão vê-se em todos os ecrãs, sempre inteiro.
+           Com o mosaico a ocupar duas colunas, o cartão sai da coluna de
            leitura e vai para a segunda metade (ver .tile--span .tile__aside).
            Numa coluna só fica aqui mesmo: a seguir ao texto e antes do botão.
            Com a página aberta não se vê, que ela traz o seu. -->
@@ -3879,12 +3883,16 @@ html.menu-open .menu::before { opacity: 1; }
       amCta: 'I want to hear the news',
       amCard: 'Friend of a Sineira card',
       secVantagens: 'Benefits',
-      amLi1: 'Discounts on regular classes, workshops and performances produced or co-produced by a\u00a0Sineira.',
+      amLi1: 'Discounts on regular classes, workshops and performances produced or co-\u2060produced by a\u00a0Sineira.',
       amRessalva: 'Flat-rate prices are excluded',
       amLi2: 'Access to exclusive plans for Performing Arts Professionals.',
       amLi3: 'Support for a\u00a0Sineira’s activities.',
-      secDonativo: 'Donation',
+      secAdesao: 'How to join',
+      amValorRot: 'Membership fee:',
       amValor: '€20 / year',
+      amAd1: 'By email, by clicking “I want to be a Friend”.',
+      amAd2: 'Payment by MB\u00a0WAY, bank transfer or cash (at a\u00a0Sineira’s premises).',
+      amAdCta: 'I want to be a Friend',
 
       /* --- loja --- */
       lojaH2: 'shop',
@@ -3917,6 +3925,7 @@ html.menu-open .menu::before { opacity: 1; }
   var menuItems = Array.prototype.slice.call(document.querySelectorAll('.menu-item'));
   var closeBtn = document.getElementById('menu-close');
   var amigoCta = document.getElementById('amigo-cta');
+  var adesaoCta = document.getElementById('adesao-cta');
   var tileBtns = Array.prototype.slice.call(document.querySelectorAll('[data-tile]'));
   var tileBodies = {};
   Array.prototype.forEach.call(document.querySelectorAll('[data-tile-body]'), function (el) {
@@ -4037,8 +4046,36 @@ html.menu-open .menu::before { opacity: 1; }
           corpo: 'Hello! I would like to keep up with a Sineira’s news :)' }
   };
 
-  function amigoMailto(lang) {
-    var m = AM_MAIL[lang === 'en' ? 'en' : 'pt'];
+  /* O do "Quero ser Amigo" é uma ficha de inscrição em texto corrido: um
+     mailto não leva caixas de marcar, por isso cada interesse traz um [ ]
+     onde se escreve o X. As linhas partem-se com \r\n, como o correio pede. */
+  var AM_ADESAO = {
+    pt: { para: 'info@asineira.pt',
+          assunto: "Quero ser Amigo d'a Sineira",
+          corpo: ['Olá!', '',
+                  "Quero ser Amigo d'a Sineira.", '',
+                  'Nome: ',
+                  'E-mail e/ou Telemóvel: ',
+                  'NIF: ', '',
+                  'Principais interesses (assinala com um X uma ou várias opções):',
+                  '[ ] Dança', '[ ] Teatro', '[ ] Performance', '[ ] Música',
+                  '[ ] Artes Visuais', '[ ] Artes Plásticas', '[ ] Fotografia',
+                  '[ ] Cinema', '[ ] Arquitetura', '[ ] Natureza', ''].join('\r\n') },
+    en: { para: 'info@asineira.pt',
+          assunto: 'I want to be a Friend of a Sineira',
+          corpo: ['Hello!', '',
+                  'I want to be a Friend of a Sineira.', '',
+                  'Name: ',
+                  'Email and/or mobile number: ',
+                  'Tax number (NIF): ', '',
+                  'Main interests (mark one or more options with an X):',
+                  '[ ] Dance', '[ ] Theatre', '[ ] Performance', '[ ] Music',
+                  '[ ] Visual Arts', '[ ] Fine Arts', '[ ] Photography',
+                  '[ ] Cinema', '[ ] Architecture', '[ ] Nature', ''].join('\r\n') }
+  };
+
+  function amigoMailto(correio, lang) {
+    var m = correio[lang === 'en' ? 'en' : 'pt'];
     return 'mailto:' + m.para +
            '?subject=' + encodeURIComponent(m.assunto) +
            '&body='    + encodeURIComponent(m.corpo);
@@ -4076,7 +4113,8 @@ html.menu-open .menu::before { opacity: 1; }
     btnEn.setAttribute('aria-pressed', String(lang === 'en'));
     btnPt.style.opacity = lang === 'pt' ? '1' : '.38';
     btnEn.style.opacity = lang === 'en' ? '1' : '.38';
-    amigoCta.href = amigoMailto(lang);
+    amigoCta.href = amigoMailto(AM_MAIL, lang);
+    adesaoCta.href = amigoMailto(AM_ADESAO, lang);
     capHrefs();
 
     /* Depois do texto, porque é o lang do <html> que escolhe o desenho. */
@@ -4166,9 +4204,15 @@ html.menu-open .menu::before { opacity: 1; }
       foco: '50% 10%',
       bilhetes: null,
       pt: { titulo: 'Workshop de impressão 3D', tituloCurto: 'Workshop 3D', sitio: 'Igreja', natureza: 'Formação',
-            hora: '11h', duracao: '90 minutos', publico: '10–100 anos' },
+            hora: '11h', duracao: '90 minutos', publico: '10–100 anos',
+            /* Com formador, o texto do cartaz é a biografia, palavra por
+               palavra como veio. */
+            formador: 'José Pedro Sousa',
+            sinopse: 'Músico e programador informático, comprou a sua primeira impressora 3d por batuta e meia em 2018. Tornou-se num hobby, numa altura em que se perdia mais tempo a modificar e consertar a máquina do que efetivamente a imprimir. Fascinado com o potencial da AI nesta área, aproveita para dar aso à imaginação em três dimensões!' },
       en: { titulo: '3D printing workshop', tituloCurto: '3D workshop', sitio: 'Church', natureza: 'Training',
-            hora: '11:00', duracao: '90 minutes', publico: 'ages 10–100' },
+            hora: '11:00', duracao: '90 minutes', publico: 'ages 10–100',
+            formador: 'José Pedro Sousa',
+            sinopse: 'A musician and computer programmer, José Pedro picked up a first 3D printer for a song in 2018. It became a hobby, at a time when more hours went into modifying and fixing the machine than into actual printing. Fascinated by the potential of AI in this field, José Pedro is seizing the chance to give free rein to the imagination in three dimensions!' },
       alt: { pt: 'Peças impressas em 3D: uma cabeça cinzenta ainda com os suportes, à frente de uma Vénus de Milo.',
              en: 'Resin 3D prints: a grey head still on its supports, in front of a Venus de Milo.' } },
 
@@ -5279,7 +5323,19 @@ html.menu-open .menu::before { opacity: 1; }
     var sub = art.querySelector('.evcard__sub');
     if (t.subtitulo) sub.textContent = t.subtitulo;
     else sub.parentNode.removeChild(sub);
-    art.querySelector('.evcard__sinopse').textContent = t.sinopse || '';
+    var sinopse = art.querySelector('.evcard__sinopse');
+    sinopse.textContent = t.sinopse || '';
+    /* Quem dá a formação, quando se sabe: o nome por cima do texto, que é
+       o de quem a dá. */
+    if (t.formador) {
+      var quem = document.createElement('p');
+      quem.className = 'evcard__formador';
+      quem.textContent = lg() === 'en' ? 'Instructor: ' : 'Formador: ';
+      var nome = document.createElement('strong');
+      nome.textContent = t.formador;
+      quem.appendChild(nome);
+      sinopse.parentNode.insertBefore(quem, sinopse);
+    }
     return art;
   }
 
@@ -6045,7 +6101,6 @@ html.menu-open .menu::before { opacity: 1; }
     if (!p) return false;
     var t = p[lg()];
 
-    fichaEl.setAttribute('data-projeto', nome);
     fichaId(p, t, nome);
     fichaMatEl.textContent = '';
     fichaVideo(p, t);
@@ -6477,14 +6532,13 @@ html.menu-open .menu::before { opacity: 1; }
   /* Agrupa os mosaicos por linha e devolve a altura que cada uma pede.
 
      Quem pede altura é o conteúdo que não se pode cortar: cabeça, texto,
-     botão e rodapé. Ficam de fora as fotografias, que se recortam, e o cartão
-     de amigo, que encolhe até desaparecer — se contassem, uma linha inteira
-     crescia por causa de um desenho e o mosaico do lado ficava com meio ecrã
-     de vazio por baixo do texto, que era o que se via no "sobre nós".
+     cartão de amigo, botão e rodapé. Ficam de fora as fotografias, que se
+     recortam. O cartão é pequeno de propósito: cabe na folga que a linha já
+     tem, e conta para nunca ficar cortado se essa folga acabar. A quatro
+     colunas está no canto, fora da coluna, e não pede altura nenhuma.
 
      Numa coluna só ninguém tem vizinho para acompanhar: aí cada mosaico fica
-     com o seu conteúdo todo, desenho incluído, e quem precisa de mais altura
-     mantém-na.
+     com a altura que o seu conteúdo pedir.
 
      Como isto mexe no layout e força cálculo, nunca pode ser chamado de
      dentro do ResizeObserver: a página encolhe, a barra de scroll desaparece,
@@ -6497,7 +6551,6 @@ html.menu-open .menu::before { opacity: 1; }
        voltar a crescer. */
     grid.style.gridTemplateRows = '';
     grid.classList.add('is-measuring');
-    grid.classList.toggle('is-measuring--tight', state.cols > 1);
 
     /* As linhas contam-se pelas colunas que cada mosaico ocupa, e não pela
        posição medida: uma linha só de fotografias não tem altura nenhuma
@@ -6523,7 +6576,6 @@ html.menu-open .menu::before { opacity: 1; }
     }
 
     grid.classList.remove('is-measuring');
-    grid.classList.remove('is-measuring--tight');
 
     /* Linha sem mosaico nenhum é só fotografia: como nenhuma pede altura,
        fica com uma paisagem à medida da largura da coluna. */
@@ -6588,11 +6640,11 @@ html.menu-open .menu::before { opacity: 1; }
     var oneCol = state.cols <= 1, tallest = 0, sum = 0, i;
 
     /* A duas colunas os mosaicos ficam largos e baixos, e os que têm pouco
-       texto — "informações", "loja", "amigo d'a Sineira" — davam tiras de
-       nada: duas linhas debaixo do título e o cartão de amigo a desaparecer
-       por inteiro. Aí o piso sobe, e é a duas colunas apenas: a uma coluna
-       cada mosaico já fica com o seu conteúdo todo, e a três ou mais as
-       colunas estreitam, o texto ganha linhas e a altura vem dele. */
+       texto — "informações", "loja" — davam tiras de nada: duas linhas
+       debaixo do título e mais nada. Aí o piso sobe, e é a duas colunas
+       apenas: a uma coluna cada mosaico já fica com o seu conteúdo todo, e
+       a três ou mais as colunas estreitam, o texto ganha linhas e a altura
+       vem dele. */
     var minRow = state.cols === 2 ? MIN_ROW_2 : MIN_ROW;
     for (i = 0; i < rows.length; i++) {
       /* Nenhuma linha fica mais baixa do que o conteúdo que a pediu, seja
