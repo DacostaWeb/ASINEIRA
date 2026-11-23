@@ -1060,14 +1060,22 @@ html[lang="en"] .title-art {
 
 /* O botão de aderir vai cheio, para não se confundir com o das novidades,
    que fica só em contorno ao fundo da página. */
+.adesao__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-top: 22px;
+}
 .tile__cta.adesao__botao {
   display: inline-block;
-  margin-top: 22px;
   border-color: var(--tile-fg);
   background: var(--tile-fg);
   color: var(--tile-bg);
 }
 .tile__cta.adesao__botao:hover { background: transparent; color: var(--tile-fg); }
+.adesao__mail { font-size: 12px; line-height: 1.5; }
+.adesao__endereco { font-weight: 700; white-space: nowrap; -webkit-user-select: all; user-select: all; }
 
 
 /* Vista aérea com etiquetas, como na experiência 6. Sem moldura: a
@@ -1522,7 +1530,10 @@ html[lang="en"] .title-art {
   margin-bottom: 22px;
 }
 
-.evcard__col { flex: 1; min-width: 0; }
+/* Em coluna flex, para as margens não se juntarem: a folga que o título
+   ganha por baixo (ver .evcard__title) devolve-se com margem negativa, e o
+   subtítulo e a autoria ficam onde estavam. */
+.evcard__col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 
 /* "18 de março" — só a data, em versaletes. */
 .evcard__kick { font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
@@ -1532,10 +1543,17 @@ html[lang="en"] .title-art {
    diferentes. O que não cabe fica cortado, com reticências a dizê-lo — e,
    como cortado não se lê, o título corre sozinho de um lado ao outro e volta
    ao princípio. Quem pediu ao sistema para não ver coisas a mexer fica-se
-   pelas reticências. */
+   pelas reticências.
+
+   O overflow corta à caixa, e com a entrelinha a 1.1 as pernas do g, do p e
+   do ç desciam quase 2px abaixo dela: lia-se "requlares". O padding de baixo
+   dá-lhes lugar e a margem negativa devolve-o, e o cartaz fica com a mesma
+   altura. Em cima não é preciso: os acentos ficam 3px dentro. */
 .evcard__title {
   position: relative;
   margin-top: 6px;
+  margin-bottom: -.25em;
+  padding-bottom: .25em;
   overflow: hidden;
   font-size: 16px;
   line-height: 1.1;
@@ -1545,11 +1563,13 @@ html[lang="en"] .title-art {
 .evcard__title > span { display: inline-block; }
 
 /* As reticências ficam pousadas no canto, por cima do que passa por baixo:
-   a placa é opaca, e é a cor dela que as sustenta. */
+   a placa é opaca, e é a cor dela que as sustenta. Vão até ao fundo da
+   caixa, para tapar também as pernas das letras que passam por baixo. */
 .evcard__title.is-longo::after {
   content: "…";
   position: absolute;
   top: 0;
+  bottom: 0;
   right: 0;
   padding-left: .3em;
   background: var(--ev-caixa-fim);   /* o fundo da caixa, para as sustentar */
@@ -3365,7 +3385,7 @@ html.menu-open .menu::before { opacity: 1; }
               style="--art-pt: url(&quot;fonts/amigodasineira.svg&quot;); --art-w-pt: 355.2390945; --art-h-pt: 45.0375977; --art-base-pt: 9.997;
                      --art-en: url(&quot;fonts/asineirafriend.svg&quot;); --art-w-en: 310.5738803; --art-h-en: 36.3850665; --art-base-en: 0.864;"></span></h2>
       </div>
-      <p class="tile__lead" data-i18n="amP">Faz parte do futuro d'a Sineira e apoia a Arte em Comunidade.</p>
+      <p class="tile__lead" data-i18n="amP">Faz parte do futuro d'a Sineira. Apoio as Artes.</p>
 
       <!-- A página da adesão, em #amigo e #friend (ver ROUTES). -->
       <div class="tile__body" data-tile-body="Amigos">
@@ -3386,12 +3406,19 @@ html.menu-open .menu::before { opacity: 1; }
               <ul class="adesao__lista">
                 <li><span data-i18n="amValorRot">Valor:</span> <strong class="adesao__valor" data-i18n="amValor">20€ / ano</strong></li>
                 <li><span data-i18n="amAd1">Por e-mail, clicando em “Quero ser Amigo”.</span></li>
-                <li><span data-i18n="amAd2">Pagamento por MB&nbsp;WAY, transferência bancária ou numerário (no espaço d'a&nbsp;Sineira).</span></li>
+                <li><span data-i18n="amAd2">Pagamento por MB&nbsp;WAY, transferência bancária ou numerário (no espaço d'a&nbsp;Sineira).</span>
+                  <small class="adesao__ressalva" data-i18n="amAdPag">Os dados para pagamento seguem por e-&#8288;mail, com a nossa política de privacidade.</small></li>
               </ul>
               <!-- Como no das novidades, o correio já vai escrito, aqui com os
-                   campos por preencher (ver AM_ADESAO). -->
-              <a class="tile__cta adesao__botao" id="adesao-cta" data-i18n="amAdCta"
-                 href="mailto:info@asineira.pt?subject=Quero%20ser%20Amigo%20d'a%20Sineira&amp;body=Ol%C3%A1!%0D%0A%0D%0AQuero%20ser%20Amigo%20d'a%20Sineira.%0D%0A%0D%0ANome%3A%20%0D%0AE-mail%20e%2Fou%20Telem%C3%B3vel%3A%20%0D%0ANIF%3A%20%0D%0A%0D%0APrincipais%20interesses%20(assinala%20com%20um%20X%20uma%20ou%20v%C3%A1rias%20op%C3%A7%C3%B5es)%3A%0D%0A%5B%20%5D%20Dan%C3%A7a%0D%0A%5B%20%5D%20Teatro%0D%0A%5B%20%5D%20Performance%0D%0A%5B%20%5D%20M%C3%BAsica%0D%0A%5B%20%5D%20Artes%20Visuais%0D%0A%5B%20%5D%20Artes%20Pl%C3%A1sticas%0D%0A%5B%20%5D%20Fotografia%0D%0A%5B%20%5D%20Cinema%0D%0A%5B%20%5D%20Arquitetura%0D%0A%5B%20%5D%20Natureza%0D%0A">Quero ser Amigo</a>
+                   campos por preencher (ver AM_ADESAO). Ao lado, o endereço à
+                   vista: num computador sem programa de e-mail o mailto não
+                   abre nada, e assim fica para copiar. Um clique seleciona-o
+                   inteiro. -->
+              <div class="adesao__acoes">
+                <a class="tile__cta adesao__botao" id="adesao-cta" data-i18n="amAdCta"
+                   href="mailto:info@asineira.pt?subject=Quero%20ser%20Amigo%20d'a%20Sineira&amp;body=Ol%C3%A1!%0D%0A%0D%0AQuero%20ser%20Amigo%20d'a%20Sineira.%0D%0A%0D%0ANome%3A%20%0D%0AE-mail%20e%2Fou%20Telem%C3%B3vel%3A%20%0D%0ANIF%3A%20%0D%0A%0D%0APrincipais%20interesses%20(assinala%20com%20um%20X%20uma%20ou%20v%C3%A1rias%20op%C3%A7%C3%B5es)%3A%0D%0A%5B%20%5D%20Dan%C3%A7a%0D%0A%5B%20%5D%20Teatro%0D%0A%5B%20%5D%20Performance%0D%0A%5B%20%5D%20M%C3%BAsica%0D%0A%5B%20%5D%20Artes%20Visuais%0D%0A%5B%20%5D%20Artes%20Pl%C3%A1sticas%0D%0A%5B%20%5D%20Fotografia%0D%0A%5B%20%5D%20Cinema%0D%0A%5B%20%5D%20Arquitetura%0D%0A%5B%20%5D%20Natureza%0D%0A">Quero ser Amigo</a>
+                <p class="adesao__mail"><span data-i18n="amAdMail">ou escreve-&#8288;nos para</span> <span class="adesao__endereco">info@asineira.pt</span></p>
+              </div>
             </div>
           </div>
         </div>
@@ -3879,7 +3906,7 @@ html.menu-open .menu::before { opacity: 1; }
 
       /* --- amigo da sineira --- */
       amH2: 'Become a Sineira friend',
-      amP: 'Be part of a Sineira’s future and support Art in Community.',
+      amP: 'Be part of a Sineira’s future. I support the Arts.',
       amCta: 'I want to hear the news',
       amCard: 'Friend of a Sineira card',
       secVantagens: 'Benefits',
@@ -3892,7 +3919,9 @@ html.menu-open .menu::before { opacity: 1; }
       amValor: '€20 / year',
       amAd1: 'By email, by clicking “I want to be a Friend”.',
       amAd2: 'Payment by MB\u00a0WAY, bank transfer or cash (at a\u00a0Sineira’s premises).',
+      amAdPag: 'Payment details follow by email, together with our privacy policy.',
       amAdCta: 'I want to be a Friend',
+      amAdMail: 'or write to us at',
 
       /* --- loja --- */
       lojaH2: 'shop',
@@ -4208,7 +4237,7 @@ html.menu-open .menu::before { opacity: 1; }
             /* Com formador, o texto do cartaz é a biografia, palavra por
                palavra como veio. */
             formador: 'José Pedro Sousa',
-            sinopse: 'Músico e programador informático, comprou a sua primeira impressora 3d por batuta e meia em 2018. Tornou-se num hobby, numa altura em que se perdia mais tempo a modificar e consertar a máquina do que efetivamente a imprimir. Fascinado com o potencial da AI nesta área, aproveita para dar aso à imaginação em três dimensões!' },
+            sinopse: 'Músico e programador informático, comprou a sua primeira impressora 3d por tuta e meia em 2018. Tornou-se num hobby, numa altura em que se perdia mais tempo a modificar e consertar a máquina do que efetivamente a imprimir. Fascinado com o potencial da AI nesta área, aproveita para dar aso à imaginação em três dimensões!' },
       en: { titulo: '3D printing workshop', tituloCurto: '3D workshop', sitio: 'Church', natureza: 'Training',
             hora: '11:00', duracao: '90 minutes', publico: 'ages 10–100',
             formador: 'José Pedro Sousa',
