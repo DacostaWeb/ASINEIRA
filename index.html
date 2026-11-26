@@ -956,6 +956,31 @@ html[lang="en"] .title-art {
 .media--eventos video { grid-area: 1 / 1; opacity: 0; transition: opacity .45s ease; }
 .media--eventos img.is-on,
 .media--eventos video.is-on { opacity: 1; }
+.media--eventos { position: relative; }
+
+/* O crédito de quem fotografou: pequeno, no canto de baixo à direita, por
+   cima da fotografia. À esquerda ficava colado à data e ao título do
+   cartaz, que começam logo por baixo, e lia-se como parte deles. Branco com
+   uma sombra curta, para se ler tanto no soalho claro como num fundo
+   escuro. Quem é vem da lista CREDITOS; a palavra antes muda com a língua. */
+.credito {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  z-index: 1;
+  max-width: calc(100% - 16px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: 400 10px/1.3 var(--font);
+  letter-spacing: .02em;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, .7), 0 0 6px rgba(0, 0, 0, .45);
+  pointer-events: none;
+}
+.credito[hidden] { display: none; }
+.credito::before { content: "Fotografia: "; }
+html[lang="en"] .credito::before { content: "Photo: "; }
 
 @media (prefers-reduced-motion: reduce) {
   .media--eventos img,
@@ -5002,6 +5027,7 @@ html.menu-open .menu::before { opacity: 1; }
       if (i === vez) img.className = 'is-on';
       evFotoEl.appendChild(img);
     });
+    creditoPoe(evFotoEl, evFotoEl.children[vez]);
   }
 
   function evFoco(i) {
@@ -5010,9 +5036,11 @@ html.menu-open .menu::before { opacity: 1; }
     /* Fixa, a célula tem uma fotografia só e é sempre essa que se vê: o rato
        numa linha sublinha-a, e não chama fotografia nenhuma para o lado. */
     if (evFotoEl && !evFotoFixa()) {
-      Array.prototype.forEach.call(evFotoEl.children, function (img, n) {
+      var pecasFoco = evFotoEl.querySelectorAll(':scope > img, :scope > video');
+      Array.prototype.forEach.call(pecasFoco, function (img, n) {
         img.classList.toggle('is-on', n === evEmFoco);
       });
+      creditoPoe(evFotoEl, pecasFoco[evEmFoco]);
     }
     if (evListaEl) {
       Array.prototype.forEach.call(evListaEl.children, function (tr, n) {
@@ -5045,7 +5073,7 @@ html.menu-open .menu::before { opacity: 1; }
      O rato no cartão não a pára: a capa não é de linha nenhuma. */
   function evCapaAnda() {
     if (!evFotoEl) return;
-    var pecas = evFotoEl.children;
+    var pecas = evFotoEl.querySelectorAll(':scope > img, :scope > video');
     if (pecas.length < 2) return;
     var agora = pecas[evCapaVez];
     /* Parado sem ter acabado é o browser a recusar o autoplay (o modo de
@@ -5055,6 +5083,7 @@ html.menu-open .menu::before { opacity: 1; }
     Array.prototype.forEach.call(pecas, function (p, n) {
       p.classList.toggle('is-on', n === evCapaVez);
     });
+    creditoPoe(evFotoEl, pecas[evCapaVez]);
     var nova = pecas[evCapaVez];
     if (nova.tagName === 'VIDEO') {
       nova.currentTime = 0;
@@ -5171,6 +5200,30 @@ html.menu-open .menu::before { opacity: 1; }
      o das obras: mudo, em volta e sozinho (sem muted nenhum browser deixa o
      autoplay pegar), e com o primeiro fotograma por cartaz enquanto não
      chega. Não tem alt: o que o diz é o aria-label. */
+  /* Os créditos das fotografias, pela morada da imagem: a mesma fotografia
+     leva o mesmo nome onde quer que apareça (cartaz, célula ao lado da
+     lista, desfile de um projeto). Sem entrada aqui, não se escreve nada. */
+  var CREDITOS = {
+    'dossier/assets/yolk-masterclass.jpg': '@dajoana.fotografia'
+  };
+
+  /* Põe na caixa o crédito da peça que se está a ver, ou esconde-o. A caixa
+     tem de estar posicionada (position: relative); o span vai no fim dela,
+     por isso quem conta as peças conta só as img e os video. */
+  function creditoPoe(caixa, peca) {
+    if (!caixa) return;
+    var c = caixa.querySelector(':scope > .credito');
+    var quem = peca ? CREDITOS[peca.getAttribute('src')] : '';
+    if (!quem) { if (c) c.hidden = true; return; }
+    if (!c) {
+      c = document.createElement('span');
+      c.className = 'credito';
+      caixa.appendChild(c);
+    }
+    c.textContent = quem;
+    c.hidden = false;
+  }
+
   function evPeca(src, capa, alt, foco, papel) {
     if (!/\.mp4$/i.test(src)) {
       var img = document.createElement('img');
@@ -5235,8 +5288,10 @@ html.menu-open .menu::before { opacity: 1; }
     function mostra(i) {
       n = ((i % total) + total) % total;
       for (var k = 0; k < imgs.length; k++) imgs[k].classList.toggle('is-on', k === n);
+      creditoPoe(palco, imgs[n]);
       if (aoMudar) aoMudar(n);
     }
+    creditoPoe(palco, imgs[0]);
 
     palco.addEventListener('pointerdown', function (e) {
       if (e.button) return;
